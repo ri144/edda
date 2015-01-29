@@ -2,7 +2,7 @@
 # Use of this source code is governed by a MIT-style license that can be
 # found in the LICENSE file.
 
-cmake_minimum_required (VERSION 3.0)
+cmake_minimum_required (VERSION 2.8)
 
 # Set the project's name.
 project (EDDA)
