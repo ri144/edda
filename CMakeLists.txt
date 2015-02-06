@@ -28,6 +28,9 @@ if (WIN32)
   set (OS_WIN ON)
 endif ()
 
+# Boost
+find_package(Boost REQUIRED)
+
 # Provide options that the user can optionally select.
 option (BUILD_SHARED_LIBS "Build into shared libraries." ON)
 

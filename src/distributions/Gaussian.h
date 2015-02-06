@@ -7,66 +7,60 @@
 
 #include <cmath>
 #include <cstdlib>
+#include <boost/math/distributions.hpp>
 #include "edda_export.h"
+#include "Distribution.h"
 #include "statistics.h"
 
-namespace edda {
+namespace edda { namespace dist {
 
 /// Defines a Gaussian distribution class
+template <class Real = float>
 class EDDA_EXPORT Gaussian {
-protected:
-    double mean;
-    double std;
+    Real mean, std;
 public:
     // construction
     explicit Gaussian(): mean(0), std(1) {}
-    explicit Gaussian(double m, double s): mean(m), std(s) {}
-
-    // assign
-    Gaussian& operator=(const Gaussian& x) {
-        mean = x.mean;  std = x.std;
-        return *this;
-    }
-
-    // assign
-    template<class Distribution>
-    Gaussian& operator=(const Distribution& x) {
-        mean = x.getMean(); std = x.getStd();
-        return *this;
-    }
+    explicit Gaussian(Real m, Real s): mean(m), std(s) {}
 
     ~Gaussian() {}
 
     // get probability
-    inline double getProb(const double x) const {
+    inline Real getProb(const Real x) const {
         return exp( -0.5 * (x-mean)*(x-mean) / std / std ) /
-                (std* sqrt(2.*M_PI));
+            (std* sqrt(2.*M_PI));
     }
-    inline double getMean() const {
+    inline Real getMean() const {
         return mean;
     }
-    inline double getVariance() const {
-        return std*std;
-    }
-    inline double getStd() const {
+    inline Real getStd() const {
         return std;
     }
+    inline Real getVariance() const {
+        return std*std;
+    }
+    inline Real getSample() const {
+        return box_muller(mean, std);
+    }
 
+    // random variable +=
     inline Gaussian& operator+=(const Gaussian& rhs) {
         mean += rhs.mean;
         std = sqrt(std*std + rhs.std*rhs.std);
         return *this;
     }
-
+    // random variable -=
     inline Gaussian& operator-=(const Gaussian& rhs) {
         mean -= rhs.mean;
         std = sqrt(std*std + rhs.std*rhs.std);
         return *this;
     }
+    // // random variable +=
     inline Gaussian& operator+=(const double r) {
         mean += r;
         return *this;
     }
+    // random variable *=
     inline Gaussian& operator*=(const double r) {
         mean *= r;
         std *= r;
@@ -74,6 +68,16 @@ public:
     }
 };
 
-} // namespace itl
+
+// get CDF
+template <class Real>
+double cdf(const Gaussian<Real> &dist, double x)
+{
+    boost::math::normal_distribution<Real> normal (dist.getMean(), dist.getStd());
+    return boost::math::cdf<>(normal, x);
+}
+
+
+} } // namespace dist, edda
 
 #endif // DIST_GAUSSIAN_H

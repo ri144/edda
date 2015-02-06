@@ -5,52 +5,62 @@
 // Use of this source code is governed by a MIT-style license that can be
 // found in the LICENSE file.
 
+// Distribution:
+// Define generic functions, which can be overriden by specific template classes
 
+#include <typeinfo>
 #include "edda_export.h"
 
-namespace edda {
+namespace edda { namespace dist {
 
-/// Defines a generic distribution class
-template<class Child>
+// a dummy distribution for demostrantion
+// class Real: this is only for data storage stype, which is float as default to reduce the size.  Otherwise in general the input/output types should be double
+
+template <class Real = float>
 class EDDA_EXPORT Distribution {
-protected:
-    Child child;
 public:
-    // construction
-    explicit Distribution() {}
-    explicit Distribution(Child child_) : child( child_ ) {}
-    Distribution(const Distribution<Child>& x) { child=x.child; }
-
-    // assign
-    Distribution& operator=(const Distribution<Child>& x) { child=x.child; return *this; }
-
-    ~Distribution() {}
-
     // get probability
-    inline double getProb(const double x) const { return child.getProb; }
-    inline double getMean() const { return child.getMean(); }
-    inline double getVariance() const { return child.getVariance(); }
-    inline double getStd() const { return child.getStd(); }
+    inline Real getProb(const Real x) const { return 0; }
+    inline Real getMean() const { return 0; }
+    inline Real getStd() const { return 0; }
+    inline Real getVariance() const { return 0; }
+    inline Real getSample() const { return 0; }
 
-    inline Distribution<Child>& operator+=(const Distribution<Child>& rhs) { child += rhs.child; return *this; }
-    inline Distribution<Child>& operator-=(const Distribution<Child>& rhs) { child -= rhs.child; return *this; }
-    inline Distribution<Child>& operator+=(const double r) { child += r; return *this; }
-    inline Distribution<Child>& operator*=(const double r) { child *= r; return *this; }
+    // random variable +=
+    inline Distribution& operator+=(const Distribution& rhs) { return *this; }
+    // random variable -=
+    inline Distribution& operator-=(const Distribution& rhs) { return *this; }
+    // // random variable +=
+    inline Distribution& operator+=(const double r) { return *this;  }
+    // random variable *=
+    inline Distribution& operator*=(const double r) { return *this; }
 };
 
+
+// random variable +
 template<class T>
-inline Distribution<T> operator+(const Distribution<T>& lhs, const Distribution<T>& rhs) {
-    Distribution<T> h(lhs);
+inline T operator+(const T& lhs, const T& rhs) {
+    T h(lhs);
     return h += rhs;
 }
+
+// random variable -
 template<class T>
-inline Distribution<T> operator-(const Distribution<T>& lhs, const Distribution<T>& rhs) {
-    Distribution<T> h(lhs);
+inline T operator-(const T& lhs, const T& rhs) {
+    T h(lhs);
     return h -= rhs;
 }
 
+// cdf
+template <class T>
+inline double cdf(const T& t, double x)
+{
+    std::cout << "Generic computation of cdf: Not implemented" << std::endl;
+    return 0;
+}
 
-} // namespace itl
+
+} } // namespace dist, edda
 
 
 #endif // DISTRIBUTION_H
