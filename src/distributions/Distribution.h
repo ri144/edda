@@ -8,6 +8,7 @@
 // Distribution:
 // Define generic functions, which can be overriden by specific template classes
 
+#include <iostream>
 #include <typeinfo>
 #include "edda_export.h"
 
@@ -19,6 +20,7 @@ namespace edda { namespace dist {
 template <class Real = float>
 class EDDA_EXPORT Distribution {
 public:
+    typedef Real real_type;
     // get probability
     inline Real getProb(const Real x) const { return 0; }
     inline Real getMean() const { return 0; }
@@ -51,13 +53,30 @@ inline T operator-(const T& lhs, const T& rhs) {
     return h -= rhs;
 }
 
+// random variable *
+template<class T>
+inline T operator*(const T& lhs, const double x) {
+    T h(lhs);
+    return h *= x;
+}
+
 // cdf
 template <class T>
-inline double cdf(const T& t, double x)
+inline double cdf(const T& dist, double x)
 {
     std::cout << "Generic computation of cdf: Not implemented" << std::endl;
     return 0;
 }
+
+#if 0
+// Random variable interpolation:  d1*(1-alpha) + d2*alpha
+// Assume correlation of d1 and d2 is 0
+template <class T>
+T lerp(const T& d1, const T& d2, double alpha )
+{
+    return d1*(1-alpha) + d2*alpha;
+}
+#endif
 
 
 } } // namespace dist, edda

@@ -33,6 +33,12 @@ find_package(Boost REQUIRED)
 
 # Provide options that the user can optionally select.
 option (BUILD_SHARED_LIBS "Build into shared libraries." ON)
+if (${BUILD_SHARED_LIBS})
+    set(LIB_TYPE SHARED)
+else ()
+    set(LIB_TYPE STATIC)
+endif ()
+
 
 option (EDDA_BUILD_TESTS "Build the test programs." OFF)
 option (EDDA_BUILD_EXAMPLES "Build the example programs." OFF)
