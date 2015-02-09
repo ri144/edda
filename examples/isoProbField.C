@@ -63,9 +63,9 @@ int main(int argc, char **argv)
     Gaussian *pDistData = loadData(meanfile, stdfile, dim);
     float iso = atoi(argv[6]);
 
-    Solution<Gaussian> *solution = new Solution<Gaussian>(&pDistData, dim[0]*dim[1]*dim[2], 0);
-    RegularCartesianGrid *grid = new RegularCartesianGrid(dim[0], dim[1], dim[2]);
-    StructuredField<Gaussian> field(solution, grid);
+    //Solution<Gaussian> *solution = new Solution<Gaussian>(&pDistData, dim[0]*dim[1]*dim[2], 0);
+    //RegularCartesianGrid *grid = new RegularCartesianGrid(dim[0], dim[1], dim[2]);
+    //StructuredField<Gaussian> field(solution, grid);
 
     float *probField = new float[dim[0]*dim[1]*dim[2]];
     int i,j,k;
