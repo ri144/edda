@@ -7,9 +7,9 @@ using namespace std;
 
 int main()
 {
-    edda::dist::Gaussian<> g1(1.,1.),
+    edda::dist::Gaussian<double> g1(1.,1.),
             g2(2.,2.);
-    edda::dist::Gaussian<> g3;
+    edda::dist::Gaussian<double> g3;
 
     cout << "g1= "; g1.print(); cout << endl;
     cout << "g1= "; g2.print(); cout << endl;
