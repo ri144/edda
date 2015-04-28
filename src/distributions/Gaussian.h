@@ -12,7 +12,7 @@
 #include "edda_export.h"
 #include "Distribution.h"
 #include "statistics.h"
-#include "header.h"
+//#include "header.h"
 
 namespace edda { namespace dist {
 
@@ -31,7 +31,7 @@ public:
     // get probability
     inline Real getProb(const double x) const {
         if (std==0) {
-            return (fabs(x-mean)<EPS)? 1: 0;
+            return (fabs(x-mean)< std::numeric_limits<Real>::epsilon() )? 1: 0;
         }
         return exp( -0.5 * (x-mean)*(x-mean) / std / std ) /
             (std* sqrt(2.*M_PI));
@@ -42,7 +42,7 @@ public:
     inline Real getStd() const {
         return std;
     }
-    inline Real getVariance() const {
+    inline Real getVar() const {
         return std*std;
     }
     inline Real getSample() const {

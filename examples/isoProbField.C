@@ -4,7 +4,7 @@
 #include <iostream>
 #include "distributions/Gaussian.h"
 #include "distributions/Distribution.h"
-#include "VectorMatrix.h"
+//#include "VectorMatrix.h"
 #include "nrrd.h"
 #include "Field.h"
 

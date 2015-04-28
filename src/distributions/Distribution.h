@@ -14,8 +14,12 @@
 
 namespace edda { namespace dist {
 
-// a dummy distribution for demostrantion
-// class Real: this is only for data storage stype, which is float as default to reduce the size.  Otherwise in general the input/output types should be double
+// a dummy distribution for illustration
+// The purpose of this file is to define the interface of a new distribution.
+// class Real: this is only used for data storage type, which is float as default 
+//    to reduce so size.  Otherwise in general the input/output types should 
+//    be double
+
 
 template <class Real = float>
 class EDDA_EXPORT Distribution {
@@ -25,7 +29,7 @@ public:
     inline Real getProb(const Real x) const { return 0; }
     inline Real getMean() const { return 0; }
     inline Real getStd() const { return 0; }
-    inline Real getVariance() const { return 0; }
+    inline Real getVar() const { return 0; } // Get variance
     inline Real getSample() const { return 0; }
 
     // random variable +=
@@ -38,6 +42,11 @@ public:
     inline Distribution& operator*=(const double r) { return *this; }
 };
 
+// Here are generic functions that can be reused by new distributions if not
+// implemented.
+
+class NotImplementedException
+{};
 
 // random variable +
 template<class T>
@@ -64,7 +73,8 @@ inline T operator*(const T& lhs, const double x) {
 template <class T>
 inline double cdf(const T& dist, double x)
 {
-    std::cout << "Generic computation of cdf: Not implemented" << std::endl;
+    std::cerr << "Generic computation of cdf: Not implemented" << std::endl;
+    throw new NotImplementedException();
     return 0;
 }
 

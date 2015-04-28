@@ -30,6 +30,10 @@ endif ()
 
 # Boost
 find_package(Boost REQUIRED)
+if(Boost_FOUND)
+    include_directories(${Boost_INCLUDE_DIRS}) 
+    link_libraries(${Boost_LIBRARIES})
+endif()
 
 # Provide options that the user can optionally select.
 option (BUILD_SHARED_LIBS "Build into shared libraries." ON)
