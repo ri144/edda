@@ -7,10 +7,11 @@
 
 #include <cmath>
 #include <cstdlib>
+#include <iostream>
 #include <boost/math/distributions.hpp>
 #include "edda_export.h"
 #include "Distribution.h"
-#include "statistics.h"
+#include "math/statistics.h"
 
 namespace edda { namespace dist {
 
@@ -19,14 +20,18 @@ template <class Real = float>
 class EDDA_EXPORT Gaussian {
     Real mean, std;
 public:
+    typedef Real real_type;
     // construction
     explicit Gaussian(): mean(0), std(1) {}
     explicit Gaussian(Real m, Real s): mean(m), std(s) {}
 
     ~Gaussian() {}
 
-    // get probability
-    inline Real getProb(const Real x) const {
+    // get probability (pdf)
+    inline Real getProb(const double x) const {
+        if (std==0) {
+            return (fabs(x-mean)< std::numeric_limits<Real>::epsilon() )? 1: 0;
+        }
         return exp( -0.5 * (x-mean)*(x-mean) / std / std ) /
             (std* sqrt(2.*M_PI));
     }
@@ -36,11 +41,15 @@ public:
     inline Real getStd() const {
         return std;
     }
-    inline Real getVariance() const {
+    inline Real getVar() const {
         return std*std;
     }
     inline Real getSample() const {
         return box_muller(mean, std);
+    }
+    // for debugging
+    inline void print() {
+        std::cout <<  "<Gaussian: mean=" << mean << ", std=" << std << ">" ;
     }
 
     // random variable +=

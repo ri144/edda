@@ -8,8 +8,8 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#ifndef _HEADER_H_
-#define _HEADER_H_
+#ifndef COMMON_H
+#define COMMON_H
 
 namespace edda {
 
@@ -17,7 +17,6 @@ const double	DEG_TO_RAD = 0.0174532925199432957692;	// PI / 180
 const double	RAD_TO_DEG = 57.2957795130823208768;	// 180 / PI
 const double	PIBY2 = 1.57079632679489661923;			// PI / 2
 const double	EPS = 1.0E-6;
-const int		OCT = 8;
 
 enum ReturnStatus { SUCCESS=0, FAIL };
 
@@ -25,6 +24,10 @@ enum ReturnStatus { SUCCESS=0, FAIL };
 typedef long long int64_t;
 #endif
 
+// May not be needed in the release version but just keep here for now
+class NotImplementedException
+{};
+
 } // namespace edda
 
-#endif
+#endif  // COMMON_H
