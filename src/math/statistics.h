@@ -1,13 +1,16 @@
-#ifndef STATISTICS_H
-#define STATISTICS_H
+// Copyright 2015 The Edda Authors. All rights reserved.
+// Use of this source code is governed by a MIT-style license that can be
+// found in the LICENSE file.
 
+#ifndef STATISTICS_H_
+#define STATISTICS_H_
 
+#include <assert.h>
 #include <cmath>
 #include <numeric>
-#include <assert.h>
 
-namespace edda
-{
+namespace edda {
+
 template <class InputIterator>
 double getSum( InputIterator first, InputIterator last ) {
     double sum_x=0;
@@ -98,8 +101,6 @@ T box_muller(T m, T s)	/* normal random variate generator */
     return( m + y1 * s );
 }
 
+}  // namespace edda
 
-
-} // namespace edda
-
-#endif
+#endif  // STATISTICS_H_

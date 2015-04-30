@@ -4,12 +4,12 @@
 
 // Reference: vtkTuple from VTK
 
-#ifndef TUPLE_H
-#define TUPLE_H
+#ifndef TUPLE_H_
+#define TUPLE_H_
 
 #include <iostream>
 
-namespace edda{
+namespace edda {
 
 // Compared to std::vector, Tuple is a fixed-length vector for space saving
 template<typename T, int N>
@@ -133,5 +133,6 @@ inline bool operator!=(const Tuple<A, N>& t1, const Tuple<A, N>& t2)
     return !(t1 == t2);
 }
 
-} // edda
-#endif // TUPLE_H
+}  // edda
+
+#endif  // TUPLE_H_

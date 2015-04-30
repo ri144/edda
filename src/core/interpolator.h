@@ -1,15 +1,16 @@
-/*************************************************************************
-*************************************************************************/
+// Copyright 2015 The Edda Authors. All rights reserved.
+// Use of this source code is governed by a MIT-style license that can be
+// found in the LICENSE file.
 
-#ifndef _INTERPOLATOR_H_
-#define _INTERPOLATOR_H_
+#ifndef INTERPOLATOR_H_
+#define INTERPOLATOR_H_
 
-#include "Tuple.h"
+#include "core/tuple.h"
 
 namespace edda {
 
 // barycentric interpolation
-template<class T>
+template <class T>
 inline T baryInterp(const T &v1, const T &v2, const T &v3, const T &v4, double coeff[3])
 {
     return v1 +
@@ -93,6 +94,6 @@ class StochasticTetraInterpolator
 };
 #endif
 
-} // namespace edda
+}  // namespace edda
 
-#endif
+#endif  // INTERPOLATOR_H_

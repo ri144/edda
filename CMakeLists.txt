@@ -5,7 +5,7 @@
 cmake_minimum_required (VERSION 2.8)
 
 # Set the project's name.
-project (EDDA)
+project (edda)
 
 # Tell the compiler to use C++11.
 if (UNIX)
@@ -28,13 +28,6 @@ if (WIN32)
   set (OS_WIN ON)
 endif ()
 
-# Boost
-find_package(Boost REQUIRED)
-if(Boost_FOUND)
-    include_directories(${Boost_INCLUDE_DIRS}) 
-    link_libraries(${Boost_LIBRARIES})
-endif()
-
 # Provide options that the user can optionally select.
 option (BUILD_SHARED_LIBS "Build into shared libraries." ON)
 if (${BUILD_SHARED_LIBS})
@@ -43,9 +36,15 @@ else ()
     set(LIB_TYPE STATIC)
 endif ()
 
-
 option (EDDA_BUILD_TESTS "Build the test programs." OFF)
 option (EDDA_BUILD_EXAMPLES "Build the example programs." OFF)
+
+# Load settings for the boost project.
+find_package (Boost REQUIRED)
+if (Boost_FOUND)
+  include_directories (${Boost_INCLUDE_DIRS})
+  link_libraries (${Boost_LIBRARIES})
+endif ()
 
 # Make the configuration file.
 configure_file ("${PROJECT_SOURCE_DIR}/edda.h.in"

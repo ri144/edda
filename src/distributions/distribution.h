@@ -1,26 +1,27 @@
-#ifndef DISTRIBUTION_H
-#define DISTRIBUTION_H
-
-// Copyright (c) 2014 The EDDA Authors. All rights reserved.
+// Copyright 2015 The Edda Authors. All rights reserved.
 // Use of this source code is governed by a MIT-style license that can be
 // found in the LICENSE file.
+
+#ifndef DISTRIBUTION_H_
+#define DISTRIBUTION_H_
 
 // Distribution:
 // Define generic functions, which can be overriden by specific template classes
 
 #include <iostream>
 #include <typeinfo>
-#include "edda_export.h"
-#include "common.h"
 
-namespace edda { namespace dist {
+#include "common.h"
+#include "edda_export.h"
+
+namespace edda {
+namespace dist {
 
 // a dummy distribution for illustration
 // The purpose of this file is to define the interface of a new distribution.
-// class Real: this is only used for data storage type, which is float as default 
-//    to reduce so size.  Otherwise in general the input/output types should 
+// class Real: this is only used for data storage type, which is float as default
+//    to reduce so size.  Otherwise in general the input/output types should
 //    be double
-
 
 template <typename Real = float>
 class EDDA_EXPORT Distribution {
@@ -88,7 +89,7 @@ T lerp(const T& d1, const T& d2, double alpha )
 #endif
 
 
-} } // namespace dist, edda
+}  // namespace dist
+}  // namespace edda
 
-
-#endif // DISTRIBUTION_H
+#endif // DISTRIBUTION_H_
