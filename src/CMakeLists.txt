@@ -2,25 +2,19 @@
 # Use of this source code is governed by a MIT-style license that can be
 # found in the LICENSE file.
 
-cmake_minimum_required (VERSION 2.8)
-project (edda)
+file (GLOB SRC_FILES "*.cpp")
 
-file (GLOB HEADER_FILES "*.h")
-file (GLOB SRC_FILES "*.C")
+add_library (${PROJECT_NAME} ${LIB_TYPE} ${SRC_FILES})
 
-add_library(${PROJECT_NAME} ${LIB_TYPE} ${SRC_FILES})
-
-set_target_properties(${PROJECT_NAME} PROPERTIES
+set_target_properties (${PROJECT_NAME} PROPERTIES
     DEBUG_OUTPUT_NAME "${PROJECT_NAME}_d"
-    RELEASE_OUTPUT_NAME "${PROJECT_NAME}"
-    )
+    RELEASE_OUTPUT_NAME "${PROJECT_NAME}")
 
 install (
-    FILES ${HEADER_FILES}
-    DESTINATION include/edda)
+    DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/
+    DESTINATION include/edda
+    FILES_MATCHING PATTERN "*.h")
 
 install (
     TARGETS ${PROJECT_NAME}
     DESTINATION lib/edda)
-
-
