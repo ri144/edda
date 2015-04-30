@@ -1,19 +1,22 @@
-// Copyright (c) 2014 The EDDA Authors. All rights reserved.
+// Copyright 2015 The Edda Authors. All rights reserved.
 // Use of this source code is governed by a MIT-style license that can be
 // found in the LICENSE file.
 
-#ifndef DIST_GAUSSIAN_H
-#define DIST_GAUSSIAN_H
+#ifndef DIST_GAUSSIAN_H_
+#define DIST_GAUSSIAN_H_
 
 #include <cmath>
 #include <cstdlib>
 #include <iostream>
+
 #include <boost/math/distributions.hpp>
+
 #include "edda_export.h"
-#include "Distribution.h"
+#include "distributions/distribution.h"
 #include "math/statistics.h"
 
-namespace edda { namespace dist {
+namespace edda {
+namespace dist {
 
 /// Defines a Gaussian distribution class
 template <class Real = float>
@@ -77,7 +80,6 @@ public:
     }
 };
 
-
 // get CDF
 template <class Real>
 double cdf(const Gaussian<Real> &dist, double x)
@@ -86,7 +88,7 @@ double cdf(const Gaussian<Real> &dist, double x)
     return boost::math::cdf<>(normal, x);
 }
 
+}  // namespace dist
+}  // namespace edda
 
-} } // namespace dist, edda
-
-#endif // DIST_GAUSSIAN_H
+#endif  // DIST_GAUSSIAN_H_
