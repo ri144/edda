@@ -11,12 +11,19 @@
 #ifndef COMMON_H
 #define COMMON_H
 
+#include <limits>
+
 namespace edda {
 
 const double	DEG_TO_RAD = 0.0174532925199432957692;	// PI / 180
 const double	RAD_TO_DEG = 57.2957795130823208768;	// 180 / PI
 const double	PIBY2 = 1.57079632679489661923;			// PI / 2
+
+// Do not use this in the future:
 const double	EPS = 1.0E-6;
+// Instead call this function:  std::numeric_limits<T>::epsilon()
+// or use this C++11 alias
+template <typename T> using limits = std::numeric_limits<T>;
 
 enum ReturnStatus { SUCCESS=0, FAIL };
 

@@ -5,7 +5,6 @@
 cmake_minimum_required (VERSION 2.8)
 project (edda)
 
-file (GLOB HEADER_FILES "*.h")
 file (GLOB SRC_FILES "*.C")
 
 add_library(${PROJECT_NAME} ${LIB_TYPE} ${SRC_FILES})
@@ -16,7 +15,7 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
     )
 
 install (
-    FILES ${HEADER_FILES}
+    DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/
     DESTINATION include/edda)
 
 install (

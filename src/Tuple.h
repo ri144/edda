@@ -16,7 +16,7 @@ template<typename T, int N>
 class Tuple
 {
 protected:
-    T data[N];
+    T vec[N];
 
 public:
     Tuple()
@@ -26,32 +26,32 @@ public:
     explicit Tuple(const T& scalar)
     {
         for (int i = 0; i < N; ++i)
-            this->data[i] = scalar;
+            this->vec[i] = scalar;
     }
 
     explicit Tuple(const T* init)
     {
         for (int i = 0; i < N; ++i)
-            this->data[i] = init[i];
+            this->vec[i] = init[i];
     }
 
     // Get the length of the tuple.
     inline int GetLen() { return N; }
 
     // Get a pointer to the underlying data of the tuple.
-    inline T* GetData() { return this->data; }
-    inline const T* GetData() const { return this->data; }
+    inline T* Getvec() { return this->vec; }
+    inline const T* Getvec() const { return this->vec; }
 
     // Get a reference to the underlying data element of the tuple.
     // This works similarly to the way C++ STL containers work.  No
     // bounds checking is performed.
     inline T& operator[](int i) {
         assert("pre: index_in_bounds" && i >= 0 && i < N);
-        return this->data[i];
+        return this->vec[i];
     }
     inline const T& operator[](int i) const {
         assert("pre: index_in_bounds" && i >= 0 && i < N);
-        return this->data[i];
+        return this->vec[i];
     }
 
     // Cast the tuple to the specified type, returning the result.
@@ -61,7 +61,7 @@ public:
         Tuple<TR, N> result;
         for (int i = 0; i < N; ++i)
         {
-            result[i] = static_cast<TR>(this->data[i]);
+            result[i] = static_cast<TR>(this->vec[i]);
         }
         return result;
     }
@@ -72,15 +72,15 @@ public:
 template<typename T> class Tuple1 : public Tuple<T, 1> {};
 template<typename T> class Tuple2 : public Tuple<T, 2> {
     explicit Tuple2(const T& x, const T& y)
-        {this->data[0] = x; this->data[1] = y;}
+        {this->vec[0] = x; this->vec[1] = y;}
 };
 template<typename T> class Tuple3 : public Tuple<T, 3> {
     explicit Tuple3(const T& x, const T& y, const T& z)
-        {this->data[0] = x; this->data[1] = y; this->data[2] = z;}
+        {this->vec[0] = x; this->vec[1] = y; this->vec[2] = z;}
 };
 template<typename T> class Tuple4 : public Tuple<T, 4> {
     explicit Tuple4(const T& x, const T& y, const T& z, const T& w)
-        {this->data[0] = x; this->data[1] = y; this->data[2] = z; this->data[3] = w;}
+        {this->vec[0] = x; this->vec[1] = y; this->vec[2] = z; this->vec[3] = w;}
 };
 template<typename T> class Tuple5 : public Tuple<T, 5> {};
 template<typename T> class Tuple6 : public Tuple<T, 6> {};
