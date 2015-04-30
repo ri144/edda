@@ -2,7 +2,7 @@
 # Use of this source code is governed by a MIT-style license that can be
 # found in the LICENSE file.
 
-file (GLOB SRC_FILES "*.cpp")
+file (GLOB_RECURSE SRC_FILES "*.cpp")
 
 add_library (${PROJECT_NAME} ${LIB_TYPE} ${SRC_FILES})
 
