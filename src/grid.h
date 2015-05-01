@@ -47,7 +47,29 @@ enum SliceType
 };
 
 
+//////////////////////////////////////////////////////////////////////////
+// about the advection point
+//////////////////////////////////////////////////////////////////////////
+typedef struct PointInfo
+{
+    VECTOR3 phyCoord;
+    VECTOR3 interpolant;    // interpolation coefficients
+    int fromCell;   // advecting result from which cell, mainly used for unstructured grid
+    int inCell;     // in which cell
 
+    PointInfo()
+    {
+        fromCell = inCell = -1;
+    }
+
+    PointInfo(const VECTOR3& pcoord, const VECTOR3& coeff, int fCell, int iCell)
+    {
+        phyCoord = pcoord;
+        interpolant = coeff;
+        fromCell = fCell;
+        inCell = iCell;
+    }
+}PointInfo;
 
 //////////////////////////////////////////////////////////////////////////
 //
@@ -62,7 +84,7 @@ public:
 	// physical coordinate of vertex verIdx
     virtual ReturnStatus at_vertex(int verIdx, VECTOR3& pos) = 0;
     // check whether the physical point is defined
-	virtual bool at_phys(VECTOR3& pos) = 0;			
+    virtual bool at_phys(VECTOR3& pos) = 0;
 	// get vertex list of a cell
     virtual ReturnStatus getCellVertices(int cellId, std::vector<int>& vVertices) = 0;
 	// get the cell id and also interpolating coefficients for the given physical position
@@ -74,19 +96,19 @@ public:
 	// type of cell
 	virtual CellType GetCellType(void) = 0;
 	// get min and maximal boundary
-	virtual void Boundary(VECTOR3& minB, VECTOR3& maxB) = 0;
+    virtual void Boundary(VECTOR3& minB, VECTOR3& maxB) = 0;
 	// set bounding box
-	virtual void SetBoundary(VECTOR3& minB, VECTOR3& maxB) = 0;
+    virtual void SetBoundary(VECTOR3& minB, VECTOR3& maxB) = 0;
 	// get grid spacing in x,y,z dimensions
 	virtual void GetGridSpacing(int cellId, float& xspace, float& yspace, float& zspace) = 0;
 	// boundary intersection
-	virtual void BoundaryIntersection(VECTOR3& intersectP, VECTOR3& startP, 
-					  VECTOR3& endP,float* stepSize, float oldStepSize) = 0;
+    virtual void BoundaryIntersection(VECTOR3& intersectP, VECTOR3& startP,
+                      VECTOR3& endP,float* stepSize, float oldStepSize) = 0;
 	// whether the point is in the bounding box
-	virtual bool isInBBox(VECTOR3& pos) = 0;
+    virtual bool isInBBox(VECTOR3& pos) = 0;
 	// whether the point is in the bounding box not counting ghost cells
-	virtual bool isInRealBBox(VECTOR3& p) = 0;
-	virtual bool isInRealBBox(VECTOR3& pos, float t) = 0;
+    virtual bool isInRealBBox(VECTOR3& p) = 0;
+    virtual bool isInRealBBox(VECTOR3& pos, float t) = 0;
 
 protected:
 	// reset parameters
@@ -109,7 +131,6 @@ public:
     CartesianGrid(int xdim, int ydim, int zdim);
 	CartesianGrid();
 	~CartesianGrid();
-    virtual void GetDimension(int& xdim, int& ydim, int& zdim);
 
 #if 0
 	// physical coordinate of vertex verIdx
@@ -154,10 +175,10 @@ protected:
 	int m_nDimension[3];				// dimension
 
 	// min and maximal boundary (includes ghost cells)
-	VECTOR3 m_vMinBound, m_vMaxBound;
+    VECTOR3 m_vMinBound, m_vMaxBound;
 
 	// min and maximal boundary (does not include ghost cells)
-	VECTOR4 m_vMinRealBound, m_vMaxRealBound;
+    VECTOR4 m_vMinRealBound, m_vMaxRealBound;
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -186,7 +207,7 @@ public:
 	// physical coordinate of vertex verIdx
     ReturnStatus at_vertex(int verIdx, VECTOR3& pos);
 	// whether the physical point is in the boundary
-	bool at_phys(VECTOR3& pos);			
+    bool at_phys(VECTOR3& pos);
 	// get vertex list of a cell
     ReturnStatus getCellVertices(int cellId, std::vector<int>& vVertices);
 	// get the cell id and also interpolating coefficients for the given physical position
@@ -197,28 +218,28 @@ public:
 	// the volume of cell
     double cellVolume(int cellId);
 	// cell type
-	CellType GetCellType(void) {return CUBE;}
+    CellType getCellType(void) {return CUBE;}
 	// set bounding box (includes ghost cells)
-	void SetBoundary(VECTOR3& minB, VECTOR3& maxB);
+    void setBoundary(VECTOR3& minB, VECTOR3& maxB);
 	// set bounding box (does not include ghost cells)
-	void SetRealBoundary(VECTOR4& minB, VECTOR4& maxB);
+    void setRealBoundary(VECTOR4& minB, VECTOR4& maxB);
 	// get min and maximal boundary
-	void Boundary(VECTOR3& minB, VECTOR3& maxB);
+    void boundary(VECTOR3& minB, VECTOR3& maxB);
 	// get grid spacing in x,y,z dimensions
-	void GetGridSpacing(int cellId, float& xspace, float& yspace, float& zspace) 
+    void getGridSpacing(int cellId, float& xspace, float& yspace, float& zspace)
 	{ xspace = oneOvermappingFactorX; yspace = oneOvermappingFactorY; zspace = oneOvermappingFactorZ; }
-	void BoundaryIntersection(VECTOR3&, VECTOR3&, VECTOR3&, float*, float);
+    void boundaryIntersection(VECTOR3&, VECTOR3&, VECTOR3&, float*, float);
 	// whether the point is in the bounding box
-	bool isInBBox(VECTOR3& pos);
+    bool isInBBox(VECTOR3& pos);
 	// whether the point is in the bounding box (not counting ghost cells)
-	bool isInRealBBox(VECTOR3& pos);
-	bool isInRealBBox(VECTOR3& pos, float t);
+    bool isInRealBBox(VECTOR3& pos);
+    bool isInRealBBox(VECTOR3& pos, float t);
 
 
 protected:
-	void Reset(void);
+    void reset(void);
 	// compute bounding box
-	void ComputeBBox(void);
+    void computeBBox(void);
 	// whether in a cell
 	bool isInCell(PointInfo& pInfo, const int cellId);
 };
@@ -266,6 +287,7 @@ public:
 
 */ 
 
+#if 0
 //////////////////////////////////////////////////////////////////////////
 //
 // irregular grid
@@ -321,6 +343,7 @@ public:
 
 };
 
+#endif
 float getStepSize(VECTOR3& p, VECTOR3& p1, VECTOR3& p2, float oldStepSize);
 
 }  // namesapce edda

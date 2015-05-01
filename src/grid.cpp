@@ -15,7 +15,8 @@
 
 
 using namespace std;
-using namespace edda;
+
+namespace edda {
 
 //////////////////////////////////////////////////////////////////////////
 //
@@ -42,17 +43,8 @@ CartesianGrid::~CartesianGrid()
 void CartesianGrid::Reset()
 {
   m_nDimension[0] = m_nDimension[1] = m_nDimension[2] = 0;
-  m_vMinBound.Zero();
-  m_vMaxBound.Zero();
-  m_vMinRealBound.Zero();
-  m_vMaxRealBound.Zero();
 }
 
-
-void CartesianGrid::GetDimension(int &xdim, int &ydim, int &zdim)
-{
-    xdim = m_nDimension[0]; ydim = m_nDimension[1]; zdim = m_nDimension[2];
-}
 
 //////////////////////////////////////////////////////////////////////////
 //
@@ -71,23 +63,23 @@ RegularCartesianGrid::RegularCartesianGrid():CartesianGrid()
 RegularCartesianGrid::RegularCartesianGrid(int xdim, int ydim, int zdim):CartesianGrid(xdim, ydim, zdim)
 {
   Reset();
-  VECTOR3 a = VECTOR3(0,0,0);   // the default is from 0 to xdim-1, etc. 
-  VECTOR3 b = VECTOR3(xdim-1, ydim-1, zdim-1); 
-  SetBoundary(a, b); 
+  VECTOR3 a(0,0,0);   // the default is from 0 to xdim-1, etc.
+  VECTOR3 b(xdim-1, ydim-1, zdim-1);
+  setBoundary(a, b);
 }
 
 RegularCartesianGrid::~RegularCartesianGrid()
 {
 }
 
-void RegularCartesianGrid::Reset(void)
+void RegularCartesianGrid::reset(void)
 {
   mappingFactorX = mappingFactorY = mappingFactorZ = 0.0;
   oneOvermappingFactorX = oneOvermappingFactorY = oneOvermappingFactorZ = 0.0;
   gridSpacing = 1.0;
 }
 
-void RegularCartesianGrid::Boundary(VECTOR3& minB, VECTOR3& maxB)
+void RegularCartesianGrid::boundary(VECTOR3& minB, VECTOR3& maxB)
 {
   minB = m_vMinBound;
   maxB = m_vMaxBound;
@@ -96,12 +88,12 @@ void RegularCartesianGrid::Boundary(VECTOR3& minB, VECTOR3& maxB)
 //////////////////////////////////////////////////////////////////////////
 // set bounding box
 //////////////////////////////////////////////////////////////////////////
-void RegularCartesianGrid::SetBoundary(VECTOR3& minB, VECTOR3& maxB)
+void RegularCartesianGrid::setBoundary(VECTOR3& minB, VECTOR3& maxB)
 {
   m_vMinBound = minB;
   m_vMaxBound = maxB;
-  m_vMinRealBound.Set(m_vMinBound[0], m_vMinBound[1], m_vMinBound[2], 0.0);
-  m_vMaxRealBound.Set(m_vMaxBound[0], m_vMaxBound[1], m_vMaxBound[2], 0.0);
+  m_vMinRealBound.set(m_vMinBound[0], m_vMinBound[1], m_vMinBound[2], 0.0);
+  m_vMaxRealBound.set(m_vMaxBound[0], m_vMaxBound[1], m_vMaxBound[2], 0.0);
   mappingFactorX = (float)(xdim()-1)/(m_vMaxBound[0] - m_vMinBound[0]);
   mappingFactorY = (float)(ydim()-1)/(m_vMaxBound[1] - m_vMinBound[1]);
   mappingFactorZ = (float)(zdim()-1)/(m_vMaxBound[2] - m_vMinBound[2]);
@@ -117,7 +109,7 @@ void RegularCartesianGrid::SetBoundary(VECTOR3& minB, VECTOR3& maxB)
 //////////////////////////////////////////////////////////////////////////
 // set real bounding box (does not include ghost cells)
 //////////////////////////////////////////////////////////////////////////
-void RegularCartesianGrid::SetRealBoundary(VECTOR4& minB, VECTOR4& maxB)
+void RegularCartesianGrid::setRealBoundary(VECTOR4& minB, VECTOR4& maxB)
 {
   m_vMinRealBound = minB;
   m_vMaxRealBound = maxB;
@@ -161,14 +153,12 @@ bool RegularCartesianGrid::isInRealBBox(VECTOR3& pos, float t)
 }
 
 // compute a default boundary 
-void RegularCartesianGrid::ComputeBBox(void)
+void RegularCartesianGrid::computeBBox(void)
 {
-  VECTOR3 minB, maxB;
-  
-  minB.Set(0, 0, 0);  // default is from zero to xdim-1, etc. 
-  maxB.Set((float)(xdim()-1), (float)(ydim()-1), (float)(zdim()-1));
+  VECTOR3 minB(0, 0, 0);  // default is from zero to xdim-1, etc.
+  VECTOR3 maxB((float)(xdim()-1), (float)(ydim()-1), (float)(zdim()-1));
 
-  SetBoundary(minB, maxB);
+  setBoundary(minB, maxB);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -237,8 +227,8 @@ ReturnStatus RegularCartesianGrid::at_vertex(int verIdx, VECTOR3& pos)
   float ypos = m_vMinBound[1] + yidx*oneOvermappingFactorY; 
   float zpos = m_vMinBound[2] + zidx*oneOvermappingFactorZ; 
 
-  // pos.Set((float)xidx, (float)yidx, (float)zidx);
-  pos.Set((float)xpos, (float)ypos, (float)zpos);
+  // pos.set((float)xidx, (float)yidx, (float)zidx);
+  pos.set((float)xpos, (float)ypos, (float)zpos);
   return SUCCESS;
 }
 
@@ -270,7 +260,7 @@ bool RegularCartesianGrid::isInCell(PointInfo& pInfo, const int cellId)
   int inCell = zidx * ycelldim() * xcelldim() + yidx * xcelldim() + xidx;
   if(cellId == inCell)
     {
-      pInfo.interpolant.Set(cx - (float)xidx, cy - (float)yidx, cz - (float)zidx);
+      pInfo.interpolant.set(cx - (float)xidx, cy - (float)yidx, cz - (float)zidx);
       return true;
     }
   else
@@ -313,7 +303,7 @@ ReturnStatus RegularCartesianGrid::phys_to_cell(PointInfo& pInfo)
   int inCell = zidx * ycelldim() * xcelldim() + yidx * xcelldim() + xidx;
 
   pInfo.inCell = inCell;
-  pInfo.interpolant.Set(cx - (float)xidx, cy - (float)yidx, cz - (float)zidx);
+  pInfo.interpolant.set(cx - (float)xidx, cy - (float)yidx, cz - (float)zidx);
   return SUCCESS;
 }
 
@@ -356,34 +346,34 @@ double RegularCartesianGrid::cellVolume(int cellId)
   return volume;
 }
 
-void RegularCartesianGrid::BoundaryIntersection(VECTOR3& intersectP,
-						VECTOR3& startP,
-						VECTOR3& endP,
+void RegularCartesianGrid::boundaryIntersection(VECTOR3& intersectP,
+                        VECTOR3& startP,
+                        VECTOR3& endP,
 						float* stepSize, 
 						float oldStepSize)
 {
-	VECTOR3 hitPoint;
+    VECTOR3 hitPoint;
 	float thit;
 	float xMin, xMax, yMin, yMax, zMin, zMax;
 
-	intersectP.Set(-1, -1, -1);
+    intersectP.set(-1, -1, -1);
 
 	xMax = (float)(m_nDimension[0] - 1);
 	yMax = (float)(m_nDimension[1] - 1);
 	zMax = (float)(m_nDimension[2] - 1);
 	xMin = yMin = zMin = 0;
 
-	VECTOR3 planeN[6];
-	planeN[0].Set(1, 0, 0);			//right
-	planeN[1].Set(-1, 0, 0);		//left
-	planeN[2].Set(0, 1, 0);			//top
-	planeN[3].Set(0,-1, 0);			//bottom	
-	planeN[4].Set(0, 0, 1);			//front
-	planeN[5].Set(0, 0,-1);			//back
+    VECTOR3 planeN[6];
+    planeN[0].set(1, 0, 0);			//right
+    planeN[1].set(-1, 0, 0);		//left
+    planeN[2].set(0, 1, 0);			//top
+    planeN[3].set(0,-1, 0);			//bottom
+    planeN[4].set(0, 0, 1);			//front
+    planeN[5].set(0, 0,-1);			//back
 
-	VECTOR3 rayNormal;
-	rayNormal.minus(endP, startP);
-	rayNormal.Normalize();
+    VECTOR3 rayNormal;
+    rayNormal = endP - startP;
+    rayNormal.normalize();
 
     /*float vertex[8][3] = {	{xMin, yMin, zMin},		// rear, left, bottom
 				{xMin, yMax, zMin},		// rear, left, top
@@ -395,25 +385,25 @@ void RegularCartesianGrid::BoundaryIntersection(VECTOR3& intersectP,
 				{xMax, yMax, zMax}};	// front, right, toop
                 */
 	
-	VECTOR3 A;
+    VECTOR3 A;
 	A = startP;
 
 	// a point on the plane
-	VECTOR3 B[6];
-	B[0].Set(xMax, (yMin + yMax)/2, (zMin + zMax)/2);			// right
-	B[1].Set(xMin, (yMin + yMax)/2, (zMin + zMax)/2);			// left
-	B[2].Set((xMax + xMin)/2, yMax, (zMin + zMax)/2);			// top
-	B[3].Set((xMax + xMin)/2, yMin, (zMin + zMax)/2);			// bottom
-	B[4].Set((xMax + xMin)/2, (yMin + yMax)/2, zMax);			// front
-	B[5].Set((xMax + xMin)/2, (yMin + yMax)/2, zMin);			// rear
+    VECTOR3 B[6];
+    B[0].set(xMax, (yMin + yMax)/2, (zMin + zMax)/2);			// right
+    B[1].set(xMin, (yMin + yMax)/2, (zMin + zMax)/2);			// left
+    B[2].set((xMax + xMin)/2, yMax, (zMin + zMax)/2);			// top
+    B[3].set((xMax + xMin)/2, yMin, (zMin + zMax)/2);			// bottom
+    B[4].set((xMax + xMin)/2, (yMin + yMax)/2, zMax);			// front
+    B[5].set((xMax + xMin)/2, (yMin + yMax)/2, zMin);			// rear
 
-	VECTOR3 bMinusA[6];
-	bMinusA[0].minus(B[0], A);
-	bMinusA[1].minus(B[1], A);
-	bMinusA[2].minus(B[2], A);
-	bMinusA[3].minus(B[3], A);
-	bMinusA[4].minus(B[4], A);
-	bMinusA[5].minus(B[5], A);
+    VECTOR3 bMinusA[6];
+    bMinusA[0] = B[0] - A;
+    bMinusA[1] = B[1] - A;
+    bMinusA[2] = B[2] - A;
+    bMinusA[3] = B[3] - A;
+    bMinusA[4] = B[4] - A;
+    bMinusA[5] = B[5] - A;
 
 	float nDotBMinusA[6];
 	nDotBMinusA[0] = dot(planeN[0], bMinusA[0]);
@@ -438,7 +428,7 @@ void RegularCartesianGrid::BoundaryIntersection(VECTOR3& intersectP,
 		thit = nDotBMinusA[0]/nDotc[0];
 		if(thit >= 0)
 		{
-			hitPoint.Set(A[0] + rayNormal[0]*thit, A[1] + rayNormal[1]*thit, A[2] + rayNormal[2]*thit);
+            hitPoint.set(A[0] + rayNormal[0]*thit, A[1] + rayNormal[1]*thit, A[2] + rayNormal[2]*thit);
 
 			// check whether this point is in the plane range
 			if((hitPoint[0] >= (xMax-EPS)) && (hitPoint[0] <= (xMax+EPS)) &&
@@ -461,7 +451,7 @@ void RegularCartesianGrid::BoundaryIntersection(VECTOR3& intersectP,
 		thit = nDotBMinusA[1]/nDotc[1];
 		if(thit >= 0)
 		{
-			hitPoint.Set(A[0] + rayNormal[0]*thit, A[1] + rayNormal[1]*thit, A[2] + rayNormal[2]*thit);
+            hitPoint.set(A[0] + rayNormal[0]*thit, A[1] + rayNormal[1]*thit, A[2] + rayNormal[2]*thit);
 
 			// check whether this point is in the plane range
 			if((hitPoint[0] >= (xMin-EPS)) && (hitPoint[0] <= (xMin+EPS)) &&
@@ -484,7 +474,7 @@ void RegularCartesianGrid::BoundaryIntersection(VECTOR3& intersectP,
 		thit = nDotBMinusA[2]/nDotc[2];
 		if(thit >= 0)
 		{
-			hitPoint.Set(A[0] + rayNormal[0]*thit, A[1] + rayNormal[1]*thit, A[2] + rayNormal[2]*thit);
+            hitPoint.set(A[0] + rayNormal[0]*thit, A[1] + rayNormal[1]*thit, A[2] + rayNormal[2]*thit);
 
 			// check whether this point is in the plane range
 			if((hitPoint[0] >= (xMin-EPS))	&& (hitPoint[0] <= (xMax+EPS))		&&
@@ -507,7 +497,7 @@ void RegularCartesianGrid::BoundaryIntersection(VECTOR3& intersectP,
 		thit = nDotBMinusA[3]/nDotc[3];
 		if(thit >= 0)
 		{
-			hitPoint.Set(A[0] + rayNormal[0]*thit, A[1] + rayNormal[1]*thit, A[2] + rayNormal[2]*thit);
+            hitPoint.set(A[0] + rayNormal[0]*thit, A[1] + rayNormal[1]*thit, A[2] + rayNormal[2]*thit);
 
 			// check whether this point is in the plane range
 			if( (hitPoint[0] >= (xMin-EPS))&& (hitPoint[0] <= (xMax+EPS)) &&
@@ -530,7 +520,7 @@ void RegularCartesianGrid::BoundaryIntersection(VECTOR3& intersectP,
 		thit = nDotBMinusA[4]/nDotc[4];
 		if(thit >= 0)
 		{
-			hitPoint.Set(A[0] + rayNormal[0]*thit, A[1] + rayNormal[1]*thit, A[2] + rayNormal[2]*thit);
+            hitPoint.set(A[0] + rayNormal[0]*thit, A[1] + rayNormal[1]*thit, A[2] + rayNormal[2]*thit);
 
 			// check whether this point is in the plane range
 			if( (hitPoint[0] >= (xMin-EPS)) && (hitPoint[0] <= (xMax+EPS)) &&
@@ -553,7 +543,7 @@ void RegularCartesianGrid::BoundaryIntersection(VECTOR3& intersectP,
 		thit = nDotBMinusA[5]/nDotc[5];
 		if(thit >= 0)
 		{
-			hitPoint.Set(A[0] + rayNormal[0]*thit, A[1] + rayNormal[1]*thit, A[2] + rayNormal[2]*thit);
+            hitPoint.set(A[0] + rayNormal[0]*thit, A[1] + rayNormal[1]*thit, A[2] + rayNormal[2]*thit);
 
 			// check whether this point is in the plane range
 			if( (hitPoint[0] >= (xMin-EPS)) && (hitPoint[0] <= (xMax+EPS)) &&
@@ -580,12 +570,12 @@ void RegularCartesianGrid::BoundaryIntersection(VECTOR3& intersectP,
 // constructor and deconstructor
 IrregularCartesianGrid::IrregularCartesianGrid():CartesianGrid()
 {
-	Reset();
+    Reset();
 }
 
 IrregularCartesianGrid::IrregularCartesianGrid(int xdim, int ydim, int zdim):CartesianGrid(xdim, ydim, zdim)
 {
-	Reset();
+    Reset();
 }
 
 IrregularCartesianGrid::~IrregularCartesianGrid()
@@ -593,7 +583,7 @@ IrregularCartesianGrid::~IrregularCartesianGrid()
 	delete[] m_pXSpacing;
 	delete[] m_pYSpacing;
 	delete[] m_pZSpacing;
-	Reset();
+    Reset();
 }
 
 void IrregularCartesianGrid::Reset(void)
@@ -602,6 +592,7 @@ void IrregularCartesianGrid::Reset(void)
 }
 */
 
+#if 0
 //////////////////////////////////////////////////////////////////////////
 //																		//
 //	definition of Irregular Grid Class									//
@@ -610,7 +601,7 @@ void IrregularCartesianGrid::Reset(void)
 // constructor and deconstructor
 IrregularGrid::IrregularGrid()
 {
-	Reset();
+    Reset();
 }
 
 IrregularGrid::IrregularGrid(int nodeNum, int tetraNum, 
@@ -618,7 +609,7 @@ IrregularGrid::IrregularGrid(int nodeNum, int tetraNum,
 							 CTetra* pTetra, 
 							 TVertex* pVertexTopo)
 {
-	Reset();
+    Reset();
 	m_nNodeNum = nodeNum;
 	m_nTetraNum = tetraNum;
 	m_pVertexGeom = pVertexGeom;
@@ -651,7 +642,7 @@ void IrregularGrid::Reset(void)
 	m_pVertexTopo = NULL;
 }
 
-void IrregularGrid::SetTetraInfoInit(bool bInit)
+void IrregularGrid::setTetraInfoInit(bool bInit)
 {
 	m_bTetraInfoInit = bInit;
 }
@@ -664,7 +655,7 @@ bool IrregularGrid::GetTetraInfoInit(void)
 //////////////////////////////////////////////////////////////////////////
 // set bounding box
 //////////////////////////////////////////////////////////////////////////
-void IrregularGrid::SetBoundary(VECTOR3& minB, VECTOR3& maxB)
+void IrregularGrid::setBoundary(VECTOR3& minB, VECTOR3& maxB)
 {
 	m_vMinBound = minB;
 	m_vMaxBound = maxB;
@@ -716,8 +707,8 @@ void IrregularGrid::ComputeBBox(void)
 {
 	VECTOR3 minB, maxB;
 
-	minB.Set(FLT_MAX, FLT_MAX, FLT_MAX);
-	maxB.Set(-FLT_MAX, -FLT_MAX, -FLT_MAX);
+    minB.set(FLT_MAX, FLT_MAX, FLT_MAX);
+    maxB.set(-FLT_MAX, -FLT_MAX, -FLT_MAX);
 
 	for(int iFor = 0; iFor < m_nNodeNum; iFor++)
 	{
@@ -740,7 +731,7 @@ void IrregularGrid::ComputeBBox(void)
 			maxB[2] = m_pVertexGeom[iFor].position[2];
 	}
 
-	SetBoundary(minB, maxB);
+    setBoundary(minB, maxB);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -754,7 +745,7 @@ bool IrregularGrid::at_phys(VECTOR3& pos)
 	if(!isInBBox(pos))
 		return false;
 
-	pInfo.Set(pos, pInfo.interpolant, -1, -1);
+    pInfo.set(pos, pInfo.interpolant, -1, -1);
 	if(phys_to_cell(pInfo) == 1)
 		return true;
 
@@ -798,13 +789,13 @@ bool IrregularGrid::Physical2NaturalCoord(VECTOR3& nCoord, VECTOR3& pCoord, int 
 	{
 		i = 0;
 		idx = m_pTetra[cellId].ver[i];
-		v.Set(m_pVertexGeom[idx].position[0], m_pVertexGeom[idx].position[1], m_pVertexGeom[idx].position[2]);	
+        v.set(m_pVertexGeom[idx].position[0], m_pVertexGeom[idx].position[1], m_pVertexGeom[idx].position[2]);
 
-		B.Set(pCoord[0] - v[0], pCoord[1] - v[1], pCoord[2] - v[2]);
+        B.set(pCoord[0] - v[0], pCoord[1] - v[1], pCoord[2] - v[2]);
 
 		if(GetTetraInfoInit() == false)
 		{
-			SetTetraInfoInit(true);
+            setTetraInfoInit(true);
 			if(m_pTetraInfo == NULL)
 				m_pTetraInfo = new TetraInfo[m_nTetraNum];
 
@@ -847,7 +838,7 @@ ReturnStatus IrregularGrid::at_vertex(int verIdx, VECTOR3& pos)
 	if((verIdx < 0) || (verIdx >= m_nNodeNum))
         return FAIL;
 
-	pos.Set(m_pVertexGeom[verIdx].position[0],
+    pos.set(m_pVertexGeom[verIdx].position[0],
 			m_pVertexGeom[verIdx].position[1],
 			m_pVertexGeom[verIdx].position[2]);
     return SUCCESS;
@@ -872,7 +863,7 @@ bool IrregularGrid::isInCell(PointInfo& pInfo, const int cellId)
 		return false;
 	}
 
-	pInfo.interpolant.Set(nCoord[0], nCoord[1], nCoord[2]);
+    pInfo.interpolant.set(nCoord[0], nCoord[1], nCoord[2]);
 	// four conditions to be in a tetra
 	// all three natural coordinates >= 0, and the sum of them <= 1
 	if( (nCoord[0] >= 0.0) && (nCoord[1] >= 0.0) && (nCoord[2] >= 0.0) && ((1.0 - nCoord[0] - nCoord[1] - nCoord[2]) >= 0))	
@@ -897,7 +888,7 @@ int IrregularGrid::nextTetra(PointInfo& pInfo, int tetraId)
 	int nextT;
 	VECTOR3 nCoord;
 /*
-	nCoord.Set(pInfo.interpolant[0], pInfo.interpolant[1], pInfo.interpolant[2]);
+    nCoord.set(pInfo.interpolant[0], pInfo.interpolant[1], pInfo.interpolant[2]);
 
 	if(nCoord[0] < 0.0)
 		nextT = m_pTetra[tetraId].tetra[1];
@@ -918,7 +909,7 @@ int IrregularGrid::nextTetra(PointInfo& pInfo, int tetraId)
 	 nextT=-1;
 //	VECTOR3 nCoord;
 
-	nCoord.Set(pInfo.interpolant[0], pInfo.interpolant[1], pInfo.interpolant[2]);
+    nCoord.set(pInfo.interpolant[0], pInfo.interpolant[1], pInfo.interpolant[2]);
 
 	float tmp_ncord[4];
 	tmp_ncord[0]=1.0 - nCoord[0] - nCoord[1] - nCoord[2];
@@ -1066,7 +1057,7 @@ double IrregularGrid::cellVolume(int cellId)
 	for(i = 0; i < 4; i++)
 	{
 		idx = m_pTetra[cellId].ver[i];
-		v[i].Set(m_pVertexGeom[idx].position[0], m_pVertexGeom[idx].position[1], m_pVertexGeom[idx].position[2]);	
+        v[i].set(m_pVertexGeom[idx].position[0], m_pVertexGeom[idx].position[1], m_pVertexGeom[idx].position[2]);
 	}
 
 	volume = (v[1][0] - v[0][0])*((v[2][1] - v[0][1])*(v[3][2] - v[0][2]) - (v[2][2] - v[0][2])*(v[3][1] - v[0][1])) + 
@@ -1093,7 +1084,7 @@ void IrregularGrid::PreGetP2NMatrix(MATRIX3& m, int cellId)
 	for(i = 1; i < 5; i++)
 	{
 		idx = m_pTetra[cellId].ver[i-1];
-		v[i].Set(m_pVertexGeom[idx].position[0], m_pVertexGeom[idx].position[1], m_pVertexGeom[idx].position[2]);	
+        v[i].set(m_pVertexGeom[idx].position[0], m_pVertexGeom[idx].position[1], m_pVertexGeom[idx].position[2]);
 	//	printf("%f %f %f \n",v[i].x(),v[i].y(),v[i].z());
 	}
 
@@ -1130,7 +1121,7 @@ void IrregularGrid::GetDimension(int& xdim, int& ydim, int& zdim)
     xdim = m_nNodeNum; ydim = m_nTetraNum; zdim = 0;
 
 }
-
+#endif
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 // with the newly intersection point, get the interpolated step size for this new point
@@ -1155,3 +1146,4 @@ float getStepSize(VECTOR3& p, VECTOR3& p1, VECTOR3& p2, float oldStepSize)
 	return newStepSize;
 }
 
+} // namespace edda

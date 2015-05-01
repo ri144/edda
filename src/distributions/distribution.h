@@ -74,7 +74,7 @@ template <class T>
 inline double cdf(const T& dist, double x)
 {
     std::cerr << "Generic computation of cdf: Not implemented" << std::endl;
-    throw new NotImplementedException();
+    throw NotImplementedException();
     return 0;
 }
 
