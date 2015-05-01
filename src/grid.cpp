@@ -10,8 +10,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #include <cfloat>
-#include "distributions/Distribution.h"
-#include "Grid.h"
+#include "distributions/distribution.h"
+#include "grid.h"
 
 
 using namespace std;

@@ -36,11 +36,11 @@ public:
     }
 
     // Get the length of the tuple.
-    inline int GetLen() { return N; }
+    inline int getLen() { return N; }
 
     // Get a pointer to the underlying data of the tuple.
-    inline T* Getvec() { return this->vec; }
-    inline const T* Getvec() const { return this->vec; }
+    inline T* getData() { return this->vec; }
+    inline const T* getData() const { return this->vec; }
 
     // Get a reference to the underlying data element of the tuple.
     // This works similarly to the way C++ STL containers work.  No
@@ -56,7 +56,7 @@ public:
 
     // Cast the tuple to the specified type, returning the result.
     template<typename TR>
-    Tuple<TR, N> Cast() const
+    Tuple<TR, N> cast() const
     {
         Tuple<TR, N> result;
         for (int i = 0; i < N; ++i)

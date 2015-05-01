@@ -1,8 +1,8 @@
 #include <iostream>
-#include "distributions/Gaussian.h"
-#include "distributions/Distribution.h"
-#include "Grid.h"
-#include "Interpolator.h"
+#include "distributions/gaussian.h"
+#include "distributions/distribution.h"
+#include "grid.h"
+#include "core/interpolator.h"
 
 using namespace std;
 using namespace edda;
