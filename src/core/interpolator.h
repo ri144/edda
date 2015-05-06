@@ -20,26 +20,26 @@ inline T baryInterp(const T &v1, const T &v2, const T &v3, const T &v4, double c
 }
 
 // linear interpolation
-template <class T>
-inline T lerp(const T &x, const T &y, const double ratio)
+template <class T, typename coeffT=float>
+inline T lerp(const T &x, const T &y, const coeffT ratio)
 {
     return x * (1. - ratio) + y * ratio;
 }
 
 // bilinear interpolation
-template <class T>
-inline T biLerp(const T &ll, const T &hl, const T &lh, const T &hh, const double coeff[2])
+template <class T, typename coeffT=float>
+inline T biLerp(const T &ll, const T &hl, const T &lh, const T &hh, const coeffT coeff[2])
 {
-    return Lerp(Lerp(ll, hl, coeff[0]), lerp(lh, hh, coeff[0]), coeff[1]);
+    return lerp(lerp(ll, hl, coeff[0]), lerp(lh, hh, coeff[0]), coeff[1]);
 }
 
 // trilinear interpolation
-template <class T>
+template <class T, typename coeffT=float>
 inline T triLerp(const T &lll, const T &hll, const T &lhl, const T &hhl,
-                 const T &llh, const T &hlh, const T &lhh, const T &hhh, const double coeff[3])
+                 const T &llh, const T &hlh, const T &lhh, const T &hhh, const coeffT coeff[3])
 {
-    return Lerp(BiLerp(lll, hll, lhl, hhl, coeff),
-                 BiLerp(llh, hlh, lhh, hhh, coeff),
+    return lerp(biLerp(lll, hll, lhl, hhl, coeff),
+                 biLerp(llh, hlh, lhh, hhh, coeff),
                  coeff[2]);
 }
 

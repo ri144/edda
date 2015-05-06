@@ -13,7 +13,9 @@
 
 #include <cassert>
 #include <vector>
+#include <boost/any.hpp>
 #include "common.h"
+
 //#include "Element.h"
 #include "core/interpolator.h"
 #include "vector_matrix.h"
@@ -89,20 +91,20 @@ public:
     virtual ReturnStatus getCellVertices(int cellId, std::vector<int>& vVertices) = 0;
 	// get the cell id and also interpolating coefficients for the given physical position
     virtual ReturnStatus phys_to_cell(PointInfo& pInfo) = 0;
-	// interpolation
-    virtual void interpolate(VECTOR3& nodeData, std::vector<VECTOR3>& vData, VECTOR3 coeff) = 0;
+    // interpolation: replaced by templated interpolator
+    // virtual void interpolate(std::vector<boost::any>& vData, VECTOR3 coeff, boost::any &output) = 0;
 	// the volume of cell
     virtual double cellVolume(int cellId) = 0;
 	// type of cell
-	virtual CellType GetCellType(void) = 0;
+    virtual CellType getCellType() = 0;
 	// get min and maximal boundary
-    virtual void Boundary(VECTOR3& minB, VECTOR3& maxB) = 0;
+    virtual void boundary(VECTOR3& minB, VECTOR3& maxB) = 0;
 	// set bounding box
-    virtual void SetBoundary(VECTOR3& minB, VECTOR3& maxB) = 0;
+    virtual void setBoundary(VECTOR3& minB, VECTOR3& maxB) = 0;
 	// get grid spacing in x,y,z dimensions
-	virtual void GetGridSpacing(int cellId, float& xspace, float& yspace, float& zspace) = 0;
+    virtual void getGridSpacing(int cellId, float& xspace, float& yspace, float& zspace) = 0;
 	// boundary intersection
-    virtual void BoundaryIntersection(VECTOR3& intersectP, VECTOR3& startP,
+    virtual void boundaryIntersection(VECTOR3& intersectP, VECTOR3& startP,
                       VECTOR3& endP,float* stepSize, float oldStepSize) = 0;
 	// whether the point is in the bounding box
     virtual bool isInBBox(VECTOR3& pos) = 0;
@@ -114,7 +116,7 @@ protected:
 	// reset parameters
 	virtual void Reset(void) = 0;
 	// compute bounding box
-	virtual void ComputeBBox(void) = 0;
+    virtual void computeBBox(void) = 0;
 	// whether in a cell
 	virtual bool isInCell(PointInfo& pInfo, const int cellId) = 0;
 };
@@ -132,7 +134,7 @@ public:
 	CartesianGrid();
 	~CartesianGrid();
 
-#if 0
+#if 1
 	// physical coordinate of vertex verIdx
     virtual ReturnStatus at_vertex(int verIdx, VECTOR3& pos) =0;
 	// whether the physical point is in the boundary
@@ -143,22 +145,22 @@ public:
     virtual ReturnStatus phys_to_cell(PointInfo& pInfo) =0;
 	
 	// interpolation
-    template <class T>
-    virtual void interpolate(T& nodeData, std::vector<T>& vData, VECTOR3 coeff) =0;
+    //template <class T>
+    //virtual void interpolate(std::vector<boost::any>& vData, VECTOR3 coeff, boost::any &output) = 0;
 	// the volume of cell
     virtual double cellVolume(int cellId) = 0;
 	// type of cell
-	virtual CellType GetCellType(void) = 0; 
+    virtual CellType getCellType() = 0;
 	// get min and maximal boundary
-	virtual void Boundary(VECTOR3& minB, VECTOR3& maxB) = 0; 
+    virtual void boundary(VECTOR3& minB, VECTOR3& maxB) = 0;
 	// set bounding box (includes ghost cells)
-	virtual void SetBoundary(VECTOR3& minB, VECTOR3& maxB) = 0; 
+    virtual void setBoundary(VECTOR3& minB, VECTOR3& maxB) = 0;
 	// set bounding box (does not include ghost cells)
-	virtual void SetRealBoundary(VECTOR4& minB, VECTOR4& maxB) = 0;
+    virtual void setRealBoundary(VECTOR4& minB, VECTOR4& maxB) = 0;
 	// get grid spacing in x,y,z dimensions
-	virtual void GetGridSpacing(int cellId, float& xspace, float& yspace, float& zspace) = 0; 
+    virtual void getGridSpacing(int cellId, float& xspace, float& yspace, float& zspace) = 0;
 	// boundary intersection
-	virtual void BoundaryIntersection(VECTOR3& intersectP, VECTOR3& startP, 
+    virtual void boundaryIntersection(VECTOR3& intersectP, VECTOR3& startP,
 					  VECTOR3& endP,float* stepSize, float oldStepSize) = 0; 
 #endif
 protected:
@@ -212,13 +214,12 @@ public:
     ReturnStatus getCellVertices(int cellId, std::vector<int>& vVertices);
 	// get the cell id and also interpolating coefficients for the given physical position
     ReturnStatus phys_to_cell(PointInfo& pInfo);
-	// interpolation
-    template<class T>
-    void interpolate(T &nodeData, std::vector<T>& vData, VECTOR3 coeff);
+    // interpolation
+    //virtual void interpolate(std::vector<boost::any>& vData, VECTOR3 coeff, boost::any output);
 	// the volume of cell
     double cellVolume(int cellId);
 	// cell type
-    CellType getCellType(void) {return CUBE;}
+    CellType getCellType() {return CUBE;}
 	// set bounding box (includes ghost cells)
     void setBoundary(VECTOR3& minB, VECTOR3& maxB);
 	// set bounding box (does not include ghost cells)
@@ -312,20 +313,20 @@ public:
 	~IrregularGrid();
 
 	// from virtual functions
-    virtual void Reset(void);
-    virtual void GetDimension(int& xdim, int& ydim, int& zdim) ;
+    virtual void reset(void);
+    virtual void getDimension(int& xdim, int& ydim, int& zdim) ;
     virtual ReturnStatus at_vertex(int verIdx, VECTOR3& pos);
     virtual bool at_phys(VECTOR3& pos);
     virtual ReturnStatus getCellVertices(int cellId, std::vector<int>& vVertices);
     virtual ReturnStatus phys_to_cell(PointInfo& pInfo);
-    virtual void interpolate(VECTOR3& nodeData, std::vector<VECTOR3>& vData, VECTOR3 coeff);
+    //virtual void interpolate(std::vector<boost::any>& vData, VECTOR3 coeff, boost::any &output);
     virtual double cellVolume(int cellId);
     virtual bool isInCell(PointInfo& pInfo, const int cellId);
-    virtual CellType GetCellType(void) {return TETRAHEDRON;}
+    virtual CellType getCellType() {return TETRAHEDRON;}
 
-    virtual void ComputeBBox(void);
-    virtual void SetBoundary(VECTOR3& minB, VECTOR3& maxB);
-    virtual void Boundary(VECTOR3& minB, VECTOR3& maxB);
+    virtual void computeBBox(void);
+    virtual void setBoundary(VECTOR3& minB, VECTOR3& maxB);
+    virtual void boundary(VECTOR3& minB, VECTOR3& maxB);
     virtual bool isInBBox(VECTOR3& pos);
     virtual bool isInRealBBox(VECTOR3& pos);
     virtual bool isInRealBBox(VECTOR3& pos, float t);

@@ -7,6 +7,7 @@
 #ifndef TUPLE_H_
 #define TUPLE_H_
 
+#include <cassert>
 #include <iostream>
 
 namespace edda {

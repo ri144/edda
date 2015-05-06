@@ -9,14 +9,17 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
+#include <iostream>
 #include <cfloat>
+#include "core/interpolator.h"
 #include "distributions/distribution.h"
 #include "grid.h"
 
-
 using namespace std;
 
+
 namespace edda {
+
 
 //////////////////////////////////////////////////////////////////////////
 //
@@ -55,14 +58,15 @@ void CartesianGrid::Reset()
 //////////////////////////////////////////////////////////////////////////
 
 // constructor and deconstructor
-RegularCartesianGrid::RegularCartesianGrid():CartesianGrid()
+RegularCartesianGrid::RegularCartesianGrid()
+    :CartesianGrid(0,0,0)
 {
   Reset();
 }
 
-RegularCartesianGrid::RegularCartesianGrid(int xdim, int ydim, int zdim):CartesianGrid(xdim, ydim, zdim)
+RegularCartesianGrid::RegularCartesianGrid(int xdim, int ydim, int zdim)
+    :CartesianGrid(xdim, ydim, zdim)
 {
-  Reset();
   VECTOR3 a(0,0,0);   // the default is from 0 to xdim-1, etc.
   VECTOR3 b(xdim-1, ydim-1, zdim-1);
   setBoundary(a, b);
@@ -300,10 +304,10 @@ ReturnStatus RegularCartesianGrid::phys_to_cell(PointInfo& pInfo)
   if (yidx == ycelldim()) yidx--;
   if (zidx == zcelldim()) zidx--;
 
-  int inCell = zidx * ycelldim() * xcelldim() + yidx * xcelldim() + xidx;
-
-  pInfo.inCell = inCell;
+  pInfo.inCell = zidx * ycelldim() * xcelldim() + yidx * xcelldim() + xidx;
   pInfo.interpolant.set(cx - (float)xidx, cy - (float)yidx, cz - (float)zidx);
+
+  //std::cout << pInfo.inCell << ',' << pInfo.interpolant << endl;
   return SUCCESS;
 }
 
@@ -315,24 +319,18 @@ ReturnStatus RegularCartesianGrid::phys_to_cell(PointInfo& pInfo)
 // output
 // vData:	output
 //////////////////////////////////////////////////////////////////////////
-template<class T>
-void RegularCartesianGrid::interpolate(T& nodeData,
-                       vector<T>& vData,
-                       VECTOR3 coeff)
+#if 0
+void RegularCartesianGrid::interpolate(vector<boost::any>& vData,
+                        VECTOR3 coeff,
+                        boost::any output
+                        )
 {
-  float fCoeff[3];
-  fCoeff[0] = coeff[0];
-  fCoeff[1] = coeff[1];
-  fCoeff[2] = coeff[2];
-
-  for(int iFor = 0; iFor < 3; iFor++)
-    {
-      if (vData.size() == 0) printf(" vData panic.\n"); 
-      nodeData[iFor] = TriLerp(vData[0][iFor], vData[1][iFor], vData[2][iFor], vData[3][iFor],
-			       vData[4][iFor], vData[5][iFor], vData[6][iFor], vData[7][iFor],
-			       fCoeff);
-    }
+  if (vData.size() == 0) printf(" vData panic.\n");
+  output = triLerp(vData[0], vData[1], vData[2], vData[3],
+                   vData[4], vData[5], vData[6], vData[7],
+                   coeff.getData());
 }
+#endif
 
 //////////////////////////////////////////////////////////////////////////
 // get tetra volume
