@@ -24,4 +24,5 @@ ReturnStatus write_nrrd_3d(const char *nrrd_fname, const char *raw_fname,
   return SUCCESS;
 }
 
+
 } // namespace edda

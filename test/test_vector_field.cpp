@@ -1,52 +1,45 @@
 #include <iostream>
+
 #include "distributions/gaussian.h"
 #include "distributions/distribution.h"
-#include "structured_grid_dataset.h"
+#include "dataset.h"
+#include "io/file_reader.h"
 #include "core/interpolator.h"
 #include "core/shared_ary.h"
+#include "data_array.h"
 
 using namespace std;
 using namespace edda;
 using namespace edda::dist;
 
-typedef Gaussian<float> fGaussian;
+typedef Gaussian<float> Gaussianf;
+typedef Vector3<Gaussianf> Gaussianf3;
 
-shared_ary<float> read_raw(string fname, int* dimension) {
-  FILE * fIn;
-  int totalNum;
-  float *pData;
+shared_ary<Gaussianf3> load_gaussian_dataset(string meanfile, string stdfile, int *dim) {
+  cout << "Loading..." << endl;
+  size_t len = dim[0]*dim[1]*dim[2];
+  shared_ary<Tuple3<float> > pMean3 = read_raw<Tuple3<float> >(meanfile, len);
+  shared_ary<Tuple3<float> > pStd3 = read_raw<Tuple3<float> >(stdfile, len);
 
-  cout << fname << endl;
-  fIn = fopen(fname.c_str(), "rb");
-  assert(fIn != NULL);
-  totalNum = dimension[0] * dimension[1] * dimension[2];
-  pData = new float[totalNum * 3];
-  fread(pData, sizeof(float), totalNum*3, fIn);
-  fclose(fIn);
-  return shared_ary<float>(pData, totalNum*3);
-}
-
-shared_ary<fGaussian> load_gaussian_dataset(string meanfile, string stdfile, int *dim) {
-  shared_ary<float> pMean = read_raw(meanfile, dim);
-  shared_ary<float> pStd = read_raw(stdfile, dim);
-  // build gaussian for x
-  int i,j,k,count=0;
-  shared_ary<fGaussian> data(new fGaussian[dim[0]*dim[1]*dim[2]], dim[0]*dim[1]*dim[2]);  // better to use managed array
-  for (k=0; k<dim[2]; k++)
-    for (j=0; j<dim[1]; j++)
-      for (i=0; i<dim[0]; i++)
-      {
-        data[count] = fGaussian(pMean[count], pStd[count]);
-        count++;
-      }
+  // Create Gaussian array
+  Gaussianf3 x;
+  shared_ary<Gaussianf3> data(new Gaussianf3[len], len);
+  int i;
+  for (i=0; i<len; i++)
+  {
+    data[i] = Gaussianf3(
+                Gaussianf(pMean3[i][0], pStd3[i][0]),
+                Gaussianf(pMean3[i][1], pStd3[i][1]),
+                Gaussianf(pMean3[i][2], pStd3[i][2]) );
+  }
   return data;
 }
 
 
 int main(int argc, char **argv) {
-    edda::ReturnStatus r;
+    ReturnStatus r;
 
-    cout << "isoProbField <mean file> <std file> <w> <h> <d>" << endl;
+    cout << "Input arguments: <mean file> <std file> <w> <h> <d>" << endl;
     if (argc<6)
         return -1;
     string meanfile, stdfile;
@@ -58,14 +51,14 @@ int main(int argc, char **argv) {
     dim[2] = atoi(argv[5]);
     cout << "dim: " << dim[0] << "," << dim[1] << "," << dim[2] << endl;
 
-    shared_ary<fGaussian> distData = load_gaussian_dataset(meanfile, stdfile, dim);
+    shared_ary<Gaussianf3> distData = load_gaussian_dataset(meanfile, stdfile, dim);
 
     /////////////////////////////////////
     cout << "value interpolation after sampling:" << endl;
 
-    StructuredGridDataset<float> dataset1 (
+    Dataset<VECTOR3> dataset1 (
                 new RegularCartesianGrid (dim[0], dim[1], dim[2]),
-                new SampledDataArray<fGaussian> (distData )
+                new SampledIndepTupleArray<Gaussianf3> (distData )
     );
 
     cout << "value interpolation after sampling:" << endl;
@@ -73,7 +66,7 @@ int main(int argc, char **argv) {
     float x;
     for (x=0; x<10; x+=.5)
     {
-        float sampled_val;
+        VECTOR3 sampled_val;
         r = dataset1.at_phys( VECTOR3(x, 10, 10), sampled_val );
         cout << sampled_val << " ";
     }
@@ -82,16 +75,18 @@ int main(int argc, char **argv) {
     /////////////////////////////////////
     cout << "value sampling after distribution interpolation :" << endl;
 
-    StructuredGridDataset<fGaussian> dataset2 (
+    Dataset<Gaussianf3> dataset2 (
                 new RegularCartesianGrid (dim[0], dim[1], dim[2]),
-                new GeneralDataArray<fGaussian> (distData) );
+                new GeneralDataArray<Gaussianf3> (distData) );
 
     for (x=0; x<10; x+=.5)
     {
-        fGaussian sampled_dist;
-        r = dataset2.at_phys( VECTOR3(x, 10, 10), sampled_dist );
-        sampled_dist.print();
-        cout << "\t" << sampled_dist.getSample() <<  endl;
+        Gaussianf3 sampled_vec_dist;
+        r = dataset2.at_phys( VECTOR3(x, 10, 10), sampled_vec_dist );
+        sampled_vec_dist[0].print(); cout << " ";
+        sampled_vec_dist[1].print(); cout << " ";
+        sampled_vec_dist[2].print(); cout << " ";
+        cout << "\t" << sampled_vec_dist[0].getSample() << " " << sampled_vec_dist[1].getSample() << " " << sampled_vec_dist[2].getSample() <<  endl;
     }
     cout << endl;
 

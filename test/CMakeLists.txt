@@ -7,3 +7,6 @@ target_link_libraries(test_gaussian edda)
 
 add_executable(test_vector_field test_vector_field.cpp)
 target_link_libraries(test_vector_field edda)
+
+add_executable(test_gaussian_scalar_field test_gaussian_scalar_field.cpp)
+target_link_libraries(test_gaussian_scalar_field edda)

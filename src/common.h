@@ -23,7 +23,7 @@ const double	EPS = 1.0E-6;
 // or use this C++11 alias
 template <typename T> using limits = std::numeric_limits<T>;
 
-enum ReturnStatus { SUCCESS = 0, FAIL };
+enum ReturnStatus { SUCCESS = 0, FAIL, OUT_OF_BOUND };
 
 #ifdef OS_WIN
 typedef long long int64_t;

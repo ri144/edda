@@ -20,6 +20,139 @@
 
 namespace edda{
 
+// Vectors are Tuples that have geometry concepts
+template <typename Real, int N>
+class Vector : public Tuple<Real, N>
+{
+    using Tuple<Real, N>::vec;
+public :
+    // constructor
+    Vector() {}
+
+    template <typename Real2>
+    bool operator ==(const Vector<Real2, N> &v) const {
+        for (int i=0; i<N; i++)
+        {
+            if (fabs(vec[0]-v(0)) >= limits<Real>::epsilon() )
+                return false;
+        }
+        return true;
+    }
+    // get magnitude
+    double getMag() const {
+        double r = 0;
+        for (int i=0; i<N; i++)
+            r += vec[i]*vec[i];
+        return sqrt(r);
+    }
+    // get the maximum value
+    Real getMax() const {
+        Real r = vec[0];
+        for (int i=1; i<N; i++)
+            r = std::max(r, vec[i]);
+        return r;
+    }
+    // normalize vector
+    void normalize()    {
+        double norm = getMag();
+        if (norm!=0) (*this) *= (1/norm);
+    }
+    Vector<Real, N> operator+=(double x) {
+        for (int i=0; i<N; i++)
+            vec[i]+=x;
+        return *this;
+    }
+    Vector<Real, N> operator*=(double x) {
+        for (int i=0; i<N; i++)
+            vec[i]*=x;
+        return *this;
+    }
+
+    // make sure all component<=1.0
+    void clamp()
+    {
+        for (int i = 0; i < this->getLen(); i++)
+            if (vec[i]>1.0) vec[i] = 1.0;
+    }
+};
+
+// Specialization of Vector3 for higher performance
+// This avoids for loops
+template <typename Real>
+class Vector<Real, 3> : public Tuple3<Real>
+{
+    using Tuple<Real, 3>::vec;
+
+public:
+    // constructor
+    Vector() {}
+    Vector(Real x, Real y, Real z) { set(x,y,z); }
+
+    inline void set(Real x, Real y, Real z) { vec[0]=x; vec[1]=y; vec[2]=z; }
+    inline Real x() const {return vec[0];}
+    inline Real y() const {return vec[1];}
+    inline Real z() const {return vec[2];}
+
+    template<typename Real2>
+    bool operator ==(const Vector<Real2, 3>& v) const {
+        return (fabs(vec[0]-v(0)) < limits<Real>::epsilon() &&
+                fabs(vec[1]-v(1)) < limits<Real>::epsilon() &&
+                fabs(vec[2]-v(2)) < limits<Real>::epsilon());
+    }
+    // get magnitude
+    double getMag() const { return sqrt(vec[0]*vec[0] + vec[1]*vec[1] + vec[2]*vec[2]);  }
+    // get the maximum value
+    Real getMax() const { return std::max(vec[0], std::max(vec[1], vec[2])); }
+    // normalize vector
+    void normalize()    { double norm = getMag(); if (norm!=0) (*this) *= (1/norm); }
+    Vector<Real, 3> operator+=(double x) { vec[0]+=x; vec[1]+=x; vec[2]+=x; return *this; }
+    Vector<Real, 3> operator*=(double x) { vec[0]*=x; vec[1]*=x; vec[2]*=x; return *this; }
+};
+
+// Specialization of Vector4 for higher performance
+template <typename Real>
+class Vector<Real, 4> : public Tuple4<Real>
+{
+    using Tuple<Real, 4>::vec;
+public :
+    // constructor
+    Vector() {}
+    Vector(Real x, Real y, Real z, Real w) { set(x,y,z,w); }
+
+    inline void set(Real x, Real y, Real z, Real w) { vec[0]=x; vec[1]=y; vec[2]=z; vec[3]=w; }
+    inline Real x() const {return vec[0];}
+    inline Real y() const {return vec[1];}
+    inline Real z() const {return vec[2];}
+    inline Real w() const {return vec[3];}
+
+    template <typename Real2>
+    bool operator ==(const Vector<Real2, 4>& v) const {
+        return (fabs(vec[0]-v(0)) < limits<Real>::epsilon() &&
+                fabs(vec[1]-v(1)) < limits<Real>::epsilon() &&
+                fabs(vec[2]-v(2)) < limits<Real>::epsilon() &&
+                fabs(vec[3]-v(3)) < limits<Real>::epsilon());
+    }
+    // get magnitude
+    double getMag() const { return sqrt(vec[0]*vec[0] + vec[1]*vec[1] + vec[2]*vec[2] + vec[3]*vec[3]);  }
+    // get the maximum value
+    Real getMax() const { return std::max(vec[0], std::max(vec[1], std::max(vec[2], vec[3]))); }
+    // normalize vector
+    void normalize()    { double norm = getMag(); if (norm!=0) (*this) *= (1/norm); }
+    Vector<Real, 4> operator+=(double x) { vec[0]+=x; vec[1]+=x; vec[2]+=x; vec[3]+=x; return *this; }
+    Vector<Real, 4> operator*=(double x) { vec[0]*=x; vec[1]*=x; vec[2]*=x; vec[3]+=x; return *this; }
+
+    // make sure all component<=1.0
+    void clamp()
+    {
+        for (int i = 0; i < this->getLen(); i++)
+            if (vec[i]>1.0) vec[i] = 1.0;
+    }
+};
+
+template<typename Real> using Vector3 = Vector<Real, 3> ;
+template<typename Real> using Vector4 = Vector<Real, 4> ;
+
+#if 0
 //////////////////////////////////////////////////////////////////////////
 /// for perfomrnace we implement each VECTOR with different lengths
 //	vector with 3 components
@@ -29,7 +162,9 @@ class Vector3 : public Tuple<Real, 3>
 {
     using Tuple<Real, 3>::vec;
 public :
-    Vector3() : Tuple<Real, 3>((Real)0) {}
+    Vector3() {}
+    template<typename T>
+        Vector3(const Tuple3<T> &tuple) {set(tuple[0], tuple[1], tuple[2]); }  // convert from Tuple
     Vector3(Real x, Real y, Real z) { set(x,y,z); }
 	// constructor
     inline Real x() const {return vec[0];}
@@ -69,9 +204,12 @@ class Vector4 : public Tuple<Real, 4>
 {
     using Tuple<Real, 4>::vec;
 public :
-    Vector4() : Tuple<Real, 4>((Real)0) {}
-    Vector4(Real x, Real y, Real z, Real w) { set(x,y,z,w); }
     // constructor
+    Vector4() {}
+    template <typename T>
+        Vector4(const Tuple4<T> &tuple) {set(tuple[0], tuple[1], tuple[2], tuple[3]); }  // convert from Tuple
+    Vector4(Real x, Real y, Real z, Real w) { set(x,y,z,w); }
+
     inline Real x() const {return vec[0];}
     inline Real y() const {return vec[1];}
     inline Real z() const {return vec[2];}
@@ -100,6 +238,8 @@ public :
             if (vec[i]>1.0) vec[i] = 1.0;
     }
 };
+
+#endif
 //************************
 // VECTOR operations
 //************************
@@ -123,7 +263,7 @@ template<typename Real> inline Real operator *(Vector3<Real>& v0, Vector3<Real>&
 {	return (v0[0] * v1[0] + v0[1] * v1[1] + v0[2] * v0[2]); }
 template<typename Real> inline Vector3<Real> operator *(float x0, const Vector3<Real> & v0)
 // return x0*v0
-{	return(Vector3<Real>(x0*v0[0], x0*v0[1], x0*v0[2])); }
+{	return(Vector3<Real>(v0[0]*x0, v0[1]*x0, v0[2]*x0)); }
 template<typename Real> inline Vector3<Real> operator *(const Vector3<Real> & v0, float x0)
 // return v0*x0 (= x0*v0)
 {	return(x0*v0); }

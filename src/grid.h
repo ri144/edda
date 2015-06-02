@@ -19,34 +19,23 @@
 //#include "Element.h"
 #include "core/interpolator.h"
 #include "vector_matrix.h"
+#include "data_array.h"
 //#include "Cell.h"
 
 namespace edda{
 
-enum CellType
-{
+enum CellType {
 	TRIANGLE,
 	CUBE,
 	POLYGON,
 	TETRAHEDRON
 };
 
-// define the cell type
-enum CellTopoType
-{
-	T0_CELL,					// vertex
-	T1_CELL,					// edge
-	T2_CELL,					// triangle, quarilateral
-	T3_CELL,					// tetrahedra, cube
-	T4_CELL						// hetrahedra, added by lijie
+enum InterpType {
+    TRI_LERP,
+    WEIGHTED_SUM
 };
 
-enum SliceType
-{
-	X_ALIGNED,
-	Y_ALIGNED,
-	Z_ALIGNED
-};
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -85,18 +74,20 @@ public:
     virtual ~Grid() {}
 	// physical coordinate of vertex verIdx
     virtual ReturnStatus at_vertex(int verIdx, VECTOR3& pos) = 0;
-    // check whether the physical point is defined
-    virtual bool at_phys(VECTOR3& pos) = 0;
+    // Return interpolation result
+    //virtual ReturnStatus at_phys(VECTOR3& pos, AbstractDataArray *array, boost::any output) = 0;
 	// get vertex list of a cell
     virtual ReturnStatus getCellVertices(int cellId, std::vector<int>& vVertices) = 0;
 	// get the cell id and also interpolating coefficients for the given physical position
     virtual ReturnStatus phys_to_cell(PointInfo& pInfo) = 0;
     // interpolation: replaced by templated interpolator
-    // virtual void interpolate(std::vector<boost::any>& vData, VECTOR3 coeff, boost::any &output) = 0;
+    //virtual ReturnStatus interpolate(std::vector<boost::any>& vData, VECTOR3 coeff, boost::any &output) = 0;
 	// the volume of cell
     virtual double cellVolume(int cellId) = 0;
 	// type of cell
     virtual CellType getCellType() = 0;
+    // how to interpolate
+    virtual InterpType getInterpType() = 0;
 	// get min and maximal boundary
     virtual void boundary(VECTOR3& minB, VECTOR3& maxB) = 0;
 	// set bounding box
@@ -137,8 +128,8 @@ public:
 #if 1
 	// physical coordinate of vertex verIdx
     virtual ReturnStatus at_vertex(int verIdx, VECTOR3& pos) =0;
-	// whether the physical point is in the boundary
-	virtual bool at_phys(VECTOR3& pos) =0; 
+    // Return interpolation result
+    //virtual bool at_phys(VECTOR3& pos) =0;
 	// get vertex list of a cell
     virtual ReturnStatus getCellVertices(int cellId, std::vector<int>& vVertices) =0;
 	// get the cell id and also interpolating coefficients for the given physical position
@@ -151,6 +142,8 @@ public:
     virtual double cellVolume(int cellId) = 0;
 	// type of cell
     virtual CellType getCellType() = 0;
+    // how to interpolate
+    virtual InterpType getInterpType() { return TRI_LERP; }
 	// get min and maximal boundary
     virtual void boundary(VECTOR3& minB, VECTOR3& maxB) = 0;
 	// set bounding box (includes ghost cells)
@@ -208,14 +201,12 @@ public:
 	~RegularCartesianGrid();
 	// physical coordinate of vertex verIdx
     ReturnStatus at_vertex(int verIdx, VECTOR3& pos);
-	// whether the physical point is in the boundary
-    bool at_phys(VECTOR3& pos);
+    // Return interpolation result
+    //ReturnStatus at_phys(VECTOR3& pos, AbstractDataArray *array, boost::any output) ;
 	// get vertex list of a cell
     ReturnStatus getCellVertices(int cellId, std::vector<int>& vVertices);
 	// get the cell id and also interpolating coefficients for the given physical position
     ReturnStatus phys_to_cell(PointInfo& pInfo);
-    // interpolation
-    //virtual void interpolate(std::vector<boost::any>& vData, VECTOR3 coeff, boost::any output);
 	// the volume of cell
     double cellVolume(int cellId);
 	// cell type
@@ -316,7 +307,7 @@ public:
     virtual void reset(void);
     virtual void getDimension(int& xdim, int& ydim, int& zdim) ;
     virtual ReturnStatus at_vertex(int verIdx, VECTOR3& pos);
-    virtual bool at_phys(VECTOR3& pos);
+    //virtual bool at_phys(VECTOR3& pos);
     virtual ReturnStatus getCellVertices(int cellId, std::vector<int>& vVertices);
     virtual ReturnStatus phys_to_cell(PointInfo& pInfo);
     //virtual void interpolate(std::vector<boost::any>& vData, VECTOR3 coeff, boost::any &output);

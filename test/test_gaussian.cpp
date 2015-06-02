@@ -30,7 +30,7 @@ int main(int argc, char* argv[]) {
 
   cout << "size of Gaussian: " << sizeof(g1) << endl;
 
-  edda::dist::Distribution<double> d1;
+  //edda::dist::Distribution<double> d1;
   //cdf(d1, 2); // generic function is currently not implmented
 
   return 0;

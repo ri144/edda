@@ -74,24 +74,24 @@ public:
     size_t getLength() { return array.getLength(); }
 };
 
-
-template<typename Dist, int dim>
-class SampledIndepVectorArray: public AbstractDataArray
+// For each element of the tuple, sample a value from the distribution.  Return a Tuple of float types (Can be VECTOR3 or VECTOR4)
+template<typename TupleType, typename OutputType = Vector<float, TupleType::LENGTH> >
+class SampledIndepTupleArray: public AbstractDataArray
 {
 protected:
-    shared_ary<Tuple<Dist, dim> > array;
+    shared_ary<TupleType > array;
 public:
-    SampledIndepVectorArray(shared_ary<Dist> array) { this->array = array; }
+    SampledIndepTupleArray(shared_ary<TupleType> array) { this->array = array; }
 
-    ~SampledIndepVectorArray() {  }
+    ~SampledIndepTupleArray() {  }
 
     boost::any getItem(size_t idx) {
-        Tuple<Dist, dim> &data_dist = array[idx];
-        Tuple<double, dim> data_sampled;
+        TupleType &data_dist = array[idx];
+        OutputType data_sampled;
 
-        // sample for each dimension
-        for (int i=0; i<dim; i++)
-            data_sampled[i] = data_dist.getSample();
+        // sample from each dimension
+        for (int i=0; i < TupleType::LENGTH; i++)
+            data_sampled[i] = data_dist[i].getSample();
 
         return boost::any ( data_sampled );
     }

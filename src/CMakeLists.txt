@@ -4,7 +4,9 @@
 
 file (GLOB_RECURSE SRC_FILES "*.cpp")
 
-add_library (${PROJECT_NAME} ${LIB_TYPE} ${SRC_FILES})
+file (GLOB_RECURSE HEADER_FILES "*.h")
+
+add_library (${PROJECT_NAME} ${LIB_TYPE} ${SRC_FILES} ${HEADER_FILES})
 
 set_target_properties (${PROJECT_NAME} PROPERTIES
     DEBUG_OUTPUT_NAME "${PROJECT_NAME}_d"

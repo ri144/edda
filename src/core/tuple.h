@@ -23,6 +23,9 @@ public:
     Tuple()
     {}
 
+    enum { LENGTH = N };
+    typedef int IsTuple;  // for compile-time generic type check
+
     // assign all values as scalar
     explicit Tuple(const T& scalar)
     {
@@ -70,24 +73,27 @@ public:
 };
 
 // Convenience use
-template<typename T> class Tuple1 : public Tuple<T, 1> {};
-template<typename T> class Tuple2 : public Tuple<T, 2> {
+template<typename T> struct Tuple1 : public Tuple<T, 1> {};
+template<typename T> struct Tuple2 : public Tuple<T, 2> {
+    Tuple2() {}
     explicit Tuple2(const T& x, const T& y)
         {this->vec[0] = x; this->vec[1] = y;}
 };
-template<typename T> class Tuple3 : public Tuple<T, 3> {
+template<typename T> struct Tuple3 : public Tuple<T, 3> {
+    Tuple3() {}
     explicit Tuple3(const T& x, const T& y, const T& z)
         {this->vec[0] = x; this->vec[1] = y; this->vec[2] = z;}
 };
-template<typename T> class Tuple4 : public Tuple<T, 4> {
+template<typename T> struct Tuple4 : public Tuple<T, 4> {
+    Tuple4() {}
     explicit Tuple4(const T& x, const T& y, const T& z, const T& w)
         {this->vec[0] = x; this->vec[1] = y; this->vec[2] = z; this->vec[3] = w;}
 };
-template<typename T> class Tuple5 : public Tuple<T, 5> {};
-template<typename T> class Tuple6 : public Tuple<T, 6> {};
-template<typename T> class Tuple7 : public Tuple<T, 7> {};
-template<typename T> class Tuple8 : public Tuple<T, 8> {};
-template<typename T> class Tuple9 : public Tuple<T, 9> {};
+template<typename T> struct Tuple5 : public Tuple<T, 5> {};
+template<typename T> struct Tuple6 : public Tuple<T, 6> {};
+template<typename T> struct Tuple7 : public Tuple<T, 7> {};
+template<typename T> struct Tuple8 : public Tuple<T, 8> {};
+template<typename T> struct Tuple9 : public Tuple<T, 9> {};
 
 
 // Output the contents of a tuple, mainly useful for debugging.

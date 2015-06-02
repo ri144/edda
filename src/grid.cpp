@@ -169,11 +169,14 @@ void RegularCartesianGrid::computeBBox(void)
 // for Cartesian grid, this funcion means whether the physical point is 
 // in the boundary
 //////////////////////////////////////////////////////////////////////////
-bool RegularCartesianGrid::at_phys(VECTOR3& pos)
+#if 0
+ReturnStatus at_phys(VECTOR3& pos, AbstractDataArray *array, boost::any output)
 {
 	// whether in the bounding box
-  return isInBBox(pos);
+    if (!isInBBox(pos))
+        return OUT_OF_BOUND;
 }
+#endif
 
 //////////////////////////////////////////////////////////////////////////
 // get vertex list of a cell
@@ -735,6 +738,7 @@ void IrregularGrid::ComputeBBox(void)
 //////////////////////////////////////////////////////////////////////////
 // whether the physical point is in the boundary
 //////////////////////////////////////////////////////////////////////////
+#if 0
 bool IrregularGrid::at_phys(VECTOR3& pos)
 {
 	PointInfo pInfo;
@@ -749,6 +753,7 @@ bool IrregularGrid::at_phys(VECTOR3& pos)
 
 	return false;
 }
+#endif
 
 //////////////////////////////////////////////////////////////////////////
 // get vertex list of a cell
