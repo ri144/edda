@@ -2,11 +2,19 @@
 # Use of this source code is governed by a MIT-style license that can be
 # found in the LICENSE file.
 
-add_executable(test_gaussian test_gaussian.cpp)
-target_link_libraries(test_gaussian edda)
+project (edda_test)
 
-add_executable(test_vector_field test_vector_field.cpp)
-target_link_libraries(test_vector_field edda)
 
-add_executable(test_gaussian_scalar_field test_gaussian_scalar_field.cpp)
-target_link_libraries(test_gaussian_scalar_field edda)
+set(TEST_SOURCES
+    test_gaussian.cpp
+    )
+
+foreach (test ${TEST_SOURCES})
+  get_filename_component(tname ${test} NAME_WE)
+  add_executable(${tname} ${test})
+  target_link_libraries(${tname} edda)
+
+  add_test(NAME ${tname}
+    COMMAND ${tname}
+    )
+endforeach (test)

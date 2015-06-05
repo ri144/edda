@@ -20,7 +20,7 @@ namespace dist {
 
 /// Defines a Gaussian distribution class
 template <class Real = float>
-class EDDA_EXPORT Gaussian {
+class EDDA_EXPORT Gaussian: public ContinuousDistribution {
     Real mean, std;
 public:
     typedef Real real_type;
@@ -31,29 +31,17 @@ public:
     ~Gaussian() {}
 
     // get probability (pdf)
-    inline Real getProb(const double x) const {
+    inline double getProb(const double x) const {
         if (std==0) {
             return (fabs(x-mean)< std::numeric_limits<Real>::epsilon() )? 1: 0;
         }
         return exp( -0.5 * (x-mean)*(x-mean) / std / std ) /
             (std* sqrt(2.*M_PI));
     }
-    inline Real getMean() const {
-        return mean;
-    }
-    inline Real getStd() const {
-        return std;
-    }
-    inline Real getVar() const {
-        return std*std;
-    }
-    inline Real getSample() const {
+    inline double getSample() const {
         return box_muller(mean, std);
     }
-    // for debugging
-    inline void print() {
-        std::cout <<  "<Gaussian: mean=" << mean << ", std=" << std << ">" ;
-    }
+
 
     // random variable +=
     inline Gaussian& operator+=(const Gaussian& rhs) {
@@ -78,15 +66,41 @@ public:
         std *= r;
         return *this;
     }
+
+    // additional functions
+    inline Real getMean() const {
+        return mean;
+    }
+    inline Real getStd() const {
+        return std;
+    }
+    inline Real getVar() const {
+        return std*std;
+    }
+
 };
+
+template <typename Real>
+std::ostream& operator<<(std::ostream& os, const Gaussian<Real>& dist)
+{
+    os <<  "<Gaussian: mean=" << dist.getMean() << ", std=" << dist.getStd() << ">" ;
+    return os;
+}
 
 // get CDF
 template <class Real>
-double cdf(const Gaussian<Real> &dist, double x)
+double getCdf(const Gaussian<Real> &dist, double x)
 {
     boost::math::normal_distribution<Real> normal (dist.getMean(), dist.getStd());
     return boost::math::cdf<>(normal, x);
 }
+
+template <class Real>
+double getMean(const Gaussian<Real> &dist)
+{
+    return dist.getMean();
+}
+
 
 }  // namespace dist
 }  // namespace edda

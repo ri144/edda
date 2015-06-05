@@ -6,6 +6,7 @@
 #define COMMON_H_
 
 #include <cstdint>
+#include <type_traits>
 
 #include "edda.h"
 
@@ -19,10 +20,11 @@ const double PIBY2 = 1.57079632679489661923;  // PI / 2
 
 // Do not use this in the future:
 const double	EPS = 1.0E-6;
-// Instead call this function:  std::numeric_limits<T>::epsilon()
-// or use this C++11 alias
+// Instead you should call this function:  std::numeric_limits<T>::epsilon()
+// or use the following C++11 alias
 template <typename T> using limits = std::numeric_limits<T>;
 
+// You can add more for needed return status
 enum ReturnStatus { SUCCESS = 0, FAIL, OUT_OF_BOUND };
 
 #ifdef OS_WIN
@@ -31,6 +33,9 @@ typedef long long int64_t;
 
 // May not be needed in the release version but just keep here for now.
 class NotImplementedException {};
+
+// This is useful to constrain what types are applicable for generic functions or classes
+#define ENABLE_IF_BASE_OF(B, T) typename std::enable_if<std::is_base_of<B, T>::value>::type* = nullptr
 
 }  // namespace edda
 

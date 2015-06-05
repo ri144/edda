@@ -83,9 +83,7 @@ int main(int argc, char **argv) {
     {
         Gaussianf3 sampled_vec_dist;
         r = dataset2.at_phys( VECTOR3(x, 10, 10), sampled_vec_dist );
-        sampled_vec_dist[0].print(); cout << " ";
-        sampled_vec_dist[1].print(); cout << " ";
-        sampled_vec_dist[2].print(); cout << " ";
+        cout << sampled_vec_dist << " ";
         cout << "\t" << sampled_vec_dist[0].getSample() << " " << sampled_vec_dist[1].getSample() << " " << sampled_vec_dist[2].getSample() <<  endl;
     }
     cout << endl;

@@ -2,5 +2,17 @@
 # Use of this source code is governed by a MIT-style license that can be
 # found in the LICENSE file.
 
-add_executable (iso_prob_field iso_prob_field.cpp)
-target_link_libraries (iso_prob_field edda)
+set(sources
+	loadGaussianScalarField
+	loadGaussianVectorField
+	genProbIsoField
+	
+)
+
+
+foreach (file ${sources})
+    get_filename_component(name ${file} NAME_WE)
+    add_executable ( ${name} ${file} )
+    target_link_libraries ( ${name} edda )
+endforeach (test)
+

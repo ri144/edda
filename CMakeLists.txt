@@ -37,7 +37,7 @@ else ()
 endif ()
 
 option (EDDA_BUILD_TESTS "Build the test programs." OFF)
-option (EDDA_BUILD_EXAMPLES "Build the example programs." OFF)
+option (EDDA_BUILD_EXAMPLES "Build the example programs." ON)
 
 # Load settings for the boost project.
 find_package (Boost REQUIRED)
