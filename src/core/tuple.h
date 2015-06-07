@@ -39,6 +39,14 @@ public:
             this->vec[i] = init[i];
     }
 
+    // assign Tuple
+    template<typename U>
+    Tuple(const Tuple<U, N>& v)
+    {
+        for (int i = 0; i < N; ++i)
+            this->vec[i] = v[i];
+    }
+
     // Get the length of the tuple.
     inline int getLen() { return N; }
 

@@ -6,7 +6,7 @@ set(sources
 	loadGaussianScalarField
 	loadGaussianVectorField
 	genProbIsoField
-	
+	streamlineGaussian
 )
 
 
@@ -14,5 +14,5 @@ foreach (file ${sources})
     get_filename_component(name ${file} NAME_WE)
     add_executable ( ${name} ${file} )
     target_link_libraries ( ${name} edda )
-endforeach (test)
+endforeach ()
 

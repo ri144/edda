@@ -59,7 +59,7 @@ public:
     size_t getLength() { return array.getLength(); }
 };
 
-template<typename Dist>
+template<typename Dist, ENABLE_IF_BASE_OF(dist::Distribution, Dist)>
 class SampledDataArray: public AbstractDataArray
 {
 protected:

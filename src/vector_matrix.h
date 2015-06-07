@@ -29,6 +29,14 @@ public :
     // constructor
     Vector() {}
 
+    // assign Vector
+    template<typename U>
+    Vector(const Vector<U, N>& v)
+    {
+        for (int i = 0; i < N; ++i)
+            this->vec[i] = v[i];
+    }
+
     template <typename Real2>
     bool operator ==(const Vector<Real2, N> &v) const {
         for (int i=0; i<N; i++)
@@ -87,6 +95,8 @@ public:
     // constructor
     Vector() {}
     Vector(Real x, Real y, Real z) { set(x,y,z); }
+    // assign Vector
+    template<typename U> Vector(const Vector<U, 3>& v) { set(v.x(), v.y(), v.z()); }
 
     inline void set(Real x, Real y, Real z) { vec[0]=x; vec[1]=y; vec[2]=z; }
     inline Real x() const {return vec[0];}
@@ -105,8 +115,10 @@ public:
     Real getMax() const { return std::max(vec[0], std::max(vec[1], vec[2])); }
     // normalize vector
     void normalize()    { double norm = getMag(); if (norm!=0) (*this) *= (1/norm); }
-    Vector<Real, 3> operator+=(double x) { vec[0]+=x; vec[1]+=x; vec[2]+=x; return *this; }
-    Vector<Real, 3> operator*=(double x) { vec[0]*=x; vec[1]*=x; vec[2]*=x; return *this; }
+    Vector<Real, 3> operator+=(Real x) { vec[0]+=x; vec[1]+=x; vec[2]+=x; return *this; }
+    Vector<Real, 3> operator*=(Real x) { vec[0]*=x; vec[1]*=x; vec[2]*=x; return *this; }
+    Vector<Real, 3> operator+=(Vector<Real, 3> x) { vec[0]+=x[0]; vec[1]+=x[1]; vec[2]+=x[2]; return *this; }
+    Vector<Real, 3> operator*=(Vector<Real, 3> x) { vec[0]*=x[0]; vec[1]*=x[1]; vec[2]*=x[2]; return *this; }
 };
 
 // Specialization of Vector4 for higher performance
@@ -118,6 +130,8 @@ public :
     // constructor
     Vector() {}
     Vector(Real x, Real y, Real z, Real w) { set(x,y,z,w); }
+    // assign Vector
+    template<typename U> Vector(const Vector<U, 4>& v) { set(v.x(), v.y(), v.z(), v.w()); }
 
     inline void set(Real x, Real y, Real z, Real w) { vec[0]=x; vec[1]=y; vec[2]=z; vec[3]=w; }
     inline Real x() const {return vec[0];}
@@ -138,8 +152,10 @@ public :
     Real getMax() const { return std::max(vec[0], std::max(vec[1], std::max(vec[2], vec[3]))); }
     // normalize vector
     void normalize()    { double norm = getMag(); if (norm!=0) (*this) *= (1/norm); }
-    Vector<Real, 4> operator+=(double x) { vec[0]+=x; vec[1]+=x; vec[2]+=x; vec[3]+=x; return *this; }
-    Vector<Real, 4> operator*=(double x) { vec[0]*=x; vec[1]*=x; vec[2]*=x; vec[3]+=x; return *this; }
+    Vector<Real, 4> operator+=(Real x) { vec[0]+=x; vec[1]+=x; vec[2]+=x; vec[3]+=x; return *this; }
+    Vector<Real, 4> operator*=(Real x) { vec[0]*=x; vec[1]*=x; vec[2]*=x; vec[3]+=x; return *this; }
+    Vector<Real, 4> operator+=(Vector<Real, 4> x) { vec[0]+=x[0]; vec[1]+=x[1]; vec[2]+=x[2]; vec[3]+=x[3]; return *this; }
+    Vector<Real, 4> operator*=(Vector<Real, 4> x) { vec[0]*=x[0]; vec[1]*=x[1]; vec[2]*=x[2]; vec[3]+=x[3]; return *this; }
 
     // make sure all component<=1.0
     void clamp()
@@ -152,7 +168,7 @@ public :
 template<typename Real> using Vector3 = Vector<Real, 3> ;
 template<typename Real> using Vector4 = Vector<Real, 4> ;
 
-#if 0
+#if 0 // TODO
 //////////////////////////////////////////////////////////////////////////
 /// for perfomrnace we implement each VECTOR with different lengths
 //	vector with 3 components

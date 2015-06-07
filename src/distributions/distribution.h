@@ -14,6 +14,7 @@
 
 #include "common.h"
 #include "edda_export.h"
+#include "vector_matrix.h"
 
 namespace edda {
 namespace dist {
@@ -95,6 +96,14 @@ double getMean(const T &dist)
     return 0;
 }
 
+template <class T, int N, ENABLE_IF_BASE_OF(Distribution, T) >
+inline Vector<double, N> getMean(const Tuple<T, N> &dist)
+{
+    Vector<double,N> result;
+    for (int i=0; i<N; i++)
+        result[i] = getMean(dist[i]);
+    return result;
+}
 
 }  // namespace dist
 }  // namespace edda

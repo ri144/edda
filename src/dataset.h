@@ -10,17 +10,18 @@
 #include <memory>
 #include "grid.h"
 #include "data_array.h"
+#include <distributions/distribution.h>
 
 namespace edda {
 
 
 
-template <typename T > // Return type
+
+template <typename T>  // Return type of at_phys
 class Dataset {
 protected:
-    Grid *pGrid;                      // grid
+    Grid *pGrid;
     AbstractDataArray *pArray;
-
 public:
     Dataset(Grid *pGrid, AbstractDataArray *pArray) {
         this->pGrid = pGrid;
@@ -34,7 +35,7 @@ public:
     Grid *getGrid() { return pGrid; }
     AbstractDataArray *getArray () {return pArray; }
 
-    ReturnStatus at_phys(VECTOR3 pos, T &output) {
+    ReturnStatus at_phys(const VECTOR3 &pos, T &output) const {
         ReturnStatus r;
         switch (pGrid->getInterpType())
         {
@@ -42,7 +43,7 @@ public:
         {
 
             PointInfo pinfo;
-            pinfo.phyCoord = pos;
+            pinfo.phyCoord = pos ;
             r = pGrid->phys_to_cell(pinfo);
             if (r != SUCCESS)
                 return r;
@@ -63,8 +64,8 @@ public:
                              pinfo.interpolant.getData());
             break;
         }
-        case InterpType::WEIGHTED_SUM:
-
+        default:
+            throw NotImplementedException();
             break;
         }
 
@@ -74,6 +75,14 @@ public:
 };
 
 
+// Make creating a shared pointer of Dataset easier
+template <typename T>  // Return type of at_phys
+inline std::shared_ptr< Dataset<T> >
+make_Dataset(Grid *pGrid, AbstractDataArray *pArray)
+{
+    return std::shared_ptr< Dataset<T> >(
+                new Dataset<T> (pGrid, pArray) );
+}
 
 } // namespace edda
 
