@@ -68,14 +68,14 @@ int main(int argc, char **argv) {
 
     Dataset<Gaussianf> dataset2 (
                 new RegularCartesianGrid (dim[0], dim[1], dim[2]),
-                new GeneralDataArray<Gaussianf> (distData)
+                new GenericDataArray<Gaussianf> (distData)
             );
 
     for (x=0; x<10; x+=.5)
     {
         Gaussianf sampled_dist;
         r = dataset2.at_phys( VECTOR3(x, 10, 10), sampled_dist );
-        cout << sampled_dist <<  "\t" << sampled_dist.getSample() <<  endl;
+        cout << sampled_dist <<  "\t" << dist::getSample(sampled_dist) <<  endl;
     }
     cout << endl;
 

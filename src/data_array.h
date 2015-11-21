@@ -45,21 +45,21 @@ public:
 
 /////////////////////////////////////////////////////////
 template<typename T>
-class GeneralDataArray: public AbstractDataArray
+class DataArray: public AbstractDataArray
 {
 protected:
     shared_ary<T> array;
 public:
-    GeneralDataArray(shared_ary<T> array) { this->array = array; }
+    DataArray(shared_ary<T> array) { this->array = array; }
 
-    ~GeneralDataArray() { }
+    virtual ~DataArray() { }
 
-    boost::any getItem(size_t idx) { return boost::any( array[idx] );  }
+    virtual boost::any getItem(size_t idx) { return boost::any( array[idx] );  }
 
-    size_t getLength() { return array.getLength(); }
+    virtual size_t getLength() { return array.getLength(); }
 };
 
-template<typename Dist, ENABLE_IF_BASE_OF(dist::Distribution, Dist)>
+template<typename Dist, ENABLE_IF_BASE_OF(Dist, dist::Distribution)>
 class SampledDataArray: public AbstractDataArray
 {
 protected:
@@ -67,11 +67,11 @@ protected:
 public:
     SampledDataArray(shared_ary<Dist> array) { this->array = array; }
 
-    ~SampledDataArray() { }
+    virtual ~SampledDataArray() { }
 
-    boost::any getItem(size_t idx) { return boost::any ( array[idx].getSample() );    }
+    virtual boost::any getItem(size_t idx) { return boost::any ( dist::getSample(array[idx]) );    }
 
-    size_t getLength() { return array.getLength(); }
+    virtual size_t getLength() { return array.getLength(); }
 };
 
 // For each element of the tuple, sample a value from the distribution.  Return a Tuple of float types (Can be VECTOR3 or VECTOR4)
@@ -83,20 +83,20 @@ protected:
 public:
     SampledIndepTupleArray(shared_ary<TupleType> array) { this->array = array; }
 
-    ~SampledIndepTupleArray() {  }
+    virtual ~SampledIndepTupleArray() {  }
 
-    boost::any getItem(size_t idx) {
+    virtual boost::any getItem(size_t idx) {
         TupleType &data_dist = array[idx];
         OutputType data_sampled;
 
         // sample from each dimension
         for (int i=0; i < TupleType::LENGTH; i++)
-            data_sampled[i] = data_dist[i].getSample();
+            data_sampled[i] = dist::getSample(data_dist[i]);
 
         return boost::any ( data_sampled );
     }
 
-    size_t getLength() { return array.getLength(); }
+    virtual size_t getLength() { return array.getLength(); }
 };
 #if 0
 /////////////////////////////////////////////////////////

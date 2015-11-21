@@ -18,89 +18,106 @@
 namespace edda {
 namespace dist {
 
-/// Defines a Gaussian distribution class
+/// Defines a simple Gaussian distribution storage
+/// Advanced storage allows storing mean and variance in different ways
 template <class Real = float>
-class EDDA_EXPORT Gaussian: public ContinuousDistribution {
-    Real mean, std;
+class EDDA_EXPORT SimpleGaussianStorage {
+  Real mean_, var_;
 public:
-    typedef Real real_type;
-    // construction
-    explicit Gaussian(): mean(0), std(1) {}
-    explicit Gaussian(Real m, Real s): mean(m), std(s) {}
-
-    ~Gaussian() {}
-
-    // get probability (pdf)
-    inline double getProb(const double x) const {
-        if (std==0) {
-            return (fabs(x-mean)< std::numeric_limits<Real>::epsilon() )? 1: 0;
-        }
-        return exp( -0.5 * (x-mean)*(x-mean) / std / std ) /
-            (std* sqrt(2.*M_PI));
-    }
-    inline double getSample() const {
-        return box_muller(mean, std);
-    }
-
-
-    // random variable +=
-    inline Gaussian& operator+=(const Gaussian& rhs) {
-        mean += rhs.mean;
-        std = sqrt(std*std + rhs.std*rhs.std);
-        return *this;
-    }
-    // random variable -=
-    inline Gaussian& operator-=(const Gaussian& rhs) {
-        mean -= rhs.mean;
-        std = sqrt(std*std + rhs.std*rhs.std);
-        return *this;
-    }
-    // // random variable +=
-    inline Gaussian& operator+=(const double r) {
-        mean += r;
-        return *this;
-    }
-    // random variable *=
-    inline Gaussian& operator*=(const double r) {
-        mean *= r;
-        std *= r;
-        return *this;
-    }
-
-    // additional functions
-    inline Real getMean() const {
-        return mean;
-    }
-    inline Real getStd() const {
-        return std;
-    }
-    inline Real getVar() const {
-        return std*std;
-    }
-
+  inline Real &mean() { return mean_; }
+  inline Real &var() { return var_; }
+  inline const Real &mean() const { return mean_; }
+  inline const Real &var() const { return var_; }
 };
 
-template <typename Real>
-std::ostream& operator<<(std::ostream& os, const Gaussian<Real>& dist)
+/// Defines a Gaussian class
+template<typename Real = float, class Storage=SimpleGaussianStorage<Real>>
+class EDDA_EXPORT Gaussian: public ContinuousDistribution {
+  Storage storage;
+public:
+  // constructor
+  explicit Gaussian(): Gaussian(0, 1.) {}
+  explicit Gaussian(Real m, Real var) { storage.mean()=m; storage.var()=var; }
+
+  // The implementation of a Gaussian class should have two functions:
+  inline Real &mean() { return storage.mean(); }
+  inline Real &var() { return storage.var(); }
+  inline const Real &mean() const { return storage.mean(); }
+  inline const Real &var() const { return storage.var(); }
+};
+
+/// Below defines Gaussian related generic functions
+template<typename Real, class Storage>
+inline double getMean(const Gaussian<Real, Storage> &dist)
 {
-    os <<  "<Gaussian: mean=" << dist.getMean() << ", std=" << dist.getStd() << ">" ;
+    return dist.mean();
+}
+
+// get variance
+template<typename Real, class Storage>
+inline double getVar(const Gaussian<Real, Storage> &dist)
+{
+    return (double) dist.var();
+}
+
+// get pdf of x
+template<typename Real, class Storage>
+inline double getPdf(const Gaussian<Real, Storage> &dist, const double x)
+{
+    if (dist.var()==0) {
+        return ( fabs(x-dist.mean()) < EPS )? 1.: 0;
+    }
+    return exp( -0.5 * pow(x-dist.mean(), 2) / dist.var() ) / sqrt(2. * dist.var() * M_PI);
+}
+
+template<typename Real, class Storage>
+inline double getSample(const Gaussian<Real, Storage> &dist)
+{
+    return box_muller((double)dist.mean(), sqrt(dist.var()) );
+}
+
+// random variable with unary -
+template<typename Real, class Storage>
+inline Gaussian<Real, Storage>& operator-(Gaussian<Real, Storage> &x)
+{
+    x.mean() = -x.mean();
+    return x;
+}
+// random variable +=
+template<typename Real, class Storage>
+inline Gaussian<Real, Storage>& operator+=(Gaussian<Real, Storage> &x, const Gaussian<Real, Storage>& rhs) {
+    x.mean() += rhs.mean();
+    x.var() += rhs.var();
+    return x;
+}
+// random variable += with scalar
+template<typename Real, class Storage>
+inline Gaussian<Real, Storage>& operator+=(Gaussian<Real, Storage> &x, const double r) {
+    x.mean() += r;
+    return x;
+}
+// random variable *= with scalar
+template<typename Real, class Storage>
+inline Gaussian<Real, Storage>& operator*=(Gaussian<Real, Storage> &x, const double r) {
+    x.mean() *= r;
+    x.var() *= r*r;
+    return x;
+}
+// get CDF
+template<typename Real, class Storage>
+inline double getCdf(const Gaussian<Real, Storage> &dist, double x)
+{
+  // TODO: need to implement on our own
+  boost::math::normal_distribution<double> normal (dist.mean(), sqrt(dist.var()) );
+  return boost::math::cdf<>(normal, x);
+}
+// output
+template<typename Real, class Storage>
+std::ostream& operator<<(std::ostream& os, const Gaussian<Real, Storage>& dist)
+{
+    os <<  "<Gaussian: mean=" << getMean(dist) << ", variance=" << getVar(dist) << ">" ;
     return os;
 }
-
-// get CDF
-template <class Real>
-double getCdf(const Gaussian<Real> &dist, double x)
-{
-    boost::math::normal_distribution<Real> normal (dist.getMean(), dist.getStd());
-    return boost::math::cdf<>(normal, x);
-}
-
-template <class Real>
-double getMean(const Gaussian<Real> &dist)
-{
-    return dist.getMean();
-}
-
 
 }  // namespace dist
 }  // namespace edda

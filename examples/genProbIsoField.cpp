@@ -71,7 +71,7 @@ int main(int argc, char **argv) {
   for (k=0; k<dim[2]; k++)
     for (j=0; j<dim[1]; j++)
       for (i=0; i<dim[0]; i++) {
-        probField[count] = pDistData[count].getProb(iso);
+        probField[count] = dist::getPdf(pDistData[count], iso);
         count++;
       }
   FILE *fp = fopen("result.raw", "wb");

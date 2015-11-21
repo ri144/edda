@@ -2,8 +2,8 @@
 // Use of this source code is governed by a MIT-style license that can be
 // found in the LICENSE file.
 
-#ifndef STRUCTURED_GRID_DATASET_H_
-#define STRUCTURED_GRID_DATASET_H_
+#ifndef DATASET_H_
+#define DATASET_H_
 
 #include <vector>
 #include <iostream>
@@ -13,9 +13,6 @@
 #include <distributions/distribution.h>
 
 namespace edda {
-
-
-
 
 template <typename T>  // Return type of at_phys
 class Dataset {
@@ -75,7 +72,7 @@ public:
 };
 
 
-// Make creating a shared pointer of Dataset easier
+// create a shared pointer of Dataset
 template <typename T>  // Return type of at_phys
 inline std::shared_ptr< Dataset<T> >
 make_Dataset(Grid *pGrid, AbstractDataArray *pArray)

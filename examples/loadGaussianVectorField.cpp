@@ -77,14 +77,16 @@ int main(int argc, char **argv) {
 
     Dataset<Gaussianf3> dataset2 (
                 new RegularCartesianGrid (dim[0], dim[1], dim[2]),
-                new GeneralDataArray<Gaussianf3> (distData) );
+                new GenericDataArray<Gaussianf3> (distData) );
 
     for (x=0; x<10; x+=.5)
     {
         Gaussianf3 sampled_vec_dist;
         r = dataset2.at_phys( VECTOR3(x, 10, 10), sampled_vec_dist );
         cout << sampled_vec_dist << " ";
-        cout << "\t" << sampled_vec_dist[0].getSample() << " " << sampled_vec_dist[1].getSample() << " " << sampled_vec_dist[2].getSample() <<  endl;
+        cout << "\t" << dist::getSample(sampled_vec_dist[0]) << " "
+                     << dist::getSample(sampled_vec_dist[1]) << " "
+                     << dist::getSample(sampled_vec_dist[2]) <<  endl;
     }
     cout << endl;
 

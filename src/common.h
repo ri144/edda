@@ -16,12 +16,11 @@ namespace edda {
 
 const double DEG_TO_RAD = 0.0174532925199432957692;  // PI / 180
 const double RAD_TO_DEG = 57.2957795130823208768;  // 180 / PI
-const double PIBY2 = 1.57079632679489661923;  // PI / 2
+const double PI_BY_2    = 1.57079632679489661923;  // PI / 2
 
-// Do not use this in the future:
-const double	EPS = 1.0E-6;
-// Instead you should call this function:  std::numeric_limits<T>::epsilon()
-// or use the following C++11 alias
+const double EPS        = 1.0E-6;
+
+// numeric limits:
 template <typename T> using limits = std::numeric_limits<T>;
 
 // You can add more for needed return status
@@ -35,7 +34,7 @@ typedef long long int64_t;
 class NotImplementedException {};
 
 // This is useful to constrain what types are applicable for generic functions or classes
-#define ENABLE_IF_BASE_OF(B, T) typename std::enable_if<std::is_base_of<B, T>::value>::type* = nullptr
+#define ENABLE_IF_BASE_OF(T, B) typename std::enable_if<std::is_base_of<B, T>::value>::type* = nullptr
 
 }  // namespace edda
 

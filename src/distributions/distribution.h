@@ -23,21 +23,7 @@ namespace dist {
 // The inheritence is useful in classifying distribution types useful in algorithm implementation
 
 class EDDA_EXPORT Distribution {
-    void error() const {std::cerr << "Functions in this class should be overloaded."; throw NotImplementedException(); }
-public:
-    // get probability, either pdf (continuous) or pmf (discrete)
-    template<typename Real>
-    inline double getProb(const Real x) const { error(); return 0; }
-    inline double getSample() const { error(); return 0; }
-
-    // random variable +=
-    inline Distribution& operator+=(const Distribution& rhs) { error(); return *this; }
-    // random variable -=
-    inline Distribution& operator-=(const Distribution& rhs) { error(); return *this; }
-    // // random variable +=
-    inline Distribution& operator+=(const double r) { error(); return *this;  }
-    // random variable *=
-    inline Distribution& operator*=(const double r) { error(); return *this; }
+    void NotImpError() const {std::cerr << "Functions in this class should be overloaded."; throw NotImplementedException(); }
 };
 
 class EDDA_EXPORT ContinuousDistribution : public Distribution{
@@ -49,37 +35,36 @@ class EDDA_EXPORT DiscreteDistribution : public Distribution{
 // Here are generic functions that can be reused by new distributions if not
 // implemented.
 
+// random variable -=
+template<class T, ENABLE_IF_BASE_OF(T, Distribution) >
+inline T operator-=(const T& lhs, const T& rhs) {
+    T h(lhs);
+    return h += (-rhs);
+}
+
 // random variable +
-template<class T, ENABLE_IF_BASE_OF(Distribution, T) >
+template<class T, ENABLE_IF_BASE_OF(T, Distribution) >
 inline T operator+(const T& lhs, const T& rhs) {
     T h(lhs);
     return h += rhs;
 }
 
 // random variable -
-template<class T, ENABLE_IF_BASE_OF(Distribution, T) >
+template<class T, ENABLE_IF_BASE_OF(T, Distribution) >
 inline T operator-(const T& lhs, const T& rhs) {
     T h(lhs);
     return h -= rhs;
 }
 
 // random variable *
-template<class T, ENABLE_IF_BASE_OF(Distribution, T) >
+template<class T, ENABLE_IF_BASE_OF(T, Distribution) >
 inline T operator*(const T& lhs, const double x) {
     T h(lhs);
     return h *= x;
 }
 
-template <class T, ENABLE_IF_BASE_OF(Distribution, T)>
-std::ostream& operator<<(std::ostream& os, const T& t)
-{
-    std::cerr <<  "Functions in this class should be overloaded.";
-    return os;
-}
-
-
 // cdf
-template <class T, ENABLE_IF_BASE_OF(Distribution, T) >
+template <class T, ENABLE_IF_BASE_OF(T, Distribution) >
 inline double getCdf(const T& dist, double x)
 {
     std::cerr << "Generic computation not implemented" << std::endl;
@@ -88,7 +73,7 @@ inline double getCdf(const T& dist, double x)
 }
 
 // Compute the mean of the distribution
-template <class T, ENABLE_IF_BASE_OF(Distribution, T) >
+template <class T, ENABLE_IF_BASE_OF(T, Distribution) >
 double getMean(const T &dist)
 {
     std::cerr << "Generic computation not implemented" << std::endl;
@@ -96,7 +81,17 @@ double getMean(const T &dist)
     return 0;
 }
 
-template <class T, int N, ENABLE_IF_BASE_OF(Distribution, T) >
+// Compute the mean of the distribution
+template <class T, ENABLE_IF_BASE_OF(T, Distribution) >
+double getSample(const T &dist)
+{
+    std::cerr << "Generic computation not implemented" << std::endl;
+    throw NotImplementedException();
+    return 0;
+}
+
+// Get vector mean
+template <class T, int N, ENABLE_IF_BASE_OF(T, Distribution) >
 inline Vector<double, N> getMean(const Tuple<T, N> &dist)
 {
     Vector<double,N> result;
