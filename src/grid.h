@@ -120,60 +120,60 @@ protected:
 class CartesianGrid : public Grid
 {
 public:
-	// constructor and destructor
-    CartesianGrid(int xdim, int ydim, int zdim);
-	CartesianGrid();
-	~CartesianGrid();
+  // constructor and destructor
+  CartesianGrid(int xdim, int ydim, int zdim);
+  CartesianGrid();
+  ~CartesianGrid();
 
-#if 1
-	// physical coordinate of vertex verIdx
-    virtual ReturnStatus at_vertex(int verIdx, VECTOR3& pos) =0;
-    // Return interpolation result
-    //virtual bool at_phys(VECTOR3& pos) =0;
-	// get vertex list of a cell
-    virtual ReturnStatus getCellVertices(int cellId, std::vector<int>& vVertices) =0;
-	// get the cell id and also interpolating coefficients for the given physical position
-    virtual ReturnStatus phys_to_cell(PointInfo& pInfo) =0;
-	
-	// interpolation
-    //template <class T>
-    //virtual void interpolate(std::vector<boost::any>& vData, VECTOR3 coeff, boost::any &output) = 0;
-	// the volume of cell
-    virtual double cellVolume(int cellId) = 0;
-	// type of cell
-    virtual CellType getCellType() = 0;
-    // how to interpolate
-    virtual InterpType getInterpType() { return TRI_LERP; }
-	// get min and maximal boundary
-    virtual void boundary(VECTOR3& minB, VECTOR3& maxB) = 0;
-	// set bounding box (includes ghost cells)
-    virtual void setBoundary(VECTOR3& minB, VECTOR3& maxB) = 0;
-	// set bounding box (does not include ghost cells)
-    virtual void setRealBoundary(VECTOR4& minB, VECTOR4& maxB) = 0;
-	// get grid spacing in x,y,z dimensions
-    virtual void getGridSpacing(int cellId, float& xspace, float& yspace, float& zspace) = 0;
-	// boundary intersection
-    virtual void boundaryIntersection(VECTOR3& intersectP, VECTOR3& startP,
-					  VECTOR3& endP,float* stepSize, float oldStepSize) = 0; 
-#endif
+  // get dimensions
+  virtual int *getDimension() ;
+  // physical coordinate of vertex verIdx
+  virtual ReturnStatus at_vertex(int verIdx, VECTOR3& pos) =0;
+  // Return interpolation result
+  virtual ReturnStatus getIndex(int i, int j, int k, int &idx);
+  // get vertex list of a cell
+  virtual ReturnStatus getCellVertices(int cellId, std::vector<int>& vVertices) =0;
+  // get the cell id and also interpolating coefficients for the given physical position
+  virtual ReturnStatus phys_to_cell(PointInfo& pInfo) =0;
+
+  // interpolation
+  //template <class T>
+  //virtual void interpolate(std::vector<boost::any>& vData, VECTOR3 coeff, boost::any &output) = 0;
+  // the volume of cell
+  virtual double cellVolume(int cellId) = 0;
+  // type of cell
+  virtual CellType getCellType() = 0;
+  // how to interpolate
+  virtual InterpType getInterpType() { return TRI_LERP; }
+  // get min and maximal boundary
+  virtual void boundary(VECTOR3& minB, VECTOR3& maxB) = 0;
+  // set bounding box (includes ghost cells)
+  virtual void setBoundary(VECTOR3& minB, VECTOR3& maxB) = 0;
+  // set bounding box (does not include ghost cells)
+  virtual void setRealBoundary(VECTOR4& minB, VECTOR4& maxB) = 0;
+  // get grid spacing in x,y,z dimensions
+  virtual void getGridSpacing(int cellId, float& xspace, float& yspace, float& zspace) = 0;
+  // boundary intersection
+  virtual void boundaryIntersection(VECTOR3& intersectP, VECTOR3& startP,
+                                    VECTOR3& endP,float* stepSize, float oldStepSize) = 0;
 protected:
-	// reset parameters
-	void Reset(void);
-	// dimension related
-	inline int xdim(void) { return m_nDimension[0];}
-	inline int ydim(void) { return m_nDimension[1];}
-	inline int zdim(void) { return m_nDimension[2];}
-	inline int xcelldim(void) {return (m_nDimension[0] - 1);}
-	inline int ycelldim(void) {return (m_nDimension[1] - 1);}
-	inline int zcelldim(void) {return (m_nDimension[2] - 1);}
+  // reset parameters
+  void Reset(void);
+  // dimension related
+  inline int xdim(void) { return m_nDimension[0];}
+  inline int ydim(void) { return m_nDimension[1];}
+  inline int zdim(void) { return m_nDimension[2];}
+  inline int xcelldim(void) {return (m_nDimension[0] - 1);}
+  inline int ycelldim(void) {return (m_nDimension[1] - 1);}
+  inline int zcelldim(void) {return (m_nDimension[2] - 1);}
 
-	int m_nDimension[3];				// dimension
+  int m_nDimension[3];				// dimension
 
-	// min and maximal boundary (includes ghost cells)
-    VECTOR3 m_vMinBound, m_vMaxBound;
+  // min and maximal boundary (includes ghost cells)
+  VECTOR3 m_vMinBound, m_vMaxBound;
 
-	// min and maximal boundary (does not include ghost cells)
-    VECTOR4 m_vMinRealBound, m_vMaxRealBound;
+  // min and maximal boundary (does not include ghost cells)
+  VECTOR4 m_vMinRealBound, m_vMaxRealBound;
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -187,53 +187,53 @@ protected:
 class RegularCartesianGrid : public CartesianGrid
 {
 private:
-	float mappingFactorX;				// mapping from physical space to computational space
-	float mappingFactorY;
-	float mappingFactorZ;
-	float oneOvermappingFactorX;
-	float oneOvermappingFactorY;
-	float oneOvermappingFactorZ;
-	float gridSpacing;			        // the minimal grid spacing of all dimensions
+  float mappingFactorX;				// mapping from physical space to computational space
+  float mappingFactorY;
+  float mappingFactorZ;
+  float oneOvermappingFactorX;
+  float oneOvermappingFactorY;
+  float oneOvermappingFactorZ;
+  float gridSpacing;			        // the minimal grid spacing of all dimensions
 
 public:
-	RegularCartesianGrid(int xdim, int ydim, int zdim);
-	RegularCartesianGrid();
-	~RegularCartesianGrid();
-	// physical coordinate of vertex verIdx
-    ReturnStatus at_vertex(int verIdx, VECTOR3& pos);
-    // Return interpolation result
-    //ReturnStatus at_phys(VECTOR3& pos, AbstractDataArray *array, boost::any output) ;
-	// get vertex list of a cell
-    ReturnStatus getCellVertices(int cellId, std::vector<int>& vVertices);
-	// get the cell id and also interpolating coefficients for the given physical position
-    ReturnStatus phys_to_cell(PointInfo& pInfo);
-	// the volume of cell
-    double cellVolume(int cellId);
-	// cell type
-    CellType getCellType() {return CUBE;}
-	// set bounding box (includes ghost cells)
-    void setBoundary(VECTOR3& minB, VECTOR3& maxB);
-	// set bounding box (does not include ghost cells)
-    void setRealBoundary(VECTOR4& minB, VECTOR4& maxB);
-	// get min and maximal boundary
-    void boundary(VECTOR3& minB, VECTOR3& maxB);
-	// get grid spacing in x,y,z dimensions
-    void getGridSpacing(int cellId, float& xspace, float& yspace, float& zspace)
-	{ xspace = oneOvermappingFactorX; yspace = oneOvermappingFactorY; zspace = oneOvermappingFactorZ; }
-    void boundaryIntersection(VECTOR3&, VECTOR3&, VECTOR3&, float*, float);
-	// whether the point is in the bounding box
-    bool isInBBox(VECTOR3& pos);
-	// whether the point is in the bounding box (not counting ghost cells)
-    bool isInRealBBox(VECTOR3& pos);
-    bool isInRealBBox(VECTOR3& pos, float t);
+  RegularCartesianGrid(int xdim, int ydim, int zdim);
+  RegularCartesianGrid();
+  ~RegularCartesianGrid();
+  // physical coordinate of vertex verIdx
+  ReturnStatus at_vertex(int verIdx, VECTOR3& pos);
+  // Return interpolation result
+  //ReturnStatus at_phys(VECTOR3& pos, AbstractDataArray *array, boost::any output) ;
+  // get vertex list of a cell
+  ReturnStatus getCellVertices(int cellId, std::vector<int>& vVertices);
+  // get the cell id and also interpolating coefficients for the given physical position
+  ReturnStatus phys_to_cell(PointInfo& pInfo);
+  // the volume of cell
+  double cellVolume(int cellId);
+  // cell type
+  CellType getCellType() {return CUBE;}
+  // set bounding box (includes ghost cells)
+  void setBoundary(VECTOR3& minB, VECTOR3& maxB);
+  // set bounding box (does not include ghost cells)
+  void setRealBoundary(VECTOR4& minB, VECTOR4& maxB);
+  // get min and maximal boundary
+  void boundary(VECTOR3& minB, VECTOR3& maxB);
+  // get grid spacing in x,y,z dimensions
+  void getGridSpacing(int cellId, float& xspace, float& yspace, float& zspace)
+  { xspace = oneOvermappingFactorX; yspace = oneOvermappingFactorY; zspace = oneOvermappingFactorZ; }
+  void boundaryIntersection(VECTOR3&, VECTOR3&, VECTOR3&, float*, float);
+  // whether the point is in the bounding box
+  bool isInBBox(VECTOR3& pos);
+  // whether the point is in the bounding box (not counting ghost cells)
+  bool isInRealBBox(VECTOR3& pos);
+  bool isInRealBBox(VECTOR3& pos, float t);
 
 
 protected:
-    void reset(void);
-	// compute bounding box
-    void computeBBox(void);
-	// whether in a cell
-	bool isInCell(PointInfo& pInfo, const int cellId);
+  void reset(void);
+  // compute bounding box
+  void computeBBox(void);
+  // whether in a cell
+  bool isInCell(PointInfo& pInfo, const int cellId);
 };
 
 /* 
@@ -268,13 +268,13 @@ protected:
 class CurvilinearGrid : public Grid
 {
 private:
-	int m_nDimension[3];				// dimension
+  int m_nDimension[3];				// dimension
 
 public:
-	// constructor and deconstructor
-	CurvilinearGrid(int xdim, int ydim, int zdim);
-	CurvilinearGrid();
-	~CurvilinearGrid();
+  // constructor and deconstructor
+  CurvilinearGrid(int xdim, int ydim, int zdim);
+  CurvilinearGrid();
+  ~CurvilinearGrid();
 };
 
 */ 

@@ -4,14 +4,18 @@
 #include <vector>
 #include <string>
 #include <cstring>
-#include <math.h>
-
+#include "dataset.h"
+#include "distributions/gaussian.h"
+#include "distributions/distribution.h"
 #include "core/shared_ary.h"
 
 namespace edda{
 
+typedef dist::Gaussian<float> Gaussianf;
+typedef Vector3<Gaussianf> Gaussianf3;
+
 template<typename T>
-shared_ary<T> read_raw(const std::string &fname, size_t len) {
+shared_ary<T> loadRawFile(const std::string &fname, size_t len) {
   FILE * fIn;
   T *pData;
 
@@ -24,6 +28,22 @@ shared_ary<T> read_raw(const std::string &fname, size_t len) {
   return shared_ary<T>(pData, len);
 }
 
+shared_ary<Gaussianf> loadGaussianRawArray(std::string meanfile, std::string stdfile, size_t len) ;
+shared_ary<Gaussianf3> loadVec3GaussianRawArray(std::string meanfile, std::string stdfile, size_t len);
+
+///////////////////////////////////////
+/// dataset creator
+/// create a regular grid dataset of gaussian distribution
+std::shared_ptr<Dataset<Gaussianf> > loadGaussianRegularGrids(std::string &meanfile, std::string &stdfile, int dim[3]);
+
+/// create a regular grid dataset of random values from gaussian distributions
+std::shared_ptr<Dataset<double> > loadGaussianSamplingRegularGrids(std::string &meanfile, std::string &stdfile, int dim[3]);
+
+/// create a regular grid dataset of 3d gaussian distribution
+std::shared_ptr<Dataset<Gaussianf3> > loadVec3GaussianRegularGrids(std::string &meanfile, std::string &stdfile, int dim[3]);
+
+/// create a regular grid dataset of random samples from 3d gaussian distribution
+std::shared_ptr<Dataset<VECTOR3> > loadVec3GaussianSamplingRegularGrids(std::string &meanfile, std::string &stdfile, int dim[3]);
 
 } // edda
 

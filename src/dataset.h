@@ -32,13 +32,19 @@ public:
     Grid *getGrid() { return pGrid; }
     AbstractDataArray *getArray () {return pArray; }
 
+    int *getDimension() {
+      CartesianGrid *cartesianGrid = dynamic_cast<CartesianGrid *>(pGrid) ;
+      if (!cartesianGrid)
+        throw NotImplementedException();
+      return cartesianGrid->getDimension();
+    }
+
     ReturnStatus at_phys(const VECTOR3 &pos, T &output) const {
         ReturnStatus r;
         switch (pGrid->getInterpType())
         {
         case InterpType::TRI_LERP:
         {
-
             PointInfo pinfo;
             pinfo.phyCoord = pos ;
             r = pGrid->phys_to_cell(pinfo);
@@ -55,7 +61,6 @@ public:
             for (i=0; i<(int)vVertices.size(); i++)
                 vData[i] = boost::any_cast<T> ( pArray->getItem(vVertices[i]) );
 
-
             output = triLerp(vData[0], vData[1], vData[2], vData[3],
                              vData[4], vData[5], vData[6], vData[7],
                              pinfo.interpolant.getData());
@@ -67,6 +72,24 @@ public:
         }
 
         return SUCCESS;
+    }
+
+    // value at computational space
+    const T &at_comp(int i, int j, int k, ReturnStatus &r) const {
+        CartesianGrid *cartesianGrid = dynamic_cast<CartesianGrid *>(pGrid) ;
+
+        if (cartesianGrid) {
+          int idx;
+          r = cartesianGrid->getIndex(i,j,k, idx);
+          if (r!=SUCCESS)
+            return boost::any_cast<const T&>( pArray->getItem(0) );
+
+          return boost::any_cast<const T&>( pArray->getItem(idx) );
+        } else {
+          // TODO for other grid types
+          throw NotImplementedException();
+        }
+        return boost::any_cast<const T&>( pArray->getItem(0) );
     }
 
 };

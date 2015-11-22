@@ -18,8 +18,8 @@ typedef Vector3<Gaussianf> Gaussianf3;
 shared_ary<Gaussianf3> load_gaussian_dataset(string meanfile, string stdfile, int *dim) {
   cout << "Loading..." << endl;
   size_t len = dim[0]*dim[1]*dim[2];
-  shared_ary<Tuple3<float> > pMean3 = read_raw<Tuple3<float> >(meanfile, len);
-  shared_ary<Tuple3<float> > pStd3 = read_raw<Tuple3<float> >(stdfile, len);
+  shared_ary<Tuple3<float> > pMean3 = loadRawFile<Tuple3<float> >(meanfile, len);
+  shared_ary<Tuple3<float> > pStd3 = loadRawFile<Tuple3<float> >(stdfile, len);
 
   // Create Gaussian array
   Gaussianf3 x;
@@ -77,7 +77,7 @@ int main(int argc, char **argv) {
 
     Dataset<Gaussianf3> dataset2 (
                 new RegularCartesianGrid (dim[0], dim[1], dim[2]),
-                new GenericDataArray<Gaussianf3> (distData) );
+                new DataArray<Gaussianf3> (distData) );
 
     for (x=0; x<10; x+=.5)
     {

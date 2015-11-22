@@ -107,6 +107,9 @@ inline Gaussian<Real, Storage>& operator*=(Gaussian<Real, Storage> &x, const dou
 template<typename Real, class Storage>
 inline double getCdf(const Gaussian<Real, Storage> &dist, double x)
 {
+  if (dist.var()==0) {
+    return x > dist.mean() ? 1 : 0;
+  }
   // TODO: need to implement on our own
   boost::math::normal_distribution<double> normal (dist.mean(), sqrt(dist.var()) );
   return boost::math::cdf<>(normal, x);

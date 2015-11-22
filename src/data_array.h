@@ -11,6 +11,7 @@
 #include <boost/any.hpp>
 #include "vector_matrix.h"
 #include "core/shared_ary.h"
+#include "distributions/distribution.h"
 
 namespace edda {
 
@@ -48,55 +49,48 @@ template<typename T>
 class DataArray: public AbstractDataArray
 {
 protected:
-    shared_ary<T> array;
+  shared_ary<T> array;
 public:
-    DataArray(shared_ary<T> array) { this->array = array; }
+  DataArray(shared_ary<T> array) { this->array = array; }
 
-    virtual ~DataArray() { }
+  virtual ~DataArray() { }
 
-    virtual boost::any getItem(size_t idx) { return boost::any( array[idx] );  }
+  virtual boost::any getItem(size_t idx) { return boost::any( array[idx] );  }
 
-    virtual size_t getLength() { return array.getLength(); }
+  virtual size_t getLength() { return array.getLength(); }
+
+  virtual shared_ary<T> getRawArray() { return array; }
 };
 
 template<typename Dist, ENABLE_IF_BASE_OF(Dist, dist::Distribution)>
-class SampledDataArray: public AbstractDataArray
+class SampledDataArray: public DataArray<Dist>
 {
-protected:
-    shared_ary<Dist> array;
 public:
-    SampledDataArray(shared_ary<Dist> array) { this->array = array; }
+  SampledDataArray(shared_ary<Dist> array) : DataArray<Dist>(array) {}
 
-    virtual ~SampledDataArray() { }
+  virtual ~SampledDataArray() { }
 
-    virtual boost::any getItem(size_t idx) { return boost::any ( dist::getSample(array[idx]) );    }
+  virtual boost::any getItem(size_t idx) { return boost::any ( dist::getSample(this->array[idx]) );    }
 
-    virtual size_t getLength() { return array.getLength(); }
 };
 
 // For each element of the tuple, sample a value from the distribution.  Return a Tuple of float types (Can be VECTOR3 or VECTOR4)
 template<typename TupleType, typename OutputType = Vector<float, TupleType::LENGTH> >
-class SampledIndepTupleArray: public AbstractDataArray
+class SampledIndepTupleArray: public DataArray<TupleType>
 {
-protected:
-    shared_ary<TupleType > array;
 public:
-    SampledIndepTupleArray(shared_ary<TupleType> array) { this->array = array; }
+  SampledIndepTupleArray(shared_ary<TupleType> array) : DataArray<TupleType>(array) {}
 
-    virtual ~SampledIndepTupleArray() {  }
+  virtual boost::any getItem(size_t idx) {
+    TupleType &data_dist = this->array[idx];
+    OutputType data_sampled;
 
-    virtual boost::any getItem(size_t idx) {
-        TupleType &data_dist = array[idx];
-        OutputType data_sampled;
+    // sample from each dimension
+    for (int i=0; i < TupleType::LENGTH; i++)
+      data_sampled[i] = dist::getSample(data_dist[i]);
 
-        // sample from each dimension
-        for (int i=0; i < TupleType::LENGTH; i++)
-            data_sampled[i] = dist::getSample(data_dist[i]);
-
-        return boost::any ( data_sampled );
-    }
-
-    virtual size_t getLength() { return array.getLength(); }
+    return boost::any ( data_sampled );
+  }
 };
 #if 0
 /////////////////////////////////////////////////////////

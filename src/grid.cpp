@@ -48,6 +48,19 @@ void CartesianGrid::Reset()
   m_nDimension[0] = m_nDimension[1] = m_nDimension[2] = 0;
 }
 
+int *CartesianGrid::getDimension()
+{
+  return m_nDimension;
+}
+
+ReturnStatus CartesianGrid::getIndex(int i, int j, int k, int &idx)
+{
+  if (i>0 && j>0 && k>0 && i<m_nDimension[0] && j<m_nDimension[1] && k<m_nDimension[2]) {
+    idx = i+m_nDimension[0]*(j+m_nDimension[1]*k);
+    return SUCCESS;
+  }
+  return OUT_OF_BOUND;
+}
 
 //////////////////////////////////////////////////////////////////////////
 //

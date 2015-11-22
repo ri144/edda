@@ -23,6 +23,7 @@ class shared_ary : public std::shared_ptr<T>
 public:
     shared_ary(): std::shared_ptr<T>(NULL, DeleteArray()), n(0) {}
     shared_ary(T *p, size_t n_): std::shared_ptr<T>(p, DeleteArray()), n(n_) { }
+    shared_ary(size_t n_): shared_ary(new T[n_], n_) {}
 
     T & operator[] (int i) const { //std::cout << n << ',' << i;
                                    assert(i>=0 && i<n); return this->get()[i]; }

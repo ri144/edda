@@ -15,8 +15,8 @@ typedef Gaussian<float> Gaussianf;
 
 shared_ary<Gaussianf> load_gaussian_dataset(string meanfile, string stdfile, int *dim) {
   size_t len = dim[0]*dim[1]*dim[2];
-  shared_ary<float> pMean = read_raw<float>(meanfile, len);
-  shared_ary<float> pStd = read_raw<float>(stdfile, len);
+  shared_ary<float> pMean = loadRawFile<float>(meanfile, len);
+  shared_ary<float> pStd = loadRawFile<float>(stdfile, len);
 
   // Create Gaussian array
   Gaussianf *pData = new Gaussianf[len];
@@ -68,7 +68,7 @@ int main(int argc, char **argv) {
 
     Dataset<Gaussianf> dataset2 (
                 new RegularCartesianGrid (dim[0], dim[1], dim[2]),
-                new GenericDataArray<Gaussianf> (distData)
+                new DataArray<Gaussianf> (distData)
             );
 
     for (x=0; x<10; x+=.5)
