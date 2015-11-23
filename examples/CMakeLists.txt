@@ -5,7 +5,7 @@
 set(sources
 	loadGaussianScalarField
 	loadGaussianVectorField
-	genProbIsoField
+    uncertainIsocontour
 	streamlineGaussian
 )
 
