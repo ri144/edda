@@ -8,8 +8,8 @@
 #include <vector>
 #include <iostream>
 #include <memory>
-#include "grid.h"
-#include "data_array.h"
+#include "geometry/grid.h"
+#include "core/data_array.h"
 #include <distributions/distribution.h>
 
 namespace edda {
@@ -74,22 +74,22 @@ public:
         return SUCCESS;
     }
 
-    // value at computational space
-    const T &at_comp(int i, int j, int k, ReturnStatus &r) const {
-        CartesianGrid *cartesianGrid = dynamic_cast<CartesianGrid *>(pGrid) ;
+    // value at computational space, only for structured grids
+    const T &at_comp(int i, int j, int k) const {
+      ReturnStatus r;
+      CartesianGrid *cartesianGrid = dynamic_cast<CartesianGrid *>(pGrid) ;
 
-        if (cartesianGrid) {
-          int idx;
-          r = cartesianGrid->getIndex(i,j,k, idx);
-          if (r!=SUCCESS)
-            return boost::any_cast<const T&>( pArray->getItem(0) );
+      if (cartesianGrid) {
+        int idx;
+        r = cartesianGrid->getIndex(i,j,k, idx);
+        if (r!=SUCCESS)
+          throw OutOfBoundException();
 
-          return boost::any_cast<const T&>( pArray->getItem(idx) );
-        } else {
-          // TODO for other grid types
-          throw NotImplementedException();
-        }
-        return boost::any_cast<const T&>( pArray->getItem(0) );
+        return boost::any_cast<const T&>( pArray->getItem(idx) );
+      }
+
+      // TODO for other grid types
+      throw NotImplementedException();
     }
 
 };

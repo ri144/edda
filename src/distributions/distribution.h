@@ -14,7 +14,7 @@
 
 #include "common.h"
 #include "edda_export.h"
-#include "vector_matrix.h"
+#include "math/vector_matrix.h"
 
 namespace edda {
 namespace dist {

@@ -9,7 +9,7 @@
 #include <iostream>
 #include <memory>
 #include <boost/any.hpp>
-#include "vector_matrix.h"
+#include "math/vector_matrix.h"
 #include "core/shared_ary.h"
 #include "distributions/distribution.h"
 
@@ -29,6 +29,7 @@ public:
     // We don't return reference because the return data can be derived from raw data
     virtual boost::any getItem(size_t idx) =0;
 
+    virtual void setItem(size_t idx, const boost::any &item) =0;
 };
 
 #if 0
@@ -56,6 +57,8 @@ public:
   virtual ~DataArray() { }
 
   virtual boost::any getItem(size_t idx) { return boost::any( array[idx] );  }
+
+  virtual void setItem(size_t idx, const boost::any &item) { array[idx] = boost::any_cast<T>( item );  }
 
   virtual size_t getLength() { return array.getLength(); }
 

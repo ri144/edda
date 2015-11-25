@@ -32,6 +32,7 @@ typedef long long int64_t;
 
 // May not be needed in the release version but just keep here for now.
 class NotImplementedException {};
+class OutOfBoundException{};
 
 // This is useful to constrain what types are applicable for generic functions or classes
 #define ENABLE_IF_BASE_OF(T, B) typename std::enable_if<std::is_base_of<B, T>::value>::type* = nullptr

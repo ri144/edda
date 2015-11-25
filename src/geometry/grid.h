@@ -18,8 +18,8 @@
 
 //#include "Element.h"
 #include "core/interpolator.h"
-#include "vector_matrix.h"
-#include "data_array.h"
+#include "math/vector_matrix.h"
+#include "core/data_array.h"
 //#include "Cell.h"
 
 namespace edda{

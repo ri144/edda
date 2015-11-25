@@ -6,7 +6,7 @@
 #include "io/file_reader.h"
 #include "core/interpolator.h"
 #include "core/shared_ary.h"
-#include "data_array.h"
+#include "core/data_array.h"
 
 using namespace std;
 using namespace edda;
