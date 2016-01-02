@@ -2,9 +2,6 @@
 // Use of this source code is governed by a MIT-style license that can be
 // found in the LICENSE file.
 
-// A probably wrong method for showing isosurface of uncertain data using pdf
-// But for histogram data it can be fine
-
 #include <string>
 #include <cstdlib>
 #include <cstdio>

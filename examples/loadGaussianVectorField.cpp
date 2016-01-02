@@ -61,8 +61,6 @@ int main(int argc, char **argv) {
                 new SampledIndepTupleArray<Gaussianf3> (distData )
     );
 
-    cout << "value interpolation after sampling:" << endl;
-
     float x;
     for (x=0; x<10; x+=.5)
     {

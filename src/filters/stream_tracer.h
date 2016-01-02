@@ -50,11 +50,11 @@ public:
         ReturnStatus r;
         DataType vec;
         r = dataset->at_phys( getPosition(pos), vec);
-        if (r != ReturnStatus::SUCCESS)
+        if (r != SUCCESS)
             return r;
         pos += vec * dt;
 
-        return ReturnStatus::SUCCESS;
+        return SUCCESS;
     }
 
     ReturnStatus runge_kutta2(
@@ -67,19 +67,19 @@ public:
 
         // 1st step of Runge-Kutta
         r = dataset->at_phys( getPosition(pos), vec);
-        if (r != ReturnStatus::SUCCESS)
+        if (r != SUCCESS)
             return r;
         k1 = vec * dt;
 
         // 2nd step or Runge Kutta
         r = dataset->at_phys( getPosition(pos + k1 * .5f), vec);
-        if (r != ReturnStatus::SUCCESS)
+        if (r != SUCCESS)
             return r;
 
         k2 = vec * dt;
         pos += k2;
 
-        return ReturnStatus::SUCCESS;
+        return SUCCESS;
     }
 
     ReturnStatus compute(
@@ -109,14 +109,14 @@ public:
                     assert(false); // should not go here
                     break;
                 }
-                if (r != ReturnStatus::SUCCESS)
+                if (r != SUCCESS)
                     break;
                 singleTrace.push_back(p);
             }
             traces.push_back(singleTrace);
 
         }
-        return ReturnStatus::SUCCESS;
+        return SUCCESS;
     }
 
 };
