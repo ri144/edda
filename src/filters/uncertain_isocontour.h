@@ -6,7 +6,12 @@
 
 namespace edda{
 
-// Currently the dataset is assumed in regular cartesian grids
+///
+/// \brief Compute level crossing probabilities
+/// Currently the input dataset is assumed to be in regular cartesian grids.
+/// For a given dataset in <w,h,d> dimensions, the output is in <w-1, h-1, d-1> dimensions,
+/// to describe the level crossing probabilities for each cell.
+///
 template <typename Dist, ENABLE_IF_BASE_OF(Dist, dist::Distribution)>
 std::shared_ptr<Dataset<float> > uncertainIsocontour(std::shared_ptr<Dataset<Dist> > dataset, float isov)
 {

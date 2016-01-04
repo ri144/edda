@@ -34,7 +34,11 @@ typedef long long int64_t;
 class NotImplementedException {};
 class OutOfBoundException{};
 
-// This is useful to constrain what types are applicable for generic functions or classes
+///
+/// This is useful to constrain what types are applicable for generic functions or classes.
+/// @param T The class to be tested
+/// @param B The supposed base class
+///
 #define ENABLE_IF_BASE_OF(T, B) typename std::enable_if<std::is_base_of<B, T>::value>::type* = nullptr
 
 }  // namespace edda

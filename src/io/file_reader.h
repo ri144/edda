@@ -31,8 +31,9 @@ shared_ary<T> loadRawFile(const std::string &fname, size_t len) {
 shared_ary<Gaussianf> loadGaussianRawArray(std::string meanfile, std::string stdfile, size_t len) ;
 shared_ary<Gaussianf3> loadVec3GaussianRawArray(std::string meanfile, std::string stdfile, size_t len);
 
-///////////////////////////////////////
-/// dataset creator
+//----------------------------------------------------------------------------------------------------------
+// dataset creators
+
 /// create a regular grid dataset of gaussian distribution
 std::shared_ptr<Dataset<Gaussianf> > loadGaussianRegularGrids(std::string &meanfile, std::string &stdfile, int dim[3]);
 

@@ -5,8 +5,9 @@
 #ifndef DISTRIBUTION_H_
 #define DISTRIBUTION_H_
 
-// Distribution:
-// Define generic functions, which can be overriden by specific template classes
+/// Distributions:
+/// Define generic functions, which can be overriden by specific template classes
+///
 
 #include <iostream>
 #include <typeinfo>
@@ -19,9 +20,10 @@
 namespace edda {
 namespace dist {
 
-// The Distribution class indicates the basic functions that all the inherited classes should implement.
-// The inheritence is useful in classifying distribution types useful in algorithm implementation
-
+///
+/// The Distribution class is a root class for all distribution-type classes.
+/// This is useful for applications to identify whether a class is a distribution-type class, by using ENABLE_IF_BASE_OF()
+///
 class EDDA_EXPORT Distribution {
     void NotImpError() const {std::cerr << "Functions in this class should be overloaded."; throw NotImplementedException(); }
 };
@@ -63,7 +65,9 @@ inline T operator*(const T& lhs, const double x) {
     return h *= x;
 }
 
-// cdf
+///
+/// Compute CDF of a distribution
+///
 template <class T, ENABLE_IF_BASE_OF(T, Distribution) >
 inline double getCdf(const T& dist, double x)
 {

@@ -1,6 +1,10 @@
 #ifndef COMPUTE_FIELD_LINE_H
 #define COMPUTE_FIELD_LINE_H
 
+///
+/// \addtogroup filters
+///
+
 #include <vector>
 #include <cassert>
 #include <list>
@@ -16,17 +20,24 @@ namespace edda {
 enum TraceDir{TD_FORWARD, TD_BACKWARD};
 enum TraceOrd{TO_EULER=0, TO_RK2, TO_RK4, TO_RK45};
 
-/// When the position is uncertain, we provide policy for obtaining a representative position
+///
 struct GetPositionAsIs {
     template<class T>
     inline VECTOR3 operator() (const T &p) const {return static_cast<VECTOR3>( p );}  // Use underlying casting
 };
+
 /// Get the position from mean of the distribution
 struct GetPositionFromDistributionMean {
     template<class T>
     inline VECTOR3 operator() (const T &p) const {return edda::dist::getMean( p );}
 };
 
+///
+/// \brief Uncertain particle tracing.
+/// Supports Euler and RK2.
+/// DataType: Return type of the dataset
+/// GetPositionPolicy: We provide policy during advection to obtain a representative direction for uncertain particle locations.
+///
 template<typename DataType, class GetPositionPolicy = GetPositionAsIs>
 class StreamTracer{
     std::shared_ptr<Dataset<DataType> > dataset;
@@ -82,6 +93,12 @@ public:
         return SUCCESS;
     }
 
+    ///
+    /// \brief Start particle tracing
+    /// \param seeds Initial particle locations
+    /// \param[out] traces Results.
+    /// \return SUCCESS or OUT_OF_BOUND
+    ///
     ReturnStatus compute(
             const std::list<DataType> &seeds,
             std::list<std::list<DataType> > &traces

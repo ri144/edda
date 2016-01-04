@@ -15,7 +15,9 @@
 
 namespace edda {
 
-
+///
+/// \brief The AbstractDataArray class used in class Dataset
+///
 class AbstractDataArray
 {
 public:
@@ -23,29 +25,28 @@ public:
 
     virtual ~AbstractDataArray() {}
 
-    // get number of elements
+    ///
+    /// Get the number of elements
+    ///
     virtual size_t getLength() =0;
 
-    // We don't return reference because the return data can be derived from raw data
+    ///
+    /// Get data at the given index
+    /// Note: We don't return reference because the return data can be derived from the original data.  Use setItem() to change the data content.
+    ///
     virtual boost::any getItem(size_t idx) =0;
 
+    ///
+    /// Set data at the given index
+    ///
     virtual void setItem(size_t idx, const boost::any &item) =0;
 };
 
-#if 0
-class AbstractVECTOR3Array: public AbstractDataArray
-{
-public:
-    // We don't return reference because the return data can be derived from raw data
-    virtual VECTOR3 getVector3(size_t idx) =0;
-
-    virtual boost::any getItem(size_t idx) {
-        return boost::any ( getVector3(idx) );
-    }
-};
-#endif
-
-/////////////////////////////////////////////////////////
+//---------------------------------------------------------------------------------------
+///
+/// \brief A simple implementation of DataArray.
+/// This is the class that holds the actual array, in a smart pointer.
+///
 template<typename T>
 class DataArray: public AbstractDataArray
 {
@@ -65,6 +66,11 @@ public:
   virtual shared_ary<T> getRawArray() { return array; }
 };
 
+//---------------------------------------------------------------------------------------
+///
+/// \brief Returns a sampling of the distribution.
+/// Derived from DataArray
+///
 template<typename Dist, ENABLE_IF_BASE_OF(Dist, dist::Distribution)>
 class SampledDataArray: public DataArray<Dist>
 {
@@ -77,7 +83,12 @@ public:
 
 };
 
-// For each element of the tuple, sample a value from the distribution.  Return a Tuple of float types (Can be VECTOR3 or VECTOR4)
+//---------------------------------------------------------------------------------------
+///
+/// \brief For each element of the tuple, sample a value from the distribution.
+/// getItem() Return a Tuple of float types (Can be VECTOR3 or VECTOR4)
+/// Derived from DataArray
+///
 template<typename TupleType, typename OutputType = Vector<float, TupleType::LENGTH> >
 class SampledIndepTupleArray: public DataArray<TupleType>
 {
@@ -95,40 +106,6 @@ public:
     return boost::any ( data_sampled );
   }
 };
-#if 0
-/////////////////////////////////////////////////////////
-class VECTOR3Array: public AbstractVECTOR3Array
-{
-protected:
-    VECTOR3 *array;
-public:
-    VECTOR3Array(VECTOR3 *array, size_t len) { this->array = array; this->len = len; }
-
-    ~VECTOR3Array() { delete[] array; }
-
-    virtual VECTOR3 getVector (size_t idx) {
-        assert( idx >=0 && idx < len );
-        return array[idx];
-    }
-};
-
-template<typename Dist>
-class SampledVECTOR3Array: public AbstractVECTOR3Array
-{
-protected:
-    Dist *array;
-public:
-    SampledVECTOR3Array(Dist *array, size_t len) { this->array = array; this->len = len; }
-
-    ~SampledVECTOR3Array() { delete[] array; }
-
-    VECTOR3 &operator[] (size_t idx) {
-        assert( idx >=0 && idx < len );
-        return array[idx].getSample();
-    }
-};
-
-#endif
 
 
 } // namespace edda
