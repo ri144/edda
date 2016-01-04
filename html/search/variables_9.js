@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['ord',['ord',['../classedda_1_1StreamTracer.html#a803bbf5eed13823c9c502722a2fc5621',1,'edda::StreamTracer']]]
+  ['step_5fsize',['step_size',['../classedda_1_1StreamTracer.html#ae5c09740fd4e418cc480fa9fa40ec50a',1,'edda::StreamTracer']]]
 ];

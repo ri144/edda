@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['ucgridphy2comp',['UCGridPhy2Comp',['../grid_8h.html#ad7352884ed931142171b2bbfc9849f59',1,'grid.h']]],
-  ['uncertain_5fisocontour_2eh',['uncertain_isocontour.h',['../uncertain__isocontour_8h.html',1,'']]],
-  ['uncertainisocontour',['uncertainIsocontour',['../namespaceedda.html#a6088c96d4c02547c60a12f552a2fb3bd',1,'edda']]],
-  ['uncertainisocontour_2ecpp',['uncertainIsocontour.cpp',['../uncertainIsocontour_8cpp.html',1,'']]]
+  ['w',['w',['../classedda_1_1Vector_3_01Real_00_014_01_4.html#a0f6853b9fab936215074e7a1b880b2d6',1,'edda::Vector&lt; Real, 4 &gt;']]],
+  ['weighted_5fsum',['WEIGHTED_SUM',['../namespaceedda.html#a431337c36fb50c77e958d8dfae855781a5cd0cc87f7789a6f7120f6f4f55594ed',1,'edda']]],
+  ['write_5fnrrd_5f3d',['write_nrrd_3d',['../namespaceedda.html#aa7d9a6036df168e12c9274b3c867b196',1,'edda']]],
+  ['writerawnrrdfile',['writeRawNrrdFile',['../namespaceedda.html#a84955479cafdd0ef664aac47680dfb74',1,'edda']]]
 ];

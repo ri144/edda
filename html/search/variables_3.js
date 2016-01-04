@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['elided',['elided',['../classcpplint_1_1CleansedLines.html#aa4d0a4d5081675c01656a5d86d99e8bd',1,'cpplint::CleansedLines']]],
-  ['eps',['EPS',['../namespaceedda.html#a01a5588f4970959e27a63f1e50862c02',1,'edda']]]
+  ['fromcell',['fromCell',['../structedda_1_1PointInfo.html#a6330e57eebd764eb565f5d0892871750',1,'edda::PointInfo']]]
 ];

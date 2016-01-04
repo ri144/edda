@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['cpplint',['cpplint',['../namespacecpplint.html',1,'']]]
+  ['dist',['dist',['../namespaceedda_1_1dist.html',1,'edda']]],
+  ['edda',['edda',['../namespaceedda.html',1,'']]]
 ];

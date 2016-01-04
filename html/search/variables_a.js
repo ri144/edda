@@ -1,7 +1,4 @@
 var searchData=
 [
-  ['parray',['pArray',['../classedda_1_1Dataset.html#addc26bb8363ae78a3a9b2996c367feb4',1,'edda::Dataset']]],
-  ['pgrid',['pGrid',['../classedda_1_1Dataset.html#a8a71a86531d1f159cebe2971b0039560',1,'edda::Dataset']]],
-  ['phycoord',['phyCoord',['../structedda_1_1PointInfo.html#a4c6cffc07aa2bde86bfae400ea723b8a',1,'edda::PointInfo']]],
-  ['pi_5fby_5f2',['PI_BY_2',['../namespaceedda.html#a6a021411c1f74214e17e1150d8f4079c',1,'edda']]]
+  ['vec',['vec',['../classedda_1_1Tuple.html#aa251ac1a46de47bde1e2f837a9155c72',1,'edda::Tuple']]]
 ];

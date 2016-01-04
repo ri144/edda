@@ -1,9 +1,13 @@
 var searchData=
 [
-  ['normalize',['normalize',['../classedda_1_1Vector.html#a7b782d162af77f502480d3cc9dab287f',1,'edda::Vector::normalize()'],['../classedda_1_1Vector_3_01Real_00_013_01_4.html#a44a3c23b172bf3fadb7e4e2b743784e4',1,'edda::Vector&lt; Real, 3 &gt;::normalize()'],['../classedda_1_1Vector_3_01Real_00_014_01_4.html#abeb3985e6b892c60380f37019dd5fc22',1,'edda::Vector&lt; Real, 4 &gt;::normalize()']]],
-  ['notimplementedexception',['NotImplementedException',['../classedda_1_1NotImplementedException.html',1,'edda']]],
-  ['nrrd_2ecpp',['nrrd.cpp',['../nrrd_8cpp.html',1,'']]],
-  ['nrrd_2eh',['nrrd.h',['../nrrd_8h.html',1,'']]],
-  ['num_5flines',['num_lines',['../classcpplint_1_1CleansedLines.html#a4b42ab48659954fb6e0a4e4eb483a45a',1,'cpplint::CleansedLines']]],
-  ['numlines',['NumLines',['../classcpplint_1_1CleansedLines.html#a768a3024ce576777a996121053404edd',1,'cpplint::CleansedLines']]]
+  ['parray',['pArray',['../classedda_1_1Dataset.html#addc26bb8363ae78a3a9b2996c367feb4',1,'edda::Dataset']]],
+  ['path_2ecpp',['path.cpp',['../path_8cpp.html',1,'']]],
+  ['path_2eh',['path.h',['../path_8h.html',1,'']]],
+  ['pgrid',['pGrid',['../classedda_1_1Dataset.html#a8a71a86531d1f159cebe2971b0039560',1,'edda::Dataset']]],
+  ['phycoord',['phyCoord',['../structedda_1_1PointInfo.html#a4c6cffc07aa2bde86bfae400ea723b8a',1,'edda::PointInfo']]],
+  ['phys_5fto_5fcell',['phys_to_cell',['../classedda_1_1Grid.html#a3ef6ca899ea32fe1eed621898a7095d1',1,'edda::Grid::phys_to_cell()'],['../classedda_1_1CartesianGrid.html#a7b596e7a80dd4a534a37a53dd0e4ddf8',1,'edda::CartesianGrid::phys_to_cell()'],['../classedda_1_1RegularCartesianGrid.html#ac60d9f13f178104274c497034703467d',1,'edda::RegularCartesianGrid::phys_to_cell()']]],
+  ['pi_5fby_5f2',['PI_BY_2',['../namespaceedda.html#a6a021411c1f74214e17e1150d8f4079c',1,'edda']]],
+  ['pointinfo',['PointInfo',['../structedda_1_1PointInfo.html#acc2731dc3751bdba37d8d0ca2f306134',1,'edda::PointInfo::PointInfo()'],['../structedda_1_1PointInfo.html#a81fd3d6e757c85db78cea4516f9f9eb9',1,'edda::PointInfo::PointInfo(const VECTOR3 &amp;pcoord, const VECTOR3 &amp;coeff, int fCell, int iCell)'],['../namespaceedda.html#a943d0c00e55b9d2ca21b97d3b218993d',1,'edda::PointInfo()']]],
+  ['pointinfo',['PointInfo',['../structedda_1_1PointInfo.html',1,'edda']]],
+  ['polygon',['POLYGON',['../namespaceedda.html#a459230caa8b746cb6818233f3f58c63ea2d3cdf5619d0d548ffefff873d913140',1,'edda']]]
 ];

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['num_5flines',['num_lines',['../classcpplint_1_1CleansedLines.html#a4b42ab48659954fb6e0a4e4eb483a45a',1,'cpplint::CleansedLines']]]
+  ['rad_5fto_5fdeg',['RAD_TO_DEG',['../namespaceedda.html#aa2b6739b83019da1bc86858c266b6fb7',1,'edda']]]
 ];

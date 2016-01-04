@@ -38,6 +38,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
       <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
+      <li><a href="modules.html"><span>Modules</span></a></li>
       <li><a href="namespaces.html"><span>Namespaces</span></a></li>
       <li class="current"><a href="annotated.html"><span>Classes</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
@@ -72,7 +73,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Macros</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(10)"><span class="SelectionMark">&#160;</span>Pages</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Macros</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(10)"><span class="SelectionMark">&#160;</span>Groups</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(11)"><span class="SelectionMark">&#160;</span>Pages</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -96,6 +97,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!--header-->
 <div class="contents">
 
+<p>A simple implementation of <a class="el" href="classedda_1_1DataArray.html" title="A simple implementation of DataArray. This is the class that holds the actual array, in a smart pointer. ">DataArray</a>. This is the class that holds the actual array, in a smart pointer.  
+ <a href="classedda_1_1DataArray.html#details">More...</a></p>
+
 <p><code>#include &lt;<a class="el" href="data__array_8h_source.html">data_array.h</a>&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for edda::DataArray&lt; T &gt;:</div>
@@ -103,7 +107,7 @@ Inheritance diagram for edda::DataArray&lt; T &gt;:</div>
  <div class="center">
   <img src="classedda_1_1DataArray.png" usemap="#edda::DataArray&lt; T &gt;_map" alt=""/>
   <map id="edda::DataArray&lt; T &gt;_map" name="edda::DataArray&lt; T &gt;_map">
-<area href="classedda_1_1AbstractDataArray.html" alt="edda::AbstractDataArray" shape="rect" coords="0,0,152,24"/>
+<area href="classedda_1_1AbstractDataArray.html" title="The AbstractDataArray class used in class Dataset. " alt="edda::AbstractDataArray" shape="rect" coords="0,0,152,24"/>
 </map>
  </div></div>
 <table class="memberdecls">
@@ -132,7 +136,12 @@ Protected Attributes</h2></td></tr>
 <tr class="memitem:afdb4a3558a1ab05022c3d6b3db465f0b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classedda_1_1shared__ary.html">shared_ary</a>&lt; T &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classedda_1_1DataArray.html#afdb4a3558a1ab05022c3d6b3db465f0b">array</a></td></tr>
 <tr class="separator:afdb4a3558a1ab05022c3d6b3db465f0b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><h3>template&lt;typename T&gt;<br/>
+class edda::DataArray&lt; T &gt;</h3>
+
+<p>A simple implementation of <a class="el" href="classedda_1_1DataArray.html" title="A simple implementation of DataArray. This is the class that holds the actual array, in a smart pointer. ">DataArray</a>. This is the class that holds the actual array, in a smart pointer. </p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="a93dc0392f55579efad19f2353c2117c4"></a>
 <div class="memitem">
 <div class="memproto">
@@ -208,6 +217,7 @@ template&lt;typename T&gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>Get data at the given index Note: We don't return reference because the return data can be derived from the original data. Use <a class="el" href="classedda_1_1DataArray.html#ad464f82cacd733765a78bf6f940a5520">setItem()</a> to change the data content. </p>
 
 <p>Implements <a class="el" href="classedda_1_1AbstractDataArray.html#af59b2bbdeadeddea90a2f9d22d057dfa">edda::AbstractDataArray</a>.</p>
 
@@ -237,6 +247,7 @@ template&lt;typename T&gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>Get the number of elements </p>
 
 <p>Implements <a class="el" href="classedda_1_1AbstractDataArray.html#a7f25dbb3907b82fb35a2a6465c57497b">edda::AbstractDataArray</a>.</p>
 
@@ -300,6 +311,7 @@ template&lt;typename T&gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>Set data at the given index </p>
 
 <p>Implements <a class="el" href="classedda_1_1AbstractDataArray.html#ada749786821e95fb590793c0017cac69">edda::AbstractDataArray</a>.</p>
 
@@ -334,7 +346,7 @@ template&lt;typename T&gt; </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Jan 3 2016 13:43:38 for EDDA by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Jan 4 2016 13:45:44 for EDDA by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>
