@@ -98,73 +98,73 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;</div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="keyword">namespace </span>edda{</div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;</div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> Dist, ENABLE_IF_BASE_OF(Dist, dist::Distribution)&gt;</div>
-<div class="line"><a name="l00016"></a><span class="lineno"><a class="line" href="namespaceedda.html#a6088c96d4c02547c60a12f552a2fb3bd">   16</a></span>&#160;std::shared_ptr&lt;Dataset&lt;float&gt; &gt; <a class="code" href="namespaceedda.html#a6088c96d4c02547c60a12f552a2fb3bd">uncertainIsocontour</a>(std::shared_ptr&lt;<a class="code" href="classedda_1_1Dataset.html">Dataset&lt;Dist&gt;</a> &gt; dataset, <span class="keywordtype">float</span> isov)</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;{</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;  <span class="keywordtype">int</span> *dim = dataset-&gt;getDimension();</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;  <span class="keywordtype">int</span> i,j,k;</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;  <span class="keywordtype">int</span> count=0;</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;  <span class="comment">//precompute cdf for speedup</span></div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;  <a class="code" href="classedda_1_1shared__ary.html">shared_ary&lt;float&gt;</a> cdfField (dim[0]*dim[1]*dim[2]);</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;  <span class="keywordflow">for</span> (k=0; k&lt;dim[2]; k++)</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    <span class="keywordflow">for</span> (j=0; j&lt;dim[1]; j++)</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;      <span class="keywordflow">for</span> (i=0; i&lt;dim[0]; i++) {</div>
-<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;        <span class="comment">// compute level crossing</span></div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;        cdfField[count] = <a class="code" href="namespaceedda_1_1dist.html#a9108a700d9ad1ce168d1a4be549e05ba">dist::getCdf</a>(dataset-&gt;at_comp(i,j,k), isov);</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;        count++;</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;      }</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;  <span class="keywordtype">int</span> new_dim[3]={dim[0]-1, dim[1]-1, dim[2]-1};</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;  <a class="code" href="classedda_1_1shared__ary.html">shared_ary&lt;float&gt;</a> probField (new_dim[0]*new_dim[1]*new_dim[2]);</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;  count = 0;</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;  <span class="keywordflow">for</span> (k=0; k&lt;new_dim[2]; k++)</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <span class="keywordflow">for</span> (j=0; j&lt;new_dim[1]; j++)</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;      <span class="keywordflow">for</span> (i=0; i&lt;new_dim[0]; i++) {</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;        <span class="comment">// compute level crossing</span></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        <span class="comment">// = 1 - prob. of all larger than isovalue - prob. of all less than isovalue</span></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        <span class="keywordtype">double</span> cdf[8];</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="preprocessor">#define IJK_TO_IDX(i,j,k)  (i+dim[0]*(j+dim[1]*(k)))</span></div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="preprocessor"></span>        cdf[0] = cdfField[<a class="code" href="uncertain__isocontour_8h.html#a1b9a61d5870ac595d332e99b4e808637">IJK_TO_IDX</a>(i  ,j  ,k)];</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        cdf[1] = cdfField[<a class="code" href="uncertain__isocontour_8h.html#a1b9a61d5870ac595d332e99b4e808637">IJK_TO_IDX</a>(i+1,j  ,k  )];</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;        cdf[2] = cdfField[<a class="code" href="uncertain__isocontour_8h.html#a1b9a61d5870ac595d332e99b4e808637">IJK_TO_IDX</a>(i  ,j+1,k  )];</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;        cdf[3] = cdfField[<a class="code" href="uncertain__isocontour_8h.html#a1b9a61d5870ac595d332e99b4e808637">IJK_TO_IDX</a>(i+1,j+1,k  )];</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        cdf[4] = cdfField[<a class="code" href="uncertain__isocontour_8h.html#a1b9a61d5870ac595d332e99b4e808637">IJK_TO_IDX</a>(i  ,j  ,k+1)];</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;        cdf[5] = cdfField[<a class="code" href="uncertain__isocontour_8h.html#a1b9a61d5870ac595d332e99b4e808637">IJK_TO_IDX</a>(i+1,j  ,k+1)];</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;        cdf[6] = cdfField[<a class="code" href="uncertain__isocontour_8h.html#a1b9a61d5870ac595d332e99b4e808637">IJK_TO_IDX</a>(i  ,j+1,k+1)];</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;        cdf[7] = cdfField[<a class="code" href="uncertain__isocontour_8h.html#a1b9a61d5870ac595d332e99b4e808637">IJK_TO_IDX</a>(i+1,j+1,k+1)];</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="preprocessor">#undef IJK_TO_IDX</span></div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="preprocessor"></span>        <span class="keywordtype">double</span> prob1=1., prob2=1.;</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;        <span class="keywordflow">for</span> (<span class="keywordtype">int</span> l=0; l&lt;8; l++) {</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;          prob1 *= cdf[l];</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;          prob2 *= 1.-cdf[l];</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        }</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;        probField[count] = 1.-prob1-prob2;</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        count++;</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;      }</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;  <span class="keywordflow">return</span> make_Dataset&lt;float&gt;(<span class="keyword">new</span> <a class="code" href="classedda_1_1RegularCartesianGrid.html">RegularCartesianGrid</a>(new_dim[0], new_dim[1], new_dim[2]),</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;                             <span class="keyword">new</span> <a class="code" href="classedda_1_1DataArray.html">DataArray&lt;float&gt;</a>(probField)</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;      );</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;}</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;} <span class="comment">// namespace edda</span></div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="preprocessor">#endif // UNCERTAIN_ISOCONTOUR_H_</span></div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> Dist, ENABLE_IF_BASE_OF(Dist, dist::Distribution)&gt;</div>
+<div class="line"><a name="l00017"></a><span class="lineno"><a class="line" href="namespaceedda.html#a6088c96d4c02547c60a12f552a2fb3bd">   17</a></span>&#160;std::shared_ptr&lt;Dataset&lt;float&gt; &gt; <a class="code" href="namespaceedda.html#a6088c96d4c02547c60a12f552a2fb3bd">uncertainIsocontour</a>(std::shared_ptr&lt;<a class="code" href="classedda_1_1Dataset.html">Dataset&lt;Dist&gt;</a> &gt; dataset, <span class="keywordtype">float</span> isov)</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;{</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;  <span class="keywordtype">int</span> *dim = dataset-&gt;getDimension();</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;  <span class="keywordtype">int</span> i,j,k;</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;  <span class="keywordtype">int</span> count=0;</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;  <span class="comment">//precompute cdf for speedup</span></div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;  <a class="code" href="classedda_1_1shared__ary.html">shared_ary&lt;float&gt;</a> cdfField (dim[0]*dim[1]*dim[2]);</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;  <span class="keywordflow">for</span> (k=0; k&lt;dim[2]; k++)</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    <span class="keywordflow">for</span> (j=0; j&lt;dim[1]; j++)</div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;      <span class="keywordflow">for</span> (i=0; i&lt;dim[0]; i++) {</div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;        <span class="comment">// compute level crossing</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;        cdfField[count] = <a class="code" href="namespaceedda_1_1dist.html#a9108a700d9ad1ce168d1a4be549e05ba">dist::getCdf</a>(dataset-&gt;at_comp(i,j,k), isov);</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;        count++;</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;      }</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;  <span class="keywordtype">int</span> new_dim[3]={dim[0]-1, dim[1]-1, dim[2]-1};</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;  <a class="code" href="classedda_1_1shared__ary.html">shared_ary&lt;float&gt;</a> probField (new_dim[0]*new_dim[1]*new_dim[2]);</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;  count = 0;</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;  <span class="keywordflow">for</span> (k=0; k&lt;new_dim[2]; k++)</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <span class="keywordflow">for</span> (j=0; j&lt;new_dim[1]; j++)</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;      <span class="keywordflow">for</span> (i=0; i&lt;new_dim[0]; i++) {</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        <span class="comment">// compute level crossing</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        <span class="comment">// = 1 - prob. of all larger than isovalue - prob. of all less than isovalue</span></div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        <span class="keywordtype">double</span> cdf[8];</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="preprocessor">#define IJK_TO_IDX(i,j,k)  (i+dim[0]*(j+dim[1]*(k)))</span></div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="preprocessor"></span>        cdf[0] = cdfField[<a class="code" href="uncertain__isocontour_8h.html#a1b9a61d5870ac595d332e99b4e808637">IJK_TO_IDX</a>(i  ,j  ,k)];</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;        cdf[1] = cdfField[<a class="code" href="uncertain__isocontour_8h.html#a1b9a61d5870ac595d332e99b4e808637">IJK_TO_IDX</a>(i+1,j  ,k  )];</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;        cdf[2] = cdfField[<a class="code" href="uncertain__isocontour_8h.html#a1b9a61d5870ac595d332e99b4e808637">IJK_TO_IDX</a>(i  ,j+1,k  )];</div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;        cdf[3] = cdfField[<a class="code" href="uncertain__isocontour_8h.html#a1b9a61d5870ac595d332e99b4e808637">IJK_TO_IDX</a>(i+1,j+1,k  )];</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;        cdf[4] = cdfField[<a class="code" href="uncertain__isocontour_8h.html#a1b9a61d5870ac595d332e99b4e808637">IJK_TO_IDX</a>(i  ,j  ,k+1)];</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;        cdf[5] = cdfField[<a class="code" href="uncertain__isocontour_8h.html#a1b9a61d5870ac595d332e99b4e808637">IJK_TO_IDX</a>(i+1,j  ,k+1)];</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;        cdf[6] = cdfField[<a class="code" href="uncertain__isocontour_8h.html#a1b9a61d5870ac595d332e99b4e808637">IJK_TO_IDX</a>(i  ,j+1,k+1)];</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;        cdf[7] = cdfField[<a class="code" href="uncertain__isocontour_8h.html#a1b9a61d5870ac595d332e99b4e808637">IJK_TO_IDX</a>(i+1,j+1,k+1)];</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="preprocessor">#undef IJK_TO_IDX</span></div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="preprocessor"></span>        <span class="keywordtype">double</span> prob1=1., prob2=1.;</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;        <span class="keywordflow">for</span> (<span class="keywordtype">int</span> l=0; l&lt;8; l++) {</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;          prob1 *= cdf[l];</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;          prob2 *= 1.-cdf[l];</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;        }</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        probField[count] = 1.-prob1-prob2;</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;        count++;</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;      }</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;  <span class="keywordflow">return</span> make_Dataset&lt;float&gt;(<span class="keyword">new</span> <a class="code" href="classedda_1_1RegularCartesianGrid.html">RegularCartesianGrid</a>(new_dim[0], new_dim[1], new_dim[2]),</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;                             <span class="keyword">new</span> <a class="code" href="classedda_1_1DataArray.html">DataArray&lt;float&gt;</a>(probField)</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;      );</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;}</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;} <span class="comment">// namespace edda</span></div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="preprocessor">#endif // UNCERTAIN_ISOCONTOUR_H_</span></div>
 <div class="ttc" id="uncertain__isocontour_8h_html_a1b9a61d5870ac595d332e99b4e808637"><div class="ttname"><a href="uncertain__isocontour_8h.html#a1b9a61d5870ac595d332e99b4e808637">IJK_TO_IDX</a></div><div class="ttdeci">#define IJK_TO_IDX(i, j, k)</div></div>
 <div class="ttc" id="classedda_1_1shared__ary_html"><div class="ttname"><a href="classedda_1_1shared__ary.html">edda::shared_ary</a></div><div class="ttdef"><b>Definition:</b> shared_ary.h:11</div></div>
 <div class="ttc" id="classedda_1_1RegularCartesianGrid_html"><div class="ttname"><a href="classedda_1_1RegularCartesianGrid.html">edda::RegularCartesianGrid</a></div><div class="ttdef"><b>Definition:</b> grid.h:187</div></div>
-<div class="ttc" id="classedda_1_1Dataset_html"><div class="ttname"><a href="classedda_1_1Dataset.html">edda::Dataset</a></div><div class="ttdef"><b>Definition:</b> dataset.h:24</div></div>
+<div class="ttc" id="classedda_1_1Dataset_html"><div class="ttname"><a href="classedda_1_1Dataset.html">edda::Dataset</a></div><div class="ttdoc">Holds all information of a dataset, which includes: 1) Geometry and 2) Data array. </div><div class="ttdef"><b>Definition:</b> dataset.h:24</div></div>
 <div class="ttc" id="distribution_8h_html"><div class="ttname"><a href="distribution_8h.html">distribution.h</a></div></div>
-<div class="ttc" id="namespaceedda_html_a6088c96d4c02547c60a12f552a2fb3bd"><div class="ttname"><a href="namespaceedda.html#a6088c96d4c02547c60a12f552a2fb3bd">edda::uncertainIsocontour</a></div><div class="ttdeci">std::shared_ptr&lt; Dataset&lt; float &gt; &gt; uncertainIsocontour(std::shared_ptr&lt; Dataset&lt; Dist &gt; &gt; dataset, float isov)</div><div class="ttdoc">Compute level crossing probabilities Currently the input dataset is assumed to be in regular cartesia...</div><div class="ttdef"><b>Definition:</b> uncertain_isocontour.h:16</div></div>
-<div class="ttc" id="classedda_1_1DataArray_html"><div class="ttname"><a href="classedda_1_1DataArray.html">edda::DataArray</a></div><div class="ttdoc">A simple implementation of DataArray. This is the class that holds the actual array, in a smart pointer. </div><div class="ttdef"><b>Definition:</b> data_array.h:51</div></div>
-<div class="ttc" id="namespaceedda_1_1dist_html_a9108a700d9ad1ce168d1a4be549e05ba"><div class="ttname"><a href="namespaceedda_1_1dist.html#a9108a700d9ad1ce168d1a4be549e05ba">edda::dist::getCdf</a></div><div class="ttdeci">double getCdf(const T &amp;dist, double x)</div><div class="ttdef"><b>Definition:</b> distribution.h:72</div></div>
+<div class="ttc" id="namespaceedda_html_a6088c96d4c02547c60a12f552a2fb3bd"><div class="ttname"><a href="namespaceedda.html#a6088c96d4c02547c60a12f552a2fb3bd">edda::uncertainIsocontour</a></div><div class="ttdeci">std::shared_ptr&lt; Dataset&lt; float &gt; &gt; uncertainIsocontour(std::shared_ptr&lt; Dataset&lt; Dist &gt; &gt; dataset, float isov)</div><div class="ttdoc">Compute level crossing probabilities. </div><div class="ttdef"><b>Definition:</b> uncertain_isocontour.h:17</div></div>
+<div class="ttc" id="classedda_1_1DataArray_html"><div class="ttname"><a href="classedda_1_1DataArray.html">edda::DataArray</a></div><div class="ttdoc">A simple implementation of DataArray. This is the class that holds the actual array, in a smart pointer. </div><div class="ttdef"><b>Definition:</b> data_array.h:56</div></div>
+<div class="ttc" id="namespaceedda_1_1dist_html_a9108a700d9ad1ce168d1a4be549e05ba"><div class="ttname"><a href="namespaceedda_1_1dist.html#a9108a700d9ad1ce168d1a4be549e05ba">edda::dist::getCdf</a></div><div class="ttdeci">double getCdf(const T &amp;dist, double x)</div><div class="ttdoc">Compute CDF of a distribution. </div><div class="ttdef"><b>Definition:</b> distribution.h:81</div></div>
 <div class="ttc" id="dataset_8h_html"><div class="ttname"><a href="dataset_8h.html">dataset.h</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Jan 4 2016 13:45:44 for EDDA by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Jan 4 2016 21:09:28 for EDDA by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

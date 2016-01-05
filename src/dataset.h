@@ -15,12 +15,12 @@
 namespace edda {
 
 ///
-/// Holds all information of a dataset, which includes:
-///    1) Geometry and
-///    2) Data array
-/// You may use make_Dataset() to create a Dataset with shorter codes.
+/// \brief Holds all information of a dataset, which includes: 1) Geometry and 2) Data array.
 ///
-template <typename T>  // Return type of at_phys
+/// You may use make_Dataset() to create a Dataset with shorter codes.
+/// \param T The return type of at_phys() and at_comp()
+///
+template <typename T>
 class Dataset {
 protected:
     Grid *pGrid;
@@ -40,6 +40,7 @@ public:
 
     ///
     /// \brief Get the dimension of the cartesian-grid data.
+    ///
     /// Non-cartesian grid data are currently not supported.
     ///
     int *getDimension() {
@@ -118,7 +119,7 @@ public:
 
 
 ///
-/// Create a shared pointer of Dataset
+/// \brief Create a shared pointer of Dataset
 ///
 template <typename T>  // Return type of at_phys
 inline std::shared_ptr< Dataset<T> >

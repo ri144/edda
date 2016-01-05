@@ -20,7 +20,7 @@
 
 namespace edda{
 
-// Vectors are Tuples that have geometry concepts
+/// \brief Vectors are Tuples that have geometry concepts
 template <typename Real, int N>
 class Vector : public Tuple<Real, N>
 {
@@ -84,8 +84,9 @@ public :
     }
 };
 
-// Specialization of Vector3 for higher performance
-// This avoids for loops
+/// \brief  Specialization of Vector3 for higher performance.
+///
+/// This avoids for-loops
 template <typename Real>
 class Vector<Real, 3> : public Tuple3<Real>
 {
@@ -121,7 +122,7 @@ public:
     Vector<Real, 3> operator*=(Vector<Real, 3> x) { vec[0]*=x[0]; vec[1]*=x[1]; vec[2]*=x[2]; return *this; }
 };
 
-// Specialization of Vector4 for higher performance
+/// \brief Specialization of Vector4 for higher performance
 template <typename Real>
 class Vector<Real, 4> : public Tuple4<Real>
 {

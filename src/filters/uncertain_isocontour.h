@@ -8,6 +8,7 @@ namespace edda{
 
 ///
 /// \brief Compute level crossing probabilities
+///
 /// Currently the input dataset is assumed to be in regular cartesian grids.
 /// For a given dataset in <w,h,d> dimensions, the output is in <w-1, h-1, d-1> dimensions,
 /// to describe the level crossing probabilities for each cell.

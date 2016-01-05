@@ -33,7 +33,7 @@ shared_ary<Gaussianf3> loadVec3GaussianRawArray(string meanfile, string stdfile,
   // Create Gaussian array
   Gaussianf3 x;
   shared_ary<Gaussianf3> data(new Gaussianf3[len], len);
-  int i;
+  size_t i;
   for (i=0; i<len; i++)
   {
     data[i] = Gaussianf3(
@@ -64,7 +64,7 @@ shared_ptr<Dataset<double> > loadGaussianSamplingRegularGrids(string &meanfile, 
   shared_ary<Gaussianf> array = loadGaussianRawArray(meanfile, stdfile, dim[0]*dim[1]*dim[2]);
   Dataset<double> *dataset = new Dataset<double> (
         new RegularCartesianGrid (dim[0], dim[1], dim[2]),
-        new SampledDataArray< Gaussianf >( array )
+        new DataArray< Gaussianf, GetItemSampled >( array )
     );
   return shared_ptr<Dataset<double> > (dataset);
 }
@@ -85,7 +85,7 @@ shared_ptr<Dataset<VECTOR3> > loadVec3GaussianSamplingRegularGrids(string &meanf
   shared_ary<Gaussianf3> array = loadVec3GaussianRawArray(meanfile, stdfile, dim[0]*dim[1]*dim[2]);
   Dataset<VECTOR3> *dataset = new Dataset<VECTOR3> (
               new RegularCartesianGrid (dim[0], dim[1], dim[2]),
-              new SampledIndepTupleArray<Gaussianf3> (array )
+              new DataArray<Gaussianf3,GetItemSampledVector> (array)
   );
   return shared_ptr<Dataset<VECTOR3> > (dataset);
 }

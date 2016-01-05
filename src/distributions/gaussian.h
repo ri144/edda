@@ -19,7 +19,7 @@ namespace edda {
 namespace dist {
 
 ///
-/// Defines a simple Gaussian distribution storage, where mean and variance are stored together.
+/// \brief Defines a simple Gaussian distribution storage, where mean and variance are stored together.
 ///
 template <class Real = float>
 class EDDA_EXPORT SimpleGaussianStorage {
@@ -33,7 +33,7 @@ public:
 
 // ------------------------------------------------------------------------------
 ///
-/// Defines a Gaussian class
+/// \brief Defines a Gaussian class
 ///
 template<typename Real = float, class Storage=SimpleGaussianStorage<Real> >
 class EDDA_EXPORT Gaussian: public ContinuousDistribution, public Storage {
@@ -47,7 +47,7 @@ public:
 // Below defines Gaussian related generic functions
 
 ///
-/// return mean
+/// \brief Return mean
 ///
 template<typename Real, class Storage>
 inline double getMean(const Gaussian<Real, Storage> &dist)
@@ -56,7 +56,7 @@ inline double getMean(const Gaussian<Real, Storage> &dist)
 }
 
 ///
-/// return variance
+/// \brief Return variance
 ///
 template<typename Real, class Storage>
 inline double getVar(const Gaussian<Real, Storage> &dist)
@@ -65,7 +65,7 @@ inline double getVar(const Gaussian<Real, Storage> &dist)
 }
 
 ///
-/// return PDF of x
+/// \brief Return PDF of x
 ///
 template<typename Real, class Storage>
 inline double getPdf(const Gaussian<Real, Storage> &dist, const double x)
@@ -77,7 +77,7 @@ inline double getPdf(const Gaussian<Real, Storage> &dist, const double x)
 }
 
 ///
-/// return a sample
+/// \brief Return a sample
 ///
 template<typename Real, class Storage>
 inline double getSample(const Gaussian<Real, Storage> &dist)
@@ -86,7 +86,7 @@ inline double getSample(const Gaussian<Real, Storage> &dist)
 }
 
 ///
-/// return CDF of x
+/// \brief Return CDF of x
 ///
 template<typename Real, class Storage>
 inline double getCdf(const Gaussian<Real, Storage> &dist, double x)
@@ -100,7 +100,7 @@ inline double getCdf(const Gaussian<Real, Storage> &dist, double x)
 }
 
 ///
-/// print itself
+/// \brief Print itself
 ///
 template<typename Real, class Storage>
 std::ostream& operator<<(std::ostream& os, const Gaussian<Real, Storage>& dist)
@@ -113,7 +113,7 @@ std::ostream& operator<<(std::ostream& os, const Gaussian<Real, Storage>& dist)
 // Below defines Gaussian related arithmetics
 
 ///
-/// random variable with unary -
+/// \brief random variable with unary -
 ///
 template<typename Real, class Storage>
 inline Gaussian<Real, Storage>& operator-(Gaussian<Real, Storage> &x)
@@ -123,7 +123,7 @@ inline Gaussian<Real, Storage>& operator-(Gaussian<Real, Storage> &x)
 }
 
 ///
-/// random variable +=
+/// \brief random variable +=
 ///
 template<typename Real, class Storage>
 inline Gaussian<Real, Storage>& operator+=(Gaussian<Real, Storage> &x, const Gaussian<Real, Storage>& rhs) {
@@ -133,7 +133,7 @@ inline Gaussian<Real, Storage>& operator+=(Gaussian<Real, Storage> &x, const Gau
 }
 
 ///
-/// random variable += with scalar
+/// \brief random variable += with scalar
 ///
 template<typename Real, class Storage>
 inline Gaussian<Real, Storage>& operator+=(Gaussian<Real, Storage> &x, const double r) {
@@ -142,7 +142,7 @@ inline Gaussian<Real, Storage>& operator+=(Gaussian<Real, Storage> &x, const dou
 }
 
 ///
-/// random variable *= with scalar
+/// \brief random variable *= with scalar
 ///
 template<typename Real, class Storage>
 inline Gaussian<Real, Storage>& operator*=(Gaussian<Real, Storage> &x, const double r) {

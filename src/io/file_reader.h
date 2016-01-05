@@ -34,16 +34,16 @@ shared_ary<Gaussianf3> loadVec3GaussianRawArray(std::string meanfile, std::strin
 //----------------------------------------------------------------------------------------------------------
 // dataset creators
 
-/// create a regular grid dataset of gaussian distribution
+/// \brief create a regular grid dataset of gaussian distribution
 std::shared_ptr<Dataset<Gaussianf> > loadGaussianRegularGrids(std::string &meanfile, std::string &stdfile, int dim[3]);
 
-/// create a regular grid dataset of random values from gaussian distributions
+/// \brief create a regular grid dataset of random values from gaussian distributions
 std::shared_ptr<Dataset<double> > loadGaussianSamplingRegularGrids(std::string &meanfile, std::string &stdfile, int dim[3]);
 
-/// create a regular grid dataset of 3d gaussian distribution
+/// \brief create a regular grid dataset of 3d gaussian distribution
 std::shared_ptr<Dataset<Gaussianf3> > loadVec3GaussianRegularGrids(std::string &meanfile, std::string &stdfile, int dim[3]);
 
-/// create a regular grid dataset of random samples from 3d gaussian distribution
+/// \brief create a regular grid dataset of random samples from 3d gaussian distribution
 std::shared_ptr<Dataset<VECTOR3> > loadVec3GaussianSamplingRegularGrids(std::string &meanfile, std::string &stdfile, int dim[3]);
 
 } // edda

@@ -26,7 +26,7 @@ struct GetPositionAsIs {
     inline VECTOR3 operator() (const T &p) const {return static_cast<VECTOR3>( p );}  // Use underlying casting
 };
 
-/// Get the position from mean of the distribution
+/// \brief Get the position from mean of the distribution
 struct GetPositionFromDistributionMean {
     template<class T>
     inline VECTOR3 operator() (const T &p) const {return edda::dist::getMean( p );}
@@ -34,6 +34,7 @@ struct GetPositionFromDistributionMean {
 
 ///
 /// \brief Uncertain particle tracing.
+///
 /// Supports Euler and RK2.
 /// DataType: Return type of the dataset
 /// GetPositionPolicy: We provide policy during advection to obtain a representative direction for uncertain particle locations.

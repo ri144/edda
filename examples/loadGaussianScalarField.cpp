@@ -13,23 +13,6 @@ using namespace edda::dist;
 
 typedef Gaussian<float> Gaussianf;
 
-shared_ary<Gaussianf> load_gaussian_dataset(string meanfile, string stdfile, int *dim) {
-  size_t len = dim[0]*dim[1]*dim[2];
-  shared_ary<float> pMean = loadRawFile<float>(meanfile, len);
-  shared_ary<float> pStd = loadRawFile<float>(stdfile, len);
-
-  // Create Gaussian array
-  Gaussianf *pData = new Gaussianf[len];
-  int i;
-  for (i=0; i<len; i++)
-  {
-    pData[i] = Gaussianf(pMean[i], pStd[i]);
-  }
-  // return smart pointer of the array
-  return shared_ary<Gaussianf> (pData, len);
-}
-
-
 int main(int argc, char **argv) {
     edda::ReturnStatus r;
 
@@ -45,14 +28,14 @@ int main(int argc, char **argv) {
     dim[2] = atoi(argv[5]);
     cout << "dim: " << dim[0] << "," << dim[1] << "," << dim[2] << endl;
 
-    shared_ary<Gaussianf> distData = load_gaussian_dataset(meanfile, stdfile, dim);
+    shared_ary<Gaussianf> distData = edda::loadGaussianRawArray(meanfile, stdfile, dim[0]*dim[1]*dim[2]);
 
     /////////////////////////////////////
     cout << "value interpolation after sampling:" << endl;
 
     Dataset<float> dataset1 (
                 new RegularCartesianGrid (dim[0], dim[1], dim[2]),
-                new SampledDataArray<Gaussianf>(distData )
+                new DataArray<Gaussianf, GetItemSampled>(distData )
             );
     float x;
     for (x=0; x<10; x+=.5)

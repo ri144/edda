@@ -138,7 +138,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="comment">//-----------------------------------------------------------------------------------------</span></div>
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="comment">// The classes to be used in data model:</span></div>
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;</div>
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> T&gt;</div>
 <div class="line"><a name="l00051"></a><span class="lineno"><a class="line" href="namespaceedda.html#a02b3b3fb6f033d50cda9fbbe40358a04">   51</a></span>&#160;<span class="keyword">inline</span> T <a class="code" href="namespaceedda.html#a02b3b3fb6f033d50cda9fbbe40358a04">cubeLerp</a>(<span class="keyword">const</span> <a class="code" href="structedda_1_1Tuple8.html">Tuple8&lt;T&gt;</a> points, <span class="keyword">const</span> <span class="keywordtype">double</span> coeff[3])</div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;{</div>
@@ -147,19 +146,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;                  coeff);</div>
 <div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;}</div>
 <div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> T&gt;</div>
-<div class="line"><a name="l00059"></a><span class="lineno"><a class="line" href="namespaceedda.html#a695a7e0efb2ab6affdc20001192c0006">   59</a></span>&#160;<span class="keyword">inline</span> T <a class="code" href="namespaceedda.html#a695a7e0efb2ab6affdc20001192c0006">tetraLerp</a>(<span class="keyword">const</span> <a class="code" href="structedda_1_1Tuple4.html">Tuple4&lt;T&gt;</a> points, <span class="keyword">const</span> <span class="keywordtype">double</span> coeff[3])</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;{</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="namespaceedda.html#a23a4a142a4ba07fb1318645250902c4e">baryInterp</a>(points[0], points[1], points[2], points[3], coeff);</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;}</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> T&gt;</div>
+<div class="line"><a name="l00060"></a><span class="lineno"><a class="line" href="namespaceedda.html#a695a7e0efb2ab6affdc20001192c0006">   60</a></span>&#160;<span class="keyword">inline</span> T <a class="code" href="namespaceedda.html#a695a7e0efb2ab6affdc20001192c0006">tetraLerp</a>(<span class="keyword">const</span> <a class="code" href="structedda_1_1Tuple4.html">Tuple4&lt;T&gt;</a> points, <span class="keyword">const</span> <span class="keywordtype">double</span> coeff[3])</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;{</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    <span class="keywordflow">return</span> <a class="code" href="namespaceedda.html#a23a4a142a4ba07fb1318645250902c4e">baryInterp</a>(points[0], points[1], points[2], points[3], coeff);</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;}</div>
 <div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;}  <span class="comment">// namespace edda</span></div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="preprocessor">#endif  // INTERPOLATOR_H_</span></div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;}  <span class="comment">// namespace edda</span></div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="preprocessor">#endif  // INTERPOLATOR_H_</span></div>
 <div class="ttc" id="namespaceedda_html_ae9734f47a623e06d20c371e010fe761e"><div class="ttname"><a href="namespaceedda.html#ae9734f47a623e06d20c371e010fe761e">edda::triLerp</a></div><div class="ttdeci">T triLerp(const T &amp;lll, const T &amp;hll, const T &amp;lhl, const T &amp;hhl, const T &amp;llh, const T &amp;hlh, const T &amp;lhh, const T &amp;hhh, const coeffT coeff[3])</div><div class="ttdef"><b>Definition:</b> interpolator.h:38</div></div>
 <div class="ttc" id="namespaceedda_html_a923e527ea437795f77c2adda560f66ed"><div class="ttname"><a href="namespaceedda.html#a923e527ea437795f77c2adda560f66ed">edda::biLerp</a></div><div class="ttdeci">T biLerp(const T &amp;ll, const T &amp;hl, const T &amp;lh, const T &amp;hh, const coeffT coeff[2])</div><div class="ttdef"><b>Definition:</b> interpolator.h:31</div></div>
-<div class="ttc" id="namespaceedda_html_a695a7e0efb2ab6affdc20001192c0006"><div class="ttname"><a href="namespaceedda.html#a695a7e0efb2ab6affdc20001192c0006">edda::tetraLerp</a></div><div class="ttdeci">T tetraLerp(const Tuple4&lt; T &gt; points, const double coeff[3])</div><div class="ttdef"><b>Definition:</b> interpolator.h:59</div></div>
+<div class="ttc" id="namespaceedda_html_a695a7e0efb2ab6affdc20001192c0006"><div class="ttname"><a href="namespaceedda.html#a695a7e0efb2ab6affdc20001192c0006">edda::tetraLerp</a></div><div class="ttdeci">T tetraLerp(const Tuple4&lt; T &gt; points, const double coeff[3])</div><div class="ttdef"><b>Definition:</b> interpolator.h:60</div></div>
 <div class="ttc" id="structedda_1_1Tuple8_html"><div class="ttname"><a href="structedda_1_1Tuple8.html">edda::Tuple8</a></div><div class="ttdef"><b>Definition:</b> tuple.h:103</div></div>
 <div class="ttc" id="structedda_1_1Tuple4_html"><div class="ttname"><a href="structedda_1_1Tuple4.html">edda::Tuple4</a></div><div class="ttdef"><b>Definition:</b> tuple.h:95</div></div>
 <div class="ttc" id="namespaceedda_html_a02b3b3fb6f033d50cda9fbbe40358a04"><div class="ttname"><a href="namespaceedda.html#a02b3b3fb6f033d50cda9fbbe40358a04">edda::cubeLerp</a></div><div class="ttdeci">T cubeLerp(const Tuple8&lt; T &gt; points, const double coeff[3])</div><div class="ttdef"><b>Definition:</b> interpolator.h:51</div></div>
@@ -169,7 +168,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Jan 4 2016 13:45:44 for EDDA by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Jan 4 2016 21:09:28 for EDDA by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

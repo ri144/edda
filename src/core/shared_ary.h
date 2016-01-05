@@ -6,7 +6,7 @@
 
 namespace edda{
 
-// smart pointer
+// smart pointer for arrays
 template <class T>
 class shared_ary : public std::shared_ptr<T>
 {

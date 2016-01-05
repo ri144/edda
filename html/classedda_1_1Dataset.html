@@ -97,6 +97,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!--header-->
 <div class="contents">
 
+<p>Holds all information of a dataset, which includes: 1) Geometry and 2) Data array.  
+ <a href="classedda_1_1Dataset.html#details">More...</a></p>
+
 <p><code>#include &lt;<a class="el" href="dataset_8h_source.html">dataset.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
@@ -110,7 +113,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a7bc1d0aecb6b80d48c0ce83d970ff4b7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classedda_1_1AbstractDataArray.html">AbstractDataArray</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classedda_1_1Dataset.html#a7bc1d0aecb6b80d48c0ce83d970ff4b7">getArray</a> ()</td></tr>
 <tr class="separator:a7bc1d0aecb6b80d48c0ce83d970ff4b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0dc71932f495f2bcf2f8f625e4dfc9a3"><td class="memItemLeft" align="right" valign="top">int *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classedda_1_1Dataset.html#a0dc71932f495f2bcf2f8f625e4dfc9a3">getDimension</a> ()</td></tr>
-<tr class="memdesc:a0dc71932f495f2bcf2f8f625e4dfc9a3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the dimension of the cartesian-grid data. Non-cartesian grid data are currently not supported.  <a href="#a0dc71932f495f2bcf2f8f625e4dfc9a3">More...</a><br/></td></tr>
+<tr class="memdesc:a0dc71932f495f2bcf2f8f625e4dfc9a3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the dimension of the cartesian-grid data.  <a href="#a0dc71932f495f2bcf2f8f625e4dfc9a3">More...</a><br/></td></tr>
 <tr class="separator:a0dc71932f495f2bcf2f8f625e4dfc9a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a885f84a2a2de16d496ee003c859def8a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="namespaceedda.html#aa0433980f2b7cbba42ff2234832b9716">ReturnStatus</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classedda_1_1Dataset.html#a885f84a2a2de16d496ee003c859def8a">at_phys</a> (const <a class="el" href="namespaceedda.html#a85fb595d837d493f208da6f010859b10">VECTOR3</a> &amp;pos, T &amp;output) const </td></tr>
 <tr class="memdesc:a885f84a2a2de16d496ee003c859def8a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the interpolated data at a given position.  <a href="#a885f84a2a2de16d496ee003c859def8a">More...</a><br/></td></tr>
@@ -130,7 +133,14 @@ Protected Attributes</h2></td></tr>
 <div class="textblock"><h3>template&lt;typename T&gt;<br/>
 class edda::Dataset&lt; T &gt;</h3>
 
-<p>Holds all information of a dataset, which includes: 1) Geometry and 2) Data array You may use <a class="el" href="namespaceedda.html#a3f08b2db90fb22fbd37da5e8a7ad8759">make_Dataset()</a> to create a <a class="el" href="classedda_1_1Dataset.html">Dataset</a> with shorter codes. </p>
+<p>Holds all information of a dataset, which includes: 1) Geometry and 2) Data array. </p>
+<p>You may use <a class="el" href="namespaceedda.html#a3f08b2db90fb22fbd37da5e8a7ad8759" title="Create a shared pointer of Dataset. ">make_Dataset()</a> to create a <a class="el" href="classedda_1_1Dataset.html" title="Holds all information of a dataset, which includes: 1) Geometry and 2) Data array. ">Dataset</a> with shorter codes. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">T</td><td>The return type of <a class="el" href="classedda_1_1Dataset.html#a885f84a2a2de16d496ee003c859def8a" title="Return the interpolated data at a given position. ">at_phys()</a> and <a class="el" href="classedda_1_1Dataset.html#a1bc76a28b31c0590043d5a8372b5b810" title="Return the data in the computational space. ">at_comp()</a> </td></tr>
+  </table>
+  </dd>
+</dl>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="a6435bda7663a40aecf2cab8ddf4dce86"></a>
 <div class="memitem">
@@ -339,7 +349,8 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Get the dimension of the cartesian-grid data. Non-cartesian grid data are currently not supported. </p>
+<p>Get the dimension of the cartesian-grid data. </p>
+<p>Non-cartesian grid data are currently not supported. </p>
 
 </div>
 </div>
@@ -419,7 +430,7 @@ template&lt;typename T &gt; </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Jan 4 2016 13:45:44 for EDDA by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Jan 4 2016 21:09:28 for EDDA by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

@@ -35,7 +35,7 @@ class NotImplementedException {};
 class OutOfBoundException{};
 
 ///
-/// This is useful to constrain what types are applicable for generic functions or classes.
+/// \brief This is useful to constrain what types are applicable for generic functions or classes.
 /// @param T The class to be tested
 /// @param B The supposed base class
 ///

@@ -96,7 +96,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!--header-->
 <div class="contents">
 
-<p>The <a class="el" href="classedda_1_1AbstractDataArray.html" title="The AbstractDataArray class used in class Dataset. ">AbstractDataArray</a> class used in class <a class="el" href="classedda_1_1Dataset.html">Dataset</a>.  
+<p>The <a class="el" href="classedda_1_1AbstractDataArray.html" title="The AbstractDataArray class used in the Dataset class. ">AbstractDataArray</a> class used in the <a class="el" href="classedda_1_1Dataset.html" title="Holds all information of a dataset, which includes: 1) Geometry and 2) Data array. ">Dataset</a> class.  
  <a href="classedda_1_1AbstractDataArray.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="data__array_8h_source.html">data_array.h</a>&gt;</code></p>
@@ -106,11 +106,7 @@ Inheritance diagram for edda::AbstractDataArray:</div>
  <div class="center">
   <img src="classedda_1_1AbstractDataArray.png" usemap="#edda::AbstractDataArray_map" alt=""/>
   <map id="edda::AbstractDataArray_map" name="edda::AbstractDataArray_map">
-<area href="classedda_1_1DataArray.html" alt="edda::DataArray&lt; Dist &gt;" shape="rect" coords="0,56,346,80"/>
-<area href="classedda_1_1DataArray.html" alt="edda::DataArray&lt; TupleType &gt;" shape="rect" coords="356,56,702,80"/>
-<area href="classedda_1_1DataArray.html" title="A simple implementation of DataArray. This is the class that holds the actual array, in a smart pointer. " alt="edda::DataArray&lt; T &gt;" shape="rect" coords="712,56,1058,80"/>
-<area href="classedda_1_1SampledDataArray.html" title="Returns a sampling of the distribution. Derived from DataArray. " alt="edda::SampledDataArray&lt; Dist, &gt;" shape="rect" coords="0,112,346,136"/>
-<area href="classedda_1_1SampledIndepTupleArray.html" title="For each element of the tuple, sample a value from the distribution. getItem() Return a Tuple of floa..." alt="edda::SampledIndepTupleArray&lt; TupleType, OutputType &gt;" shape="rect" coords="356,112,702,136"/>
+<area href="classedda_1_1DataArray.html" title="A simple implementation of DataArray. This is the class that holds the actual array, in a smart pointer. " alt="edda::DataArray&lt; T, GetItemPolicy &gt;" shape="rect" coords="0,56,221,80"/>
 </map>
  </div></div>
 <table class="memberdecls">
@@ -128,7 +124,7 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ada749786821e95fb590793c0017cac69"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>The <a class="el" href="classedda_1_1AbstractDataArray.html" title="The AbstractDataArray class used in class Dataset. ">AbstractDataArray</a> class used in class <a class="el" href="classedda_1_1Dataset.html">Dataset</a>. </p>
+<div class="textblock"><p>The <a class="el" href="classedda_1_1AbstractDataArray.html" title="The AbstractDataArray class used in the Dataset class. ">AbstractDataArray</a> class used in the <a class="el" href="classedda_1_1Dataset.html" title="Holds all information of a dataset, which includes: 1) Geometry and 2) Data array. ">Dataset</a> class. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="ac4d9e7c9c90b31fc27c3d37884bcc9cf"></a>
 <div class="memitem">
@@ -200,7 +196,7 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 <p>Get data at the given index Note: We don't return reference because the return data can be derived from the original data. Use <a class="el" href="classedda_1_1AbstractDataArray.html#ada749786821e95fb590793c0017cac69">setItem()</a> to change the data content. </p>
 
-<p>Implemented in <a class="el" href="classedda_1_1SampledIndepTupleArray.html#a08f470144807b15b3f3555bda28ea1fc">edda::SampledIndepTupleArray&lt; TupleType, OutputType &gt;</a>, <a class="el" href="classedda_1_1SampledDataArray.html#a2b4b426eb39e34a8c79d570ef61fbe40">edda::SampledDataArray&lt; Dist, &gt;</a>, <a class="el" href="classedda_1_1DataArray.html#a6d9e1033e18540303da7d06cdd769424">edda::DataArray&lt; T &gt;</a>, <a class="el" href="classedda_1_1DataArray.html#a6d9e1033e18540303da7d06cdd769424">edda::DataArray&lt; TupleType &gt;</a>, and <a class="el" href="classedda_1_1DataArray.html#a6d9e1033e18540303da7d06cdd769424">edda::DataArray&lt; Dist &gt;</a>.</p>
+<p>Implemented in <a class="el" href="classedda_1_1DataArray.html#a6f9e1c164d3300330265370d7770a61c">edda::DataArray&lt; T, GetItemPolicy &gt;</a>.</p>
 
 </div>
 </div>
@@ -226,7 +222,7 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 <p>Get the number of elements </p>
 
-<p>Implemented in <a class="el" href="classedda_1_1DataArray.html#a58e6e4fe8e7d9cb4f007bfb37856eed2">edda::DataArray&lt; T &gt;</a>, <a class="el" href="classedda_1_1DataArray.html#a58e6e4fe8e7d9cb4f007bfb37856eed2">edda::DataArray&lt; TupleType &gt;</a>, and <a class="el" href="classedda_1_1DataArray.html#a58e6e4fe8e7d9cb4f007bfb37856eed2">edda::DataArray&lt; Dist &gt;</a>.</p>
+<p>Implemented in <a class="el" href="classedda_1_1DataArray.html#a2d3ae15906635324cfd58f42fcf1aca8">edda::DataArray&lt; T, GetItemPolicy &gt;</a>.</p>
 
 </div>
 </div>
@@ -263,7 +259,7 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 <p>Set data at the given index </p>
 
-<p>Implemented in <a class="el" href="classedda_1_1DataArray.html#ad464f82cacd733765a78bf6f940a5520">edda::DataArray&lt; T &gt;</a>, <a class="el" href="classedda_1_1DataArray.html#ad464f82cacd733765a78bf6f940a5520">edda::DataArray&lt; TupleType &gt;</a>, and <a class="el" href="classedda_1_1DataArray.html#ad464f82cacd733765a78bf6f940a5520">edda::DataArray&lt; Dist &gt;</a>.</p>
+<p>Implemented in <a class="el" href="classedda_1_1DataArray.html#a7271abddd26b311bca2de0bb18fe884e">edda::DataArray&lt; T, GetItemPolicy &gt;</a>.</p>
 
 </div>
 </div>
@@ -273,7 +269,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Jan 4 2016 13:45:44 for EDDA by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Jan 4 2016 21:09:28 for EDDA by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

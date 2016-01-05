@@ -21,7 +21,8 @@ namespace edda {
 namespace dist {
 
 ///
-/// The Distribution class is a root class for all distribution-type classes.
+/// \brief The Distribution class is a root class for all distribution-type classes.
+///
 /// This is useful for applications to identify whether a class is a distribution-type class, by using ENABLE_IF_BASE_OF()
 ///
 class EDDA_EXPORT Distribution {
@@ -37,28 +38,36 @@ class EDDA_EXPORT DiscreteDistribution : public Distribution{
 // Here are generic functions that can be reused by new distributions if not
 // implemented.
 
-// random variable -=
+///
+/// \brief random variable -=
+///
 template<class T, ENABLE_IF_BASE_OF(T, Distribution) >
 inline T operator-=(const T& lhs, const T& rhs) {
     T h(lhs);
     return h += (-rhs);
 }
 
-// random variable +
+///
+/// \brief random variable +
+///
 template<class T, ENABLE_IF_BASE_OF(T, Distribution) >
 inline T operator+(const T& lhs, const T& rhs) {
     T h(lhs);
     return h += rhs;
 }
 
-// random variable -
+///
+/// \brief random variable -
+///
 template<class T, ENABLE_IF_BASE_OF(T, Distribution) >
 inline T operator-(const T& lhs, const T& rhs) {
     T h(lhs);
     return h -= rhs;
 }
 
-// random variable *
+///
+/// \brief random variable *
+///
 template<class T, ENABLE_IF_BASE_OF(T, Distribution) >
 inline T operator*(const T& lhs, const double x) {
     T h(lhs);
@@ -66,7 +75,7 @@ inline T operator*(const T& lhs, const double x) {
 }
 
 ///
-/// Compute CDF of a distribution
+/// \brief Compute CDF of a distribution
 ///
 template <class T, ENABLE_IF_BASE_OF(T, Distribution) >
 inline double getCdf(const T& dist, double x)
@@ -76,7 +85,9 @@ inline double getCdf(const T& dist, double x)
     return 0;
 }
 
-// Compute the mean of the distribution
+///
+/// \brief Compute the mean of the distribution
+///
 template <class T, ENABLE_IF_BASE_OF(T, Distribution) >
 double getMean(const T &dist)
 {
@@ -85,8 +96,10 @@ double getMean(const T &dist)
     return 0;
 }
 
-// Compute the mean of the distribution
-template <class T, ENABLE_IF_BASE_OF(T, Distribution) >
+///
+/// \brief Get a Monte-Carlo sample of the distribution. We rely on the specific implementation from each distribution.
+///
+template <class T, ENABLE_IF_BASE_OF(T, Distribution)>
 double getSample(const T &dist)
 {
     std::cerr << "Generic computation not implemented" << std::endl;
@@ -94,7 +107,9 @@ double getSample(const T &dist)
     return 0;
 }
 
-// Get vector mean
+///
+/// \brief Get vector mean
+///
 template <class T, int N, ENABLE_IF_BASE_OF(T, Distribution) >
 inline Vector<double, N> getMean(const Tuple<T, N> &dist)
 {

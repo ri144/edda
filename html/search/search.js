@@ -12,7 +12,7 @@ var indexSectionsWithContent =
   2: "e",
   3: "acdefgilnprstuv",
   4: "abcdegilmnoprstuvwxyz~",
-  5: "adefimoprsv",
+  5: "adefgimoprsv",
   6: "gilpv",
   7: "cirt",
   8: "cflopstw",

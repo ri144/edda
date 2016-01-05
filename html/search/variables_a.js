@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['vec',['vec',['../classedda_1_1Tuple.html#aa251ac1a46de47bde1e2f837a9155c72',1,'edda::Tuple']]]
+  ['step_5fsize',['step_size',['../classedda_1_1StreamTracer.html#ae5c09740fd4e418cc480fa9fa40ec50a',1,'edda::StreamTracer']]]
 ];

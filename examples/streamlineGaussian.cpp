@@ -73,7 +73,7 @@ int main(int argc, char **argv) {
     {
         shared_ptr<Dataset<VECTOR3> > dataset  = make_Dataset<VECTOR3>(
                     new RegularCartesianGrid (dim[0], dim[1], dim[2]),
-                    new SampledIndepTupleArray<Gaussianf3> (distData )
+                    new DataArray<Gaussianf3, GetItemSampledVector> (distData )
         );
 
         list<VECTOR3> seeds;

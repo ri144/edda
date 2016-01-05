@@ -16,7 +16,7 @@
 namespace edda {
 
 ///
-/// \brief The AbstractDataArray class used in class Dataset
+/// \brief The AbstractDataArray class used in the Dataset class
 ///
 class AbstractDataArray
 {
@@ -43,21 +43,27 @@ public:
 };
 
 //---------------------------------------------------------------------------------------
+struct GetItemAsIs ;
+struct GetItemSampled ;
+struct GetItemSampledVector ;
 ///
 /// \brief A simple implementation of DataArray.
 /// This is the class that holds the actual array, in a smart pointer.
+/// \param T The element type of an array.
+/// \param GetItemPolicy Allows to output in different representations of the distribution.  Possible choices: GetItemAsIs, GetItemSampled, GetItemSampledVector.
 ///
-template<typename T>
+template<typename T, class GetItemPolicy = GetItemAsIs >
 class DataArray: public AbstractDataArray
 {
 protected:
   shared_ary<T> array;
+  GetItemPolicy GetItem;
 public:
   DataArray(shared_ary<T> array) { this->array = array; }
 
   virtual ~DataArray() { }
 
-  virtual boost::any getItem(size_t idx) { return boost::any( array[idx] );  }
+  virtual boost::any getItem(size_t idx) { return boost::any( GetItem(array[idx]) );  }
 
   virtual void setItem(size_t idx, const boost::any &item) { array[idx] = boost::any_cast<T>( item );  }
 
@@ -66,47 +72,41 @@ public:
   virtual shared_ary<T> getRawArray() { return array; }
 };
 
+
 //---------------------------------------------------------------------------------------
+// GetItemPolicy implementations for DataArray
 ///
-/// \brief Returns a sampling of the distribution.
-/// Derived from DataArray
+/// \brief Describes GetItemPolicy for DataArray.  Returns as is the input.
 ///
-template<typename Dist, ENABLE_IF_BASE_OF(Dist, dist::Distribution)>
-class SampledDataArray: public DataArray<Dist>
-{
-public:
-  SampledDataArray(shared_ary<Dist> array) : DataArray<Dist>(array) {}
-
-  virtual ~SampledDataArray() { }
-
-  virtual boost::any getItem(size_t idx) { return boost::any ( dist::getSample(this->array[idx]) );    }
-
+struct GetItemAsIs {
+  template<class T>
+  inline T &operator() (T &x) { return x; }
 };
 
-//---------------------------------------------------------------------------------------
 ///
-/// \brief For each element of the tuple, sample a value from the distribution.
-/// getItem() Return a Tuple of float types (Can be VECTOR3 or VECTOR4)
-/// Derived from DataArray
+/// \brief Describes GetItemPolicy for DataArray.  It assumes the input is a distribution and outputs a sample of it.
 ///
-template<typename TupleType, typename OutputType = Vector<float, TupleType::LENGTH> >
-class SampledIndepTupleArray: public DataArray<TupleType>
-{
-public:
-  SampledIndepTupleArray(shared_ary<TupleType> array) : DataArray<TupleType>(array) {}
+struct GetItemSampled {
+  template<class T>
+  inline double operator() (T &x) { return dist::getSample(x); }
+};
 
-  virtual boost::any getItem(size_t idx) {
-    TupleType &data_dist = this->array[idx];
-    OutputType data_sampled;
+///
+/// \brief Describes GetItemPolicy for DataArray.  It assumes the input is a tuple of distributions and outputs a vector of sampled values in floats.
+///
+struct GetItemSampledVector {
+  template<typename VectorType, typename OutputType = Vector<float, VectorType::LENGTH> >
+  OutputType operator() (const VectorType &tuple)
+  {
+    OutputType tuple_sampled;
 
-    // sample from each dimension
-    for (int i=0; i < TupleType::LENGTH; i++)
-      data_sampled[i] = dist::getSample(data_dist[i]);
+    // sample from each element
+    for (int i=0; i < VectorType::LENGTH; i++)
+      tuple_sampled[i] = dist::getSample(tuple[i]);
 
-    return boost::any ( data_sampled );
+    return tuple_sampled;
   }
 };
-
 
 } // namespace edda
 

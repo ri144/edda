@@ -46,7 +46,7 @@ inline T triLerp(const T &lll, const T &hll, const T &lhl, const T &hhl,
 //-----------------------------------------------------------------------------------------
 // The classes to be used in data model:
 
-
+///
 template<class T>
 inline T cubeLerp(const Tuple8<T> points, const double coeff[3])
 {
@@ -55,6 +55,7 @@ inline T cubeLerp(const Tuple8<T> points, const double coeff[3])
                   coeff);
 }
 
+///
 template<class T>
 inline T tetraLerp(const Tuple4<T> points, const double coeff[3])
 {
