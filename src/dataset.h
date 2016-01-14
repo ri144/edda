@@ -60,7 +60,7 @@ public:
         ReturnStatus r;
         switch (pGrid->getInterpType())
         {
-        case InterpType::TRI_LERP:
+        case TRI_LERP:
         {
             PointInfo pinfo;
             pinfo.phyCoord = pos ;

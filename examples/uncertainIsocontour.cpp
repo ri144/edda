@@ -19,22 +19,17 @@ using namespace edda;
 typedef dist::Gaussian<> Gaussian;
 
 int main(int argc, char **argv) {
-  cout << "isoProbField <mean file> <std file> <w> <h> <d> <iso-value>" << endl;
-  if (argc<7)
-      return -1;
-  string meanfile, stdfile;
-  meanfile = argv[1];
-  stdfile = argv[2];
-  int dim[3];
-  dim[0] = atoi(argv[3]);
-  dim[1] = atoi(argv[4]);
-  dim[2] = atoi(argv[5]);
-  cout << "dim: " << dim[0] << "," << dim[1] << "," << dim[2] << endl;
-  float isov = atof(argv[6]);
+  cout << "isoProbField <info file> <iso-value>" << endl;
+  string info_file = argv[1];
+  float isov = atof(argv[2]);
 
-  shared_ptr<Dataset<Gaussianf> > dataset = loadGaussianRegularGrids(meanfile, stdfile, dim);
+  // load data
+  shared_ptr<Dataset<Gaussianf> > dataset = loadData<Gaussianf>(info_file);
+
+  // compute isocontour
   shared_ptr<Dataset<float> > output = uncertainIsocontour(dataset, isov);
 
+  // save into file
   cout << "Output: probField.raw, probField.nrrd" << endl;
   writeRawNrrdFile(output, "probField");
 }
