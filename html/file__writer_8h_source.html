@@ -114,9 +114,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;  std::string rawfilename = filename+<span class="stringliteral">&quot;.raw&quot;</span>;</div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;  <span class="comment">// output raw file</span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;  FILE *fp = fopen(rawfilename.c_str(), <span class="stringliteral">&quot;wb&quot;</span>);</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;  <a class="code" href="classedda_1_1DataArray.html">DataArray&lt;T&gt;</a> *array = <span class="keyword">dynamic_cast&lt;</span><a class="code" href="classedda_1_1DataArray.html">DataArray&lt;T&gt;</a> *<span class="keyword">&gt;</span>( dataset-&gt;getArray() );</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;  <a class="code" href="classedda_1_1shared__ary.html">shared_ary&lt;T&gt;</a> array = boost::any_cast&lt;<a class="code" href="classedda_1_1shared__ary.html">shared_ary&lt;T&gt;</a> &gt;( dataset-&gt;getArray()-&gt;getRawArray() );</div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;  assert(array!=NULL);</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;  fwrite( array-&gt;getRawArray().get() , dataset-&gt;getArray()-&gt;getLength(), <span class="keyword">sizeof</span>(float), fp);</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;  fwrite( array.get() , dataset-&gt;getArray()-&gt;getLength(), <span class="keyword">sizeof</span>(float), fp);</div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;  fclose(fp);</div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;  <span class="comment">// output nrrd file</span></div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;  <span class="keywordtype">int</span> *new_dim = <span class="keyword">dynamic_cast&lt;</span><a class="code" href="classedda_1_1RegularCartesianGrid.html">RegularCartesianGrid</a>*<span class="keyword">&gt;</span>( dataset-&gt;getGrid() )-&gt;getDimension();</div>
@@ -127,6 +127,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;</div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="preprocessor">#endif // FILE_WRITER_H_</span></div>
 <div class="ttc" id="namespaceedda_html_a84955479cafdd0ef664aac47680dfb74"><div class="ttname"><a href="namespaceedda.html#a84955479cafdd0ef664aac47680dfb74">edda::writeRawNrrdFile</a></div><div class="ttdeci">void writeRawNrrdFile(std::shared_ptr&lt; Dataset&lt; T &gt; &gt; dataset, std::string filename)</div><div class="ttdef"><b>Definition:</b> file_writer.h:20</div></div>
+<div class="ttc" id="classedda_1_1shared__ary_html"><div class="ttname"><a href="classedda_1_1shared__ary.html">edda::shared_ary</a></div><div class="ttdef"><b>Definition:</b> shared_ary.h:11</div></div>
 <div class="ttc" id="shared__ary_8h_html"><div class="ttname"><a href="shared__ary_8h.html">shared_ary.h</a></div></div>
 <div class="ttc" id="classedda_1_1RegularCartesianGrid_html"><div class="ttname"><a href="classedda_1_1RegularCartesianGrid.html">edda::RegularCartesianGrid</a></div><div class="ttdef"><b>Definition:</b> grid.h:187</div></div>
 <div class="ttc" id="classedda_1_1Dataset_html"><div class="ttname"><a href="classedda_1_1Dataset.html">edda::Dataset</a></div><div class="ttdoc">Holds all information of a dataset, which includes: 1) Geometry and 2) Data array. </div><div class="ttdef"><b>Definition:</b> dataset.h:24</div></div>
@@ -135,12 +136,11 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="ttc" id="distribution_8h_html"><div class="ttname"><a href="distribution_8h.html">distribution.h</a></div></div>
 <div class="ttc" id="namespaceedda_html_aa7d9a6036df168e12c9274b3c867b196"><div class="ttname"><a href="namespaceedda.html#aa7d9a6036df168e12c9274b3c867b196">edda::write_nrrd_3d</a></div><div class="ttdeci">ReturnStatus write_nrrd_3d(const char *nrrd_fname, const char *raw_fname, int w, int h, int d, const char *type)</div><div class="ttdef"><b>Definition:</b> nrrd.cpp:12</div></div>
 <div class="ttc" id="path_8h_html"><div class="ttname"><a href="path_8h.html">path.h</a></div></div>
-<div class="ttc" id="classedda_1_1DataArray_html"><div class="ttname"><a href="classedda_1_1DataArray.html">edda::DataArray</a></div><div class="ttdoc">A simple implementation of DataArray. This is the class that holds the actual array, in a smart pointer. </div><div class="ttdef"><b>Definition:</b> data_array.h:56</div></div>
 <div class="ttc" id="dataset_8h_html"><div class="ttname"><a href="dataset_8h.html">dataset.h</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Jan 4 2016 21:09:28 for EDDA by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Jan 14 2016 20:58:50 for EDDA by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

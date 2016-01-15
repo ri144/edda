@@ -12,11 +12,11 @@ var indexSectionsWithContent =
   2: "e",
   3: "acdefgilnprstuv",
   4: "abcdegilmnoprstuvwxyz~",
-  5: "adefgimoprsv",
+  5: "adefgilmoprsv",
   6: "gilpv",
   7: "cirt",
   8: "cflopstw",
-  9: "eiotu",
+  9: "eiotuv",
   10: "f",
   11: "ael"
 };

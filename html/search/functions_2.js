@@ -6,6 +6,7 @@ var searchData=
   ['clamp',['clamp',['../classedda_1_1Vector.html#a51a82f3e95eb87bf98aaa26f3d2bd03a',1,'edda::Vector::clamp()'],['../classedda_1_1Vector_3_01Real_00_014_01_4.html#a08f179cb06c5aae652a49b02c65fd941',1,'edda::Vector&lt; Real, 4 &gt;::clamp()']]],
   ['compute',['compute',['../classedda_1_1StreamTracer.html#adbbf6510363f650089804bd2a45d0f88',1,'edda::StreamTracer']]],
   ['computebbox',['computeBBox',['../classedda_1_1Grid.html#a538c4f44fa3b37c892705f02475ba568',1,'edda::Grid::computeBBox()'],['../classedda_1_1RegularCartesianGrid.html#ac26c70ad564400a15ef51ad1a5489c59',1,'edda::RegularCartesianGrid::computeBBox()']]],
+  ['computestreamlines',['computeStreamlines',['../streamlineGaussianVTK_8cpp.html#afa66efa39eeccf7b9bc62e6302b30d46',1,'computeStreamlines(vtkSmartPointer&lt; vtkPolyData &gt; vtk_seeds):&#160;streamlineGaussianVTK.cpp'],['../streamlineMonteCarlo_8cpp.html#afa66efa39eeccf7b9bc62e6302b30d46',1,'computeStreamlines(vtkSmartPointer&lt; vtkPolyData &gt; vtk_seeds):&#160;streamlineMonteCarlo.cpp']]],
   ['cross',['cross',['../namespaceedda.html#afeb533ece9d7f2447ee12393696a5ffb',1,'edda']]],
   ['cubelerp',['cubeLerp',['../namespaceedda.html#a02b3b3fb6f033d50cda9fbbe40358a04',1,'edda']]]
 ];

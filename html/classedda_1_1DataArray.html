@@ -97,7 +97,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!--header-->
 <div class="contents">
 
-<p>A simple implementation of <a class="el" href="classedda_1_1DataArray.html" title="A simple implementation of DataArray. This is the class that holds the actual array, in a smart pointer. ">DataArray</a>. This is the class that holds the actual array, in a smart pointer.  
+<p>A simple implementation of <a class="el" href="classedda_1_1DataArray.html" title="A simple implementation of DataArray. ">DataArray</a>.  
  <a href="classedda_1_1DataArray.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="data__array_8h_source.html">data_array.h</a>&gt;</code></p>
@@ -123,8 +123,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a7271abddd26b311bca2de0bb18fe884e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2d3ae15906635324cfd58f42fcf1aca8"><td class="memItemLeft" align="right" valign="top">virtual size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classedda_1_1DataArray.html#a2d3ae15906635324cfd58f42fcf1aca8">getLength</a> ()</td></tr>
 <tr class="separator:a2d3ae15906635324cfd58f42fcf1aca8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a034fbf5ae1436392aa182f0c992d3ea7"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classedda_1_1shared__ary.html">shared_ary</a>&lt; T &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classedda_1_1DataArray.html#a034fbf5ae1436392aa182f0c992d3ea7">getRawArray</a> ()</td></tr>
-<tr class="separator:a034fbf5ae1436392aa182f0c992d3ea7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a767976eb921b9051090ad840446ea978"><td class="memItemLeft" align="right" valign="top">virtual boost::any&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classedda_1_1DataArray.html#a767976eb921b9051090ad840446ea978">getRawArray</a> ()</td></tr>
+<tr class="separator:a767976eb921b9051090ad840446ea978"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classedda_1_1AbstractDataArray"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classedda_1_1AbstractDataArray')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classedda_1_1AbstractDataArray.html">edda::AbstractDataArray</a></td></tr>
 <tr class="memitem:ac4d9e7c9c90b31fc27c3d37884bcc9cf inherit pub_methods_classedda_1_1AbstractDataArray"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classedda_1_1AbstractDataArray.html#ac4d9e7c9c90b31fc27c3d37884bcc9cf">AbstractDataArray</a> ()</td></tr>
 <tr class="separator:ac4d9e7c9c90b31fc27c3d37884bcc9cf inherit pub_methods_classedda_1_1AbstractDataArray"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -142,7 +142,8 @@ Protected Attributes</h2></td></tr>
 <div class="textblock"><h3>template&lt;typename T, class GetItemPolicy = GetItemAsIs&gt;<br/>
 class edda::DataArray&lt; T, GetItemPolicy &gt;</h3>
 
-<p>A simple implementation of <a class="el" href="classedda_1_1DataArray.html" title="A simple implementation of DataArray. This is the class that holds the actual array, in a smart pointer. ">DataArray</a>. This is the class that holds the actual array, in a smart pointer. </p>
+<p>A simple implementation of <a class="el" href="classedda_1_1DataArray.html" title="A simple implementation of DataArray. ">DataArray</a>. </p>
+<p>This is the class that holds the actual array, in a smart pointer. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">T</td><td>The element type of an array. </td></tr>
@@ -155,7 +156,7 @@ class edda::DataArray&lt; T, GetItemPolicy &gt;</h3>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename T, class GetItemPolicy = GetItemAsIs&gt; </div>
+template&lt;typename T , class GetItemPolicy  = GetItemAsIs&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -181,7 +182,7 @@ template&lt;typename T, class GetItemPolicy = GetItemAsIs&gt; </div>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename T, class GetItemPolicy = GetItemAsIs&gt; </div>
+template&lt;typename T , class GetItemPolicy  = GetItemAsIs&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -207,7 +208,7 @@ template&lt;typename T, class GetItemPolicy = GetItemAsIs&gt; </div>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename T, class GetItemPolicy = GetItemAsIs&gt; </div>
+template&lt;typename T , class GetItemPolicy  = GetItemAsIs&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -236,7 +237,7 @@ template&lt;typename T, class GetItemPolicy = GetItemAsIs&gt; </div>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename T, class GetItemPolicy = GetItemAsIs&gt; </div>
+template&lt;typename T , class GetItemPolicy  = GetItemAsIs&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -260,17 +261,17 @@ template&lt;typename T, class GetItemPolicy = GetItemAsIs&gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="a034fbf5ae1436392aa182f0c992d3ea7"></a>
+<a class="anchor" id="a767976eb921b9051090ad840446ea978"></a>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename T, class GetItemPolicy = GetItemAsIs&gt; </div>
+template&lt;typename T , class GetItemPolicy  = GetItemAsIs&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual <a class="el" href="classedda_1_1shared__ary.html">shared_ary</a>&lt;T&gt; <a class="el" href="classedda_1_1DataArray.html">edda::DataArray</a>&lt; T, GetItemPolicy &gt;::getRawArray </td>
+          <td class="memname">virtual boost::any <a class="el" href="classedda_1_1DataArray.html">edda::DataArray</a>&lt; T, GetItemPolicy &gt;::getRawArray </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -282,6 +283,9 @@ template&lt;typename T, class GetItemPolicy = GetItemAsIs&gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
+<p>Get the array </p>
+
+<p>Implements <a class="el" href="classedda_1_1AbstractDataArray.html#af7070129998073a6fe0bc1ffc259d31d">edda::AbstractDataArray</a>.</p>
 
 </div>
 </div>
@@ -289,7 +293,7 @@ template&lt;typename T, class GetItemPolicy = GetItemAsIs&gt; </div>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename T, class GetItemPolicy = GetItemAsIs&gt; </div>
+template&lt;typename T , class GetItemPolicy  = GetItemAsIs&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -329,7 +333,7 @@ template&lt;typename T, class GetItemPolicy = GetItemAsIs&gt; </div>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename T, class GetItemPolicy = GetItemAsIs&gt; </div>
+template&lt;typename T , class GetItemPolicy  = GetItemAsIs&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -351,7 +355,7 @@ template&lt;typename T, class GetItemPolicy = GetItemAsIs&gt; </div>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename T, class GetItemPolicy = GetItemAsIs&gt; </div>
+template&lt;typename T , class GetItemPolicy  = GetItemAsIs&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -375,7 +379,7 @@ template&lt;typename T, class GetItemPolicy = GetItemAsIs&gt; </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Jan 4 2016 21:09:28 for EDDA by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Jan 14 2016 20:58:50 for EDDA by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

@@ -1,7 +1,7 @@
 var searchData=
 [
   ['gaussian',['Gaussian',['../classedda_1_1dist_1_1Gaussian.html',1,'edda::dist']]],
-  ['gaussian',['Gaussian',['../classedda_1_1dist_1_1Gaussian.html#a41b97a90c61a188cc2457485fa82c810',1,'edda::dist::Gaussian::Gaussian()'],['../classedda_1_1dist_1_1Gaussian.html#ac23e5aedde3b2cb6097419f32e9a49fb',1,'edda::dist::Gaussian::Gaussian(Real m, Real var)'],['../uncertainIsocontour_8cpp.html#aed57d073310d2bf99cd0790f5e2b17c1',1,'Gaussian():&#160;uncertainIsocontour.cpp']]],
+  ['gaussian',['Gaussian',['../classedda_1_1dist_1_1Gaussian.html#a41b97a90c61a188cc2457485fa82c810',1,'edda::dist::Gaussian::Gaussian()'],['../classedda_1_1dist_1_1Gaussian.html#ac23e5aedde3b2cb6097419f32e9a49fb',1,'edda::dist::Gaussian::Gaussian(Real m, Real var)'],['../uncertainIsocontour_8cpp.html#aed57d073310d2bf99cd0790f5e2b17c1',1,'Gaussian():&#160;uncertainIsocontour.cpp'],['../uncertainIsocontourVTK_8cpp.html#aed57d073310d2bf99cd0790f5e2b17c1',1,'Gaussian():&#160;uncertainIsocontourVTK.cpp']]],
   ['gaussian_2eh',['gaussian.h',['../gaussian_8h.html',1,'']]],
   ['gaussianf',['Gaussianf',['../loadGaussianScalarField_8cpp.html#af260049accdb7a78a1b188ae97d7407e',1,'Gaussianf():&#160;loadGaussianScalarField.cpp'],['../loadGaussianVectorField_8cpp.html#af260049accdb7a78a1b188ae97d7407e',1,'Gaussianf():&#160;loadGaussianVectorField.cpp'],['../streamlineGaussian_8cpp.html#af260049accdb7a78a1b188ae97d7407e',1,'Gaussianf():&#160;streamlineGaussian.cpp'],['../namespaceedda.html#a58f8573eb3210c4239fa440215af269c',1,'edda::Gaussianf()']]],
   ['gaussianf3',['Gaussianf3',['../loadGaussianVectorField_8cpp.html#a8c6f71d66d07e43d157c26f071735872',1,'Gaussianf3():&#160;loadGaussianVectorField.cpp'],['../streamlineGaussian_8cpp.html#a8c6f71d66d07e43d157c26f071735872',1,'Gaussianf3():&#160;streamlineGaussian.cpp'],['../namespaceedda.html#a8f7076b13de1cb3d0659ae4ec05211bd',1,'edda::Gaussianf3()']]],
@@ -31,9 +31,10 @@ var searchData=
   ['getmean',['getMean',['../namespaceedda_1_1dist.html#aa647a75ef90d5ec917d5d82cee61e35a',1,'edda::dist::getMean(const T &amp;dist)'],['../namespaceedda_1_1dist.html#ad57b2fa1045786424910800ecb46d95f',1,'edda::dist::getMean(const Tuple&lt; T, N &gt; &amp;dist)'],['../namespaceedda_1_1dist.html#a90fd0b34ddbb73646b1fe67edf00c11f',1,'edda::dist::getMean(const Gaussian&lt; Real, Storage &gt; &amp;dist)'],['../namespaceedda.html#aa11376ddc98a4d6fe98046b962ae22e6',1,'edda::getMean()']]],
   ['getpath',['getPath',['../namespaceedda.html#a33c899f398e10b56ea24b4a0aebc403e',1,'edda']]],
   ['getpdf',['getPdf',['../namespaceedda_1_1dist.html#a71689b72547bef351efbeeaac396c7dc',1,'edda::dist']]],
+  ['getposition',['getPosition',['../structedda_1_1GetPositionAsIs.html#a05f5568ab6c91b17c3e611dbd7535ae4',1,'edda::GetPositionAsIs::getPosition()'],['../structedda_1_1GetPositionFromDistributionMean.html#a6bd189b05a1b73f8fcddfed44e311a0c',1,'edda::GetPositionFromDistributionMean::getPosition()']]],
   ['getpositionasis',['GetPositionAsIs',['../structedda_1_1GetPositionAsIs.html',1,'edda']]],
   ['getpositionfromdistributionmean',['GetPositionFromDistributionMean',['../structedda_1_1GetPositionFromDistributionMean.html',1,'edda']]],
-  ['getrawarray',['getRawArray',['../classedda_1_1DataArray.html#a034fbf5ae1436392aa182f0c992d3ea7',1,'edda::DataArray']]],
+  ['getrawarray',['getRawArray',['../classedda_1_1AbstractDataArray.html#af7070129998073a6fe0bc1ffc259d31d',1,'edda::AbstractDataArray::getRawArray()'],['../classedda_1_1DataArray.html#a767976eb921b9051090ad840446ea978',1,'edda::DataArray::getRawArray()']]],
   ['getsample',['getSample',['../namespaceedda_1_1dist.html#ada43f38ccf485826e1140639f2bcb9ec',1,'edda::dist::getSample(const T &amp;dist)'],['../namespaceedda_1_1dist.html#ab8fe6caa0a57a3bec9ef7ba25754fcfb',1,'edda::dist::getSample(const Gaussian&lt; Real, Storage &gt; &amp;dist)']]],
   ['getstepsize',['getStepSize',['../namespaceedda.html#aa3b8bbdd2ee47371f895f59cb7b998b2',1,'edda']]],
   ['getsum',['getSum',['../namespaceedda.html#a5df8c10f913b59e8112bfb7eb1b6c765',1,'edda']]],

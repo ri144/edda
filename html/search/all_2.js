@@ -9,6 +9,7 @@ var searchData=
   ['common_2eh',['common.h',['../common_8h.html',1,'']]],
   ['compute',['compute',['../classedda_1_1StreamTracer.html#adbbf6510363f650089804bd2a45d0f88',1,'edda::StreamTracer']]],
   ['computebbox',['computeBBox',['../classedda_1_1Grid.html#a538c4f44fa3b37c892705f02475ba568',1,'edda::Grid::computeBBox()'],['../classedda_1_1RegularCartesianGrid.html#ac26c70ad564400a15ef51ad1a5489c59',1,'edda::RegularCartesianGrid::computeBBox()']]],
+  ['computestreamlines',['computeStreamlines',['../streamlineGaussianVTK_8cpp.html#afa66efa39eeccf7b9bc62e6302b30d46',1,'computeStreamlines(vtkSmartPointer&lt; vtkPolyData &gt; vtk_seeds):&#160;streamlineGaussianVTK.cpp'],['../streamlineMonteCarlo_8cpp.html#afa66efa39eeccf7b9bc62e6302b30d46',1,'computeStreamlines(vtkSmartPointer&lt; vtkPolyData &gt; vtk_seeds):&#160;streamlineMonteCarlo.cpp']]],
   ['continuousdistribution',['ContinuousDistribution',['../classedda_1_1dist_1_1ContinuousDistribution.html',1,'edda::dist']]],
   ['cross',['cross',['../namespaceedda.html#afeb533ece9d7f2447ee12393696a5ffb',1,'edda']]],
   ['cube',['CUBE',['../namespaceedda.html#a459230caa8b746cb6818233f3f58c63eaee5742601be37980f6574329a54c49bc',1,'edda']]],
