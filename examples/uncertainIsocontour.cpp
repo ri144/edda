@@ -20,6 +20,8 @@ typedef dist::Gaussian<> Gaussian;
 
 int main(int argc, char **argv) {
   cout << "isoProbField <info file> <iso-value>" << endl;
+  if (argc<=2)
+    return -1;
   string info_file = argv[1];
   float isov = atof(argv[2]);
 

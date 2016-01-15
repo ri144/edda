@@ -3,16 +3,16 @@
 # found in the LICENSE file.
 
 set(sources
-	loadGaussianScalarField
-	loadGaussianVectorField
-    uncertainIsocontour
-	streamlineGaussian
+  loadGaussianScalarField
+  loadGaussianVectorField
+  uncertainIsocontour
+  streamlineGaussian
 )
 
 
 foreach (file ${sources})
-    get_filename_component(name ${file} NAME_WE)
-    add_executable ( ${name} ${file} )
-    target_link_libraries ( ${name} edda )
+  get_filename_component(name ${file} NAME_WE)
+  add_executable ( ${name} ${file} )
+  target_link_libraries ( ${name} edda )
 endforeach ()
 

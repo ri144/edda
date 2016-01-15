@@ -23,13 +23,13 @@ enum TraceOrd{TO_EULER=0, TO_RK2, TO_RK4, TO_RK45};
 ///
 struct GetPositionAsIs {
     template<class T>
-    inline VECTOR3 operator() (const T &p) const {return static_cast<VECTOR3>( p );}  // Use underlying casting
+    inline VECTOR3 getPosition(const T &p) const {return static_cast<VECTOR3>( p );}  // Use underlying casting
 };
 
 /// \brief Get the position from mean of the distribution
 struct GetPositionFromDistributionMean {
     template<class T>
-    inline VECTOR3 operator() (const T &p) const {return edda::dist::getMean( p );}
+    inline VECTOR3 getPosition(const T &p) const {return edda::dist::getMean( p );}
 };
 
 ///
@@ -40,18 +40,16 @@ struct GetPositionFromDistributionMean {
 /// GetPositionPolicy: We provide policy during advection to obtain a representative direction for uncertain particle locations.
 ///
 template<typename DataType, class GetPositionPolicy = GetPositionAsIs>
-class StreamTracer{
+class StreamTracer: public GetPositionPolicy{
     std::shared_ptr<Dataset<DataType> > dataset;
-    GetPositionPolicy getPosition;
 public:
     int max_steps = 1000;
     float step_size = .5f;
     TraceDir dir = TD_FORWARD;
     TraceOrd ord = TO_RK2;
 
-    StreamTracer(std::shared_ptr<Dataset<DataType> > &dataset_,
-                 GetPositionPolicy getPosition_ = GetPositionAsIs())
-        : dataset(dataset_), getPosition(getPosition_)
+    StreamTracer(std::shared_ptr<Dataset<DataType> > &dataset_)
+        : dataset(dataset_)
     {
     }
 
@@ -61,7 +59,7 @@ public:
     {
         ReturnStatus r;
         DataType vec;
-        r = dataset->at_phys( getPosition(pos), vec);
+        r = dataset->at_phys( this->getPosition(pos), vec);
         if (r != SUCCESS)
             return r;
         pos += vec * dt;
@@ -78,13 +76,13 @@ public:
         DataType k1, k2;
 
         // 1st step of Runge-Kutta
-        r = dataset->at_phys( getPosition(pos), vec);
+        r = dataset->at_phys( this->getPosition(pos), vec);
         if (r != SUCCESS)
             return r;
         k1 = vec * dt;
 
         // 2nd step or Runge Kutta
-        r = dataset->at_phys( getPosition(pos + k1 * .5f), vec);
+        r = dataset->at_phys( this->getPosition(pos + k1 * .5f), vec);
         if (r != SUCCESS)
             return r;
 

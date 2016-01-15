@@ -22,9 +22,9 @@ void writeRawNrrdFile(std::shared_ptr<Dataset<T> > dataset, std::string filename
   std::string rawfilename = filename+".raw";
   // output raw file
   FILE *fp = fopen(rawfilename.c_str(), "wb");
-  DataArray<T> *array = dynamic_cast<DataArray<T> *>( dataset->getArray() );
+  shared_ary<T> array = boost::any_cast<shared_ary<T> >( dataset->getArray()->getRawArray() );
   assert(array!=NULL);
-  fwrite( array->getRawArray().get() , dataset->getArray()->getLength(), sizeof(float), fp);
+  fwrite( array.get() , dataset->getArray()->getLength(), sizeof(float), fp);
   fclose(fp);
   // output nrrd file
   int *new_dim = dynamic_cast<RegularCartesianGrid*>( dataset->getGrid() )->getDimension();

@@ -40,6 +40,11 @@ public:
     /// Set data at the given index
     ///
     virtual void setItem(size_t idx, const boost::any &item) =0;
+
+    ///
+    /// Get the array
+    ///
+    virtual boost::any getRawArray() = 0;
 };
 
 //---------------------------------------------------------------------------------------
@@ -48,6 +53,7 @@ struct GetItemSampled ;
 struct GetItemSampledVector ;
 ///
 /// \brief A simple implementation of DataArray.
+///
 /// This is the class that holds the actual array, in a smart pointer.
 /// \param T The element type of an array.
 /// \param GetItemPolicy Allows to output in different representations of the distribution.  Possible choices: GetItemAsIs, GetItemSampled, GetItemSampledVector.
@@ -69,7 +75,7 @@ public:
 
   virtual size_t getLength() { return array.getLength(); }
 
-  virtual shared_ary<T> getRawArray() { return array; }
+  virtual boost::any getRawArray() { return boost::any(array); }
 };
 
 
