@@ -39,12 +39,19 @@ endif ()
 option (EDDA_BUILD_TESTS "Build the test programs." OFF)
 option (EDDA_BUILD_EXAMPLES "Build the example programs." ON)
 option (EDDA_BUILD_VTK_EXAMPLES "Build VTK examples" OFF)
+option (EDDA_BUILD_VTK_INT "Build with VTK integration" OFF)
 
 # Load settings for the boost project.
 find_package (Boost REQUIRED)
 if (Boost_FOUND)
   include_directories (${Boost_INCLUDE_DIRS})
   link_libraries (${Boost_LIBRARIES})
+endif ()
+
+# VTK integration
+if (EDDA_BUILD_VTK_EXAMPLES OR EDDA_BUILD_VTK_INT)
+  find_package(VTK)
+  include (${VTK_USE_FILE})
 endif ()
 
 # Make the configuration file.
@@ -66,6 +73,10 @@ endif ()
 # If EDDA_BUILD_EXAMPLES is on, add the examples subdirectory to the build.
 if (EDDA_BUILD_EXAMPLES)
   add_subdirectory (examples)
+endif ()
+
+if (EDDA_BUILD_VTK_INT)
+  add_subdirectory (vtk)
 endif ()
 
 if (EDDA_BUILD_VTK_EXAMPLES)
