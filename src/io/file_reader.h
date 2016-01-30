@@ -5,9 +5,9 @@
 #include <string>
 #include <cstring>
 #include <iostream>
-#include "dataset.h"
 #include "distributions/gaussian.h"
 #include "distributions/distribution.h"
+#include "dataset.h"
 #include "core/shared_ary.h"
 #include "io/path.h"
 #include <boost/property_tree/ptree.hpp>
@@ -51,16 +51,7 @@ std::shared_ptr<Dataset<Gaussianf3> > loadVec3GaussianRegularGrids(std::string &
 std::shared_ptr<Dataset<VECTOR3> > loadVec3GaussianSamplingRegularGrids(std::string &meanfile, std::string &stdfile, int dim[3]);
 
 namespace detail{
-  void print(boost::property_tree::ptree const& pt)
-  {
-      boost::property_tree::ptree::const_iterator end = pt.end();
-      std::cout << "{" << std::endl;
-      for (boost::property_tree::ptree::const_iterator it = pt.begin(); it != end; ++it) {
-          std::cout << it->first << ": " << it->second.get_value<std::string>() << std::endl;
-          print(it->second);
-      }
-      std::cout << "}" << std::endl;
-  }
+  void print(boost::property_tree::ptree const& pt);
 }
 
 template<typename T, class GetItemPolicy=GetItemAsIs>

@@ -1,0 +1,5 @@
+<ParaViewReaders>
+  <Reader name="EddaReader" extensions="info"
+	  file_description="Example (.info) Files">
+  </Reader>
+</ParaViewReaders>

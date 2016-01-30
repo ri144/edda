@@ -48,10 +48,19 @@ if (Boost_FOUND)
   link_libraries (${Boost_LIBRARIES})
 endif ()
 
-# VTK integration
-if (EDDA_BUILD_VTK_EXAMPLES OR EDDA_BUILD_VTK_INT)
-  find_package(VTK)
-  include (${VTK_USE_FILE})
+
+option (EDDA_BUILD_PARAVIEW_PLUGINS "Build Paraview Plugins." OFF)
+
+if (EDDA_BUILD_PARAVIEW_PLUGINS)
+  FIND_PACKAGE(ParaView REQUIRED)
+  INCLUDE(${PARAVIEW_USE_FILE})
+
+else ()
+  # VTK integration
+  if (EDDA_BUILD_VTK_EXAMPLES OR EDDA_BUILD_VTK_INT )
+    find_package(VTK)
+    include (${VTK_USE_FILE})
+  endif ()
 endif ()
 
 # Make the configuration file.

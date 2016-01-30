@@ -66,14 +66,14 @@ void computeStreamlines(vtkSmartPointer<vtkPolyData> vtk_seeds)
 
   list<list<VECTOR3> >traces;
   streamTracer->step_size = 0.01;
-  streamTracer->max_steps = 10000;
+  streamTracer->max_steps = 1000;
   streamTracer->compute(seeds, traces);
 
 
   // convert traces to vtk
-  vtkPoints *points = vtkPoints::New();
-  vtkCellArray *cells = vtkCellArray::New();
-  vtkFloatArray *fieldData = vtkFloatArray::New();
+  vsp_new(vtkPoints, points);
+  vsp_new(vtkCellArray, cells);
+  vsp_new(vtkFloatArray, fieldData);
   fieldData->SetNumberOfComponents(1);
 
   int count = 0;
@@ -92,6 +92,7 @@ void computeStreamlines(vtkSmartPointer<vtkPolyData> vtk_seeds)
     cells->InsertNextCell(ids);
     count ++;
   }
+
   streamlines->SetPoints(points);
   streamlines->SetLines(cells);
   int array_idx = streamlines->GetPointData()->AddArray(fieldData);

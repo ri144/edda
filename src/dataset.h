@@ -27,16 +27,24 @@ protected:
     AbstractDataArray *pArray;
 public:
     Dataset(Grid *pGrid, AbstractDataArray *pArray) {
-        this->pGrid = pGrid;
-        this->pArray = pArray;
+      this->pGrid = pGrid;
+      this->pArray = pArray;
     }
     ~Dataset() {
+      if (pGrid)
         delete pGrid;
+      if (pArray)
         delete pArray;
     }
 
     Grid *getGrid() { return pGrid; }
     AbstractDataArray *getArray () {return pArray; }
+
+    ///
+    /// \brief Detach the array so that it will not be deleted when the dataset is destroyed.
+    /// \return Detached array.
+    ///
+    AbstractDataArray *detachArray () {AbstractDataArray *tmp = pArray; pArray = NULL; return tmp; }
 
     ///
     /// \brief Get the dimension of the cartesian-grid data.

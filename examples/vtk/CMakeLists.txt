@@ -17,6 +17,6 @@ ENDIF(APPLE)
 foreach (file ${sources})
   get_filename_component(name ${file} NAME_WE)
   add_executable ( ${name} ${EXECUTABLE_FLAG} ${file} )
-  target_link_libraries ( ${name} edda ${VTK_LIBRARIES})
+  target_link_libraries ( ${name} ${PROJECT_NAME} ${VTK_LIBRARIES})
 endforeach ()
 

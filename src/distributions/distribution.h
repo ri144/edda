@@ -99,6 +99,7 @@ double getMean(const T &dist)
 ///
 /// \brief Get a Monte-Carlo sample of the distribution. We rely on the specific implementation from each distribution.
 ///
+#if 0
 template <class T, ENABLE_IF_BASE_OF(T, Distribution)>
 double getSample(const T &dist)
 {
@@ -106,6 +107,7 @@ double getSample(const T &dist)
     throw NotImplementedException();
     return 0;
 }
+#endif
 
 ///
 /// \brief Get vector mean

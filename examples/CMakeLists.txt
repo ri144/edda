@@ -13,6 +13,6 @@ set(sources
 foreach (file ${sources})
   get_filename_component(name ${file} NAME_WE)
   add_executable ( ${name} ${file} )
-  target_link_libraries ( ${name} edda )
+  target_link_libraries ( ${name} ${PROJECT_NAME} )
 endforeach ()
 

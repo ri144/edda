@@ -1,7 +1,7 @@
 #include <cassert>
+#include "distributions/gaussian.h"
 #include "file_reader.h"
 #include "dataset.h"
-#include "distributions/gaussian.h"
 #include "math/vector_matrix.h"
 
 using namespace std;
@@ -89,5 +89,19 @@ shared_ptr<Dataset<VECTOR3> > loadVec3GaussianSamplingRegularGrids(string &meanf
   );
   return shared_ptr<Dataset<VECTOR3> > (dataset);
 }
+
+namespace detail {
+void print(boost::property_tree::ptree const& pt)
+{
+    boost::property_tree::ptree::const_iterator end = pt.end();
+    std::cout << "{" << std::endl;
+    for (boost::property_tree::ptree::const_iterator it = pt.begin(); it != end; ++it) {
+        std::cout << it->first << ": " << it->second.get_value<std::string>() << std::endl;
+        print(it->second);
+    }
+    std::cout << "}" << std::endl;
+}
+} // detail
+
 
 } // edda
