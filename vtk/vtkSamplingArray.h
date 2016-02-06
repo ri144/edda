@@ -5,8 +5,8 @@
 
 #include <vtkIdList.h>
 
-#include "core/abstract_data_array.h"
-#include "math/vector_matrix.h"
+#include <dataset/abstract_data_array.h>
+#include <core/vector_matrix.h>
 using namespace edda;
 
 class vtkSamplingArray : public vtkDataArray

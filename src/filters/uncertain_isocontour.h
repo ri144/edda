@@ -1,38 +1,49 @@
 #ifndef UNCERTAIN_ISOCONTOUR_H_
 #define UNCERTAIN_ISOCONTOUR_H_
 
-#include "dataset.h"
-#include "distributions/distribution.h"
+#include <common.h>
+#include <dataset/dataset.h>
+#include <distributions/distribution.h>
+#include <core/shared_ary.h>
+#include <dataset/abstract_data_array.h>
 
 namespace edda{
 
+/// \breif Compute level crossing probablility.  Compute cell-wise probability of level crossing given distributions on the grid points.
 ///
-/// \brief Compute level crossing probabilities
-///
-/// Currently the input dataset is assumed to be in regular cartesian grids.
-/// For a given dataset in <w,h,d> dimensions, the output is in <w-1, h-1, d-1> dimensions,
-/// to describe the level crossing probabilities for each cell.
-///
+/// \param input  input array, in size dim[0]*dim[1]*dim[2]
+/// \param isov   isovalue to query
+/// \param[out] probField   output array.
+/// You can pass an empty array of probField.  The output will be allocated with size (dim[0]-1)*(dim[1]-1)*(dim[2]-1).
+/// Otherwise you can preallocate the array so the result will be stored in-place.
 template <typename Dist, ENABLE_IF_BASE_OF(Dist, dist::Distribution)>
-std::shared_ptr<Dataset<float> > uncertainIsocontour(std::shared_ptr<Dataset<Dist> > dataset, float isov)
+ReturnStatus levelCrossing(shared_ary<Dist> input, int dim[3], float isov, shared_ary<float> probField)
 {
-  int *dim = dataset->getDimension();
-
   int i,j,k;
   int count=0;
+  int new_dim[3]={dim[0]-1, dim[1]-1, dim[2]-1};
+
+  if (input.getLength() < dim[0]*dim[1]*dim[2]) {
+    return ReturnStatus::FAIL;
+  }
+  if (probField.getLength()>0 && probField.getLength() < new_dim[0]*new_dim[1]*new_dim[2]) {
+    return ReturnStatus::FAIL;
+  }
+  if (probField.getLength()==0) {
+    probField = shared_ary<float> (new_dim[0]*new_dim[1]*new_dim[2]);
+  }
 
   //precompute cdf for speedup
   shared_ary<float> cdfField (dim[0]*dim[1]*dim[2]);
+  count = 0;
   for (k=0; k<dim[2]; k++)
     for (j=0; j<dim[1]; j++)
       for (i=0; i<dim[0]; i++) {
         // compute level crossing
-        cdfField[count] = dist::getCdf(dataset->at_comp(i,j,k), isov);
+        cdfField[count] = dist::getCdf(input[count], isov);
         count++;
       }
 
-  int new_dim[3]={dim[0]-1, dim[1]-1, dim[2]-1};
-  shared_ary<float> probField (new_dim[0]*new_dim[1]*new_dim[2]);
   count = 0;
   for (k=0; k<new_dim[2]; k++)
     for (j=0; j<new_dim[1]; j++)
@@ -60,8 +71,27 @@ std::shared_ptr<Dataset<float> > uncertainIsocontour(std::shared_ptr<Dataset<Dis
         count++;
       }
 
+}
+
+///
+/// \brief Compute level crossing probabilities given a Dataset class.
+///
+/// Currently the input dataset is assumed to be in regular cartesian grids.
+/// For a given dataset in <w,h,d> dimensions, the output is in <w-1, h-1, d-1> dimensions,
+/// to describe the level crossing probabilities for each cell.
+///
+template <typename Dist, ENABLE_IF_BASE_OF(Dist, dist::Distribution)>
+std::shared_ptr<Dataset<float> > uncertainIsocontour(std::shared_ptr<Dataset<Dist> > dataset, float isov)
+{
+  shared_ary<float> output;
+  shared_ary<Dist> input = boost::any_cast<shared_ary<Dist> >(dataset->getArray()->getRawArray());
+
+  levelCrossing(input , dataset->getDimension(), isov, output);
+
+  int *dim = dataset->getDimension();
+  int new_dim[3]={dim[0]-1, dim[1]-1, dim[2]-1};
   return make_Dataset<float>(new RegularCartesianGrid(new_dim[0], new_dim[1], new_dim[2]),
-                             new DataArray<float>(probField)
+                             new DataArray<float>(output)
       );
 }
 

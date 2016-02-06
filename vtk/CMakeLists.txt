@@ -6,6 +6,7 @@ set(SRC_FILES "")
 list ( APPEND SRC_FILES
     vtkEddaReader.cpp
     vtkSamplingArray.cpp
+    vtkUncertainIsocontour.cpp
     )
 
 file (GLOB_RECURSE HEADER_FILES "*.h")

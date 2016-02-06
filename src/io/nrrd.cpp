@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "io/nrrd.h"
+#include <io/nrrd.h>
 
 namespace edda {
 

@@ -9,31 +9,21 @@
 
 namespace edda {
 
-// barycentric interpolation
-template <class T>
-inline T baryInterp(const T &v1, const T &v2, const T &v3, const T &v4, double coeff[3])
-{
-    return v1 +
-            (v2-v1)*coeff[0] +
-            (v3-v1)*coeff[1] +
-            (v4-v1)*coeff[2];
-}
-
-// linear interpolation
+/// linear interpolation
 template <class T, typename coeffT=float>
 inline T lerp(const T &x, const T &y, const coeffT ratio)
 {
     return x * (1. - ratio) + y * ratio;
 }
 
-// bilinear interpolation
+/// bilinear interpolation
 template <class T, typename coeffT=float>
 inline T biLerp(const T &ll, const T &hl, const T &lh, const T &hh, const coeffT coeff[2])
 {
     return lerp(lerp(ll, hl, coeff[0]), lerp(lh, hh, coeff[0]), coeff[1]);
 }
 
-// trilinear interpolation
+/// trilinear interpolation
 template <class T, typename coeffT=float>
 inline T triLerp(const T &lll, const T &hll, const T &lhl, const T &hhl,
                  const T &llh, const T &hlh, const T &lhh, const T &hhh, const coeffT coeff[3])
@@ -45,6 +35,16 @@ inline T triLerp(const T &lll, const T &hll, const T &lhl, const T &hhl,
 
 //-----------------------------------------------------------------------------------------
 // The classes to be used in data model:
+
+/// barycentric interpolation
+template <class T>
+inline T baryInterp(const T &v1, const T &v2, const T &v3, const T &v4, double coeff[3])
+{
+    return v1 +
+            (v2-v1)*coeff[0] +
+            (v3-v1)*coeff[1] +
+            (v4-v1)*coeff[2];
+}
 
 ///
 template<class T>

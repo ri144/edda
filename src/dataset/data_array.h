@@ -8,10 +8,10 @@
 #include <cassert>
 #include <iostream>
 #include <memory>
-#include "core/abstract_data_array.h"
-#include "math/vector_matrix.h"
-#include "core/shared_ary.h"
-#include "distributions/distribution.h"
+#include <dataset/abstract_data_array.h>
+#include <core/vector_matrix.h>
+#include <core/shared_ary.h>
+#include <distributions/distribution.h>
 
 namespace edda {
 

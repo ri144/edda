@@ -1,8 +1,8 @@
 #include <cassert>
-#include "distributions/gaussian.h"
-#include "file_reader.h"
-#include "dataset.h"
-#include "math/vector_matrix.h"
+#include <distributions/gaussian.h>
+#include <io/file_reader.h>
+#include <dataset/dataset.h>
+#include <core/vector_matrix.h>
 
 using namespace std;
 

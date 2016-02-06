@@ -34,7 +34,7 @@
 #include "distributions/distribution.h"
 #include "io/file_reader.h"
 #include "filters/stream_tracer.h"
-#include "dataset.h"
+#include "dataset/dataset.h"
 
 #include "vtkTransformFilter.h"
 #include "vtkTransform.h"

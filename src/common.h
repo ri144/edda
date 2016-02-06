@@ -7,6 +7,7 @@
 
 #include <cstdint>
 #include <type_traits>
+#include <cassert>
 
 #include "edda.h"
 

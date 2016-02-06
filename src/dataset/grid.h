@@ -17,8 +17,8 @@
 #include "common.h"
 
 //#include "Element.h"
-#include "core/interpolator.h"
-#include "math/vector_matrix.h"
+#include <core/interpolator.h>
+#include <core/vector_matrix.h>
 //#include "Cell.h"
 
 namespace edda{

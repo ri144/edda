@@ -11,9 +11,9 @@
 #include <memory>
 
 #include <common.h>
-#include <math/vector_matrix.h>
+#include <core/vector_matrix.h>
 #include <distributions/distribution.h>
-#include <dataset.h>
+#include <dataset/dataset.h>
 
 namespace edda {
 

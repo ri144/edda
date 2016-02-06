@@ -7,9 +7,9 @@
 #include <iostream>
 #include "distributions/gaussian.h"
 #include "distributions/distribution.h"
-#include "dataset.h"
-#include "core/shared_ary.h"
-#include "io/path.h"
+#include <dataset/dataset.h>
+#include <core/shared_ary.h>
+#include <io/path.h>
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/info_parser.hpp>
 

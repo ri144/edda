@@ -4,7 +4,7 @@
 #include <vector>
 #include <string>
 #include <cstring>
-#include "dataset.h"
+#include "dataset/dataset.h"
 #include "distributions/gaussian.h"
 #include "distributions/distribution.h"
 #include "core/shared_ary.h"
