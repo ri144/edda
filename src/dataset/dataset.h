@@ -9,7 +9,7 @@
 #include <iostream>
 #include <memory>
 #include <dataset/grid.h>
-#include <dataset/data_array.h>
+#include <core/data_array.h>
 #include <distributions/distribution.h>
 
 namespace edda {

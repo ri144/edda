@@ -36,8 +36,6 @@ using namespace edda;
 
 #define vsp_new(cls,x) vtkSmartPointer<cls> x = vtkSmartPointer<cls>::New()
 
-typedef dist::Gaussian<> Gaussian;
-
 int main(int argc, char **argv) {
   cout << "isoProbField <info file> <iso-value>" << endl;
   if (argc<=2)
@@ -46,10 +44,10 @@ int main(int argc, char **argv) {
   float isov = atof(argv[2]);
 
   // load data
-  shared_ptr<Dataset<Gaussianf> > dataset = loadData<Gaussianf>(info_file);
+  shared_ptr<Dataset<dist::Gaussian> > dataset = loadData<dist::Gaussian>(info_file);
 
   // uncertain isocontour
-  shared_ptr<Dataset<float> > output = uncertainIsocontour(dataset, isov);
+  shared_ptr<Dataset<Real> > output = uncertainIsocontour(dataset, isov);
 
   // Convert to vtk image data
   vsp_new(vtkImageData, image);

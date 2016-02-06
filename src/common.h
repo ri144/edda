@@ -21,6 +21,10 @@ const double PI_BY_2    = 1.57079632679489661923;  // PI / 2
 
 const double EPS        = 1.0E-6;
 
+// The distribution precision is set here.
+// Using float instead of double for smaller storage and because the nature of uncertainty has less precision.
+typedef float Real;
+
 // numeric limits:
 template <typename T> using limits = std::numeric_limits<T>;
 

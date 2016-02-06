@@ -10,8 +10,7 @@ using namespace std;
 using namespace edda;
 using namespace edda::dist;
 
-typedef Gaussian<float> Gaussianf;
-typedef Vector3<Gaussianf> Gaussianf3;
+typedef Vector3<Gaussian> Gaussian3;
 
 template<typename DataType, class GetPositionPolicy>
 void run(StreamTracer<DataType, GetPositionPolicy> &streamTracer, const list<DataType> &seeds)
@@ -55,12 +54,12 @@ int main(int argc, char **argv) {
   /////////////////////////////////////
   cout << "Streamline computed with distribution:" << endl;
   {
-    shared_ptr<Dataset<Gaussianf3> > dataset = loadVectorData<Gaussianf3>(filename);
+    shared_ptr<Dataset<Gaussian3> > dataset = loadVectorData<Gaussian3>(filename);
 
-    list<Gaussianf3> seeds;
-    seeds.push_back(Gaussianf3(Gaussianf(10.f, 0), Gaussianf(10.f, 0), Gaussianf(10.f, 0)));
+    list<Gaussian3> seeds;
+    seeds.push_back(Gaussian3(Gaussian(10.f, 0), Gaussian(10.f, 0), Gaussian(10.f, 0)));
 
-    StreamTracer<Gaussianf3, GetPositionFromDistributionMean> streamTracer(dataset);
+    StreamTracer<Gaussian3, GetPositionFromDistributionMean> streamTracer(dataset);
 
     run(streamTracer, seeds);
   }

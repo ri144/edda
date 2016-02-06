@@ -9,9 +9,9 @@ using namespace std;
 using namespace edda;
 
 int main(int argc, char* argv[]) {
-  dist::Gaussian<double> g1(1.,1.);
-  dist::Gaussian<double> g2(2.,2.);
-  dist::Gaussian<double> g3;
+  dist::Gaussian g1(1.,1.);
+  dist::Gaussian g2(2.,2.);
+  dist::Gaussian g3;
 
   cout << "g1= "<< g1 << endl;
   cout << "g1= "<< g2 << endl;
@@ -20,7 +20,7 @@ int main(int argc, char* argv[]) {
   g3=g1+g2;
 
   cout << "g1+g2= " << g3 << endl;
-  TEST( g1.mean() == dist::getMean(g1) );
+  TEST( g1.mean == dist::getMean(g1) );
   TEST( approx_equal(dist::getMean(g3), 3. ) );
   TEST( approx_equal(dist::getVar(g3), 3. ) );
 

@@ -36,6 +36,9 @@ target_link_libraries( test_vtkEddaReader ${PROJECT_NAME} ${VTK_LIBRARIES} )
 add_executable(test_pipeline ${EXECUTABLE_FLAG} test_pipeline.cpp ${SRC_FILES})
 target_link_libraries( test_pipeline ${PROJECT_NAME} ${VTK_LIBRARIES} )
 
+add_executable(convertGMM ${EXECUTABLE_FLAG} convertGMM.cpp ${SRC_FILES})
+target_link_libraries( convertGMM ${PROJECT_NAME} ${VTK_LIBRARIES} )
+
 install (
     DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/
     DESTINATION include/edda/vtk

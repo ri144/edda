@@ -18,29 +18,15 @@
 namespace edda {
 namespace dist {
 
-///
-/// \brief Defines a simple Gaussian distribution storage, where mean and variance are stored together.
-///
-template <class Real = float>
-class EDDA_EXPORT SimpleGaussianStorage {
-  Real mean_, var_;
-public:
-  inline Real &mean() { return mean_; }
-  inline Real &var() { return var_; }
-  inline const Real &mean() const { return mean_; }
-  inline const Real &var() const { return var_; }
-};
-
 // ------------------------------------------------------------------------------
 ///
 /// \brief Defines a Gaussian class
 ///
-template<typename Real = float, class Storage=SimpleGaussianStorage<Real> >
-class EDDA_EXPORT Gaussian: public ContinuousDistribution, public Storage {
-public:
+struct EDDA_EXPORT Gaussian: public ContinuousDistribution {
+  Real mean, var;
   // constructor
   explicit Gaussian(): Gaussian(0, (Real)1.) {}
-  explicit Gaussian(Real m, Real var) { this->mean()=m; this->var()=var; }
+  explicit Gaussian(Real m, Real var) { this->mean=m; this->var=var; }
 };
 
 // ------------------------------------------------------------------------------
@@ -49,61 +35,55 @@ public:
 ///
 /// \brief Return mean
 ///
-template<typename Real, class Storage>
-inline double getMean(const Gaussian<Real, Storage> &dist)
+inline double getMean(const Gaussian &dist)
 {
-    return dist.mean();
+    return dist.mean;
 }
 
 ///
 /// \brief Return variance
 ///
-template<typename Real, class Storage>
-inline double getVar(const Gaussian<Real, Storage> &dist)
+inline double getVar(const Gaussian &dist)
 {
-    return (double) dist.var();
+    return (double) dist.var;
 }
 
 ///
 /// \brief Return PDF of x
 ///
-template<typename Real, class Storage>
-inline double getPdf(const Gaussian<Real, Storage> &dist, const double x)
+inline double getPdf(const Gaussian &dist, const double x)
 {
-    if (dist.var()==0) {
-        return ( fabs(x-dist.mean()) < EPS )? 1.: 0;
+    if (dist.var==0) {
+        return ( fabs(x-dist.mean) < EPS )? 1.: 0;
     }
-    return exp( -0.5 * pow(x-dist.mean(), 2) / dist.var() ) / sqrt(2. * dist.var() * M_PI);
+    return exp( -0.5 * pow(x-dist.mean, 2) / dist.var ) / sqrt(2. * dist.var * M_PI);
 }
 
 ///
 /// \brief Return a sample
 ///
-template<typename Real, class Storage>
-inline double getSample(const Gaussian<Real, Storage> &dist)
+inline double getSample(const Gaussian &dist)
 {
-    return box_muller((double)dist.mean(), sqrt(dist.var()) );
+    return box_muller((double)dist.mean, sqrt(dist.var) );
 }
 
 ///
 /// \brief Return CDF of x
 ///
-template<typename Real, class Storage>
-inline double getCdf(const Gaussian<Real, Storage> &dist, double x)
+inline double getCdf(const Gaussian &dist, double x)
 {
-  if (dist.var()==0) {
-    return x > dist.mean() ? 1 : 0;
+  if (dist.var==0) {
+    return x > dist.mean ? 1 : 0;
   }
   // TODO: need to implement on our own
-  boost::math::normal_distribution<double> normal (dist.mean(), sqrt(dist.var()) );
+  boost::math::normal_distribution<double> normal (dist.mean, sqrt(dist.var) );
   return boost::math::cdf<>(normal, x);
 }
 
 ///
 /// \brief Print itself
 ///
-template<typename Real, class Storage>
-std::ostream& operator<<(std::ostream& os, const Gaussian<Real, Storage>& dist)
+inline std::ostream& operator<<(std::ostream& os, const Gaussian &dist)
 {
     os <<  "<Gaussian: mean=" << getMean(dist) << ", variance=" << getVar(dist) << ">" ;
     return os;
@@ -115,39 +95,35 @@ std::ostream& operator<<(std::ostream& os, const Gaussian<Real, Storage>& dist)
 ///
 /// \brief random variable with unary -
 ///
-template<typename Real, class Storage>
-inline Gaussian<Real, Storage>& operator-(Gaussian<Real, Storage> &x)
+inline Gaussian& operator-(Gaussian &x)
 {
-    x.mean() = -x.mean();
+    x.mean = -x.mean;
     return x;
 }
 
 ///
 /// \brief random variable +=
 ///
-template<typename Real, class Storage>
-inline Gaussian<Real, Storage>& operator+=(Gaussian<Real, Storage> &x, const Gaussian<Real, Storage>& rhs) {
-    x.mean() += rhs.mean();
-    x.var() += rhs.var();
+inline Gaussian& operator+=(Gaussian &x, const Gaussian& rhs) {
+    x.mean += rhs.mean;
+    x.var += rhs.var;
     return x;
 }
 
 ///
 /// \brief random variable += with scalar
 ///
-template<typename Real, class Storage>
-inline Gaussian<Real, Storage>& operator+=(Gaussian<Real, Storage> &x, const double r) {
-    x.mean() += r;
+inline Gaussian& operator+=(Gaussian &x, const double r) {
+    x.mean += r;
     return x;
 }
 
 ///
 /// \brief random variable *= with scalar
 ///
-template<typename Real, class Storage>
-inline Gaussian<Real, Storage>& operator*=(Gaussian<Real, Storage> &x, const double r) {
-    x.mean() *= r;
-    x.var() *= r*r;
+inline Gaussian& operator*=(Gaussian &x, const double r) {
+    x.mean *= r;
+    x.var *= r*r;
     return x;
 }
 

@@ -54,26 +54,26 @@ vtkSmartPointer<vtkLineWidget> lineWidget;
 vtkSmartPointer<vtkRenderWindow> renWin;
 vtkSmartPointer<vtkPolyData> streamlines;
 
-shared_ptr<StreamTracer<Gaussianf3, GetPositionFromDistributionMean> > streamTracer;
+shared_ptr<StreamTracer<Gaussian3, GetPositionFromDistributionMean> > streamTracer;
 
 void computeStreamlines(vtkSmartPointer<vtkPolyData> vtk_seeds)
 {
   int i;
   // convert seeds from vtk
-  list<Gaussianf3> seeds;
+  list<Gaussian3> seeds;
   for (i=0; i<vtk_seeds->GetNumberOfPoints(); i++)
   {
     double p[3];
     vtk_seeds->GetPoint(i, p);
     // add a particle location with zero mean
-    seeds.push_back(Gaussianf3(
-                      Gaussianf(p[0], 0),
-                      Gaussianf(p[1], 0),
-                      Gaussianf(p[2], 0) )
+    seeds.push_back(Gaussian3(
+                      dist::Gaussian(p[0], 0),
+                      dist::Gaussian(p[1], 0),
+                      dist::Gaussian(p[2], 0) )
         );
   }
 
-  list<list<Gaussianf3> >traces;
+  list<list<Gaussian3> >traces;
   streamTracer->step_size = 0.05;
   streamTracer->max_steps = 500;
   streamTracer->compute(seeds, traces);
@@ -93,16 +93,16 @@ void computeStreamlines(vtkSmartPointer<vtkPolyData> vtk_seeds)
     vtkIdList *ids = vtkIdList::New();
     for (auto posItr = singleTrace.begin(); posItr!=singleTrace.end(); ++posItr)
     {
-      Gaussianf3 &p = *posItr;
+      Gaussian3 &p = *posItr;
 
-      int id = points->InsertNextPoint(p[0].mean(), p[1].mean(), p[2].mean());
+      int id = points->InsertNextPoint(p[0].mean, p[1].mean, p[2].mean);
       ids->InsertNextId(id);
 
       // get 97.5% percentile
       uncertainty->InsertNextTuple3(
-          sqrt(p[0].var())*1.96,
-          sqrt(p[1].var())*1.96,
-          sqrt(p[2].var())*1.96 );
+          sqrt(p[0].var)*1.96,
+          sqrt(p[1].var)*1.96,
+          sqrt(p[2].var)*1.96 );
 
       fieldData->InsertNextTuple1(count);
     }
@@ -135,15 +135,15 @@ int main(int argc, char **argv)
   cout << "Press 'i' to change the rake\n";
 
   // load data with random sampling
-  shared_ptr<Dataset<Gaussianf3> > dataset = loadVectorData<Gaussianf3>(filename);
+  shared_ptr<Dataset<Gaussian3> > dataset = loadVectorData<Gaussian3>(filename);
 
   VECTOR3 minB, maxB;
   dataset->getGrid()->boundary(minB, maxB);
 
   // create stream tracer
-  new StreamTracer<Gaussianf3, GetPositionFromDistributionMean>(dataset);
-  streamTracer = shared_ptr<StreamTracer<Gaussianf3, GetPositionFromDistributionMean> >
-      (new StreamTracer<Gaussianf3, GetPositionFromDistributionMean>(dataset) );
+  new StreamTracer<Gaussian3, GetPositionFromDistributionMean>(dataset);
+  streamTracer = shared_ptr<StreamTracer<Gaussian3, GetPositionFromDistributionMean> >
+      (new StreamTracer<Gaussian3, GetPositionFromDistributionMean>(dataset) );
 
   // create a dummy vtk bounding box
   vsp_new(vtkCubeSource, cube);

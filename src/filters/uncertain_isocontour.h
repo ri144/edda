@@ -5,7 +5,7 @@
 #include <dataset/dataset.h>
 #include <distributions/distribution.h>
 #include <core/shared_ary.h>
-#include <dataset/abstract_data_array.h>
+#include <core/abstract_data_array.h>
 
 namespace edda{
 

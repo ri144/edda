@@ -15,8 +15,7 @@
 
 using namespace std;
 using namespace edda;
-
-typedef dist::Gaussian<> Gaussian;
+using namespace edda::dist;
 
 int main(int argc, char **argv) {
   cout << "isoProbField <info file> <iso-value>" << endl;
@@ -26,7 +25,7 @@ int main(int argc, char **argv) {
   float isov = atof(argv[2]);
 
   // load data
-  shared_ptr<Dataset<Gaussianf> > dataset = loadData<Gaussianf>(info_file);
+  shared_ptr<Dataset<Gaussian> > dataset = loadData<Gaussian>(info_file);
 
   // compute isocontour
   shared_ptr<Dataset<float> > output = uncertainIsocontour(dataset, isov);

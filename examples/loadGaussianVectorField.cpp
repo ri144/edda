@@ -2,7 +2,7 @@
 
 #include "distributions/gaussian.h"
 #include "distributions/distribution.h"
-#include "dataset.h"
+#include "dataset/dataset.h"
 #include "io/file_reader.h"
 #include "core/interpolator.h"
 #include "core/shared_ary.h"
@@ -12,8 +12,7 @@ using namespace std;
 using namespace edda;
 using namespace edda::dist;
 
-typedef Gaussian<float> Gaussianf;
-typedef Vector3<Gaussianf> Gaussianf3;
+typedef Vector3<Gaussian> Gaussian3;
 
 
 int main(int argc, char **argv) {
@@ -31,14 +30,14 @@ int main(int argc, char **argv) {
     dim[2] = atoi(argv[5]);
     cout << "dim: " << dim[0] << "," << dim[1] << "," << dim[2] << endl;
 
-    shared_ary<Gaussianf3> distData = edda::loadVec3GaussianRawArray(meanfile, stdfile, dim[0]*dim[1]*dim[2]);
+    shared_ary<Gaussian3> distData = edda::loadVec3GaussianRawArray(meanfile, stdfile, dim[0]*dim[1]*dim[2]);
 
     /////////////////////////////////////
     cout << "value interpolation after sampling:" << endl;
 
     Dataset<VECTOR3> dataset1 (
                 new RegularCartesianGrid (dim[0], dim[1], dim[2]),
-                new DataArray<Gaussianf3, GetItemSampledVector> (distData )
+                new DataArray<Gaussian3, GetItemSampledVector> (distData )
     );
 
     float x;
@@ -53,13 +52,13 @@ int main(int argc, char **argv) {
     /////////////////////////////////////
     cout << "value sampling after distribution interpolation :" << endl;
 
-    Dataset<Gaussianf3> dataset2 (
+    Dataset<Gaussian3> dataset2 (
                 new RegularCartesianGrid (dim[0], dim[1], dim[2]),
-                new DataArray<Gaussianf3> (distData) );
+                new DataArray<Gaussian3> (distData) );
 
     for (x=0; x<10; x+=.5)
     {
-        Gaussianf3 sampled_vec_dist;
+        Gaussian3 sampled_vec_dist;
         r = dataset2.at_phys( VECTOR3(x, 10, 10), sampled_vec_dist );
         cout << sampled_vec_dist << " ";
         cout << "\t" << dist::getSample(sampled_vec_dist[0]) << " "

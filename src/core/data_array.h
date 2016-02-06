@@ -8,7 +8,7 @@
 #include <cassert>
 #include <iostream>
 #include <memory>
-#include <dataset/abstract_data_array.h>
+#include <core/abstract_data_array.h>
 #include <core/vector_matrix.h>
 #include <core/shared_ary.h>
 #include <distributions/distribution.h>
@@ -19,6 +19,7 @@ namespace edda {
 struct GetItemAsIs ;
 struct GetItemSampled ;
 struct GetItemSampledVector ;
+struct GetItemStrided;
 ///
 /// \brief A simple implementation of DataArray.
 ///
