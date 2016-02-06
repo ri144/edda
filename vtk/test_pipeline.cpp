@@ -90,6 +90,8 @@ int main(int argc, char **argv)
   vtkPolyDataMapper *mapper = vtkPolyDataMapper::New();
   mapper->SetInputConnection(streamer->GetOutputPort());
   mapper->SetScalarRange(data->GetScalarRange());
+  //mapper->SetScalarRange(0, 20); // for 20 seeds
+  mapper->SetColorModeToMapScalars();
   vtkActor *actor = vtkActor::New();
   actor->SetMapper(mapper);
 
@@ -132,6 +134,11 @@ int main(int argc, char **argv)
   renWin->SetSize(500,500);
 
   iren->Initialize();
+
+  // Sign up to receive TimerEvent
+  iren->AddObserver(vtkCommand::TimerEvent, callback);
+  int timerId = iren->CreateRepeatingTimer(100);
+
   renWin->Render();
   iren->Start();
 
