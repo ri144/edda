@@ -10,6 +10,6 @@
 #include <vtkFieldData.h>
 #include <vtkStructuredGrid.h>
 
-#define vsp_new(cls,x) vtkSmartPointer<cls> x = vtkSmartPointer<cls>::New()
+#define vsp_new(T,x) vtkSmartPointer<T> x = vtkSmartPointer<T>::New()
 
 #endif

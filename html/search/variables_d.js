@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['vec',['vec',['../classedda_1_1Tuple.html#aa251ac1a46de47bde1e2f837a9155c72',1,'edda::Tuple']]]
+  ['w',['w',['../structedda_1_1dist_1_1GMMTuple.html#a3f52857178189dcb76b5132a60c0a50a',1,'edda::dist::GMMTuple']]]
 ];
