@@ -39,8 +39,9 @@ struct EDDA_EXPORT GaussianMixture: public ContinuousDistribution {
     models = models_;
     normalizeWeights();
   }
+
   void normalizeWeights() {
-    Real sum = 0;
+    double sum = 0;
     size_t i;
     for (i=0; i<models.size(); i++) {
       sum += models[i].w;
@@ -61,7 +62,7 @@ struct EDDA_EXPORT GaussianMixture: public ContinuousDistribution {
 inline double getMean(const GaussianMixture &dist)
 {
   double mean = 0;
-  for (int i=0; i<dist.models.size(); i++)
+  for (size_t i=0; i<dist.models.size(); i++)
   {
     mean += dist.models[i].m * dist.models[i].w;
   }
@@ -82,7 +83,7 @@ inline double getVar(const GaussianMixture &dist)
 inline double getPdf(const GaussianMixture &dist, const double x)
 {
   double p=0;
-  for (int i=0; i<dist.models.size(); i++)
+  for (size_t i=0; i<dist.models.size(); i++)
   {
     p += getPdf( Gaussian(dist.models[i].m, dist.models[i].v), x ) * dist.models[i].w;
   }
@@ -96,7 +97,7 @@ inline double getSample(const GaussianMixture &dist)
 {
   float ratio = rand() / (float)RAND_MAX;
   float accumulated = 0;
-  for (int i=0; i<dist.models.size(); i++)
+  for (size_t i=0; i<dist.models.size(); i++)
   {
     accumulated += dist.models[i].w;
     if (ratio < accumulated) {
@@ -113,7 +114,7 @@ inline double getSample(const GaussianMixture &dist)
 inline double getCdf(const GaussianMixture &dist, double x)
 {
   double cdf=0;
-  for (int i=0; i<dist.models.size(); i++)
+  for (size_t i=0; i<dist.models.size(); i++)
   {
     cdf += getCdf(Gaussian(dist.models[i].m, dist.models[i].v), x) * dist.models[i].w;
   }
@@ -126,7 +127,7 @@ inline double getCdf(const GaussianMixture &dist, double x)
 inline std::ostream& operator<<(std::ostream& os, const GaussianMixture &dist)
 {
   os <<  "<GaussianMixture(m,v,w):";
-  for (int i=0; i<dist.models.size(); i++)
+  for (size_t i=0; i<dist.models.size(); i++)
     os << " (" << dist.models[i].m << "," << dist.models[i].v << "," << dist.models[i].w << ")";
   os << ">";
   return os;
@@ -140,7 +141,7 @@ inline std::ostream& operator<<(std::ostream& os, const GaussianMixture &dist)
 ///
 inline GaussianMixture& operator-(GaussianMixture &x)
 {
-  for (int i=0; i<x.models.size(); i++)
+  for (size_t i=0; i<x.models.size(); i++)
     x.models[i].m = -x.models[i].m;
   return x;
 }
@@ -156,7 +157,7 @@ inline GaussianMixture& operator+=(GaussianMixture &x, const GaussianMixture& rh
 /// \brief random variable += with scalar
 ///
 inline GaussianMixture& operator+=(GaussianMixture &x, const double r) {
-  for (int i=0; i<x.models.size(); i++)
+  for (size_t i=0; i<x.models.size(); i++)
     x.models[i].m += r;
   return x;
 }
@@ -165,7 +166,7 @@ inline GaussianMixture& operator+=(GaussianMixture &x, const double r) {
 /// \brief random variable *= with scalar
 ///
 inline GaussianMixture& operator*=(GaussianMixture &x, const double r) {
-  for (int i=0; i<x.models.size(); i++) {
+  for (size_t i=0; i<x.models.size(); i++) {
     x.models[i].m *= r;
     x.models[i].v *= r;
   }

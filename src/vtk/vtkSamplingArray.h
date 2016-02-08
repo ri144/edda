@@ -9,6 +9,10 @@
 #include <core/vector_matrix.h>
 using namespace edda;
 
+///
+/// \brief The vtkSamplingArray class is a vtkDataArray that returns a random sample from the distribution array.
+/// This is still experimental and unsafe to use because the grandparent class vtkAbstractArray allows GetVoidPointer() to bypass GetTuple().
+///
 class vtkSamplingArray : public vtkDataArray
 {
   edda::AbstractDataArray *pArray;

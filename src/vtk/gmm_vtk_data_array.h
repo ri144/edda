@@ -26,7 +26,7 @@ protected:
   std::vector<vtkSmartPointer<vtkDataArray> > arrays;
   size_t length = 0;
 public:
-  GmmVtkDataArray(vtkFieldData *fieldData, const char *arrayNamePrefix=NULL)  ;
+  GmmVtkDataArray(vtkFieldData *fieldData, const char *arrayNamePrefix="")  ;
 
   /// \brief Based on the input array order, assign mean0, var0, weight0, mean1, var1, weight1,...
   /// The number of arrays should be multiples of 3

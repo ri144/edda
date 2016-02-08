@@ -10,7 +10,7 @@ GmmVtkDataArray::GmmVtkDataArray(vtkFieldData *fieldData, const char *arrayNameP
   char stdevArrayName[1024];
   char varArrayName[1024];
   char weightArrayName[1024];
-  for (size_t i=0; i<fieldData->GetNumberOfArrays(); i++)
+  for (int i=0; i<fieldData->GetNumberOfArrays(); i++)
   {
     sprintf(meanArrayName, "%smean%d", arrayNamePrefix, (int)i/3 );
     sprintf(stdevArrayName, "%sstdev%d", arrayNamePrefix, (int)i/3 );
@@ -83,7 +83,7 @@ GmmVtkDataArray::GmmVtkDataArray(std::vector<vtkSmartPointer<vtkDataArray> > arr
 
 boost::any GmmVtkDataArray::getItem(size_t idx) {
   std::vector<GMMTuple> models ( arrays.size()/3 );
-  for (int i=0; i<arrays.size(); i++) {
+  for (size_t i=0; i<arrays.size(); i++) {
     models[i/3].p[i%3] = arrays[i]->GetTuple1(idx);
   }
   return boost::any( GaussianMixture(models) );
@@ -92,7 +92,7 @@ boost::any GmmVtkDataArray::getItem(size_t idx) {
 void GmmVtkDataArray::setItem(size_t idx, const boost::any &item) {
   // not tested
   GaussianMixture gmm = boost::any_cast<GaussianMixture>( item );
-  for (int i=0; i<arrays.size(); i++) {
+  for (size_t i=0; i<arrays.size(); i++) {
     arrays[i]->SetTuple1(idx, gmm.models[i/3].p[i%3]);
   }
 }

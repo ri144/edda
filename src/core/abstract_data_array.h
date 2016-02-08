@@ -35,6 +35,7 @@ public:
     /// Get the array
     ///
     virtual boost::any getRawArray() = 0;
+
 };
 
 } // edda

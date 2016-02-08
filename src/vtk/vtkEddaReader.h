@@ -15,6 +15,9 @@
 
 class vtkImageData;
 
+///
+/// \brief The vtkEddaReader class reads an internal .info file format and creates a dataset with vtkSamplingArray.  This class is experimental.
+///
 class vtkEddaReader : public vtkImageAlgorithm
 {
 public:

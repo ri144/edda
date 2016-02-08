@@ -29,10 +29,10 @@
 
   <ProxyGroup name="filters">
     <!-- ================================================================== -->
-    <SourceProxy name="UncertainIsocontour" class="vtkUncertainIsocontour" label="UncertainIsocontour">
+    <SourceProxy name="EddaUncertainIsocontour" class="vtkUncertainIsocontour" label="EddaUncertainIsocontour">
       <Documentation
-         long_help="Uncertain isocontour."
-         short_help="UncertainIsocontour">
+         long_help="Compute uncertain isocontour with level crossing probability."
+         short_help="Uncertain Isocontour">
       </Documentation>
 
      <InputProperty
@@ -54,11 +54,36 @@
   </DoubleVectorProperty>
 
       <Hints>
-    <ShowInMenu category="Extensions" />
+    <ShowInMenu category="EDDA" />
       </Hints>
  
     </SourceProxy>
-    <!-- End Reader -->
+
+    <!-- ================================================================== -->
+    <SourceProxy name="EddaRandomSampleField" class="vtkRandomSampleField" label="EddaRandomSampleField">
+      <Documentation
+         long_help="Obtain random samples from distribution data."
+         short_help="Random sampling">
+      </Documentation>
+
+     <InputProperty
+        name="Input"
+        command="SetInputConnection">
+           <ProxyGroupDomain name="groups">
+             <Group name="sources"/>
+             <Group name="filters"/>
+           </ProxyGroupDomain>
+           <DataTypeDomain name="input_type">
+             <DataType value="vtkDataSet"/>
+           </DataTypeDomain>
+      </InputProperty>
+
+      <Hints>
+    <ShowInMenu category="EDDA" />
+      </Hints>
+ 
+    </SourceProxy>
+    <!-- End filter -->
   </ProxyGroup>
   <!-- End Filters Group -->
 </ServerManagerConfiguration>

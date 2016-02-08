@@ -4,9 +4,11 @@
 
 # This is only for Paraview plugins
 
+# List cpp files that will be explosed in plugins
 set( PV_SRC_FILES
     vtkEddaReader.cpp
     vtkUncertainIsocontour.cpp
+    vtkRandomSampleField.cpp
     )
 
 include_directories(${CMAKE_SOURCE_PATH}/src)
