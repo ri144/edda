@@ -2,16 +2,25 @@
 #define VTK_SAMPLING_ARRAY_H
 #include <cstdio>
 #include <vtkDataArray.h>
+#include <vtkFloatArray.h>
 
 #include <vtkIdList.h>
 
-#include <core/abstract_data_array.h>
-#include <core/vector_matrix.h>
+#include "core/abstract_data_array.h"
+#include "math/vector_matrix.h"
+
+// should be removed
+#include "distributions/gaussian.h"
+#include "core/data_array.h"
+
 using namespace edda;
 
 class vtkSamplingArray : public vtkDataArray
 {
-  edda::AbstractDataArray *pArray;
+  typedef Vector3<dist::Gaussian<float> > DistType;
+  typedef edda::DataArray<DistType, GetItemSampledVector> SamplingArray;
+
+  SamplingArray *pArray;
   double tmp[3];
 public:
   vtkTypeMacro(vtkSamplingArray,vtkDataArray)
@@ -479,8 +488,9 @@ public : // vtkAbstractArray
   }
 
   virtual void *GetVoidPointer(vtkIdType id) {
-    printf("GetVoidPointer\n");
-    return NULL;
+    printf("(GetVoidPointer)\n");
+    shared_ary<DistType> array = boost::any_cast<shared_ary<DistType> >(pArray->getRawArray());
+    return &array[id];
   }
 
   virtual void Squeeze() {
@@ -488,12 +498,18 @@ public : // vtkAbstractArray
   }
 
   virtual int Resize(vtkIdType numTuples) {
-    return 0;
+    printf("(resize)\n");
+    shared_ary<DistType> new_array(numTuples);
+    shared_ary<DistType> array = boost::any_cast<shared_ary<DistType> >(pArray->getRawArray());
+    memcpy(&new_array[0], &array[0], numTuples*sizeof(DistType));
+    pArray->setRawArray( new_array );
+    return new_array.getLength();
   }
+
   virtual void SetVoidArray(void *vtkNotUsed(array),
                             vtkIdType vtkNotUsed(size),
                             int vtkNotUsed(save)) {
-
+    printf("SetVoidArray\n");
   }
   virtual vtkArrayIterator* NewIterator()  {
     printf("vtkArrayIterator\n");

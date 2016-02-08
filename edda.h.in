@@ -10,4 +10,12 @@
 #cmakedefine OS_MACOSX
 #cmakedefine OS_WIN
 
+#include "common.h"
+#include "distributions/distribution.h"
+#include "distributions/gaussian_mixture.h"
+#include "core/data_array.h"
+#include "dataset/dataset.h"
+#include "filters/stream_tracer.h"
+#include "filters/uncertain_isocontour.h"
+
 #endif  // EDDA_H_

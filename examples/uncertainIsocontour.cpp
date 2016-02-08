@@ -7,11 +7,9 @@
 #include <cstdio>
 #include <iostream>
 
-#include "distributions/gaussian.h"
-#include "distributions/distribution.h"
+#include "edda.h"
 #include "io/file_reader.h"
 #include "io/file_writer.h"
-#include "filters/uncertain_isocontour.h"
 
 using namespace std;
 using namespace edda;

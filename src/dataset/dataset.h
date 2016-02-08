@@ -8,9 +8,9 @@
 #include <vector>
 #include <iostream>
 #include <memory>
-#include <dataset/grid.h>
-#include <core/data_array.h>
-#include <distributions/distribution.h>
+#include "grid.h"
+#include "core/data_array.h"
+#include "distributions/distribution.h"
 
 namespace edda {
 

@@ -5,7 +5,7 @@
 #ifndef INTERPOLATOR_H_
 #define INTERPOLATOR_H_
 
-#include "core/tuple.h"
+#include "tuple.h"
 
 namespace edda {
 

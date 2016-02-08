@@ -1,7 +1,7 @@
 #include <iostream>
 #include <vtkSmartPointer.h>
 
-#include "vtkEddaReader.h"
+#include "vtk/vtkEddaReader.h"
 
 #include "edda.h"
 

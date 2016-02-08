@@ -65,7 +65,7 @@ void computeStreamlines(vtkSmartPointer<vtkPolyData> vtk_seeds)
   }
 
   list<list<VECTOR3> >traces;
-  streamTracer->step_size = 0.01;
+  streamTracer->step_size = 0.05;
   streamTracer->max_steps = 1000;
   streamTracer->compute(seeds, traces);
 

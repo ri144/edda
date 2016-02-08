@@ -14,24 +14,28 @@ namespace edda{
 /// \param input  input array, in size dim[0]*dim[1]*dim[2]
 /// \param isov   isovalue to query
 /// \param[out] probField   output array.
-/// You can pass an empty array of probField.  The output will be allocated with size (dim[0]-1)*(dim[1]-1)*(dim[2]-1).
-/// Otherwise you can preallocate the array so the result will be stored in-place.
+/// You can pass an empty array of probField.  The output should be allocated with size (dim[0]-1)*(dim[1]-1)*(dim[2]-1).
 template <typename Dist, ENABLE_IF_BASE_OF(Dist, dist::Distribution)>
-ReturnStatus levelCrossing(shared_ary<Dist> input, int dim[3], float isov, shared_ary<float> probField)
+ReturnStatus levelCrossing(AbstractDataArray *input, int dim[3], float isov, float *probField)
 {
   int i,j,k;
   int count=0;
   int new_dim[3]={dim[0]-1, dim[1]-1, dim[2]-1};
 
-  if (input.getLength() < dim[0]*dim[1]*dim[2]) {
+  if (input->getLength() < dim[0]*dim[1]*dim[2]) {
     return ReturnStatus::FAIL;
   }
+#if 0
+  // if output is allocated, check the length
   if (probField.getLength()>0 && probField.getLength() < new_dim[0]*new_dim[1]*new_dim[2]) {
     return ReturnStatus::FAIL;
   }
+  // if output is not allocated, allocate the array
   if (probField.getLength()==0) {
-    probField = shared_ary<float> (new_dim[0]*new_dim[1]*new_dim[2]);
+    shared_ary<float> new_ary(new_dim[0]*new_dim[1]*new_dim[2]);
+    probField.swap(new_ary);
   }
+#endif
 
   //precompute cdf for speedup
   shared_ary<float> cdfField (dim[0]*dim[1]*dim[2]);
@@ -40,7 +44,7 @@ ReturnStatus levelCrossing(shared_ary<Dist> input, int dim[3], float isov, share
     for (j=0; j<dim[1]; j++)
       for (i=0; i<dim[0]; i++) {
         // compute level crossing
-        cdfField[count] = dist::getCdf(input[count], isov);
+        cdfField[count] = dist::getCdf( boost::any_cast<Dist>( input->getItem(count) ), isov);
         count++;
       }
 
@@ -71,6 +75,7 @@ ReturnStatus levelCrossing(shared_ary<Dist> input, int dim[3], float isov, share
         count++;
       }
 
+  return ReturnStatus::SUCCESS;
 }
 
 ///
@@ -83,13 +88,12 @@ ReturnStatus levelCrossing(shared_ary<Dist> input, int dim[3], float isov, share
 template <typename Dist, ENABLE_IF_BASE_OF(Dist, dist::Distribution)>
 std::shared_ptr<Dataset<float> > uncertainIsocontour(std::shared_ptr<Dataset<Dist> > dataset, float isov)
 {
-  shared_ary<float> output;
-  shared_ary<Dist> input = boost::any_cast<shared_ary<Dist> >(dataset->getArray()->getRawArray());
-
-  levelCrossing(input , dataset->getDimension(), isov, output);
-
   int *dim = dataset->getDimension();
   int new_dim[3]={dim[0]-1, dim[1]-1, dim[2]-1};
+  shared_ary<float> output(new_dim[0]*new_dim[1]*new_dim[2]);
+
+  levelCrossing<Dist>(dataset->getArray(), dataset->getDimension(), isov, output.get());
+
   return make_Dataset<float>(new RegularCartesianGrid(new_dim[0], new_dim[1], new_dim[2]),
                              new DataArray<float>(output)
       );

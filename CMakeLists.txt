@@ -38,8 +38,7 @@ endif ()
 
 option (EDDA_BUILD_TESTS "Build the test programs." OFF)
 option (EDDA_BUILD_EXAMPLES "Build the example programs." ON)
-option (EDDA_BUILD_VTK_EXAMPLES "Build VTK examples" OFF)
-option (EDDA_BUILD_VTK_INT "Build with VTK integration" OFF)
+option (EDDA_WITH_VTK "Build with VTK integration" OFF)
 
 # Load settings for the boost project.
 find_package (Boost REQUIRED)
@@ -49,15 +48,15 @@ if (Boost_FOUND)
 endif ()
 
 
+# Paraview integration
 option (EDDA_BUILD_PARAVIEW_PLUGINS "Build Paraview Plugins." OFF)
-
 if (EDDA_BUILD_PARAVIEW_PLUGINS)
   FIND_PACKAGE(ParaView REQUIRED)
   INCLUDE(${PARAVIEW_USE_FILE})
 
 else ()
   # VTK integration
-  if (EDDA_BUILD_VTK_EXAMPLES OR EDDA_BUILD_VTK_INT )
+  if (EDDA_WITH_VTK )
     find_package(VTK)
     include (${VTK_USE_FILE})
   endif ()
@@ -82,13 +81,5 @@ endif ()
 # If EDDA_BUILD_EXAMPLES is on, add the examples subdirectory to the build.
 if (EDDA_BUILD_EXAMPLES)
   add_subdirectory (examples)
-endif ()
-
-if (EDDA_BUILD_VTK_INT)
-  add_subdirectory (vtk)
-endif ()
-
-if (EDDA_BUILD_VTK_EXAMPLES)
-  add_subdirectory (examples/vtk)
 endif ()
 

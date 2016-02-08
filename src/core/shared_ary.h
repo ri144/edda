@@ -16,6 +16,7 @@ class shared_ary : public std::shared_ptr<T>
     public:
         void operator () (T* d) const
         {
+          if (d)
             delete [] d;
         }
     };
@@ -28,6 +29,9 @@ public:
     T & operator[] (int i) const { //std::cout << n << ',' << i;
                                    assert(i>=0 && i<n); return this->get()[i]; }
     size_t getLength() const {return n;}
+    void swap(shared_ary<T> &ary) {
+      std::shared_ptr<T>::swap(ary); std::swap(n, ary.n);
+    }
 };
 
 } // namespace edda

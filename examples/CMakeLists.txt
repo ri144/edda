@@ -9,6 +9,7 @@ set(sources
   streamlineGaussian
 )
 
+include_directories(${CMAKE_SOURCE_DIR}/src)
 
 foreach (file ${sources})
   get_filename_component(name ${file} NAME_WE)
@@ -16,3 +17,6 @@ foreach (file ${sources})
   target_link_libraries ( ${name} ${PROJECT_NAME} )
 endforeach ()
 
+if (EDDA_WITH_VTK)
+  add_subdirectory (vtk)
+endif ()

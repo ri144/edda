@@ -16,7 +16,7 @@
 
 #include <cmath>
 #include "common.h"
-#include "core/tuple.h"
+#include "tuple.h"
 
 namespace edda{
 
@@ -41,7 +41,7 @@ public :
     bool operator ==(const Vector<Real2, N> &v) const {
         for (int i=0; i<N; i++)
         {
-            if (fabs(vec[0]-v(0)) >= limits<Real>::epsilon() )
+            if (fabs(vec[0]-v(0)) >= EPS )
                 return false;
         }
         return true;
@@ -106,9 +106,9 @@ public:
 
     template<typename Real2>
     bool operator ==(const Vector<Real2, 3>& v) const {
-        return (fabs(vec[0]-v(0)) < limits<Real>::epsilon() &&
-                fabs(vec[1]-v(1)) < limits<Real>::epsilon() &&
-                fabs(vec[2]-v(2)) < limits<Real>::epsilon());
+        return (fabs(vec[0]-v(0)) < EPS &&
+                fabs(vec[1]-v(1)) < EPS &&
+                fabs(vec[2]-v(2)) < EPS);
     }
     // get magnitude
     double getMag() const { return sqrt(vec[0]*vec[0] + vec[1]*vec[1] + vec[2]*vec[2]);  }
@@ -142,10 +142,10 @@ public :
 
     template <typename Real2>
     bool operator ==(const Vector<Real2, 4>& v) const {
-        return (fabs(vec[0]-v(0)) < limits<Real>::epsilon() &&
-                fabs(vec[1]-v(1)) < limits<Real>::epsilon() &&
-                fabs(vec[2]-v(2)) < limits<Real>::epsilon() &&
-                fabs(vec[3]-v(3)) < limits<Real>::epsilon());
+        return (fabs(vec[0]-v(0)) < EPS &&
+                fabs(vec[1]-v(1)) < EPS &&
+                fabs(vec[2]-v(2)) < EPS &&
+                fabs(vec[3]-v(3)) < EPS);
     }
     // get magnitude
     double getMag() const { return sqrt(vec[0]*vec[0] + vec[1]*vec[1] + vec[2]*vec[2] + vec[3]*vec[3]);  }

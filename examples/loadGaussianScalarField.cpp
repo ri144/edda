@@ -1,11 +1,8 @@
 #include <iostream>
 
 #include "distributions/gaussian.h"
-#include "distributions/distribution.h"
-#include "dataset/dataset.h"
+#include "edda.h"
 #include "io/file_reader.h"
-#include "core/interpolator.h"
-#include "core/shared_ary.h"
 
 using namespace std;
 using namespace edda;

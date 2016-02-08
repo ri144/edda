@@ -11,9 +11,8 @@
 
 #include <iostream>
 #include <cfloat>
-#include "core/interpolator.h"
-#include "distributions/distribution.h"
 #include "grid.h"
+#include "core/interpolator.h"
 
 using namespace std;
 

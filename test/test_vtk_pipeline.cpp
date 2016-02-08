@@ -30,8 +30,8 @@
 // streamline
 #include "vtkStreamLine.h"
 
-#include "vtkEddaReader.h"
-#include "vtkSamplingArray.h"
+#include "vtk/vtkEddaReader.h"
+#include "vtk/vtkSamplingArray.h"
 
 using namespace std;
 

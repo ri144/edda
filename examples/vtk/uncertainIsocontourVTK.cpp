@@ -11,11 +11,14 @@
 #include <vtkSmartPointer.h>
 #include <vtkSmartVolumeMapper.h>
 #include <vtkVolumeProperty.h>
-#include <vtkImageData.h>
 #include <vtkVolume.h>
 #include <vtkXMLImageDataWriter.h>
 #include <vtkColorTransferFunction.h>
 #include <vtkOutlineFilter.h>
+#include <vtkXMLImageDataReader.h>
+#include <vtkXMLStructuredGridReader.h>
+#include <vtkCellDataToPointData.h>
+#include <vtkXMLStructuredGridWriter.h>
 
 #include <vtkRenderer.h>
 #include <vtkRenderWindow.h>
@@ -29,20 +32,62 @@
 #include "distributions/distribution.h"
 #include "io/file_reader.h"
 #include "io/file_writer.h"
+#include "io/path.h"
 #include "filters/uncertain_isocontour.h"
+#include "vtk/vtk_common.h"
+#include "vtk/vtkUncertainIsocontour.h"
 
 using namespace std;
 using namespace edda;
 
-#define vsp_new(cls,x) vtkSmartPointer<cls> x = vtkSmartPointer<cls>::New()
+vtkSmartPointer<vtkDataSet> process_vtk_file(string vtk_file, float isov)
+{
+  vtkSmartPointer <vtkDataSet> dataset;
+  if (getFileExtension(vtk_file).compare("vts")==0) {
+    vsp_new(vtkXMLStructuredGridReader, reader);
+    reader->SetFileName(vtk_file.c_str());
+    reader->Update();
+    dataset = reader->GetOutput();
 
-int main(int argc, char **argv) {
-  cout << "isoProbField <info file> <iso-value>" << endl;
-  if (argc<=2)
-    return -1;
-  string info_file = argv[1];
-  float isov = atof(argv[2]);
+  } else if (getFileExtension(vtk_file).compare("vti")==0) {
+    vsp_new(vtkXMLImageDataReader, reader);
+    reader->SetFileName(vtk_file.c_str());
+    reader->Update();
+    dataset = reader->GetOutput();
+  } else {
+    printf("File format not supported\n");
+    exit(1);
+  }
+  vsp_new(vtkUncertainIsocontour, isocontour);
+  isocontour->SetInputData(dataset);
+  isocontour->SetIsov(isov);
+  isocontour->Update();
 
+  vsp_new(vtkCellDataToPointData, cell2point);
+  cell2point->SetInputData(isocontour->GetOutput());
+  cell2point->Update();
+
+  cell2point->GetOutput()->PrintSelf(cout, vtkIndent(0));
+
+  printf("Saving output file\n");
+  if (getFileExtension(vtk_file).compare("vti")==0) {
+    vsp_new(vtkXMLImageDataWriter, writer);
+    writer->SetFileName("ProbField.vti");
+    writer->SetInputData(isocontour->GetOutput());
+    writer->Write();
+  } else {
+    vsp_new(vtkXMLStructuredGridWriter, writer);
+    writer->SetFileName("ProbField.vts");
+    writer->SetInputData(isocontour->GetOutput());
+    writer->Write();
+
+  }
+
+  return cell2point->GetOutput();
+}
+
+vtkSmartPointer<vtkDataSet> process_info_file(string info_file, float isov)
+{
   // load data
   shared_ptr<Dataset<dist::Gaussian> > dataset = loadData<dist::Gaussian>(info_file);
 
@@ -57,6 +102,25 @@ int main(int argc, char **argv) {
   shared_ary<float> array = boost::any_cast<shared_ary<float> >( output->getArray()->getRawArray() );
   std::copy( &array[0], &array[0]+output->getArray()->getLength(),
             (float *)image->GetScalarPointer(0,0,0));
+
+  return image;
+}
+
+int main(int argc, char **argv) {
+  cout << "isoProbField <info file> <iso-value>" << endl;
+  if (argc<=2)
+    return -1;
+  string input_file = argv[1];
+  float isov = atof(argv[2]);
+
+  vtkSmartPointer<vtkDataSet> probField;
+  if (getFileExtension(input_file).compare("vts")==0 || getFileExtension(input_file).compare("vti")==0) {
+    probField = process_vtk_file(input_file, isov);
+  }
+  else {
+    probField = process_info_file(input_file, isov);
+  }
+
 
   // Volume render
   vsp_new(vtkPiecewiseFunction, alphaChannelFunc);
@@ -76,7 +140,7 @@ int main(int argc, char **argv) {
 
   vsp_new(vtkSmartVolumeMapper, volumeMapper);
   volumeMapper->SetBlendModeToComposite(); // composite first
-  volumeMapper->SetInputData(image);
+  volumeMapper->SetInputData(probField);
 
   vsp_new(vtkVolume, volume);
   volume->SetMapper(volumeMapper);
@@ -84,7 +148,7 @@ int main(int argc, char **argv) {
 
   // outline
   vsp_new(vtkOutlineFilter, outline);
-  outline->SetInputData(image);
+  outline->SetInputData(probField);
   vsp_new(vtkPolyDataMapper, outlineMapper);
   outlineMapper->SetInputConnection(outline->GetOutputPort());
   vsp_new(vtkActor, outlineActor);

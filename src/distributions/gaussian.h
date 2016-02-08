@@ -11,9 +11,8 @@
 
 #include <boost/math/distributions.hpp>
 
-#include <edda_export.h>
-#include <distributions/distribution.h>
-#include <core/statistics.h>
+#include "distribution.h"
+#include "core/statistics.h"
 
 namespace edda {
 namespace dist {

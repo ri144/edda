@@ -8,10 +8,10 @@
 #include <cassert>
 #include <iostream>
 #include <memory>
-#include <core/abstract_data_array.h>
-#include <core/vector_matrix.h>
-#include <core/shared_ary.h>
-#include <distributions/distribution.h>
+#include "abstract_data_array.h"
+#include "vector_matrix.h"
+#include "shared_ary.h"
+#include "distributions/distribution.h"
 
 namespace edda {
 
@@ -19,8 +19,7 @@ namespace edda {
 struct GetItemAsIs ;
 struct GetItemSampled ;
 struct GetItemSampledVector ;
-struct GetItemStrided;
-///
+
 /// \brief A simple implementation of DataArray.
 ///
 /// This is the class that holds the actual array, in a smart pointer.

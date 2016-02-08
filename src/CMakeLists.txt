@@ -2,21 +2,54 @@
 # Use of this source code is governed by a MIT-style license that can be
 # found in the LICENSE file.
 
-file (GLOB_RECURSE SRC_FILES "*.cpp")
+set (SRC_DIRS
+  .
+  core
+  dataset
+  distributions
+  filters
+  io
+)
 
-file (GLOB_RECURSE HEADER_FILES "*.h")
+if (EDDA_WITH_VTK OR EDDA_BUILD_PARAVIEW_PLUGINS)
+  set (SRC_DIRS ${SRC_DIRS} vtk)
+endif ()
+
+foreach (dir in ${SRC_DIRS})
+  file(GLOB tmp ${dir}/*.cpp)
+  list(APPEND SRC_FILES ${tmp})
+  file(GLOB tmp  RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} ${dir}/*.h)
+  list(APPEND HEADER_FILES ${tmp})
+endforeach ()
+
+#file (GLOB_RECURSE SRC_FILES "*.cpp")
+#file (GLOB_RECURSE HEADER_FILES "*.h")
+#message(warning "${SRC_FILES} ")
 
 add_library (${PROJECT_NAME} ${LIB_TYPE} ${SRC_FILES} ${HEADER_FILES})
+
+### for building shared library (BUILD_SHARED_LIBS=ON), otherwise this does nothing:
+target_link_libraries(${PROJECT_NAME} ${VTK_LIBRARIES})
 
 set_target_properties (${PROJECT_NAME} PROPERTIES
     DEBUG_OUTPUT_NAME "${PROJECT_NAME}_d"
     RELEASE_OUTPUT_NAME "${PROJECT_NAME}")
 
-install (
-    DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/
-    DESTINATION include/edda
-    FILES_MATCHING PATTERN "*.h")
+#install (
+#    DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/
+#    DESTINATION include/${PROJECT_NAME}
+#    FILES_MATCHING PATTERN "*.h")
+
+foreach(HEADER ${HEADER_FILES})
+  string(REGEX MATCH "(.*)[/\\]" DIR ${HEADER})
+  install(FILES ${HEADER} DESTINATION include/${PROJECT_NAME}/${DIR})
+endforeach()
 
 install (
     TARGETS ${PROJECT_NAME}
-    DESTINATION lib/edda)
+    DESTINATION lib/${PROJECT_NAME})
+
+if (EDDA_BUILD_PARAVIEW_PLUGINS)
+  add_subdirectory(vtk)
+endif ()
+
