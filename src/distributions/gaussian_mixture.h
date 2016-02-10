@@ -70,11 +70,25 @@ inline double getMean(const GaussianMixture &dist)
 }
 
 ///
-/// \brief Return variance
+/// \brief Return variance.
+///
+/// if f(x) = sum_i( w_i * f_i(x) ), v_i = variance of f_i, and m_i = mean of f_i, then
+/// var(f) = sum_i( w_i * v_i + w_i * m_i^2 ) - (sum_i( w_i * m_i) )^2.
+///
+/// ref: http://stats.stackexchange.com/questions/16608/what-is-the-variance-of-the-weighted-mixture-of-two-gaussians
+/// (code not verified)
 ///
 inline double getVar(const GaussianMixture &dist)
 {
-    throw NotImplementedException();
+  // Let the first summation as term1 and second as term2
+  double term1=0, term2=0;
+  for (size_t i=0; i<dist.models.size(); i++)
+  {
+    const GMMTuple & model = dist.models[i];
+    term1 += (double)model.w * model.v + (double)model.w * model.m * model.m ;
+    term2 += (double)model.w * model.m;
+  }
+  return term1 - term2 * term2;
 }
 
 ///

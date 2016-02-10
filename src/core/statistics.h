@@ -5,7 +5,7 @@
 #ifndef STATISTICS_H_
 #define STATISTICS_H_
 
-#include <assert.h>
+#include <cassert>
 #include <cmath>
 #include <numeric>
 

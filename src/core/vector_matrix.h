@@ -9,6 +9,7 @@
 //		08-20-99        K. Boner
 //		07-15-00        J. Gao
 // 		05-25-05		H-W Shen, Liya Li
+//              01-2016         C-M Chen
 //////////////////////////////////////////////////////////////////////////
 
 #ifndef _VECTOR_MATRIX_H_
@@ -169,94 +170,6 @@ public :
 template<typename Real> using Vector3 = Vector<Real, 3> ;
 template<typename Real> using Vector4 = Vector<Real, 4> ;
 
-#if 0 // TODO
-//////////////////////////////////////////////////////////////////////////
-/// for perfomrnace we implement each VECTOR with different lengths
-//	vector with 3 components
-//////////////////////////////////////////////////////////////////////////
-template <typename Real>
-class Vector3 : public Tuple<Real, 3>
-{
-    using Tuple<Real, 3>::vec;
-public :
-    Vector3() {}
-    template<typename T>
-        Vector3(const Tuple3<T> &tuple) {set(tuple[0], tuple[1], tuple[2]); }  // convert from Tuple
-    Vector3(Real x, Real y, Real z) { set(x,y,z); }
-	// constructor
-    inline Real x() const {return vec[0];}
-    inline Real y() const {return vec[1];}
-    inline Real z() const {return vec[2];}
-    inline void set(Real x, Real y, Real z) { vec[0]=x; vec[1]=y; vec[2]=z; }
-
-    bool operator ==(const Vector3& v) const {
-        return (fabs(vec[0]-v(0)) < limits<Real>::epsilon() &&
-                fabs(vec[1]-v(1)) < limits<Real>::epsilon() &&
-                fabs(vec[2]-v(2)) < limits<Real>::epsilon());
-    }
-    // get magnitude
-    double getMag() const { return sqrt(vec[0]*vec[0] + vec[1]*vec[1] + vec[2]*vec[2]);  }
-    // get the maximum value
-    Real getMax() const { return std::max(vec[0], std::max(vec[1], vec[2])); }
-    // normalize vector
-    void normalize()    { double norm = getMag(); if (norm!=0) (*this) *= (1/norm); }
-    Vector3<Real> operator+=(double x) { vec[0]+=x; vec[1]+=x; vec[2]+=x; return *this; }
-    Vector3<Real> operator*=(double x) { vec[0]*=x; vec[1]*=x; vec[2]*=x; return *this; }
-
-    // make sure all component<=1.0
-    void clamp()
-    {
-        for (int i = 0; i < this->getLen(); i++)
-            if (vec[i]>1.0) vec[i] = 1.0;
-    }
-};
-
-
-//////////////////////////////////////////////////////////////////////////
-/// for perfomrnace we implement each VECTOR with different lengths
-//	vector with 4 components
-//////////////////////////////////////////////////////////////////////////
-template <typename Real>
-class Vector4 : public Tuple<Real, 4>
-{
-    using Tuple<Real, 4>::vec;
-public :
-    // constructor
-    Vector4() {}
-    template <typename T>
-        Vector4(const Tuple4<T> &tuple) {set(tuple[0], tuple[1], tuple[2], tuple[3]); }  // convert from Tuple
-    Vector4(Real x, Real y, Real z, Real w) { set(x,y,z,w); }
-
-    inline Real x() const {return vec[0];}
-    inline Real y() const {return vec[1];}
-    inline Real z() const {return vec[2];}
-    inline Real w() const {return vec[3];}
-    inline void set(Real x, Real y, Real z, Real w) { vec[0]=x; vec[1]=y; vec[2]=z; vec[3]=w; }
-
-    bool operator ==(const Vector4<Real>& v) const {
-        return (fabs(vec[0]-v(0)) < limits<Real>::epsilon() &&
-                fabs(vec[1]-v(1)) < limits<Real>::epsilon() &&
-                fabs(vec[2]-v(2)) < limits<Real>::epsilon() &&
-                fabs(vec[3]-v(3)) < limits<Real>::epsilon());
-    }
-    // get magnitude
-    double getMag() const { return sqrt(vec[0]*vec[0] + vec[1]*vec[1] + vec[2]*vec[2] + vec[3]*vec[3]);  }
-    // get the maximum value
-    Real getMax() const { return std::max(vec[0], std::max(vec[1], std::max(vec[2], vec[3]))); }
-    // normalize vector
-    void normalize()    { double norm = getMag(); if (norm!=0) (*this) *= (1/norm); }
-    Vector4<Real> operator+=(double x) { vec[0]+=x; vec[1]+=x; vec[2]+=x; vec[3]+=x; return *this; }
-    Vector4<Real> operator*=(double x) { vec[0]*=x; vec[1]*=x; vec[2]*=x; vec[3]+=x; return *this; }
-
-    // make sure all component<=1.0
-    void clamp()
-    {
-        for (int i = 0; i < this->getLen(); i++)
-            if (vec[i]>1.0) vec[i] = 1.0;
-    }
-};
-
-#endif
 //************************
 // VECTOR operations
 //************************

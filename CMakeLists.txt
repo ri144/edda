@@ -7,9 +7,22 @@ cmake_minimum_required (VERSION 2.8)
 # Set the project's name.
 project (edda)
 
+### Provide options that the user can optionally select.
+option (EDDA_BUILD_TESTS "Build the test programs." OFF)
+option (EDDA_BUILD_EXAMPLES "Build the example programs." ON)
+option (EDDA_BUILD_SHARED_LIBS "Build into shared libraries." ON)
+option (EDDA_BUILD_PARAVIEW_PLUGINS "Build Paraview Plugins." OFF)
+option (EDDA_WITH_VTK "Build with VTK integration." OFF)
+option (EDDA_FILTERS_WITH_OPENMP "Build with OpenMP parallelization." ON)
+###
+
 # Tell the compiler to use C++11.
 if (UNIX)
   set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall")
+endif ()
+
+if (EDDA_FILTERS_WITH_OPENMP)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fopenmp")
 endif ()
 
 # Set libraries' output path to lib.
@@ -28,17 +41,11 @@ if (WIN32)
   set (OS_WIN ON)
 endif ()
 
-# Provide options that the user can optionally select.
-option (BUILD_SHARED_LIBS "Build into shared libraries." ON)
-if (${BUILD_SHARED_LIBS})
+if (${EDDA_BUILD_SHARED_LIBS})
     set(LIB_TYPE SHARED)
 else ()
     set(LIB_TYPE STATIC)
 endif ()
-
-option (EDDA_BUILD_TESTS "Build the test programs." OFF)
-option (EDDA_BUILD_EXAMPLES "Build the example programs." ON)
-option (EDDA_WITH_VTK "Build with VTK integration" OFF)
 
 # Load settings for the boost project.
 find_package (Boost REQUIRED)
@@ -48,8 +55,7 @@ if (Boost_FOUND)
 endif ()
 
 
-# Paraview integration
-option (EDDA_BUILD_PARAVIEW_PLUGINS "Build Paraview Plugins." OFF)
+# Choose either Paraview or VTK library
 if (EDDA_BUILD_PARAVIEW_PLUGINS)
   FIND_PACKAGE(ParaView REQUIRED)
   INCLUDE(${PARAVIEW_USE_FILE})
