@@ -22,7 +22,8 @@ if (UNIX)
 endif ()
 
 if (EDDA_FILTERS_WITH_OPENMP)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fopenmp")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fopenmp")
+  add_definitions(-DEDDA_FILTERS_WITH_OPENMP)
 endif ()
 
 # Set libraries' output path to lib.

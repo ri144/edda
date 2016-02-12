@@ -2,6 +2,7 @@
 
 #include "vtkRandomSampleField.h"
 
+#include "common.h"
 #include "vtk_common.h"
 #include "vtkInformation.h"
 #include "vtkInformationVector.h"
@@ -9,6 +10,7 @@
 #include "vtkStreamingDemandDrivenPipeline.h"
 
 #include "gmm_vtk_data_array.h"
+#include "core/sampling_data_array.h"
 
 using namespace std;
 using namespace edda;
@@ -35,6 +37,25 @@ void vtkRandomSampleField::InitializeData(vtkDataSet* input,
   output->CopyStructure(input);
 }
 
+void vtkRandomSampleField::SampleDataArray(shared_ptr<GmmVtkDataArray> dataArray, vtkSmartPointer<vtkFieldData> output_field)
+{
+  // create output array
+  vsp_new(vtkFloatArray, out_vtkArray);
+  out_vtkArray->SetNumberOfComponents(dataArray->getComponents());
+  out_vtkArray->SetNumberOfTuples(dataArray->getLength());
+  out_vtkArray->SetName("RandomSample");
+
+  float *p = (float *)out_vtkArray->GetVoidPointer(0);
+#pragma omp parallel for
+  for (size_t i=0; i<dataArray->getLength(); i++)
+  {
+    for (int c=0; c<dataArray->getComponents(); c++)
+      p[i*dataArray->getComponents()+c] = dist::getSample(boost::any_cast<dist::GaussianMixture>( dataArray->getItem(i,c) ) );
+  }
+
+  output_field->AddArray(out_vtkArray);
+}
+
 //----------------------------------------------------------------------------
 int vtkRandomSampleField::RequestData(
   vtkInformation *vtkNotUsed(request),
@@ -53,40 +74,26 @@ int vtkRandomSampleField::RequestData(
 
   this->InitializeData(input, output);
 
+  shared_ptr<GmmVtkDataArray> dataArray;
+
   // process point data
-  shared_ptr<GmmVtkDataArray> dataArray(new GmmVtkDataArray(input->GetPointData()) );
-
-  // has point data?
+  dataArray = shared_ptr<GmmVtkDataArray>(new GmmVtkDataArray(input->GetPointData()) );
   if (dataArray->getLength() > 0) {
-    // create output array
-    vsp_new(vtkFloatArray, out_vtkArray);
-    out_vtkArray->SetNumberOfComponents(1);
-    out_vtkArray->SetNumberOfTuples(dataArray->getLength());
-    out_vtkArray->SetName("RandomSample");
-
-    for (size_t i=0; i<dataArray->getLength(); i++)
-    {
-      *(float *)out_vtkArray->GetVoidPointer(i) = dist::getSample(boost::any_cast<dist::GaussianMixture>( dataArray->getItem(i) ) );
-    }
-    output->GetPointData()->AddArray(out_vtkArray);
+    this->SampleDataArray(  dataArray, output->GetPointData());
+    if (dataArray->getComponents()==1)
+      output->GetPointData()->SetActiveScalars("RandomSample");
+    else
+      output->GetPointData()->SetActiveVectors("RandomSample");
   }
 
-  // process cell data
   dataArray = shared_ptr<GmmVtkDataArray>(new GmmVtkDataArray(input->GetCellData()) );
-
-  if (dataArray->getLength())
+  if (dataArray->getLength() > 0)
   {
-    // create output array
-    vsp_new(vtkFloatArray, out_vtkArray);
-    out_vtkArray->SetNumberOfComponents(1);
-    out_vtkArray->SetNumberOfTuples(dataArray->getLength());
-    out_vtkArray->SetName("RandomSample");
-
-    for (size_t i=0; i<dataArray->getLength(); i++)
-    {
-      *(float *)out_vtkArray->GetVoidPointer(i) = dist::getSample( boost::any_cast<dist::GaussianMixture>( dataArray->getItem(i) ) );
-    }
-    output->GetCellData()->AddArray(out_vtkArray);
+    this->SampleDataArray(dataArray, output->GetCellData());
+    if (dataArray->getComponents()==1)
+      output->GetCellData()->SetActiveScalars("RandomSample");
+    else
+      output->GetCellData()->SetActiveVectors("RandomSample");
   }
 
   return 1;

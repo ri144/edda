@@ -25,6 +25,7 @@ class GmmVtkDataArray: public AbstractDataArray
 protected:
   std::vector<vtkSmartPointer<vtkDataArray> > arrays;
   size_t length = 0;
+  int components = 1;
 public:
   GmmVtkDataArray(vtkFieldData *fieldData, const char *arrayNamePrefix="")  ;
 
@@ -34,11 +35,13 @@ public:
 
   virtual ~GmmVtkDataArray() { }
 
-  virtual boost::any getItem(size_t idx);
+  virtual boost::any getItem(size_t idx, int component=0);
 
-  virtual void setItem(size_t idx, const boost::any &item);
+  virtual void setItem(size_t idx, int component, const boost::any &item);
 
   virtual size_t getLength() { return length; }
+
+  virtual int getComponents() { return this->components; }
 
   virtual boost::any getRawArray() { return boost::any(arrays); }
 };

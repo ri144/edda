@@ -12,6 +12,13 @@
 
 #include <limits>
 
+#ifdef EDDA_FILTERS_WITH_OPENMP
+#include <omp.h>
+#define FILTER_PARFOR #pragma omp parallel_for
+#else
+#define FILTER_PARFOR
+#endif
+
 namespace edda {
 
 const double DEG_TO_RAD = 0.0174532925199432957692;  // PI / 180

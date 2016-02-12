@@ -1,5 +1,6 @@
 #include <algorithm>
 #include <cstring>
+#include <cstdlib>
 #include "gmm_vtk_data_array.h"
 using namespace std;
 namespace edda{
@@ -22,21 +23,41 @@ GmmVtkDataArray::GmmVtkDataArray(vtkFieldData *fieldData, const char *arrayNameP
     vtkSmartPointer<vtkDataArray> varArray = fieldData->GetArray(varArrayName);
     vtkSmartPointer<vtkDataArray> weightArray = fieldData->GetArray(weightArrayName);
     if (i==0 && meanArray && weightArray==0) {
+      int c = meanArray->GetNumberOfComponents();
+      int n = meanArray->GetNumberOfTuples();
       // allows when only one mean and one variance are provided
       // create weight Array
       weightArray = vtkSmartPointer<vtkFloatArray>::New();
-      int n = meanArray->GetNumberOfTuples();
-      weightArray->SetNumberOfComponents(1);
+      weightArray->SetNumberOfComponents(c);
       weightArray->SetNumberOfTuples(n);
-      for (int j=0; j<n; j++)
-        *(float *)weightArray->GetVoidPointer(j) = 1.f ;
-      n = weightArray->GetNumberOfTuples();
+      // asign 1's
+      float *p = (float *)weightArray->GetVoidPointer(0);
+      for (int j=0; j<n*c; j++)
+        p[j] = 1.f;
     }
     if (meanArray && varArray && weightArray) {
+      // get components
+      int c = meanArray->GetNumberOfComponents();
+      if (c != varArray->GetNumberOfComponents() || c!= weightArray->GetNumberOfComponents()) {
+        printf("Warning: the number of array components do not match\n") ;
+        c = 1;
+      }
+      this->components = c;
+
+      // set arrays
       arrays.push_back(meanArray);
       arrays.push_back(varArray);
       arrays.push_back(weightArray);
+
     } else if (meanArray && stdevArray && weightArray) {
+      // get components
+      int c = meanArray->GetNumberOfComponents();
+      if (c != varArray->GetNumberOfComponents() || c!= weightArray->GetNumberOfComponents()) {
+        printf("Warning: the number of array components do not match\n") ;
+        c = 1;
+      }
+      this->components = c;
+
       // convert stdev to variance
       arrays.push_back(meanArray);
       vsp_new(vtkFloatArray, varArray);
@@ -44,13 +65,14 @@ GmmVtkDataArray::GmmVtkDataArray(vtkFieldData *fieldData, const char *arrayNameP
       varArray->SetNumberOfComponents(1);
       varArray->SetNumberOfTuples(n);
       for (int j=0; j<n; j++)
-        *(float *)varArray->GetVoidPointer(j) = pow(stdevArray->GetTuple1(j), 2) ;
+        *(float *)varArray->GetVoidPointer(j) = pow(stdevArray->GetTuple1(j), 2.) ;
+
+      // set arrays
       arrays.push_back(varArray);
       arrays.push_back(weightArray);
     }
   }
   if (arrays.size() == 0) {
-    printf("Warning: no array assigned to GmmVtkArray\n");
     return;
   }
   length = arrays[0]->GetNumberOfTuples();
@@ -81,19 +103,19 @@ GmmVtkDataArray::GmmVtkDataArray(std::vector<vtkSmartPointer<vtkDataArray> > arr
   }
 }
 
-boost::any GmmVtkDataArray::getItem(size_t idx) {
+boost::any GmmVtkDataArray::getItem(size_t idx, int component) {
   std::vector<GMMTuple> models ( arrays.size()/3 );
   for (size_t i=0; i<arrays.size(); i++) {
-    models[i/3].p[i%3] = arrays[i]->GetTuple1(idx);
+    models[i/3].p[i%3] = arrays[i]->GetComponent(idx, component);
   }
   return boost::any( GaussianMixture(models) );
 }
 
-void GmmVtkDataArray::setItem(size_t idx, const boost::any &item) {
+void GmmVtkDataArray::setItem(size_t idx, int component, const boost::any &item) {
   // not tested
   GaussianMixture gmm = boost::any_cast<GaussianMixture>( item );
   for (size_t i=0; i<arrays.size(); i++) {
-    arrays[i]->SetTuple1(idx, gmm.models[i/3].p[i%3]);
+    arrays[i]->SetComponent(idx, component, gmm.models[i/3].p[i%3]);
   }
 }
 }; //edda

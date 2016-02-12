@@ -37,11 +37,13 @@ public:
 
   virtual ~DataArray() { }
 
-  virtual boost::any getItem(size_t idx) { return boost::any( GetItem(array[idx]) );  }
+  virtual boost::any getItem(size_t idx, int component=0) { return boost::any( GetItem(array[idx]) );  }
 
-  virtual void setItem(size_t idx, const boost::any &item) { array[idx] = boost::any_cast<T>( item );  }
+  virtual void setItem(size_t idx, int component, const boost::any &item) { array[idx] = boost::any_cast<T>( item );  }
 
   virtual size_t getLength() { return array.getLength(); }
+
+  virtual int getComponents() { return 1; }
 
   virtual boost::any getRawArray() { return boost::any(array); }
 };

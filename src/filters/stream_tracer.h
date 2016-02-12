@@ -122,6 +122,7 @@ public:
                     r = runge_kutta2(p, step_size);
                     break;
                 default:
+                    r = ReturnStatus::FAIL;
                     assert(false); // should not go here
                     break;
                 }

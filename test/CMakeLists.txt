@@ -23,7 +23,7 @@ endforeach (test)
 
 if (EDDA_WITH_VTK)
   set(sources
-    convertGMM
+    gmm_raw2vtk
     test_vtk_pipeline
     #test_vtkEddaReader
   )

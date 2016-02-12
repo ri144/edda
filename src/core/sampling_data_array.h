@@ -29,15 +29,20 @@ public:
 
   virtual ~SamplingDataArray() { }
 
-  virtual boost::any getItem(size_t idx) {
+  ///
+  /// getSample returns double or tuple types
+  ///
+  virtual boost::any getItem(size_t idx, int component=0) {
     return boost::any(
-          getSample( boost::any_cast<Dist>(array->getItem(idx) ) )
+          getSample( boost::any_cast<Dist>(array->getItem(idx, component) ) )
           );
   }
 
-  virtual void setItem(size_t idx, const boost::any &item) { array->setItem( idx, boost::any_cast<Dist>( item ) );  }
+  virtual void setItem(size_t idx, int component, const boost::any &item) { array->setItem( idx, component, boost::any_cast<Dist>( item ) );  }
 
   virtual size_t getLength() { return array->getLength(); }
+
+  virtual int getComponents() { return array->getComponents(); }
 
   virtual boost::any getRawArray() { return array->getRawArray(); }
 };

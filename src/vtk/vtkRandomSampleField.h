@@ -5,6 +5,8 @@
 #include "vtkDataSetAlgorithm.h"
 #include "vtkDataSetAttributes.h" // needed for vtkDataSetAttributes::FieldList
 
+#include "gmm_vtk_data_array.h"
+
 class vtkIdTypeArray;
 class vtkCharArray;
 class vtkMaskPoints;
@@ -29,8 +31,10 @@ protected:
   virtual int RequestUpdateExtent(vtkInformation *, vtkInformationVector **,
     vtkInformationVector *);
 
+  // non-vtk functions
   virtual void InitializeData(vtkDataSet* input,
                               vtkDataSet* output);
+  virtual void SampleDataArray(std::shared_ptr<edda::GmmVtkDataArray> dataArray, vtkSmartPointer<vtkFieldData> output);
 
 private:
   vtkRandomSampleField(const vtkRandomSampleField&);  // Not implemented.
