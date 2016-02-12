@@ -96,6 +96,9 @@ int vtkRandomSampleField::RequestData(
       output->GetCellData()->SetActiveVectors("RandomSample");
   }
 
+  output->Modified();
+  this->Modified();
+
   return 1;
 }
 
@@ -113,6 +116,20 @@ int vtkRandomSampleField::RequestInformation(
                inInfo->Get(vtkStreamingDemandDrivenPipeline::WHOLE_EXTENT()),
                6);
 
+  // time:
+  double timeStepValues[] = {0,1.,2.,3.,4.,5.,6.,7.,8.,9.};
+  outInfo->Set(vtkStreamingDemandDrivenPipeline::TIME_STEPS(),
+    timeStepValues, 10);
+
+  double timeRange[2];
+  timeRange[0] = 0;
+  timeRange[1] = 9;
+  outInfo->Set(vtkStreamingDemandDrivenPipeline::TIME_RANGE(), timeRange, 2);
+
+  //outInfo->Set(vtkStreamingDemandDrivenPipeline::TIME_RANGE(), timeRange, 2);
+  //outInfo->Set(vtkStreamingDemandDrivenPipeline::UPDATE_TIME_STEPS(), &myRequestedTime, 1);
+
+  this->Modified();
   return 1;
 }
 
@@ -144,6 +161,8 @@ int vtkRandomSampleField::RequestUpdateExtent(
     inInfo->Set(
       vtkStreamingDemandDrivenPipeline::UPDATE_EXTENT(),
       outInfo->Get(vtkStreamingDemandDrivenPipeline::UPDATE_EXTENT()), 6);
+
+    this->Modified();
 
   return 1;
 }

@@ -52,7 +52,7 @@ GmmVtkDataArray::GmmVtkDataArray(vtkFieldData *fieldData, const char *arrayNameP
     } else if (meanArray && stdevArray && weightArray) {
       // get components
       int c = meanArray->GetNumberOfComponents();
-      if (c != varArray->GetNumberOfComponents() || c!= weightArray->GetNumberOfComponents()) {
+      if (c != stdevArray->GetNumberOfComponents() || c!= weightArray->GetNumberOfComponents()) {
         printf("Warning: the number of array components do not match\n") ;
         c = 1;
       }
