@@ -33,7 +33,7 @@ int main(int argc, char **argv) {
 
     Dataset<VECTOR3> dataset1 (
                 new RegularCartesianGrid (dim[0], dim[1], dim[2]),
-                new DataArray<Gaussian3, GetItemSampledVector> (distData )
+                new DataSamplingArray<Vector<Gaussian, 3> >( new VectorArray<Gaussian, 3> (distData ) )
     );
 
     float x;
@@ -50,7 +50,7 @@ int main(int argc, char **argv) {
 
     Dataset<Gaussian3> dataset2 (
                 new RegularCartesianGrid (dim[0], dim[1], dim[2]),
-                new DataArray<Gaussian3> (distData) );
+                new VectorArray<Gaussian, 3> (distData) );
 
     for (x=0; x<10; x+=.5)
     {

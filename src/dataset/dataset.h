@@ -41,12 +41,6 @@ public:
     AbstractDataArray *getArray () {return pArray; }
 
     ///
-    /// \brief Detach the array so that it will not be deleted when the dataset is destroyed.
-    /// \return Detached array.
-    ///
-    AbstractDataArray *detachArray () {AbstractDataArray *tmp = pArray; pArray = NULL; return tmp; }
-
-    ///
     /// \brief Get the dimension of the cartesian-grid data.
     ///
     /// Non-cartesian grid data are currently not supported.
@@ -76,14 +70,14 @@ public:
             if (r != SUCCESS)
                 return r;
 
-            std::vector<int> vVertices;
+            std::vector<size_t> vVertices;
             r = pGrid->getCellVertices(pinfo.inCell, vVertices);
             if (r != SUCCESS)
                 return r;
 
             int i;
             std::vector<T> vData(vVertices.size());
-            for (i=0; i<(int)vVertices.size(); i++)
+            for (i=0; i<vVertices.size(); i++)
                 vData[i] = boost::any_cast<T> ( pArray->getItem(vVertices[i]) );
 
             output = triLerp(vData[0], vData[1], vData[2], vData[3],
@@ -111,7 +105,7 @@ public:
       CartesianGrid *cartesianGrid = dynamic_cast<CartesianGrid *>(pGrid) ;
 
       if (cartesianGrid) {
-        int idx;
+        size_t idx;
         r = cartesianGrid->getIndex(i,j,k, idx);
         if (r!=SUCCESS)
           throw OutOfBoundException();

@@ -74,7 +74,7 @@ public:
     // Return interpolation result
     //virtual ReturnStatus at_phys(VECTOR3& pos, AbstractDataArray *array, boost::any output) = 0;
 	// get vertex list of a cell
-    virtual ReturnStatus getCellVertices(int cellId, std::vector<int>& vVertices) = 0;
+    virtual ReturnStatus getCellVertices(int cellId, std::vector<size_t>& vVertices) = 0;
 	// get the cell id and also interpolating coefficients for the given physical position
     virtual ReturnStatus phys_to_cell(PointInfo& pInfo) = 0;
     // interpolation: replaced by templated interpolator
@@ -127,9 +127,9 @@ public:
   // physical coordinate of vertex verIdx
   virtual ReturnStatus at_vertex(int verIdx, VECTOR3& pos) =0;
   // Return interpolation result
-  virtual ReturnStatus getIndex(int i, int j, int k, int &idx);
+  virtual ReturnStatus getIndex(int i, int j, int k, size_t &idx);
   // get vertex list of a cell
-  virtual ReturnStatus getCellVertices(int cellId, std::vector<int>& vVertices) =0;
+  virtual ReturnStatus getCellVertices(int cellId, std::vector<size_t>& vVertices) =0;
   // get the cell id and also interpolating coefficients for the given physical position
   virtual ReturnStatus phys_to_cell(PointInfo& pInfo) =0;
 
@@ -201,7 +201,7 @@ public:
   // Return interpolation result
   //ReturnStatus at_phys(VECTOR3& pos, AbstractDataArray *array, boost::any output) ;
   // get vertex list of a cell
-  ReturnStatus getCellVertices(int cellId, std::vector<int>& vVertices);
+  ReturnStatus getCellVertices(int cellId, std::vector<size_t>& vVertices);
   // get the cell id and also interpolating coefficients for the given physical position
   ReturnStatus phys_to_cell(PointInfo& pInfo);
   // the volume of cell

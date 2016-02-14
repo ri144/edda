@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "distributions/gaussian.h"
+#include "core/abstract_sampling_array.h"
 #include "edda.h"
 #include "io/file_reader.h"
 
@@ -28,15 +29,17 @@ int main(int argc, char **argv) {
     /////////////////////////////////////
     cout << "value interpolation after sampling:" << endl;
 
-    Dataset<float> dataset1 (
+    Dataset<double> dataset1 (
                 new RegularCartesianGrid (dim[0], dim[1], dim[2]),
-                new DataArray<Gaussian, GetItemSampled>(distData )
+                new DataSamplingArray<Gaussian>( new ScalarArray<Gaussian>(distData) )
             );
     float x;
     for (x=0; x<10; x+=.5)
     {
-        float sampled_val;
+        double sampled_val;
         r = dataset1.at_phys( VECTOR3(x, 10, 10), sampled_val );
+        if (r!=SUCCESS)
+          return -1;
         cout << sampled_val << " ";
     }
     cout << endl;
@@ -46,13 +49,15 @@ int main(int argc, char **argv) {
 
     Dataset<Gaussian> dataset2 (
                 new RegularCartesianGrid (dim[0], dim[1], dim[2]),
-                new DataArray<Gaussian> (distData)
+                new ScalarArray<Gaussian> (distData)
             );
 
     for (x=0; x<10; x+=.5)
     {
         Gaussian sampled_dist;
         r = dataset2.at_phys( VECTOR3(x, 10, 10), sampled_dist );
+        if (r!=SUCCESS)
+          return -1;
         cout << sampled_dist <<  "\t" << dist::getSample(sampled_dist) <<  endl;
     }
     cout << endl;

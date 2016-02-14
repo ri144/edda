@@ -52,10 +52,10 @@ int *CartesianGrid::getDimension()
   return m_nDimension;
 }
 
-ReturnStatus CartesianGrid::getIndex(int i, int j, int k, int &idx)
+ReturnStatus CartesianGrid::getIndex(int i, int j, int k, size_t &idx)
 {
   if (i>=0 && j>=0 && k>=0 && i<m_nDimension[0] && j<m_nDimension[1] && k<m_nDimension[2]) {
-    idx = i+m_nDimension[0]*(j+m_nDimension[1]*k);
+    idx = i+m_nDimension[0]*(j+m_nDimension[1]*(size_t)k);
     return SUCCESS;
   }
   return OUT_OF_BOUND;
@@ -199,10 +199,10 @@ ReturnStatus at_phys(VECTOR3& pos, AbstractDataArray *array, boost::any output)
 //		vVertices: the vertex lis of the cell
 //////////////////////////////////////////////////////////////////////////
 ReturnStatus  RegularCartesianGrid::getCellVertices(int cellId,
-					  vector<int>& vVertices)
+                                          std::vector<size_t> &vVertices)
 {
   int totalCell = xcelldim() * ycelldim() * zcelldim();
-  int xidx, yidx, zidx, index;
+  size_t xidx, yidx, zidx, index;
 
   if((cellId < 0) || (cellId >= totalCell))
     return FAIL;

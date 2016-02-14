@@ -39,7 +39,7 @@ int main(int argc, char **argv) {
   /////////////////////////////////////
   cout << "Streamline computed by Monte-Carlo sampling from the uncertain velocity field:" << endl;
   {
-    shared_ptr<Dataset<VECTOR3> > dataset = loadVectorData<VECTOR3, GetItemSampledVector>(filename);
+    shared_ptr<Dataset<VECTOR3> > dataset = loadVectorData<VECTOR3>(filename, true);
 
     list<VECTOR3> seeds;
     seeds.push_back(VECTOR3(10.f, 10.f, 10.f));

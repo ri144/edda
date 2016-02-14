@@ -10,7 +10,6 @@
 #include "vtkStreamingDemandDrivenPipeline.h"
 
 #include "gmm_vtk_data_array.h"
-#include "core/sampling_data_array.h"
 
 using namespace std;
 using namespace edda;
@@ -41,16 +40,22 @@ void vtkRandomSampleField::SampleDataArray(shared_ptr<GmmVtkDataArray> dataArray
 {
   // create output array
   vsp_new(vtkFloatArray, out_vtkArray);
-  out_vtkArray->SetNumberOfComponents(dataArray->getComponents());
+  out_vtkArray->SetNumberOfComponents(dataArray->getNumComponents());
   out_vtkArray->SetNumberOfTuples(dataArray->getLength());
   out_vtkArray->SetName("RandomSample");
 
   float *p = (float *)out_vtkArray->GetVoidPointer(0);
+  int nc = dataArray->getNumComponents();
 #pragma omp parallel for
   for (size_t i=0; i<dataArray->getLength(); i++)
   {
-    for (int c=0; c<dataArray->getComponents(); c++)
-      p[i*dataArray->getComponents()+c] = dist::getSample(boost::any_cast<dist::GaussianMixture>( dataArray->getItem(i,c) ) );
+    if (nc==1) {
+      p[i*nc] = dist::getSample( dataArray->getScalar(i) );
+    } else {
+      std::vector< dist::Variant > v = dataArray->getVector(i);
+      for (int c=0; c<nc; c++)
+        p[i*nc+c] = dist::getSample( v[c] );
+    }
   }
 
   output_field->AddArray(out_vtkArray);
@@ -80,7 +85,7 @@ int vtkRandomSampleField::RequestData(
   dataArray = shared_ptr<GmmVtkDataArray>(new GmmVtkDataArray(input->GetPointData()) );
   if (dataArray->getLength() > 0) {
     this->SampleDataArray(  dataArray, output->GetPointData());
-    if (dataArray->getComponents()==1)
+    if (dataArray->getNumComponents()==1)
       output->GetPointData()->SetActiveScalars("RandomSample");
     else
       output->GetPointData()->SetActiveVectors("RandomSample");
@@ -90,7 +95,7 @@ int vtkRandomSampleField::RequestData(
   if (dataArray->getLength() > 0)
   {
     this->SampleDataArray(dataArray, output->GetCellData());
-    if (dataArray->getComponents()==1)
+    if (dataArray->getNumComponents()==1)
       output->GetCellData()->SetActiveScalars("RandomSample");
     else
       output->GetCellData()->SetActiveVectors("RandomSample");

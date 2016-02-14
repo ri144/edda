@@ -42,7 +42,7 @@ int main(int argc, char* argv[]) {
   cout << "A random sample of g3: " << getSample(g3) << endl;
 
   cout << "size of Gaussian<double>: " << sizeof(g1) << endl;
-  TEST( sizeof(g1) == sizeof(double)*2 );
+  TEST( sizeof(g1) == sizeof(Real)*2 );
 
 
   return 0;

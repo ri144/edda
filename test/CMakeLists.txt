@@ -8,6 +8,7 @@ include_directories(${CMAKE_SOURCE_DIR}/src)
 
 set(TEST_SOURCES
     test_gaussian.cpp
+    test_variant.cpp
     )
 
 foreach (test ${TEST_SOURCES})

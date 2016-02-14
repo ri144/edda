@@ -35,15 +35,20 @@ public:
 
   virtual ~GmmVtkDataArray() { }
 
-  virtual boost::any getItem(size_t idx, int component=0);
+  virtual size_t getLength() { return length; }
+
+  virtual int getNumComponents() { return this->components; }
+
+  virtual dist::Variant getScalar(size_t idx);
+
+  virtual std::vector<dist::Variant> getVector(size_t idx);
+
+  virtual boost::any getItem(size_t idx);
 
   virtual void setItem(size_t idx, int component, const boost::any &item);
 
-  virtual size_t getLength() { return length; }
-
-  virtual int getComponents() { return this->components; }
-
   virtual boost::any getRawArray() { return boost::any(arrays); }
+
 };
 
 } // namespace edda

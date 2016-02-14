@@ -101,7 +101,7 @@ int vtkEddaReader:: RequestData(
   // ... read data for this extent from the file ...
   printf("Reading data...\n");
 
-  std::shared_ptr<Dataset<VECTOR3> > dataset = loadVectorData<VECTOR3, GetItemSampledVector>(this->FileName);
+  std::shared_ptr<Dataset<VECTOR3> > dataset = loadVectorData<VECTOR3>(this->FileName, true);
 
   // Specify the size of the image data
 #if VTK_MAJOR_VERSION <= 5
@@ -114,7 +114,7 @@ int vtkEddaReader:: RequestData(
   outData->SetExtent(0, dim[0]-1, 0, dim[1]-1, 0, dim[2]-1);
 
   vtkSamplingArray *array = vtkSamplingArray::New();
-  array->SetEddaArray(dataset->detachArray());
+  array->SetEddaArray(dataset->getArray());
   array->SetName("VectorSampling");
 
   outData->GetPointData()->AddArray(array);

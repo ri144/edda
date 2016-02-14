@@ -26,7 +26,7 @@ int main(int argc, char **argv) {
   shared_ptr<Dataset<Gaussian> > dataset = loadData<Gaussian>(info_file);
 
   // compute isocontour
-  shared_ptr<Dataset<float> > output = uncertainIsocontour(dataset, isov);
+  shared_ptr<Dataset<Real> > output = uncertainIsocontour(dataset, isov);
 
   // save into file
   cout << "Output: probField.raw, probField.nrrd" << endl;

@@ -87,7 +87,7 @@ int vtkUncertainIsocontour::RequestData(
     out_vtkArray->SetNumberOfComponents(1);
     out_vtkArray->SetNumberOfTuples(out_length);
     out_vtkArray->SetName("ProbField");
-    ReturnStatus r = levelCrossing<dist::GaussianMixture>(dataArray.get(), dim, this->Isov, (float *)out_vtkArray->GetVoidPointer(0));
+    ReturnStatus r = levelCrossing(dataArray.get(), dim, this->Isov, (float *)out_vtkArray->GetVoidPointer(0));
 
     // release ownership of shared_ary
     if (r!=ReturnStatus::SUCCESS) {

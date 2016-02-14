@@ -5,13 +5,15 @@
 #include <string>
 #include <cstring>
 #include <iostream>
+#include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/info_parser.hpp>
+
 #include <distributions/distribution.h>
 #include <distributions/gaussian.h>
 #include <dataset/dataset.h>
 #include <core/shared_ary.h>
 #include <io/path.h>
-#include <boost/property_tree/ptree.hpp>
-#include <boost/property_tree/info_parser.hpp>
+#include "core/abstract_sampling_array.h"
 
 namespace edda{
 
@@ -53,8 +55,8 @@ namespace detail{
   void print(boost::property_tree::ptree const& pt);
 }
 
-template<typename T, class GetItemPolicy=GetItemAsIs>
-std::shared_ptr<Dataset<T> > loadData(std::string filename)
+template<typename T>
+std::shared_ptr<Dataset<T> > loadData(std::string filename, bool bSamplingDistribution=false)
 {
   std::ifstream myfile(filename);
   std::string filepath = getPath(filename);
@@ -94,7 +96,9 @@ std::shared_ptr<Dataset<T> > loadData(std::string filename)
       if (isFilenameOnly(mfile)) mfile = filepath + "/" + mfile;
       if (isFilenameOnly(sfile)) sfile = filepath + "/" + sfile;
       shared_ary<dist::Gaussian> array = loadGaussianRawArray(mfile, sfile, array_size);
-      data_array = new DataArray<dist::Gaussian, GetItemPolicy> (array);
+      data_array = new ScalarArray<dist::Gaussian> (array);
+      if (bSamplingDistribution)
+        data_array = new DataSamplingArray<dist::Gaussian>(data_array);
     } else {
       std::cout << "gtype not supported: " << gtype << std::endl;
       exit(1);
@@ -108,8 +112,8 @@ std::shared_ptr<Dataset<T> > loadData(std::string filename)
   exit(1);
 }
 
-template<typename T, class GetItemPolicy=GetItemAsIs>
-std::shared_ptr<Dataset<T> > loadVectorData(std::string filename)
+template<typename T>
+std::shared_ptr<Dataset<T> > loadVectorData(std::string filename, bool bSamplingDistribution=false)
 {
   std::ifstream myfile(filename);
   std::string filepath = getPath(filename);
@@ -149,7 +153,9 @@ std::shared_ptr<Dataset<T> > loadVectorData(std::string filename)
       if (isFilenameOnly(sfile)) sfile = filepath + "/" + sfile;
       assert(tuples==3);
       shared_ary<Gaussian3> array = loadVec3GaussianRawArray(mfile, sfile, array_size);
-      data_array = new DataArray<Gaussian3, GetItemPolicy> (array);
+      data_array = new VectorArray<dist::Gaussian, 3> (array);
+      if (bSamplingDistribution)
+        data_array = new DataSamplingArray< Vector<dist::Gaussian,3> >(data_array);
     } else {
       std::cout << "gtype not supported: " << gtype << std::endl;
       exit(1);

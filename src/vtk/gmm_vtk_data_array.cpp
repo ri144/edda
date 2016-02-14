@@ -103,12 +103,22 @@ GmmVtkDataArray::GmmVtkDataArray(std::vector<vtkSmartPointer<vtkDataArray> > arr
   }
 }
 
-boost::any GmmVtkDataArray::getItem(size_t idx, int component) {
-  std::vector<GMMTuple> models ( arrays.size()/3 );
-  for (size_t i=0; i<arrays.size(); i++) {
-    models[i/3].p[i%3] = arrays[i]->GetComponent(idx, component);
+boost::any GmmVtkDataArray::getItem(size_t idx) {
+  return getVector(idx);
+}
+
+std::vector<dist::Variant> GmmVtkDataArray::getVector(size_t idx) {
+  int components = this->getNumComponents();
+  std::vector<dist::Variant> v( components );
+  for (int c = 0; c < components; c++ )
+  {
+    std::vector<GMMTuple> models ( this->getNumComponents() );
+    for (size_t i=0; i<arrays.size(); i++) {
+      models[i/3].p[i%3] = arrays[i]->GetComponent(idx, c);
+    }
+    v[c] = GaussianMixture(models);
   }
-  return boost::any( GaussianMixture(models) );
+  return v;
 }
 
 void GmmVtkDataArray::setItem(size_t idx, int component, const boost::any &item) {
@@ -118,4 +128,13 @@ void GmmVtkDataArray::setItem(size_t idx, int component, const boost::any &item)
     arrays[i]->SetComponent(idx, component, gmm.models[i/3].p[i%3]);
   }
 }
+
+dist::Variant GmmVtkDataArray::getScalar(size_t idx) {
+  std::vector<GMMTuple> models ( arrays.size()/3 );
+  for (size_t i=0; i<arrays.size(); i++) {
+    models[i/3].p[i%3] = arrays[i]->GetComponent(idx, 0);
+  }
+  return GaussianMixture(models);
+}
+
 }; //edda

@@ -44,7 +44,7 @@ class EDDA_EXPORT DiscreteDistribution : public Distribution{
 template<class T, ENABLE_IF_BASE_OF(T, Distribution) >
 inline T operator-=(const T& lhs, const T& rhs) {
     T h(lhs);
-    return h += (-rhs);
+      return h += (-rhs);
 }
 
 ///

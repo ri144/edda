@@ -2,7 +2,7 @@
 #define ABSTRACT_DATA_ARRAY_H
 
 #include <boost/any.hpp>
-#include <boost/variant/variant_fwd.hpp>
+#include "distributions/variant.h"
 
 namespace edda {
 
@@ -12,7 +12,6 @@ namespace edda {
 class AbstractDataArray
 {
 public:
-  AbstractDataArray() {}
 
   virtual ~AbstractDataArray() {}
 
@@ -24,7 +23,11 @@ public:
   ///
   /// Get the number of element components.  This is used for elements in variable-length vector or matrix.
   ///
-  virtual int getComponents() = 0;
+  virtual int getNumComponents() = 0;
+
+  virtual dist::Variant getScalar(size_t idx) =0;
+
+  virtual std::vector<dist::Variant> getVector(size_t idx)=0;
 
   ///
   /// \brief Get data at the given index
@@ -33,7 +36,7 @@ public:
   ///
   /// Note: We don't return reference because the return data can be derived from the original data.  Use setItem() to change the data content.
   ///
-  virtual boost::any getItem(size_t idx, int component=0) =0;
+  virtual boost::any getItem(size_t idx) =0;
 
   ///
   /// Set data at the given index

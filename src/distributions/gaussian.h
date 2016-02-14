@@ -24,8 +24,9 @@ namespace dist {
 struct EDDA_EXPORT Gaussian: public ContinuousDistribution {
   Real mean, var;
   // constructor
-  explicit Gaussian(): Gaussian(0, (Real)1.) {}
-  explicit Gaussian(Real m, Real var) { this->mean=m; this->var=var; }
+  Gaussian(): Gaussian(0, (Real)1.) {}
+  Gaussian(Real m, Real var) { this->mean=m; this->var=var; }
+
 };
 
 // ------------------------------------------------------------------------------

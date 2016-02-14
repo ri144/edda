@@ -8,6 +8,8 @@
 #include <cassert>
 #include <iostream>
 #include <memory>
+#include <stdexcept>
+#include <vector>
 #include "abstract_data_array.h"
 #include "vector_matrix.h"
 #include "shared_ary.h"
@@ -16,73 +18,71 @@
 namespace edda {
 
 //---------------------------------------------------------------------------------------
-struct GetItemAsIs ;
-struct GetItemSampled ;
-struct GetItemSampledVector ;
-
 /// \brief A simple implementation of DataArray.
 ///
-/// This is the class that holds the actual array, in a smart pointer.
+/// This is the class that holds the actual array, in a smart array.
 /// \param T The element type of an array.
-/// \param GetItemPolicy Allows to output in different representations of the distribution.  Possible choices: GetItemAsIs, GetItemSampled, GetItemSampledVector.
 ///
-template<typename T, class GetItemPolicy = GetItemAsIs >
-class DataArray: public AbstractDataArray
+template<typename T>
+class ScalarArray: public AbstractDataArray
 {
 protected:
   shared_ary<T> array;
-  GetItemPolicy GetItem;
 public:
-  DataArray(shared_ary<T> array) { this->array = array; }
+  ScalarArray(shared_ary<T> array) { this->array = array; }
 
-  virtual ~DataArray() { }
-
-  virtual boost::any getItem(size_t idx, int component=0) { return boost::any( GetItem(array[idx]) );  }
-
-  virtual void setItem(size_t idx, int component, const boost::any &item) { array[idx] = boost::any_cast<T>( item );  }
+  virtual ~ScalarArray() { }
 
   virtual size_t getLength() { return array.getLength(); }
 
-  virtual int getComponents() { return 1; }
+  virtual int getNumComponents() { return 1; }
+
+  virtual dist::Variant getScalar(size_t idx) { return array[idx]; }
+
+  virtual std::vector<dist::Variant> getVector(size_t idx) { return std::vector<dist::Variant> (1, array[idx] ); }
+
+  virtual boost::any getItem(size_t idx) { return boost::any( array[idx] );  }
+
+  virtual void setItem(size_t idx, int component, const boost::any &item) { array[idx] = boost::any_cast<T>( item );  }
 
   virtual boost::any getRawArray() { return boost::any(array); }
 };
 
 
 //---------------------------------------------------------------------------------------
-// GetItemPolicy implementations for DataArray
-///
-/// \brief Describes GetItemPolicy for DataArray.  Returns as is the input.
-///
-struct GetItemAsIs {
-  template<class T>
-  inline T &operator() (T &x) { return x; }
+
+template<typename T, int N>
+class VectorArray: public AbstractDataArray
+{
+protected:
+  shared_ary<Vector<T,N> > array;
+public:
+  VectorArray(shared_ary<Vector<T,N> > array) { this->array = array; }
+
+  virtual ~VectorArray() { }
+
+  virtual size_t getLength() { return array.getLength(); }
+
+  virtual int getNumComponents() { return 1; }
+
+  virtual dist::Variant getScalar(size_t idx) {
+      throw std::runtime_error("Requesting scalar in a VectorArray");
+    }
+
+  virtual std::vector<dist::Variant> getVector(size_t idx) {
+    std::vector<dist::Variant> v(N);
+    for (int i=0; i<N; i++)
+      v[i] = array[idx][i];
+    return v; }
+
+  virtual boost::any getItem(size_t idx) { return boost::any( array[idx] );  }
+
+  virtual void setItem(size_t idx, int component, const boost::any &item) { array[idx] = boost::any_cast<Vector<T,N> >( item );  }
+
+  virtual boost::any getRawArray() { return boost::any(array); }
 };
 
-///
-/// \brief Describes GetItemPolicy for DataArray.  It assumes the input is a distribution and outputs a sample of it.
-///
-struct GetItemSampled {
-  template<class T>
-  inline double operator() (T &x) { return dist::getSample(x); }
-};
 
-///
-/// \brief Describes GetItemPolicy for DataArray.  It assumes the input is a tuple of distributions and outputs a vector of sampled values in floats.
-///
-struct GetItemSampledVector {
-  template<typename VectorType, typename OutputType = Vector<float, VectorType::LENGTH> >
-  OutputType operator() (const VectorType &tuple)
-  {
-    OutputType tuple_sampled;
-
-    // sample from each element
-    for (int i=0; i < VectorType::LENGTH; i++)
-      tuple_sampled[i] = dist::getSample(tuple[i]);
-
-    return tuple_sampled;
-  }
-};
 
 } // namespace edda
 

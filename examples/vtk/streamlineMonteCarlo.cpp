@@ -120,7 +120,7 @@ int main(int argc, char **argv)
   cout << "Press 'i' to change the rake\n";
 
   // load data with random sampling
-  shared_ptr<Dataset<VECTOR3> > dataset = loadVectorData<VECTOR3, GetItemSampledVector>(filename);
+  shared_ptr<Dataset<VECTOR3> > dataset = loadVectorData<VECTOR3>(filename, true);
 
   VECTOR3 minB, maxB;
   dataset->getGrid()->boundary(minB, maxB);

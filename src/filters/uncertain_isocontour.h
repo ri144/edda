@@ -15,8 +15,7 @@ namespace edda{
 /// \param isov   isovalue to query
 /// \param[out] probField   output array.
 /// You can pass an empty array of probField.  The output should be allocated with size (dim[0]-1)*(dim[1]-1)*(dim[2]-1).
-template <typename Dist, ENABLE_IF_BASE_OF(Dist, dist::Distribution)>
-ReturnStatus levelCrossing(AbstractDataArray *input, int dim[3], float isov, float *probField)
+ReturnStatus levelCrossingSerial(AbstractDataArray *input, int dim[3], double isov, float *probField)
 {
   int i,j,k;
   int count=0;
@@ -25,17 +24,6 @@ ReturnStatus levelCrossing(AbstractDataArray *input, int dim[3], float isov, flo
   if (input->getLength() < dim[0]*dim[1]*dim[2]) {
     return ReturnStatus::FAIL;
   }
-#if 0
-  // if output is allocated, check the length
-  if (probField.getLength()>0 && probField.getLength() < new_dim[0]*new_dim[1]*new_dim[2]) {
-    return ReturnStatus::FAIL;
-  }
-  // if output is not allocated, allocate the array
-  if (probField.getLength()==0) {
-    shared_ary<float> new_ary(new_dim[0]*new_dim[1]*new_dim[2]);
-    probField.swap(new_ary);
-  }
-#endif
 
   //precompute cdf for speedup
   shared_ary<float> cdfField (dim[0]*dim[1]*dim[2]);
@@ -44,7 +32,7 @@ ReturnStatus levelCrossing(AbstractDataArray *input, int dim[3], float isov, flo
     for (j=0; j<dim[1]; j++)
       for (i=0; i<dim[0]; i++) {
         // compute level crossing
-        cdfField[count] = dist::getCdf( boost::any_cast<Dist>( input->getItem(count) ), isov);
+        cdfField[count] = dist::getCdf( input->getScalar(count) , isov);
         count++;
       }
 
@@ -78,6 +66,15 @@ ReturnStatus levelCrossing(AbstractDataArray *input, int dim[3], float isov, flo
   return ReturnStatus::SUCCESS;
 }
 
+ReturnStatus levelCrossing(AbstractDataArray *input, int dim[3], double isov, float *probField)
+{
+#ifdef EDDA_WITH_THRUST
+  return levelCrossingThrust(input, dim, isov, probField);
+#else
+  return levelCrossingSerial(input, dim, isov, probField);
+#endif
+}
+
 ///
 /// \brief Compute level crossing probabilities given a Dataset class.
 ///
@@ -86,16 +83,16 @@ ReturnStatus levelCrossing(AbstractDataArray *input, int dim[3], float isov, flo
 /// to describe the level crossing probabilities for each cell.
 ///
 template <typename Dist, ENABLE_IF_BASE_OF(Dist, dist::Distribution)>
-std::shared_ptr<Dataset<float> > uncertainIsocontour(std::shared_ptr<Dataset<Dist> > dataset, float isov)
+std::shared_ptr<Dataset<Real> > uncertainIsocontour(std::shared_ptr<Dataset<Dist> > dataset, double isov)
 {
   int *dim = dataset->getDimension();
   int new_dim[3]={dim[0]-1, dim[1]-1, dim[2]-1};
   shared_ary<float> output(new_dim[0]*new_dim[1]*new_dim[2]);
 
-  levelCrossing<Dist>(dataset->getArray(), dataset->getDimension(), isov, output.get());
+  levelCrossing(dataset->getArray(), dataset->getDimension(), isov, output.get());
 
   return make_Dataset<float>(new RegularCartesianGrid(new_dim[0], new_dim[1], new_dim[2]),
-                             new DataArray<float>(output)
+                             new ScalarArray<Real>(output) // TODO
       );
 }
 
