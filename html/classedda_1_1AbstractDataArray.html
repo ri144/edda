@@ -106,52 +106,37 @@ Inheritance diagram for edda::AbstractDataArray:</div>
  <div class="center">
   <img src="classedda_1_1AbstractDataArray.png" usemap="#edda::AbstractDataArray_map" alt=""/>
   <map id="edda::AbstractDataArray_map" name="edda::AbstractDataArray_map">
-<area href="classedda_1_1DataArray.html" title="A simple implementation of DataArray. " alt="edda::DataArray&lt; T, GetItemPolicy &gt;" shape="rect" coords="0,56,221,80"/>
-<area href="classedda_1_1GmmVtkDataArray.html" title="GmmVtkDataArray implements AbstractDataArray. It holds vtkDataArrys and returns GMMs with interleaved..." alt="edda::GmmVtkDataArray" shape="rect" coords="231,56,452,80"/>
+<area href="classedda_1_1DataSamplingArray.html" title="Take a distribution data array and output a sample. " alt="edda::DataSamplingArray&lt; T &gt;" shape="rect" coords="0,56,187,80"/>
+<area href="classedda_1_1GmmVtkDataArray.html" title="GmmVtkDataArray implements AbstractDataArray. It holds vtkDataArrys and returns GMMs with interleaved..." alt="edda::GmmVtkDataArray" shape="rect" coords="197,56,384,80"/>
+<area href="classedda_1_1ScalarArray.html" title="A simple implementation of DataArray. " alt="edda::ScalarArray&lt; T &gt;" shape="rect" coords="394,56,581,80"/>
+<area href="classedda_1_1VectorArray.html" alt="edda::VectorArray&lt; T, N &gt;" shape="rect" coords="591,56,778,80"/>
 </map>
  </div></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ac4d9e7c9c90b31fc27c3d37884bcc9cf"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classedda_1_1AbstractDataArray.html#ac4d9e7c9c90b31fc27c3d37884bcc9cf">AbstractDataArray</a> ()</td></tr>
-<tr class="separator:ac4d9e7c9c90b31fc27c3d37884bcc9cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa83756aa71cb59e3537e02795b8c8810"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classedda_1_1AbstractDataArray.html#aa83756aa71cb59e3537e02795b8c8810">~AbstractDataArray</a> ()</td></tr>
 <tr class="separator:aa83756aa71cb59e3537e02795b8c8810"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7f25dbb3907b82fb35a2a6465c57497b"><td class="memItemLeft" align="right" valign="top">virtual size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classedda_1_1AbstractDataArray.html#a7f25dbb3907b82fb35a2a6465c57497b">getLength</a> ()=0</td></tr>
 <tr class="separator:a7f25dbb3907b82fb35a2a6465c57497b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a95a0b368f5867ca8ad283cacfe067760"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classedda_1_1AbstractDataArray.html#a95a0b368f5867ca8ad283cacfe067760">getNumComponents</a> ()=0</td></tr>
+<tr class="separator:a95a0b368f5867ca8ad283cacfe067760"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9cd2e7ece1d3287650d00923fcd7ec0d"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="structedda_1_1dist_1_1Variant.html">dist::Variant</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classedda_1_1AbstractDataArray.html#a9cd2e7ece1d3287650d00923fcd7ec0d">getScalar</a> (size_t idx)=0</td></tr>
+<tr class="separator:a9cd2e7ece1d3287650d00923fcd7ec0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4631c8b1d81460a8319b853d09403db6"><td class="memItemLeft" align="right" valign="top">virtual std::vector<br class="typebreak"/>
+&lt; <a class="el" href="structedda_1_1dist_1_1Variant.html">dist::Variant</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classedda_1_1AbstractDataArray.html#a4631c8b1d81460a8319b853d09403db6">getVector</a> (size_t idx)=0</td></tr>
+<tr class="separator:a4631c8b1d81460a8319b853d09403db6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af59b2bbdeadeddea90a2f9d22d057dfa"><td class="memItemLeft" align="right" valign="top">virtual boost::any&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classedda_1_1AbstractDataArray.html#af59b2bbdeadeddea90a2f9d22d057dfa">getItem</a> (size_t idx)=0</td></tr>
+<tr class="memdesc:af59b2bbdeadeddea90a2f9d22d057dfa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get data at the given index.  <a href="#af59b2bbdeadeddea90a2f9d22d057dfa">More...</a><br/></td></tr>
 <tr class="separator:af59b2bbdeadeddea90a2f9d22d057dfa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ada749786821e95fb590793c0017cac69"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classedda_1_1AbstractDataArray.html#ada749786821e95fb590793c0017cac69">setItem</a> (size_t idx, const boost::any &amp;item)=0</td></tr>
-<tr class="separator:ada749786821e95fb590793c0017cac69"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aade6731b6b68fb94fe2369eba637d43b"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classedda_1_1AbstractDataArray.html#aade6731b6b68fb94fe2369eba637d43b">setItem</a> (size_t idx, int component, const boost::any &amp;item)=0</td></tr>
+<tr class="separator:aade6731b6b68fb94fe2369eba637d43b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af7070129998073a6fe0bc1ffc259d31d"><td class="memItemLeft" align="right" valign="top">virtual boost::any&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classedda_1_1AbstractDataArray.html#af7070129998073a6fe0bc1ffc259d31d">getRawArray</a> ()=0</td></tr>
 <tr class="separator:af7070129998073a6fe0bc1ffc259d31d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>The <a class="el" href="classedda_1_1AbstractDataArray.html" title="The AbstractDataArray class used in the Dataset class. ">AbstractDataArray</a> class used in the <a class="el" href="classedda_1_1Dataset.html" title="Holds all information of a dataset, which includes: 1) Geometry and 2) Data array. ">Dataset</a> class. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" id="ac4d9e7c9c90b31fc27c3d37884bcc9cf"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">edda::AbstractDataArray::AbstractDataArray </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <a class="anchor" id="aa83756aa71cb59e3537e02795b8c8810"></a>
 <div class="memitem">
 <div class="memproto">
@@ -197,9 +182,18 @@ Public Member Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Get data at the given index Note: We don't return reference because the return data can be derived from the original data. Use <a class="el" href="classedda_1_1AbstractDataArray.html#ada749786821e95fb590793c0017cac69">setItem()</a> to change the data content. </p>
 
-<p>Implemented in <a class="el" href="classedda_1_1DataArray.html#a6f9e1c164d3300330265370d7770a61c">edda::DataArray&lt; T, GetItemPolicy &gt;</a>, and <a class="el" href="classedda_1_1GmmVtkDataArray.html#a2192fdc52b7122906c773471be6a4045">edda::GmmVtkDataArray</a>.</p>
+<p>Get data at the given index. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">idx</td><td>Index of array </td></tr>
+    <tr><td class="paramname">component</td><td>Select the component of the array item (vector component).</td></tr>
+  </table>
+  </dd>
+</dl>
+<p>Note: We don't return reference because the return data can be derived from the original data. Use <a class="el" href="classedda_1_1AbstractDataArray.html#aade6731b6b68fb94fe2369eba637d43b">setItem()</a> to change the data content. </p>
+
+<p>Implemented in <a class="el" href="classedda_1_1VectorArray.html#a73bd4bad60609b662b61c818cc9517b2">edda::VectorArray&lt; T, N &gt;</a>, <a class="el" href="classedda_1_1GmmVtkDataArray.html#a2192fdc52b7122906c773471be6a4045">edda::GmmVtkDataArray</a>, <a class="el" href="classedda_1_1DataSamplingArray.html#a0f0482ec2ed2677c40b4bf9a532c60f8">edda::DataSamplingArray&lt; T &gt;</a>, and <a class="el" href="classedda_1_1ScalarArray.html#a26506ab978225aae83454a8f7a000163">edda::ScalarArray&lt; T &gt;</a>.</p>
 
 </div>
 </div>
@@ -225,7 +219,33 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 <p>Get the number of elements </p>
 
-<p>Implemented in <a class="el" href="classedda_1_1DataArray.html#a2d3ae15906635324cfd58f42fcf1aca8">edda::DataArray&lt; T, GetItemPolicy &gt;</a>, and <a class="el" href="classedda_1_1GmmVtkDataArray.html#ae253c523c5d1488fb18214cfe4df4c78">edda::GmmVtkDataArray</a>.</p>
+<p>Implemented in <a class="el" href="classedda_1_1VectorArray.html#a058c81b9c6693539b0166e8a36365612">edda::VectorArray&lt; T, N &gt;</a>, <a class="el" href="classedda_1_1GmmVtkDataArray.html#ae253c523c5d1488fb18214cfe4df4c78">edda::GmmVtkDataArray</a>, <a class="el" href="classedda_1_1ScalarArray.html#ab5d941d19575ba5a0eac6c700cb81f1d">edda::ScalarArray&lt; T &gt;</a>, and <a class="el" href="classedda_1_1DataSamplingArray.html#adff9f4c28bf99669b870272b047d223b">edda::DataSamplingArray&lt; T &gt;</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a95a0b368f5867ca8ad283cacfe067760"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual int edda::AbstractDataArray::getNumComponents </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Get the number of element components. This is used for elements in variable-length vector or matrix. </p>
+
+<p>Implemented in <a class="el" href="classedda_1_1VectorArray.html#ab55dfed7c680f323c0990c35ee96abfa">edda::VectorArray&lt; T, N &gt;</a>, <a class="el" href="classedda_1_1GmmVtkDataArray.html#a52a2a8b8afa15807ec7ca859b712e66b">edda::GmmVtkDataArray</a>, <a class="el" href="classedda_1_1ScalarArray.html#ab5c90ef4f106ee6b827c53d708f12747">edda::ScalarArray&lt; T &gt;</a>, and <a class="el" href="classedda_1_1DataSamplingArray.html#aec17130e8869680c067cbfea5242c1a2">edda::DataSamplingArray&lt; T &gt;</a>.</p>
 
 </div>
 </div>
@@ -251,11 +271,63 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 <p>Get the array </p>
 
-<p>Implemented in <a class="el" href="classedda_1_1DataArray.html#a767976eb921b9051090ad840446ea978">edda::DataArray&lt; T, GetItemPolicy &gt;</a>, and <a class="el" href="classedda_1_1GmmVtkDataArray.html#a01d173f90474b4af8ba5a56ebeb1a3f7">edda::GmmVtkDataArray</a>.</p>
+<p>Implemented in <a class="el" href="classedda_1_1VectorArray.html#a52ebb5d335b08eeb7f0f965ba4ea11a4">edda::VectorArray&lt; T, N &gt;</a>, <a class="el" href="classedda_1_1GmmVtkDataArray.html#a01d173f90474b4af8ba5a56ebeb1a3f7">edda::GmmVtkDataArray</a>, <a class="el" href="classedda_1_1DataSamplingArray.html#a7a8a7263909566c2b86e565f3c9c3d99">edda::DataSamplingArray&lt; T &gt;</a>, and <a class="el" href="classedda_1_1ScalarArray.html#aeff0d890ae2f1e024c175bbcec21f00c">edda::ScalarArray&lt; T &gt;</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="ada749786821e95fb590793c0017cac69"></a>
+<a class="anchor" id="a9cd2e7ece1d3287650d00923fcd7ec0d"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="structedda_1_1dist_1_1Variant.html">dist::Variant</a> edda::AbstractDataArray::getScalar </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>idx</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implemented in <a class="el" href="classedda_1_1VectorArray.html#ae47a8e6c9d3621ef5588b3b2a831f61f">edda::VectorArray&lt; T, N &gt;</a>, <a class="el" href="classedda_1_1GmmVtkDataArray.html#a2b806f97be6c48bd3ddef302aab0f72c">edda::GmmVtkDataArray</a>, <a class="el" href="classedda_1_1ScalarArray.html#a7fa33454d6e995bf6d7edbf7aa029096">edda::ScalarArray&lt; T &gt;</a>, and <a class="el" href="classedda_1_1DataSamplingArray.html#a71a8fbbe6503843c81e642be7e6ec6a0">edda::DataSamplingArray&lt; T &gt;</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a4631c8b1d81460a8319b853d09403db6"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual std::vector&lt;<a class="el" href="structedda_1_1dist_1_1Variant.html">dist::Variant</a>&gt; edda::AbstractDataArray::getVector </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>idx</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implemented in <a class="el" href="classedda_1_1VectorArray.html#a3e1570929f1aec18d4883b86916b896b">edda::VectorArray&lt; T, N &gt;</a>, <a class="el" href="classedda_1_1GmmVtkDataArray.html#abc6a6c8a4ed3133f2299888a65178c24">edda::GmmVtkDataArray</a>, <a class="el" href="classedda_1_1ScalarArray.html#a324332d06930633966ee4db81f1a47a5">edda::ScalarArray&lt; T &gt;</a>, and <a class="el" href="classedda_1_1DataSamplingArray.html#af9df5c6ada4cee874e3d4f10b1bd554c">edda::DataSamplingArray&lt; T &gt;</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="aade6731b6b68fb94fe2369eba637d43b"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -267,6 +339,12 @@ Public Member Functions</h2></td></tr>
           <td>(</td>
           <td class="paramtype">size_t&#160;</td>
           <td class="paramname"><em>idx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>component</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -288,17 +366,17 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 <p>Set data at the given index </p>
 
-<p>Implemented in <a class="el" href="classedda_1_1DataArray.html#a7271abddd26b311bca2de0bb18fe884e">edda::DataArray&lt; T, GetItemPolicy &gt;</a>, and <a class="el" href="classedda_1_1GmmVtkDataArray.html#a86e99b84cfe8d765cebee9fce4fe0b41">edda::GmmVtkDataArray</a>.</p>
+<p>Implemented in <a class="el" href="classedda_1_1VectorArray.html#a0e5cf62545fbeb841f3796714e1cb5a2">edda::VectorArray&lt; T, N &gt;</a>, <a class="el" href="classedda_1_1GmmVtkDataArray.html#a8341d874fc378ccbac61a39c0e9b96ec">edda::GmmVtkDataArray</a>, <a class="el" href="classedda_1_1DataSamplingArray.html#a2059b73cb5b53681312b4cee587b78ad">edda::DataSamplingArray&lt; T &gt;</a>, and <a class="el" href="classedda_1_1ScalarArray.html#a5e8fb8dae54a82a9996dd43c2068c69c">edda::ScalarArray&lt; T &gt;</a>.</p>
 
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li>src/core/<a class="el" href="abstract__data__array_8h_source.html">abstract_data_array.h</a></li>
+<li>src/dataset/<a class="el" href="abstract__data__array_8h_source.html">abstract_data_array.h</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Feb 8 2016 03:45:48 for EDDA by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun Feb 21 2016 02:38:42 for EDDA by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

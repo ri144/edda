@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['pointinfo',['PointInfo',['../namespaceedda.html#a943d0c00e55b9d2ca21b97d3b218993d',1,'edda']]]
+  ['limits',['limits',['../namespaceedda.html#a87b1c43cf7ee78a656c0ea99a773982e',1,'edda']]]
 ];

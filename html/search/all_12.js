@@ -1,8 +1,11 @@
 var searchData=
 [
-  ['w',['w',['../structedda_1_1dist_1_1GMMTuple.html#a3f52857178189dcb76b5132a60c0a50a',1,'edda::dist::GMMTuple::w()'],['../classedda_1_1Vector_3_01Real_00_014_01_4.html#a0f6853b9fab936215074e7a1b880b2d6',1,'edda::Vector&lt; Real, 4 &gt;::w()']]],
-  ['weighted_5fsum',['WEIGHTED_SUM',['../namespaceedda.html#a431337c36fb50c77e958d8dfae855781a5cd0cc87f7789a6f7120f6f4f55594ed',1,'edda']]],
-  ['write_5fnrrd_5f3d',['write_nrrd_3d',['../namespaceedda.html#aa7d9a6036df168e12c9274b3c867b196',1,'edda']]],
-  ['writerawnrrdfile',['writeRawNrrdFile',['../namespaceedda.html#a84955479cafdd0ef664aac47680dfb74',1,'edda']]],
-  ['writevoidpointer',['WriteVoidPointer',['../classvtkSamplingArray.html#a5a9b6f6c5d13d67f508617cf3fb2f5af',1,'vtkSamplingArray']]]
+  ['ucgridphy2comp',['UCGridPhy2Comp',['../grid_8h.html#ad7352884ed931142171b2bbfc9849f59',1,'grid.h']]],
+  ['uncertain_5fisocontour_2ecpp',['uncertain_isocontour.cpp',['../uncertain__isocontour_8cpp.html',1,'']]],
+  ['uncertain_5fisocontour_2eh',['uncertain_isocontour.h',['../uncertain__isocontour_8h.html',1,'']]],
+  ['uncertainisocontour',['uncertainIsocontour',['../namespaceedda.html#a9ff08f30d263ed3c287cdb377a0ec07f',1,'edda']]],
+  ['uncertainisocontour_2ecpp',['uncertainIsocontour.cpp',['../uncertainIsocontour_8cpp.html',1,'']]],
+  ['uncertainisocontourvtk_2ecpp',['uncertainIsocontourVTK.cpp',['../uncertainIsocontourVTK_8cpp.html',1,'']]],
+  ['updateseeds',['updateSeeds',['../streamlineGaussianVTK_8cpp.html#a96cd5e1dc934297dbf710c04b1408e2c',1,'updateSeeds(vtkObject *caller, unsigned long eventId, void *clientdata, void *calldata):&#160;streamlineGaussianVTK.cpp'],['../streamlineMonteCarlo_8cpp.html#a96cd5e1dc934297dbf710c04b1408e2c',1,'updateSeeds(vtkObject *caller, unsigned long eventId, void *clientdata, void *calldata):&#160;streamlineMonteCarlo.cpp']]],
+  ['use_5fgmms',['USE_GMMs',['../gmm__vtk__data__array_8cpp.html#a809f24354ccc855d7287bdd31766a190',1,'gmm_vtk_data_array.cpp']]]
 ];

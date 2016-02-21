@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['pointinfo',['PointInfo',['../structedda_1_1PointInfo.html',1,'edda']]]
+  ['math',['Math',['../classedda_1_1Math.html',1,'edda']]]
 ];

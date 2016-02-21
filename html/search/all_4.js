@@ -1,13 +1,19 @@
 var searchData=
 [
-  ['detail',['detail',['../namespaceedda_1_1detail.html',1,'edda']]],
-  ['dist',['dist',['../namespaceedda_1_1dist.html',1,'edda']]],
-  ['edda',['edda',['../namespaceedda.html',1,'']]],
-  ['edda_2eh',['edda.h',['../edda_8h.html',1,'']]],
-  ['edda_5fexport',['EDDA_EXPORT',['../edda__export_8h.html#a4130eba3dcc4b1e840d3ee6e2a2e4d6b',1,'edda_export.h']]],
-  ['edda_5fexport_2eh',['edda_export.h',['../edda__export_8h.html',1,'']]],
-  ['enable_5fif_5fbase_5fof',['ENABLE_IF_BASE_OF',['../common_8h.html#aa9a69652fb421d221f087dff01b9d007',1,'common.h']]],
-  ['eps',['EPS',['../namespaceedda.html#a01a5588f4970959e27a63f1e50862c02',1,'edda']]],
-  ['euler',['euler',['../classedda_1_1StreamTracer.html#a880892fada69bb3e36cbab4c7de1e29b',1,'edda::StreamTracer']]],
-  ['edda',['edda',['../md_README.html',1,'']]]
+  ['data',['data',['../classedda_1_1NdArray.html#adab41970261227bb8cbee61437668836',1,'edda::NdArray']]],
+  ['data_5farray_2eh',['data_array.h',['../data__array_8h.html',1,'']]],
+  ['dataarray',['dataArray',['../classedda_1_1GmmNdArray.html#a784426277dacd05a5f4f1b7edc2db4b5',1,'edda::GmmNdArray']]],
+  ['datachanged',['DataChanged',['../classvtkSamplingArray.html#a9f659ba660b75566ee7b3a8734b207d4',1,'vtkSamplingArray']]],
+  ['datasamplingarray',['DataSamplingArray',['../classedda_1_1DataSamplingArray.html',1,'edda']]],
+  ['datasamplingarray',['DataSamplingArray',['../classedda_1_1DataSamplingArray.html#a1f77e38d1c8f2c2f6a56ef5fcbb171a1',1,'edda::DataSamplingArray']]],
+  ['dataset',['Dataset',['../classedda_1_1Dataset.html',1,'edda']]],
+  ['dataset',['Dataset',['../classedda_1_1Dataset.html#a6435bda7663a40aecf2cab8ddf4dce86',1,'edda::Dataset']]],
+  ['dataset_2eh',['dataset.h',['../dataset_8h.html',1,'']]],
+  ['deg_5fto_5frad',['DEG_TO_RAD',['../namespaceedda.html#aaba1e417275e1d2467125f4144a9f629',1,'edda']]],
+  ['dims',['dims',['../classedda_1_1NdArray.html#a4d7a4bab93f3633052353ebd2c7126b6',1,'edda::NdArray']]],
+  ['dir',['dir',['../classedda_1_1StreamTracer.html#a6f3c23ea936d22d007d49786e40da954',1,'edda::StreamTracer']]],
+  ['discretedistribution',['DiscreteDistribution',['../classedda_1_1dist_1_1DiscreteDistribution.html',1,'edda::dist']]],
+  ['distribution',['Distribution',['../classedda_1_1dist_1_1Distribution.html',1,'edda::dist']]],
+  ['distribution_2eh',['distribution.h',['../distribution_8h.html',1,'']]],
+  ['dot',['dot',['../namespaceedda.html#ac6eb0fa147f28e44295bbe3201c0281e',1,'edda::dot(const Vector3&lt; Real &gt; &amp;v0, const Vector3&lt; Real &gt; &amp;v1)'],['../namespaceedda.html#acbc60ac78a9972a32aa4a470f9174087',1,'edda::dot(const Vector4&lt; Real &gt; &amp;v0, const Vector4&lt; Real &gt; &amp;v1)']]]
 ];

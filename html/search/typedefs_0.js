@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['gaussian3',['Gaussian3',['../loadGaussianVectorField_8cpp.html#affd76c1e25d5b22f077bb34594959ced',1,'Gaussian3():&#160;loadGaussianVectorField.cpp'],['../streamlineGaussian_8cpp.html#affd76c1e25d5b22f077bb34594959ced',1,'Gaussian3():&#160;streamlineGaussian.cpp'],['../namespaceedda.html#a6d54e1203ede2af17ea3a993e32d6a19',1,'edda::Gaussian3()']]]
+  ['_5fvariant',['_Variant',['../namespaceedda_1_1dist.html#a7ed6bf19ce7888ad2ee8bd4eb1d867f8',1,'edda::dist']]]
 ];

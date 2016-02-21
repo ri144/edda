@@ -1,4 +1,12 @@
 var searchData=
 [
-  ['notimplementedexception',['NotImplementedException',['../classedda_1_1NotImplementedException.html',1,'edda']]]
+  ['gaussian',['Gaussian',['../structedda_1_1dist_1_1Gaussian.html',1,'edda::dist']]],
+  ['gaussianmixture',['GaussianMixture',['../classedda_1_1dist_1_1GaussianMixture.html',1,'edda::dist']]],
+  ['getpositionasis',['GetPositionAsIs',['../structedda_1_1GetPositionAsIs.html',1,'edda']]],
+  ['getpositionfromdistributionmean',['GetPositionFromDistributionMean',['../structedda_1_1GetPositionFromDistributionMean.html',1,'edda']]],
+  ['getsample_5ffunctor',['GetSample_functor',['../structedda_1_1GetSample__functor.html',1,'edda']]],
+  ['gmmndarray',['GmmNdArray',['../classedda_1_1GmmNdArray.html',1,'edda']]],
+  ['gmmtuple',['GMMTuple',['../structedda_1_1dist_1_1GMMTuple.html',1,'edda::dist']]],
+  ['gmmvtkdataarray',['GmmVtkDataArray',['../classedda_1_1GmmVtkDataArray.html',1,'edda']]],
+  ['grid',['Grid',['../classedda_1_1Grid.html',1,'edda']]]
 ];

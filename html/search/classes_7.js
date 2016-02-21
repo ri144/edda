@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['regularcartesiangrid',['RegularCartesianGrid',['../classedda_1_1RegularCartesianGrid.html',1,'edda']]]
+  ['ndarray',['NdArray',['../classedda_1_1NdArray.html',1,'edda']]],
+  ['notimplementedexception',['NotImplementedException',['../structedda_1_1NotImplementedException.html',1,'edda']]]
 ];

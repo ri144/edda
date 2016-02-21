@@ -140,7 +140,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    }</div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;</div>
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <span class="comment">// Get the length of the tuple.</span></div>
-<div class="line"><a name="l00051"></a><span class="lineno"><a class="line" href="classedda_1_1Tuple.html#a79b7363e8b97b30dc951640f4f0820ad">   51</a></span>&#160;    <span class="keyword">inline</span> <span class="keywordtype">int</span> <a class="code" href="classedda_1_1Tuple.html#a79b7363e8b97b30dc951640f4f0820ad">getLen</a>() { <span class="keywordflow">return</span> N; }</div>
+<div class="line"><a name="l00051"></a><span class="lineno"><a class="line" href="classedda_1_1Tuple.html#a67a186f03a29ff0f57d451d9df648608">   51</a></span>&#160;    <span class="keyword">inline</span> <span class="keywordtype">int</span> <a class="code" href="classedda_1_1Tuple.html#a67a186f03a29ff0f57d451d9df648608">length</a>() { <span class="keywordflow">return</span> N; }</div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;</div>
 <div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    <span class="comment">// Get a pointer to the underlying data of the tuple.</span></div>
 <div class="line"><a name="l00054"></a><span class="lineno"><a class="line" href="classedda_1_1Tuple.html#ad4732e50534ece277286a4f7aed200aa">   54</a></span>&#160;    <span class="keyword">inline</span> T* <a class="code" href="classedda_1_1Tuple.html#ad4732e50534ece277286a4f7aed200aa">getData</a>() { <span class="keywordflow">return</span> this-&gt;<a class="code" href="classedda_1_1Tuple.html#aa251ac1a46de47bde1e2f837a9155c72">vec</a>; }</div>
@@ -244,7 +244,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;</div>
 <div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;<span class="preprocessor">#endif  // TUPLE_H_</span></div>
 <div class="ttc" id="classedda_1_1Tuple_html_a2590411fa34b301ee08526e10ca38527"><div class="ttname"><a href="classedda_1_1Tuple.html#a2590411fa34b301ee08526e10ca38527">edda::Tuple::operator[]</a></div><div class="ttdeci">T &amp; operator[](int i)</div><div class="ttdef"><b>Definition:</b> tuple.h:60</div></div>
-<div class="ttc" id="classedda_1_1Tuple_html_a79b7363e8b97b30dc951640f4f0820ad"><div class="ttname"><a href="classedda_1_1Tuple.html#a79b7363e8b97b30dc951640f4f0820ad">edda::Tuple::getLen</a></div><div class="ttdeci">int getLen()</div><div class="ttdef"><b>Definition:</b> tuple.h:51</div></div>
 <div class="ttc" id="structedda_1_1Tuple7_html"><div class="ttname"><a href="structedda_1_1Tuple7.html">edda::Tuple7</a></div><div class="ttdef"><b>Definition:</b> tuple.h:102</div></div>
 <div class="ttc" id="classedda_1_1Tuple_html_a7b0de54420e05b5a35695f045ffc3bdf"><div class="ttname"><a href="classedda_1_1Tuple.html#a7b0de54420e05b5a35695f045ffc3bdf">edda::Tuple::cast</a></div><div class="ttdeci">Tuple&lt; TR, N &gt; cast() const </div><div class="ttdef"><b>Definition:</b> tuple.h:71</div></div>
 <div class="ttc" id="namespaceedda_html_af67fbd966d5b27087d91e6f03578182e"><div class="ttname"><a href="namespaceedda.html#af67fbd966d5b27087d91e6f03578182e">edda::operator!=</a></div><div class="ttdeci">bool operator!=(const Tuple&lt; A, N &gt; &amp;t1, const Tuple&lt; A, N &gt; &amp;t2)</div><div class="ttdef"><b>Definition:</b> tuple.h:146</div></div>
@@ -263,6 +262,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="ttc" id="structedda_1_1Tuple4_html"><div class="ttname"><a href="structedda_1_1Tuple4.html">edda::Tuple4</a></div><div class="ttdef"><b>Definition:</b> tuple.h:95</div></div>
 <div class="ttc" id="structedda_1_1Tuple2_html"><div class="ttname"><a href="structedda_1_1Tuple2.html">edda::Tuple2</a></div><div class="ttdef"><b>Definition:</b> tuple.h:85</div></div>
 <div class="ttc" id="structedda_1_1Tuple2_html_a4b573e5df5a0dc3663e70e2f42fcdb55"><div class="ttname"><a href="structedda_1_1Tuple2.html#a4b573e5df5a0dc3663e70e2f42fcdb55">edda::Tuple2::Tuple2</a></div><div class="ttdeci">Tuple2()</div><div class="ttdef"><b>Definition:</b> tuple.h:86</div></div>
+<div class="ttc" id="classedda_1_1Tuple_html_a67a186f03a29ff0f57d451d9df648608"><div class="ttname"><a href="classedda_1_1Tuple.html#a67a186f03a29ff0f57d451d9df648608">edda::Tuple::length</a></div><div class="ttdeci">int length()</div><div class="ttdef"><b>Definition:</b> tuple.h:51</div></div>
 <div class="ttc" id="structedda_1_1Tuple9_html"><div class="ttname"><a href="structedda_1_1Tuple9.html">edda::Tuple9</a></div><div class="ttdef"><b>Definition:</b> tuple.h:104</div></div>
 <div class="ttc" id="classedda_1_1Tuple_html_a5f317957e1c04c52d52e89319471d6ee"><div class="ttname"><a href="classedda_1_1Tuple.html#a5f317957e1c04c52d52e89319471d6ee">edda::Tuple::Tuple</a></div><div class="ttdeci">Tuple(const T &amp;scalar)</div><div class="ttdef"><b>Definition:</b> tuple.h:30</div></div>
 <div class="ttc" id="structedda_1_1Tuple5_html"><div class="ttname"><a href="structedda_1_1Tuple5.html">edda::Tuple5</a></div><div class="ttdef"><b>Definition:</b> tuple.h:100</div></div>
@@ -277,7 +277,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Feb 8 2016 03:45:48 for EDDA by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun Feb 21 2016 02:38:41 for EDDA by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

@@ -120,8 +120,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a72f84115bb6a22fa18149e2c46141bed"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2df64d91c52a5a6790b24eeb70bb9bb2"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespaceedda.html#aa0433980f2b7cbba42ff2234832b9716">ReturnStatus</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classedda_1_1Grid.html#a2df64d91c52a5a6790b24eeb70bb9bb2">at_vertex</a> (int verIdx, <a class="el" href="namespaceedda.html#a85fb595d837d493f208da6f010859b10">VECTOR3</a> &amp;pos)=0</td></tr>
 <tr class="separator:a2df64d91c52a5a6790b24eeb70bb9bb2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2c50852f4bbaa457a333664e033a69ba"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespaceedda.html#aa0433980f2b7cbba42ff2234832b9716">ReturnStatus</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classedda_1_1Grid.html#a2c50852f4bbaa457a333664e033a69ba">getCellVertices</a> (int cellId, std::vector&lt; int &gt; &amp;vVertices)=0</td></tr>
-<tr class="separator:a2c50852f4bbaa457a333664e033a69ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a03a9c59b80664b69e0225966691a3648"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespaceedda.html#aa0433980f2b7cbba42ff2234832b9716">ReturnStatus</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classedda_1_1Grid.html#a03a9c59b80664b69e0225966691a3648">getCellVertices</a> (int cellId, std::vector&lt; size_t &gt; &amp;vVertices)=0</td></tr>
+<tr class="separator:a03a9c59b80664b69e0225966691a3648"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3ef6ca899ea32fe1eed621898a7095d1"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="namespaceedda.html#aa0433980f2b7cbba42ff2234832b9716">ReturnStatus</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classedda_1_1Grid.html#a3ef6ca899ea32fe1eed621898a7095d1">phys_to_cell</a> (<a class="el" href="structedda_1_1PointInfo.html">PointInfo</a> &amp;pInfo)=0</td></tr>
 <tr class="separator:a3ef6ca899ea32fe1eed621898a7095d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a226725af5b61a11b52d97e66ea899703"><td class="memItemLeft" align="right" valign="top">virtual double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classedda_1_1Grid.html#a226725af5b61a11b52d97e66ea899703">cellVolume</a> (int cellId)=0</td></tr>
@@ -407,7 +407,7 @@ Protected Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a2c50852f4bbaa457a333664e033a69ba"></a>
+<a class="anchor" id="a03a9c59b80664b69e0225966691a3648"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -423,7 +423,7 @@ Protected Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">std::vector&lt; int &gt; &amp;&#160;</td>
+          <td class="paramtype">std::vector&lt; size_t &gt; &amp;&#160;</td>
           <td class="paramname"><em>vVertices</em>&#160;</td>
         </tr>
         <tr>
@@ -439,7 +439,7 @@ Protected Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classedda_1_1RegularCartesianGrid.html#a0e5e2ccf8bb2fa4255b1fab11c51d9f2">edda::RegularCartesianGrid</a>, and <a class="el" href="classedda_1_1CartesianGrid.html#afcd58b92a144ec7ebd16e2a6ca2dd588">edda::CartesianGrid</a>.</p>
+<p>Implemented in <a class="el" href="classedda_1_1RegularCartesianGrid.html#adbec43a3b5345edec3b92299777ed6f2">edda::RegularCartesianGrid</a>, and <a class="el" href="classedda_1_1CartesianGrid.html#a8320281bcfe0b9f7fad04cbb6f4dd080">edda::CartesianGrid</a>.</p>
 
 </div>
 </div>
@@ -734,7 +734,7 @@ Protected Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Feb 8 2016 03:45:48 for EDDA by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun Feb 21 2016 02:38:42 for EDDA by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>
