@@ -2,6 +2,8 @@
 // Use of this source code is governed by a MIT-style license that can be
 // found in the LICENSE file.
 
+/// Read a distribution data set and generate a new field of random samples.
+
 #include <string>
 #include <cstdlib>
 #include <cstdio>
@@ -33,14 +35,13 @@
 #include "io/file_reader.h"
 #include "io/file_writer.h"
 #include "io/path.h"
-#include "filters/uncertain_isocontour.h"
 #include "vtk/vtk_common.h"
-#include "vtk/vtkUncertainIsocontour.h"
+#include "vtk/vtkRandomSampleField.h"
 
 using namespace std;
 using namespace edda;
 
-vtkSmartPointer<vtkDataSet> process_vtk_file(string vtk_file, float isov)
+vtkSmartPointer<vtkDataSet> process_vtk_file(string vtk_file)
 {
   vtkSmartPointer <vtkDataSet> dataset;
   if (getFileExtension(vtk_file).compare("vts")==0) {
@@ -59,14 +60,14 @@ vtkSmartPointer<vtkDataSet> process_vtk_file(string vtk_file, float isov)
     exit(1);
   }
 
-  // Edda filter
-  vsp_new(vtkUncertainIsocontour, isocontour);
-  isocontour->SetInputData(dataset);
-  isocontour->SetIsov(isov);
-  isocontour->Update();
+  // Edda filter: random sample field
+  vsp_new(vtkRandomSampleField , randomSample);
+  randomSample->SetInputData(dataset);
+  randomSample->Update();
 
+  // cell data to point data
   vsp_new(vtkCellDataToPointData, cell2point);
-  cell2point->SetInputData(isocontour->GetOutput());
+  cell2point->SetInputData(randomSample->GetOutput());
   cell2point->Update();
 
   cell2point->GetOutput()->PrintSelf(cout, vtkIndent(0));
@@ -75,12 +76,12 @@ vtkSmartPointer<vtkDataSet> process_vtk_file(string vtk_file, float isov)
   if (getFileExtension(vtk_file).compare("vti")==0) {
     vsp_new(vtkXMLImageDataWriter, writer);
     writer->SetFileName("ProbField.vti");
-    writer->SetInputData(isocontour->GetOutput());
+    writer->SetInputData(randomSample->GetOutput());
     writer->Write();
   } else {
     vsp_new(vtkXMLStructuredGridWriter, writer);
     writer->SetFileName("ProbField.vts");
-    writer->SetInputData(isocontour->GetOutput());
+    writer->SetInputData(randomSample->GetOutput());
     writer->Write();
 
   }
@@ -88,40 +89,15 @@ vtkSmartPointer<vtkDataSet> process_vtk_file(string vtk_file, float isov)
   return cell2point->GetOutput();
 }
 
-vtkSmartPointer<vtkDataSet> process_info_file(string info_file, float isov)
-{
-  // load data
-  shared_ptr<Dataset<dist::Gaussian> > dataset = loadData<dist::Gaussian>(info_file);
-
-  // uncertain isocontour
-  shared_ptr<Dataset<Real> > output = uncertainIsocontour(dataset, isov);
-
-  // Convert to vtk image data
-  vsp_new(vtkImageData, image);
-  image->SetDimensions(output->getDimension());
-  image->AllocateScalars(VTK_FLOAT,1);
-
-  shared_ary<float> array = boost::any_cast<shared_ary<float> >( output->getArray()->getRawArray() );
-  std::copy( &array[0], &array[0]+output->getArray()->getLength(),
-            (float *)image->GetScalarPointer(0,0,0));
-
-  return image;
-}
 
 int main(int argc, char **argv) {
-  cout << "isoProbField <info file> <iso-value>" << endl;
-  if (argc<=2)
+  cout << "randomSample <info file> " << endl;
+  if (argc<=1)
     return -1;
   string input_file = argv[1];
-  float isov = atof(argv[2]);
 
   vtkSmartPointer<vtkDataSet> probField;
-  if (getFileExtension(input_file).compare("vts")==0 || getFileExtension(input_file).compare("vti")==0) {
-    probField = process_vtk_file(input_file, isov);
-  }
-  else {
-    probField = process_info_file(input_file, isov);
-  }
+  probField = process_vtk_file(input_file);
 
 
   // Volume render

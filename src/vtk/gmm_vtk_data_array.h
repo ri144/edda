@@ -12,8 +12,8 @@
 #include <vtk/vtk_common.h>
 
 #include <distributions/gaussian_mixture.h>
-#include <core/abstract_data_array.h>
 #include <core/data_array.h>
+#include "core/gmm_ndarray.h"
 
 namespace edda {
 
@@ -24,6 +24,7 @@ class GmmVtkDataArray: public AbstractDataArray
 {
 protected:
   std::vector<vtkSmartPointer<vtkDataArray> > arrays;
+
   size_t length = 0;
   int components = 1;
 public:
@@ -32,6 +33,8 @@ public:
   /// \brief Based on the input array order, assign mean0, var0, weight0, mean1, var1, weight1,...
   /// The number of arrays should be multiples of 3
   GmmVtkDataArray(std::vector<vtkSmartPointer<vtkDataArray> > arrays_);
+
+  typedef std::vector<vtkSmartPointer<vtkDataArray> > RawArrayType;
 
   virtual ~GmmVtkDataArray() { }
 
@@ -49,6 +52,7 @@ public:
 
   virtual boost::any getRawArray() { return boost::any(arrays); }
 
+  std::shared_ptr<GmmNdArray> genNdArray() ;
 };
 
 } // namespace edda

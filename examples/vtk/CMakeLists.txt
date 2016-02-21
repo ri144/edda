@@ -6,6 +6,7 @@ set(sources
   uncertainIsocontourVTK.cpp
   streamlineMonteCarlo.cpp
   streamlineGaussianVTK.cpp
+  randomSample.cpp
 )
 
 IF(APPLE)
@@ -14,9 +15,11 @@ IF(APPLE)
   SET(EXECUTABLE_FLAG MACOSX_BUNDLE)
 ENDIF(APPLE)
 
+  message(WARNING  "use: ${LINK_LIBS}")
+
 foreach (file ${sources})
   get_filename_component(name ${file} NAME_WE)
   add_executable ( ${name} ${EXECUTABLE_FLAG} ${file} )
-  target_link_libraries ( ${name} ${PROJECT_NAME} ${VTK_LIBRARIES})
+  target_link_libraries ( ${name} ${LINK_LIBS} ${VTK_LIBRARIES})
 endforeach ()
 

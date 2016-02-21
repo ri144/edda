@@ -1,3 +1,6 @@
+#ifndef VARIANT_H
+#define VARIANT_H
+
 #include <boost/variant.hpp>
 
 #include "distribution.h"
@@ -7,13 +10,14 @@
 namespace edda{
 namespace dist{
 
-  typedef boost::variant<Real, Gaussian, GaussianMixture> _Variant;
+  typedef boost::variant<Real, Gaussian, GaussianMixture<1>, GaussianMixture<2>, GaussianMixture<3>, GaussianMixture<4>, GaussianMixture<5>  > _Variant;
 
   struct Variant : public _Variant, public Distribution {
     Variant() : _Variant() {}
     Variant(const Real &obj) : _Variant (obj) {}
     Variant(const Gaussian &obj) : _Variant (obj) {}
-    Variant(const GaussianMixture &obj) : _Variant (obj) {}
+    template <int GMMs>
+    Variant(const GaussianMixture<GMMs> &obj) : _Variant (obj) {}
   };
 
   namespace detail{
@@ -102,3 +106,5 @@ namespace dist{
 
 } // namespace dist
 } // namespace edda
+
+#endif // #define VARIANT_H

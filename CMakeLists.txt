@@ -13,32 +13,32 @@ option (EDDA_BUILD_EXAMPLES "Build the example programs." ON)
 option (EDDA_BUILD_SHARED_LIBS "Build into shared libraries." ON)
 option (EDDA_BUILD_PARAVIEW_PLUGINS "Build Paraview Plugins." OFF)
 option (EDDA_WITH_VTK "Build with VTK integration." OFF)
-option (EDDA_FILTERS_WITH_OPENMP "Build with OpenMP parallelization." ON)
-option (EDDA_FILTERS_WITH_THRUST "Build with Cuda Thrust parallelization." OFF)
+option (EDDA_WITH_OPENMP "Build with OpenMP parallelization." ON)
 ###
+
+list(APPEND LINK_LIBS ${PROJECT_NAME})
 
 # Tell the compiler to use C++11.
 if (UNIX)
   set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall")
 endif ()
 
-if (EDDA_FILTERS_WITH_OPENMP)
+if (EDDA_WITH_OPENMP)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fopenmp")
-  add_definitions(-DEDDA_FILTERS_WITH_OPENMP)
 endif ()
 
-if (EDDA_FILTERS_WITH_THRUST)
-  add_definitions(-DEDDA_WITH_THRUST)
-  set(THRUST_INCLUDE_DIR "/usr/local/include" CACHE PATH "Thrust root dir")
-  INCLUDE_DIRECTORIES(THRUST_INCLUDE_DIR)
+## Thrust
+set(THRUST_INCLUDE_DIR "/usr/local/include" CACHE PATH "Thrust root dir")
+INCLUDE_DIRECTORIES(${THRUST_INCLUDE_DIR})
 
-  option (THRUST_DEVICE_SYSTEM_TBB "Build with Cuda Thrust parallelization." OFF)
-  if (THRUST_DEVICE_SYSTEM_TBB)
-    set(TBB_INSTALL_PATH "/usr/local" CACHE PATH "TBB root dir")
-    INCLUDE_DIRECTORIES(${TBB_INSTALL_PATH}/include)
-    LINK_DIRECTORIES(${TBB_INSTALL_PATH}/lib)
-    add_definitions(-DTHRUST_DEVICE_SYSTEM=THRUST_DEVICE_SYSTEM_TBB)
-  endif ()
+## Thrust with TBB backend
+option (THRUST_DEVICE_SYSTEM_TBB "Build with Cuda Thrust parallelization." OFF)
+if (THRUST_DEVICE_SYSTEM_TBB)
+  set(TBB_INSTALL_PATH "/usr/local" CACHE PATH "TBB root dir")
+  INCLUDE_DIRECTORIES(${TBB_INSTALL_PATH}/include)
+  LINK_DIRECTORIES(${TBB_INSTALL_PATH}/lib)
+  add_definitions(-DTHRUST_DEVICE_SYSTEM=THRUST_DEVICE_SYSTEM_TBB)
+  list(APPEND LINK_LIBS tbb)
 endif ()
 
 

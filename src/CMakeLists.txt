@@ -29,7 +29,7 @@ endforeach ()
 add_library (${PROJECT_NAME} ${LIB_TYPE} ${SRC_FILES} ${HEADER_FILES})
 
 ### for building shared library (BUILD_SHARED_LIBS=ON), otherwise this does nothing:
-target_link_libraries(${PROJECT_NAME} ${VTK_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} ${LINK_LIBS} ${VTK_LIBRARIES})
 
 set_target_properties (${PROJECT_NAME} PROPERTIES
     DEBUG_OUTPUT_NAME "${PROJECT_NAME}_d"

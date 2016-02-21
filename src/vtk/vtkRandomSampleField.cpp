@@ -10,17 +10,25 @@
 #include "vtkStreamingDemandDrivenPipeline.h"
 
 #include "gmm_vtk_data_array.h"
+#include "filters/random_sample_field.h"
 
 using namespace std;
 using namespace edda;
 
 vtkStandardNewMacro(vtkRandomSampleField);
 
+
+// Copyright 2015 The Edda Authors. All rights reserved.
+// Use of this source code is governed by a MIT-style license that can be
+// found in the LICENSE file.
+
 //----------------------------------------------------------------------------
 vtkRandomSampleField::vtkRandomSampleField()
 {
   this->SetNumberOfInputPorts(1);
   this->SetNumberOfOutputPorts(1);
+  ResultName = "RandomSample";
+  Prefix = "";
 }
 
 //----------------------------------------------------------------------------
@@ -42,8 +50,16 @@ void vtkRandomSampleField::SampleDataArray(shared_ptr<GmmVtkDataArray> dataArray
   vsp_new(vtkFloatArray, out_vtkArray);
   out_vtkArray->SetNumberOfComponents(dataArray->getNumComponents());
   out_vtkArray->SetNumberOfTuples(dataArray->getLength());
-  out_vtkArray->SetName("RandomSample");
+  out_vtkArray->SetName(ResultName.c_str());
 
+#if 1 // thrust
+  shared_ptr<GmmNdArray> gmmNdArray = dataArray->genNdArray();
+  thrust::device_vector<Real> out(dataArray->getLength());
+
+  thrust::transform(gmmNdArray->begin(), gmmNdArray->end(), out.begin(), GetSample_functor() );
+  thrust::copy(out.begin(), out.end(), (float *)out_vtkArray->GetVoidPointer(0));
+
+#else // sequential
   float *p = (float *)out_vtkArray->GetVoidPointer(0);
   int nc = dataArray->getNumComponents();
 #pragma omp parallel for
@@ -57,6 +73,7 @@ void vtkRandomSampleField::SampleDataArray(shared_ptr<GmmVtkDataArray> dataArray
         p[i*nc+c] = dist::getSample( v[c] );
     }
   }
+#endif
 
   output_field->AddArray(out_vtkArray);
 }
@@ -85,10 +102,11 @@ int vtkRandomSampleField::RequestData(
   dataArray = shared_ptr<GmmVtkDataArray>(new GmmVtkDataArray(input->GetPointData()) );
   if (dataArray->getLength() > 0) {
     this->SampleDataArray(  dataArray, output->GetPointData());
+
     if (dataArray->getNumComponents()==1)
-      output->GetPointData()->SetActiveScalars("RandomSample");
+      output->GetPointData()->SetActiveScalars(ResultName.c_str());
     else
-      output->GetPointData()->SetActiveVectors("RandomSample");
+      output->GetPointData()->SetActiveVectors(ResultName.c_str());
   }
 
   dataArray = shared_ptr<GmmVtkDataArray>(new GmmVtkDataArray(input->GetCellData()) );
@@ -96,9 +114,9 @@ int vtkRandomSampleField::RequestData(
   {
     this->SampleDataArray(dataArray, output->GetCellData());
     if (dataArray->getNumComponents()==1)
-      output->GetCellData()->SetActiveScalars("RandomSample");
+      output->GetCellData()->SetActiveScalars(ResultName.c_str());
     else
-      output->GetCellData()->SetActiveVectors("RandomSample");
+      output->GetCellData()->SetActiveVectors(ResultName.c_str());
   }
 
   output->Modified();
@@ -121,14 +139,14 @@ int vtkRandomSampleField::RequestInformation(
                inInfo->Get(vtkStreamingDemandDrivenPipeline::WHOLE_EXTENT()),
                6);
 
-  // time:
-  double timeStepValues[] = {0,1.,2.,3.,4.,5.,6.,7.,8.,9.};
+  // Generate dummy time steps to enable flickering
+  double timeStepValues[] = {0,.1,.2,.3,.4,.5,.6,.7,.8,.9};
   outInfo->Set(vtkStreamingDemandDrivenPipeline::TIME_STEPS(),
     timeStepValues, 10);
 
   double timeRange[2];
   timeRange[0] = 0;
-  timeRange[1] = 9;
+  timeRange[1] = 1.;
   outInfo->Set(vtkStreamingDemandDrivenPipeline::TIME_RANGE(), timeRange, 2);
 
   //outInfo->Set(vtkStreamingDemandDrivenPipeline::TIME_RANGE(), timeRange, 2);

@@ -14,7 +14,7 @@ include_directories(${CMAKE_SOURCE_DIR}/src)
 foreach (file ${sources})
   get_filename_component(name ${file} NAME_WE)
   add_executable ( ${name} ${file} )
-  target_link_libraries ( ${name} ${PROJECT_NAME} )
+  target_link_libraries ( ${name} ${LINK_LIBS} )
 endforeach ()
 
 if (EDDA_WITH_VTK)

@@ -9,12 +9,13 @@ include_directories(${CMAKE_SOURCE_DIR}/src)
 set(TEST_SOURCES
     test_gaussian.cpp
     test_variant.cpp
+    test_thrust.cpp
     )
 
 foreach (test ${TEST_SOURCES})
   get_filename_component(tname ${test} NAME_WE)
   add_executable(${tname} ${test})
-  target_link_libraries(${tname} edda)
+  target_link_libraries(${tname} ${LINK_LIBS})
 
   add_test(NAME ${tname}
     COMMAND ${tname}
@@ -38,7 +39,7 @@ if (EDDA_WITH_VTK)
   foreach (file ${sources})
     get_filename_component(name ${file} NAME_WE)
     add_executable ( ${name} ${EXECUTABLE_FLAG} ${file} )
-    target_link_libraries ( ${name} edda ${VTK_LIBRARIES})
+    target_link_libraries ( ${name} ${LINK_LIBS} ${VTK_LIBRARIES})
   endforeach ()
 
 endif ()

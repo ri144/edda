@@ -48,7 +48,7 @@ public:
     }
 
     // Get the length of the tuple.
-    inline int getLen() { return N; }
+    inline int length() { return N; }
 
     // Get a pointer to the underlying data of the tuple.
     inline T* getData() { return this->vec; }

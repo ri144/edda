@@ -2,6 +2,7 @@
 
 #include "distributions/gaussian.h"
 #include "core/abstract_sampling_array.h"
+#include "core/gmm_ndarray.h"
 #include "edda.h"
 #include "io/file_reader.h"
 

@@ -12,13 +12,6 @@
 
 #include <limits>
 
-#ifdef EDDA_FILTERS_WITH_OPENMP
-#include <omp.h>
-#define FILTER_PARFOR #pragma omp parallel_for
-#else
-#define FILTER_PARFOR
-#endif
-
 namespace edda {
 
 const double DEG_TO_RAD = 0.0174532925199432957692;  // PI / 180
@@ -42,7 +35,9 @@ typedef long long int64_t;
 #endif
 
 // May not be needed in the release version but just keep here for now.
-class NotImplementedException {};
+struct NotImplementedException: public std::runtime_error {
+  NotImplementedException() : std::runtime_error("Sorry, method not implemented.") {}
+};
 class OutOfBoundException{};
 
 ///
@@ -51,6 +46,8 @@ class OutOfBoundException{};
 /// @param B The supposed base class
 ///
 #define ENABLE_IF_BASE_OF(T, B) typename std::enable_if<std::is_base_of<B, T>::value>::type* = nullptr
+
+#define MAX_GMMs 5
 
 }  // namespace edda
 

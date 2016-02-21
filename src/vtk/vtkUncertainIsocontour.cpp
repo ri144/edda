@@ -77,22 +77,29 @@ int vtkUncertainIsocontour::RequestData(
 
   // process point data
   shared_ptr<GmmVtkDataArray> dataArray(new GmmVtkDataArray(input->GetPointData()) );
+  shared_ptr<GmmNdArray> gmmNdArray = dataArray->genNdArray();
 
   // has point data?
   if (dataArray->getLength() > 0) {
     int out_length = (dim[0]-1)*(dim[1]-1)*(dim[2]-1);
+
+    shared_ptr<NdArray<float> > out_ndarray;
+
+    //ReturnStatus r = levelCrossingSerial(dataArray.get(), dim, this->Isov, (float *)out_vtkArray->GetVoidPointer(0));
+    levelCrossing(gmmNdArray, dim, this->Isov, out_ndarray);
 
     // create output array
     vsp_new(vtkFloatArray, out_vtkArray);
     out_vtkArray->SetNumberOfComponents(1);
     out_vtkArray->SetNumberOfTuples(out_length);
     out_vtkArray->SetName("ProbField");
-    ReturnStatus r = levelCrossing(dataArray.get(), dim, this->Isov, (float *)out_vtkArray->GetVoidPointer(0));
+    // copy from device to host
+    thrust::copy( out_ndarray->data().begin(), out_ndarray->data().end(), (float *)out_vtkArray->GetVoidPointer(0) );
 
     // release ownership of shared_ary
-    if (r!=ReturnStatus::SUCCESS) {
-      return 0;
-    }
+    //if (r!=ReturnStatus::SUCCESS) {
+    //  return 0;
+    //}
 
     output->GetCellData()->AddArray(out_vtkArray);
   } else {

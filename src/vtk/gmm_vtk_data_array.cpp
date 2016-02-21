@@ -1,10 +1,15 @@
 #include <algorithm>
 #include <cstring>
 #include <cstdlib>
+#include <vtkDoubleArray.h>
+#include <vtkFloatArray.h>
 #include "gmm_vtk_data_array.h"
+#include "core/thrust_common.h"
 using namespace std;
 namespace edda{
 using namespace dist;
+
+#define USE_GMMs 4
 
 GmmVtkDataArray::GmmVtkDataArray(vtkFieldData *fieldData, const char *arrayNamePrefix)  {
   char meanArrayName[1024];
@@ -32,6 +37,7 @@ GmmVtkDataArray::GmmVtkDataArray(vtkFieldData *fieldData, const char *arrayNameP
       weightArray->SetNumberOfTuples(n);
       // asign 1's
       float *p = (float *)weightArray->GetVoidPointer(0);
+
       for (int j=0; j<n*c; j++)
         p[j] = 1.f;
     }
@@ -116,14 +122,14 @@ std::vector<dist::Variant> GmmVtkDataArray::getVector(size_t idx) {
     for (size_t i=0; i<arrays.size(); i++) {
       models[i/3].p[i%3] = arrays[i]->GetComponent(idx, c);
     }
-    v[c] = GaussianMixture(models);
+    v[c] = GaussianMixture<USE_GMMs>(models);
   }
   return v;
 }
 
 void GmmVtkDataArray::setItem(size_t idx, int component, const boost::any &item) {
   // not tested
-  GaussianMixture gmm = boost::any_cast<GaussianMixture>( item );
+  GaussianMixture<USE_GMMs> gmm = boost::any_cast<GaussianMixture<USE_GMMs> >( item );
   for (size_t i=0; i<arrays.size(); i++) {
     arrays[i]->SetComponent(idx, component, gmm.models[i/3].p[i%3]);
   }
@@ -134,7 +140,44 @@ dist::Variant GmmVtkDataArray::getScalar(size_t idx) {
   for (size_t i=0; i<arrays.size(); i++) {
     models[i/3].p[i%3] = arrays[i]->GetComponent(idx, 0);
   }
-  return GaussianMixture(models);
+  return GaussianMixture<USE_GMMs>(models);
 }
 
+
+std::shared_ptr<GmmNdArray> GmmVtkDataArray::genNdArray() {
+  std::vector<NdArray<Real> > data;
+  for (size_t i=0; i<arrays.size(); i++) {
+    int n= arrays[i]->GetNumberOfTuples();
+
+    vtkFloatArray *farray = vtkFloatArray::SafeDownCast( arrays[i].Get() );
+    vtkDoubleArray *darray = vtkDoubleArray::SafeDownCast( arrays[i].Get() );
+
+    if ((farray && sizeof(float) == sizeof(Real))
+        || (darray && sizeof(double)==sizeof(Real)) ) {
+      NdArray<Real> ndarray((Real *)arrays[i]->GetVoidPointer(0), 1, &n );
+      data.push_back(ndarray);
+
+    } else if ( sizeof(float) == sizeof(Real) ){
+      // create a temp array in Real
+      vtkFloatArray *newArray = vtkFloatArray::New();
+      newArray->DeepCopy(arrays[i]);
+      NdArray<Real> ndarray((Real *)newArray->GetVoidPointer(0), 1, &n );
+      data.push_back(ndarray);
+      newArray->Delete();
+
+    } else if ( sizeof(double) == sizeof(Real) ) {
+      // create a temp array in Real
+      vtkDoubleArray *newArray = vtkDoubleArray::New();
+      newArray->DeepCopy(arrays[i]);
+      NdArray<Real> ndarray((Real *)newArray->GetVoidPointer(0), 1, &n );
+      data.push_back(ndarray);
+      newArray->Delete();
+
+    } else {
+      throw std::runtime_error("vtk array type not supported.");
+    }
+  }
+  return std::shared_ptr<GmmNdArray> ( new GmmNdArray(data) );
+
+}
 }; //edda

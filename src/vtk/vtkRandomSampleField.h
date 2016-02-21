@@ -1,6 +1,7 @@
 #ifndef VTK_RANDOM_SAMPLE_FIELD_H
 #define VTK_RANDOM_SAMPLE_FIELD_H
 
+#include <string>
 #include "vtkFiltersCoreModule.h" // For export macro
 #include "vtkDataSetAlgorithm.h"
 #include "vtkDataSetAttributes.h" // needed for vtkDataSetAttributes::FieldList
@@ -20,6 +21,8 @@ public:
 
 protected:
   double Isov;
+  std::string ResultName;
+  std::string Prefix;
 
   vtkRandomSampleField();
   ~vtkRandomSampleField();
