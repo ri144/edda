@@ -37,12 +37,21 @@ class EDDA_EXPORT GaussianMixture: public ContinuousDistribution {
     if (models_.size() <=  GMMs) {
       reset();
       for (size_t i=0; i<models_.size(); i++)
-      {
         models[i] = models_[i];
-      }
+
     } else {
+
       throw NotImplementedException();
     }
+  }
+
+  ///
+  /// \brief Reset all model weights to 0
+  ///
+  __host__ __device__
+  inline void reset () {
+    for (int i=0; i<GMMs; i++)
+      models[i].w = 0;
   }
 
 public:
@@ -52,28 +61,13 @@ public:
   __host__ __device__
   GaussianMixture() { reset(); }
 
-
+  __host__ __device__
   template <int GMMs_>
-  GaussianMixture(const Tuple<GMMTuple, GMMs> &models_) {
+  void assign (const Tuple<GMMTuple, GMMs_> &models) {
     std::vector<GMMTuple> vmodels_;
-    for (int i=0; i<GMMs_; i++) {
-      GMMTuple t;
-      t.m = models_[i].m;
-      t.v = models_[i].v;
-      t.w = models_[i].w;
-      vmodels_.push_back(t);
-    }
-    modelReduction(vmodels_);
-  }
-
-  template <int GMMs_>
-  GaussianMixture(const Tuple<GMMTuple, GMMs_> &models_) {
-    std::vector<GMMTuple> vmodels_;
-    for (int i=0; i<GMMs_; i++) {
-      GMMTuple t;
-      t.m = models_[i].m;
-      t.v = models_[i].v;
-      t.w = models_[i].w;
+    for (int i=0; i<GMMs_; i++)
+    {
+      GMMTuple t = models[i];
       vmodels_.push_back(t);
     }
     modelReduction(vmodels_);
@@ -81,15 +75,6 @@ public:
 
   GaussianMixture(const std::vector<GMMTuple> &models_) {
     modelReduction(models_);
-  }
-
-  ///
-  /// \brief Reset all model weights to 0
-  ///
-  __host__ __device__
-  void reset () {
-    for (int i=0; i<GMMs; i++)
-      models[i].w = 0;
   }
 
   ///

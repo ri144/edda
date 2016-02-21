@@ -5,22 +5,20 @@
 #include "core/thrust_common.h"
 #include "distributions/variant.h"
 #include "distributions/gaussian_mixture.h"
-#include "core/thrust_common_functors.h"
 
 namespace edda {
 
+struct GetSample_functor {
+  __host__ __device__
+  template<class Dist>
+  double operator() (const Dist &x ) const { return dist::getSample(x); }
+};
 
-template<class Dist>
-inline ReturnStatus randomSampleField(const thrust::device_vector<Dist> &field, thrust::device_vector<Real> &out )
+template <class InputIterator, class OutputIterator>
+void randomSampleField(InputIterator begin, InputIterator end, OutputIterator out)
 {
-  out.clear();
-  out.resize(field.size());
-
-  thrust::transform(field.begin(), field.end(), out.begin(), GetSample_functor() );
-
-  return ReturnStatus::SUCCESS;
+  thrust::transform(begin, end, out, GetSample_functor());
 }
-
 
 } // edda
 

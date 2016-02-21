@@ -94,7 +94,7 @@ int vtkUncertainIsocontour::RequestData(
     out_vtkArray->SetNumberOfTuples(out_length);
     out_vtkArray->SetName("ProbField");
     // copy from device to host
-    thrust::copy( out_ndarray->data().begin(), out_ndarray->data().end(), (float *)out_vtkArray->GetVoidPointer(0) );
+    out_ndarray->copy_to_host((float *)out_vtkArray->GetVoidPointer(0));
 
     // release ownership of shared_ary
     //if (r!=ReturnStatus::SUCCESS) {

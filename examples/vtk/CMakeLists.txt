@@ -15,8 +15,6 @@ IF(APPLE)
   SET(EXECUTABLE_FLAG MACOSX_BUNDLE)
 ENDIF(APPLE)
 
-  message(WARNING  "use: ${LINK_LIBS}")
-
 foreach (file ${sources})
   get_filename_component(name ${file} NAME_WE)
   add_executable ( ${name} ${EXECUTABLE_FLAG} ${file} )

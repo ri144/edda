@@ -62,33 +62,20 @@ public:
 
   thrust::transform_iterator<GmmNdArray, thrust::counting_iterator<int> > begin() {
     return thrust::make_transform_iterator( thrust::make_counting_iterator(0), *this );
-#if 0
-    switch (data->dims()[data->num_of_dims()-1])
-    {
-      case 2:
-        return thrust::transform_iterator(
-              thrust::make_zip_iterator(thrust::make_tuple(
-                 thrust::make_tuple(data->get_ptr({0,0}), data->get_ptr({0,1}), thrust::constant_iterator(1.f))
-                                           )),
-              MakeStridedGmm(data) );
-        break;
-      default:
-        throw std::runtime_error("NdArray size invalid for GmmNdArray.");
-    }
-#endif
   }
 
   thrust::transform_iterator<GmmNdArray, thrust::counting_iterator<int> > end() {
-    return thrust::make_transform_iterator( thrust::make_counting_iterator((int)dataArray[0].data().size()), *this );
+    return thrust::make_transform_iterator( thrust::make_counting_iterator((int)dataArray[0].num_of_elems()), *this );
   }
 
   __host__ __device__
   dist::GaussianMixture<MAX_GMMs> operator() (int idx) {
-    return getItem(idx);
+    return get_val(idx);
   }
 
   __host__ __device__
-  inline dist::GaussianMixture<MAX_GMMs> getItem(int idx) {
+  dist::GaussianMixture<MAX_GMMs> get_val(int idx) {
+
     dist::GaussianMixture<MAX_GMMs> gmm;
     int narray = (int)dataArray.size();
     for (int i=0; i<narray; i++) {

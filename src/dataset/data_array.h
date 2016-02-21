@@ -10,9 +10,10 @@
 #include <memory>
 #include <stdexcept>
 #include <vector>
+
 #include "abstract_data_array.h"
-#include "vector_matrix.h"
-#include "shared_ary.h"
+#include <core/vector_matrix.h>
+#include <core/shared_ary.h>
 #include "distributions/distribution.h"
 
 namespace edda {

@@ -3,8 +3,6 @@
 # found in the LICENSE file.
 
 set(sources
-  loadGaussianScalarField
-  loadGaussianVectorField
   uncertainIsocontour
   streamlineGaussian
 )

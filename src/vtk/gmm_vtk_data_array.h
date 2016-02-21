@@ -12,8 +12,8 @@
 #include <vtk/vtk_common.h>
 
 #include <distributions/gaussian_mixture.h>
-#include <core/data_array.h>
-#include "core/gmm_ndarray.h"
+#include <dataset/abstract_data_array.h>
+#include <core/gmm_ndarray.h>
 
 namespace edda {
 

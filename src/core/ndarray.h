@@ -17,117 +17,112 @@ const int kNdArrayMaxDims = 8;
 template <typename Type>
 class NdArray {
 
- public:
+  thrust::device_ptr<Type> dev_ptr;
+  int num_of_dims_ = 0;
+  int num_of_elems_ = 0;
+  int dims_[kNdArrayMaxDims];
+  int strides_[kNdArrayMaxDims];
+  bool ownership_ = true;
 
-  NdArray(Type* data, const std::initializer_list<int>& dims) {
-    assert(dims.size() <= kNdArrayMaxDims);
 
-    num_of_dims_ = dims.size();
-
-    auto it = dims.begin();
-    for (int i = 0; i < num_of_dims_; ++i)
-      dims_[i] = *(it + i);
-
-    UpdateStrides();
-
-    int num_of_elems = 1;
-    for (int i = 0; i < num_of_dims_; ++i)
-      num_of_elems *= dims_[i];
-
-    data_.swap( thrust::device_vector<Type> (num_of_elems) );
-    thrust::copy(data, data+num_of_elems, data_.begin() );
-  }
-
-  NdArray(Type* data, int num_of_dims, int* dims) {
-    assert(num_of_dims <= kNdArrayMaxDims);
-
-    num_of_dims_ = num_of_dims;
-
-    for (int i = 0; i < num_of_dims_; ++i)
-      dims_[i] = dims[i];
-
-    UpdateStrides();
-
-    int num_of_elems = 1;
-    for (int i = 0; i < num_of_dims_; ++i)
-      num_of_elems *= dims_[i];
-
-    data_.resize( num_of_elems) ;
-    thrust::copy(data, data+num_of_elems, data_.begin() );
-
-  }
-
+public:
+  ///
+  /// \brief Create an empty array
+  ///
   NdArray(int num_of_dims, int* dims) {
-    assert(num_of_dims <= kNdArrayMaxDims);
 
-    num_of_dims_ = num_of_dims;
+    init_shape(num_of_dims, dims);
 
-    for (int i = 0; i < num_of_dims_; ++i)
-      dims_[i] = dims[i];
+    dev_ptr = thrust::device_malloc<Type>(num_of_elems_);
 
-    UpdateStrides();
-
-    int num_of_elems = 1;
-    for (int i = 0; i < num_of_dims_; ++i)
-      num_of_elems *= dims_[i];
-
-    data_.resize( num_of_elems) ;
   }
 
-#if 0
-  NdArray(Type* data, int num_of_dims, int* dims, int* strides) {
-    assert(num_of_dims <= kNdArrayMaxDims);
+  ///
+  /// \brief Create an empty array
+  ///
+  NdArray(const std::initializer_list<int>& dims) {
 
-    num_of_dims_ = num_of_dims;
+    init_shape(dims);
 
-    for (int i = 0; i < num_of_dims_; ++i) {
-      dims_[i] = dims[i];
-      strides_[i] = strides[i];
-    }
+    dev_ptr = thrust::device_malloc<Type>(num_of_elems_);
 
-    if (memory_type_ == kHost) {
-      data_ = data;
-      ownership_ = false;
-    }
-
-#ifdef WITH_CUDA
-    if (memory_type_ == kDevice) {
-      int num_of_elems = 1;
-      for (int i = 0; i < num_of_dims_; ++i)
-        num_of_elems *= dims_[i];
-
-      CudaAllocate(data_, num_of_elems);
-      CudaMemCopyHostToDevice(data_, data, num_of_elems);
-
-      ownership_ = true;
-    }
-#endif  // WITH_CUDA
   }
-#endif
+
+  ///
+  /// \brief Create a device array and copy host content to it.
+  ///
+  NdArray(Type* data, int num_of_dims, int* dims)
+    : NdArray(num_of_dims, dims)
+  {
+    thrust::copy(data, data+num_of_elems_, dev_ptr );
+  }
+
+  ///
+  /// \brief Create a device array and copy host content to it.
+  ///
+  NdArray(Type* data, const std::initializer_list<int>& dims)
+    : NdArray( dims )
+  {
+    thrust::copy(data, data+num_of_elems_, dev_ptr );
+  }
+
+  ///
+  /// \brief pass a device pointer.
+  ///
+  /// Note: NdArray now does not own the array
+  ///
+  NdArray(thrust::device_ptr<Type> dev_ptr, int num_of_dims, int* dims)
+    : NdArray( num_of_dims, dims )
+  {
+    this->dev_ptr  = dev_ptr;
+    this->ownership_ = false;
+  }
+
 
   ~NdArray() {
+    if (this->ownership_) {
+      thrust::device_free( dev_ptr );
+    }
+  }
+
+  template <typename OutputIterator>
+  void copy_to_host(OutputIterator out) {
+
+    thrust::copy(begin(), end(), out);
   }
 
   __host__ __device__ int num_of_dims() const {
     return num_of_dims_;
   }
 
+  __host__ __device__ int num_of_elems() const {
+    return num_of_elems_;
+  }
+
   __host__ __device__ const int* dims() const {
     return dims_;
   }
 
-  __host__ __device__ thrust::device_vector<Type> & data() {
-    return data_;
+  __host__ __device__ void set_ownership(bool own) {
+    this->ownership_ = own;
   }
 
-  __host__ __device__ const thrust::device_vector<Type> & data() const {
-    return data_;
+  __host__ __device__ thrust::device_ptr<Type> & data() {
+    return dev_ptr;
   }
 
-  __host__ __device__ Type* get_ptr(const std::initializer_list<int>& ind) {
+  __host__ __device__ const thrust::device_ptr<Type> begin() const {
+    return dev_ptr;
+  }
+
+  __host__ __device__ const thrust::device_ptr<Type> end() const {
+    return dev_ptr + num_of_elems_;
+  }
+
+  __host__ __device__ thrust::device_ptr<Type> get_ptr(const std::initializer_list<int>& ind) {
     int nd = num_of_dims_;
     int* strides = strides_;
-    Type* dptr = data_;
+    thrust::device_ptr<Type> dptr = dev_ptr;
     auto it = ind.begin();
     while (nd--) {
       dptr += (*strides++) * (*it++);
@@ -147,20 +142,17 @@ class NdArray {
   __host__ __device__ void Reshape(
       const std::initializer_list<int>& newshape) {
 
-    // total size check, todo: slice check
-    int newsize=1, oldsize=1;
+    // total size check
+    int newsize=1;
     auto it = newshape.begin();
     for (; it != newshape.end(); ++it)
       newsize *= *it;
-    int i;
-    for (i = 0; i < dims_[i]; ++i)
-      oldsize *= dims_[i];
-    assert (newsize == oldsize);
+    assert (newsize == num_of_elems_);
 
     num_of_dims_ = newshape.size();
 
     it = newshape.begin();
-    for (; it != newshape.end(); ++it)
+    for (int i = 0; i < num_of_dims_; ++i, ++it)
       dims_[i] = *it;
 
     UpdateStrides();
@@ -183,6 +175,40 @@ class NdArray {
   // }
 
  private:
+  __host__ __device__ void init_shape(const std::initializer_list<int>& dims) {
+
+    assert(dims.size() <= kNdArrayMaxDims);
+
+    num_of_dims_ = dims.size();
+
+    auto it = dims.begin();
+    for (int i = 0; i < num_of_dims_; ++i)
+      dims_[i] = *(it + i);
+
+    UpdateStrides();
+
+    num_of_elems_ = 1;
+    for (int i = 0; i < num_of_dims_; ++i)
+      num_of_elems_ *= dims_[i];
+  }
+
+  __host__ __device__ void init_shape(int num_of_dims, int* dims) {
+
+    assert(num_of_dims <= kNdArrayMaxDims);
+
+    num_of_dims_ = num_of_dims;
+
+    for (int i = 0; i < num_of_dims_; ++i)
+      dims_[i] = dims[i];
+
+    UpdateStrides();
+
+    num_of_elems_ = 1;
+    for (int i = 0; i < num_of_dims_; ++i)
+      num_of_elems_ *= dims_[i];
+
+  }
+
   __host__ __device__ void UpdateStrides() {
     int stride = 1;
     for (int i = num_of_dims_ - 1; i >= 0; --i) {
@@ -191,11 +217,6 @@ class NdArray {
     }
   }
 
-  thrust::device_vector<Type> data_;
-  int num_of_dims_ = 0;
-  int dims_[kNdArrayMaxDims];
-  int strides_[kNdArrayMaxDims];
-  //bool ownership_ = false;
 };
 
 }  // namespace dv

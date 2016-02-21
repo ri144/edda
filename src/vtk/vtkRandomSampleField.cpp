@@ -56,7 +56,7 @@ void vtkRandomSampleField::SampleDataArray(shared_ptr<GmmVtkDataArray> dataArray
   shared_ptr<GmmNdArray> gmmNdArray = dataArray->genNdArray();
   thrust::device_vector<Real> out(dataArray->getLength());
 
-  thrust::transform(gmmNdArray->begin(), gmmNdArray->end(), out.begin(), GetSample_functor() );
+  randomSampleField(gmmNdArray->begin(), gmmNdArray->end(), out.begin());
   thrust::copy(out.begin(), out.end(), (float *)out_vtkArray->GetVoidPointer(0));
 
 #else // sequential

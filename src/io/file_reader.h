@@ -13,7 +13,7 @@
 #include <dataset/dataset.h>
 #include <core/shared_ary.h>
 #include <io/path.h>
-#include "core/abstract_sampling_array.h"
+#include <dataset/abstract_sampling_array.h>
 
 namespace edda{
 

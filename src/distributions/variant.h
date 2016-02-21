@@ -1,6 +1,8 @@
 #ifndef VARIANT_H
 #define VARIANT_H
 
+/// Experimental functionality
+
 #include <boost/variant.hpp>
 
 #include "distribution.h"

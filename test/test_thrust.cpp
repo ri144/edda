@@ -35,7 +35,7 @@ int main(int argc, char* argv[]) {
 
   thrust::device_vector<Real> d_out;
 
-  randomSampleField(d_array, d_out);
+  randomSampleField(d_array.begin(), d_array.end(), d_out.begin());
 
   thrust::host_vector<Real> h_out = d_out;
 
