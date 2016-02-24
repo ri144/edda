@@ -16,7 +16,7 @@ if (EDDA_WITH_VTK OR EDDA_BUILD_PARAVIEW_PLUGINS)
 endif ()
 
 foreach (dir in ${SRC_DIRS})
-  file(GLOB tmp ${dir}/*.cpp)
+  file(GLOB tmp ${dir}/*.cpp ${dir}/*.cu)
   list(APPEND SRC_FILES ${tmp})
   file(GLOB tmp  RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} ${dir}/*.h)
   list(APPEND HEADER_FILES ${tmp})
@@ -26,7 +26,11 @@ endforeach ()
 #file (GLOB_RECURSE HEADER_FILES "*.h")
 #message(warning "${SRC_FILES} ")
 
-add_library (${PROJECT_NAME} ${LIB_TYPE} ${SRC_FILES} ${HEADER_FILES})
+if (EDDA_BUILD_WITH_CUDA)
+  cuda_add_library (${PROJECT_NAME} ${LIB_TYPE} ${SRC_FILES} ${HEADER_FILES})
+else ()
+  add_library (${PROJECT_NAME} ${LIB_TYPE} ${SRC_FILES} ${HEADER_FILES})
+endif ()
 
 ### for building shared library (BUILD_SHARED_LIBS=ON), otherwise this does nothing:
 target_link_libraries(${PROJECT_NAME} ${LINK_LIBS} ${VTK_LIBRARIES})

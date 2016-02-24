@@ -18,33 +18,48 @@ namespace edda{
 
 // cross-platform math
 // singleton class
-class Math
+namespace Math
 {
-private:
-  thrust::default_random_engine rng;
-  thrust::uniform_real_distribution<float> dist;
 
-  Math() {
-    rng = thrust::default_random_engine(time(NULL));
-    dist = thrust::uniform_real_distribution<float> (0, RAND_MAX);
+  ///
+  /// \brief Return random value between 0..1
+  ///
+  /// Need to pass a unique index value
+  ///
+  struct Rand{
+    __host__ __device__
+    float operator() (int index)
+    {
+      thrust::default_random_engine rng(index<<1);
+      return rng();
+    }
+  };
+
+#if 0
+  namespace detail{
+    struct BoxMullerGPU{
+      __device__
+      void operator() (float& u1, float& u2){
+        float   r = sqrtf(-2.0f * logf(u1));
+        float phi = 2 * M_PI * u2;
+        u1 = r * __cosf(phi);
+        u2 = r * __sinf(phi);
+      }
+    };
   }
 
-  Math(Math const&) ;
-  void operator=(Math const&); // Don't implement
-
-public:
-  __host__ __device__
-  static Math &getInstance() {
-    static Math instance;
-    return instance;
-  }
-
-  __host__ __device__
-  static float rand()  {
-    return getInstance().dist(getInstance().rng);
-  }
-
-};
+  struct BoxMuller{
+    __device__
+    void operator() (int index){
+      float p = Rand(index);
+      float   r = sqrtf(-2.0f * logf(u1));
+      float phi = 2 * M_PI * u2;
+      u1 = r * __cosf(phi);
+      u2 = r * __sinf(phi);
+    }
+  };
+#endif
+} // Math
 
 } // edda
 

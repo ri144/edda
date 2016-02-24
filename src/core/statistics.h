@@ -89,8 +89,8 @@ T box_muller(T m, T s)	/* normal random variate generator */
     else
     {
         do {
-            x1 = 2.0 * (T)Math::rand()/RAND_MAX - 1.0;
-            x2 = 2.0 * (T)Math::rand()/RAND_MAX - 1.0;
+            x1 = 2.0 * (T)rand()/RAND_MAX - 1.0;
+            x2 = 2.0 * (T)rand()/RAND_MAX - 1.0;
             w = x1 * x1 + x2 * x2;
         } while ( w >= 1.0 );
 

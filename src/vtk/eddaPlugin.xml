@@ -1,32 +1,4 @@
 <ServerManagerConfiguration>
-  <ProxyGroup name="sources">
-    <!-- ================================================================== -->
-    <SourceProxy name="EddaReader" class="vtkEddaReader" label="EddaReader">
-      <Documentation
-         long_help="Read an Edda file."
-         short_help="Read an Edda file.">
-      </Documentation>
-      <StringVectorProperty
-            name="FileName"
-            animateable="0"
-            command="SetFileName"
-            number_of_elements="1">
-        <FileListDomain name="files"/>
-        <Documentation>
-          This property specifies the file name for the Edda reader.
-        </Documentation>
-      </StringVectorProperty>
- 
-      <Hints>
-        <ReaderFactory extensions="info"
-                       file_description="Edda Format" />
-     </Hints>
-    </SourceProxy>
-    <!-- End Reader -->
-  </ProxyGroup>
-  <!-- End Filters Group -->
-
-
   <ProxyGroup name="filters">
     <!-- ================================================================== -->
     <SourceProxy name="EddaUncertainIsocontour" class="vtkUncertainIsocontour" label="EddaUncertainIsocontour">
@@ -83,7 +55,7 @@
       </Hints>
  
     </SourceProxy>
-    <!-- End filter -->
-  </ProxyGroup>
-  <!-- End Filters Group -->
+
+  </ProxyGroup>  <!-- End Filters Group -->
 </ServerManagerConfiguration>
+<!-- Refrence: ParaViewCore/ServerManager/SMApplication/Resources -->

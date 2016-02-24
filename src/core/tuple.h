@@ -9,6 +9,7 @@
 
 #include <cassert>
 #include <iostream>
+#include "thrust_common.h"
 
 namespace edda {
 
@@ -48,21 +49,26 @@ public:
     }
 
     // Get the length of the tuple.
+    __host__ __device__
     inline int length() { return N; }
 
     // Get a pointer to the underlying data of the tuple.
+    __host__ __device__
     inline T* getData() { return this->vec; }
+    __host__ __device__
     inline const T* getData() const { return this->vec; }
 
     // Get a reference to the underlying data element of the tuple.
     // This works similarly to the way C++ STL containers work.  No
     // bounds checking is performed.
+    __host__ __device__
     inline T& operator[](int i) {
-        assert("pre: index_in_bounds" && i >= 0 && i < N);
+        //assert("pre: index_in_bounds" && i >= 0 && i < N);
         return this->vec[i];
     }
+    __host__ __device__
     inline const T& operator[](int i) const {
-        assert("pre: index_in_bounds" && i >= 0 && i < N);
+        //assert("pre: index_in_bounds" && i >= 0 && i < N);
         return this->vec[i];
     }
 

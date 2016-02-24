@@ -5,12 +5,13 @@
 #ifndef COMMON_H_
 #define COMMON_H_
 
-#include <cstdint>
-#include <type_traits>
 #include <cassert>
 #include <stdexcept>
-
 #include <limits>
+
+#include <cstdint>
+#include <boost/config.hpp>
+#include <type_traits>
 
 namespace edda {
 
@@ -25,7 +26,7 @@ const double EPS        = 1.0E-6;
 typedef float Real;
 
 // numeric limits:
-template <typename T> using limits = std::numeric_limits<T>;
+//template <typename T> using limits = std::numeric_limits<T>;
 
 // You can add more for needed return status
 enum ReturnStatus { SUCCESS = 0, FAIL, OUT_OF_BOUND };
@@ -45,7 +46,7 @@ class OutOfBoundException{};
 /// @param T The class to be tested
 /// @param B The supposed base class
 ///
-#define ENABLE_IF_BASE_OF(T, B) typename std::enable_if<std::is_base_of<B, T>::value>::type* = nullptr
+#define ENABLE_IF_BASE_OF(T, B)  typename std::enable_if<std::is_base_of<B, T>::value>::type* = nullptr
 
 #define MAX_GMMs 5
 

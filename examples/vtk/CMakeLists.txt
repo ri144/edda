@@ -17,7 +17,13 @@ ENDIF(APPLE)
 
 foreach (file ${sources})
   get_filename_component(name ${file} NAME_WE)
-  add_executable ( ${name} ${EXECUTABLE_FLAG} ${file} )
-  target_link_libraries ( ${name} ${LINK_LIBS} ${VTK_LIBRARIES})
+  if (EDDA_BUILD_WITH_CUDA)
+    cuda_add_executable ( ${name} ${EXECUTABLE_FLAG} ${file} )
+  else ()
+    SET_SOURCE_FILES_PROPERTIES(${file} PROPERTIES LANGUAGE CXX)
+    add_executable ( ${name} ${EXECUTABLE_FLAG} ${file} )
+  endif ()
+
+  target_link_libraries ( ${name} ${LINK_LIBS} )
 endforeach ()
 

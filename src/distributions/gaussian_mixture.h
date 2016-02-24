@@ -49,9 +49,10 @@ class EDDA_EXPORT GaussianMixture: public ContinuousDistribution {
   /// \brief Reset all model weights to 0
   ///
   __host__ __device__
-  inline void reset () {
-    for (int i=0; i<GMMs; i++)
-      models[i].w = 0;
+  void reset () {
+    memset(this, 0, sizeof(GaussianMixture<GMMs>));
+    //for (int i=0; i<GMMs; i++)
+    //  models[i].w = 0;
   }
 
 public:
@@ -61,7 +62,6 @@ public:
   __host__ __device__
   GaussianMixture() { reset(); }
 
-  __host__ __device__
   template <int GMMs_>
   void assign (const Tuple<GMMTuple, GMMs_> &models) {
     std::vector<GMMTuple> vmodels_;
@@ -100,7 +100,6 @@ public:
 ///
 /// \brief Return mean
 ///
-__host__ __device__
 template <int GMMs>
 inline double getMean(const GaussianMixture<GMMs> &dist)
 {
@@ -121,7 +120,6 @@ inline double getMean(const GaussianMixture<GMMs> &dist)
 /// ref: http://stats.stackexchange.com/questions/16608/what-is-the-variance-of-the-weighted-mixture-of-two-gaussians
 /// (code not verified)
 ///
-__host__ __device__
 template <int GMMs>
 inline double getVar(const GaussianMixture<GMMs> &dist)
 {
@@ -139,7 +137,6 @@ inline double getVar(const GaussianMixture<GMMs> &dist)
 ///
 /// \brief Return PDF of x
 ///
-__host__ __device__
 template <int GMMs>
 inline double getPdf(const GaussianMixture<GMMs> &dist, const double x)
 {
@@ -157,7 +154,6 @@ inline double getPdf(const GaussianMixture<GMMs> &dist, const double x)
 /// Note: To ensure correct sampling distribution, the sum of weights
 /// should be normalized to 1 before calling this function.
 ///
-__host__ __device__
 template <int GMMs>
 inline double getSample(const GaussianMixture<GMMs> &dist)
 {
@@ -175,16 +171,39 @@ inline double getSample(const GaussianMixture<GMMs> &dist)
 }
 
 ///
+/// \brief Return a sample
+///
+/// Note: To ensure correct sampling distribution, the sum of weights
+/// should be normalized to 1 before calling this function.
+///
+template <int GMMs>
+__host__ __device__
+inline double getSample(const GaussianMixture<GMMs> &dist, thrust::default_random_engine &rng)
+{
+  float ratio = rand() / (float)RAND_MAX;
+  float accumulated = 0;
+  for (int i=0; i<GMMs; i++)
+  {
+    accumulated += dist.models[i].w;
+    if (ratio < accumulated) {
+      return getSample( Gaussian(dist.models[i].m, dist.models[i].v), rng );
+    }
+  }
+  // return sample from the last model
+  return getSample( Gaussian(dist.models[GMMs-1].m, dist.models[GMMs-1].v), rng );
+}
+///
 /// \brief Return CDF of x
 ///
-__host__ __device__
 template <int GMMs>
+__host__ __device__
 inline double getCdf(const GaussianMixture<GMMs> &dist, double x)
 {
   double cdf=0;
   for (int i=0; i<GMMs; i++)
   {
-    cdf += getCdf(Gaussian(dist.models[i].m, dist.models[i].v), x) * dist.models[i].w;
+    if (dist.models[i].w >0)
+      cdf += getCdf(Gaussian(dist.models[i].m, dist.models[i].v), x) * dist.models[i].w;
   }
   return cdf;
 }
@@ -192,7 +211,6 @@ inline double getCdf(const GaussianMixture<GMMs> &dist, double x)
 ///
 /// \brief Print itself
 ///
-__host__ __device__
 template <int GMMs>
 inline std::ostream& operator<<(std::ostream& os, const GaussianMixture<GMMs> &dist)
 {
@@ -209,7 +227,6 @@ inline std::ostream& operator<<(std::ostream& os, const GaussianMixture<GMMs> &d
 ///
 /// \brief random variable with unary -
 ///
-__host__ __device__
 template <int GMMs>
 inline GaussianMixture<GMMs>& operator-(GaussianMixture<GMMs> &x)
 {
@@ -221,7 +238,6 @@ inline GaussianMixture<GMMs>& operator-(GaussianMixture<GMMs> &x)
 ///
 /// \brief random variable +=
 ///
-__host__ __device__
 template <int GMMs>
 inline GaussianMixture<GMMs>& operator+=(GaussianMixture<GMMs> &x, const GaussianMixture<GMMs>& rhs) {
   throw NotImplementedException();
@@ -230,7 +246,6 @@ inline GaussianMixture<GMMs>& operator+=(GaussianMixture<GMMs> &x, const Gaussia
 ///
 /// \brief random variable += with scalar
 ///
-__host__ __device__
 template <int GMMs>
 inline GaussianMixture<GMMs>& operator+=(GaussianMixture<GMMs> &x, const double r) {
   for (int i=0; i<GMMs; i++)
@@ -241,7 +256,6 @@ inline GaussianMixture<GMMs>& operator+=(GaussianMixture<GMMs> &x, const double 
 ///
 /// \brief random variable *= with scalar
 ///
-__host__ __device__
 template <int GMMs>
 inline GaussianMixture<GMMs>& operator*=(GaussianMixture<GMMs> &x, const double r) {
   for (int i=0; i<GMMs; i++) {

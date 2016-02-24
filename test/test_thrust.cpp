@@ -33,7 +33,7 @@ int main(int argc, char* argv[]) {
   h_array[2] = g3;
   thrust::device_vector<dist::Gaussian> d_array = h_array;
 
-  thrust::device_vector<Real> d_out;
+  thrust::device_vector<Real> d_out(h_array.size());
 
   randomSampleField(d_array.begin(), d_array.end(), d_out.begin());
 

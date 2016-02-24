@@ -5,8 +5,10 @@
 #ifndef NDARRAY_H_
 #define NDARRAY_H_
 
+#include <cstdio>
 #include <cassert>
 #include <iostream>
+#include <memory>
 
 #include "thrust_common.h"
 
@@ -22,8 +24,8 @@ class NdArray {
   int num_of_elems_ = 0;
   int dims_[kNdArrayMaxDims];
   int strides_[kNdArrayMaxDims];
-  bool ownership_ = true;
-
+  bool ownership_ = false;
+  mutable int* refCount;
 
 public:
   ///
@@ -35,6 +37,8 @@ public:
 
     dev_ptr = thrust::device_malloc<Type>(num_of_elems_);
 
+    ownership_ = true; refCount = new int(); *refCount = 1;
+    printf("NdArray created\n");
   }
 
   ///
@@ -46,6 +50,8 @@ public:
 
     dev_ptr = thrust::device_malloc<Type>(num_of_elems_);
 
+    ownership_ = true; refCount = new int(); *refCount = 1;
+    printf("NdArray created\n");
   }
 
   ///
@@ -64,24 +70,26 @@ public:
     : NdArray( dims )
   {
     thrust::copy(data, data+num_of_elems_, dev_ptr );
+
   }
 
   ///
   /// \brief pass a device pointer.
   ///
-  /// Note: NdArray now does not own the array
+  /// Note: NdArray now owns the array
   ///
   NdArray(thrust::device_ptr<Type> dev_ptr, int num_of_dims, int* dims)
     : NdArray( num_of_dims, dims )
   {
     this->dev_ptr  = dev_ptr;
-    this->ownership_ = false;
+
   }
 
-
   ~NdArray() {
-    if (this->ownership_) {
-      thrust::device_free( dev_ptr );
+    if( --(*refCount) == 0 ) {
+      if (this->ownership_ )
+        thrust::device_free( dev_ptr );
+      printf("NdArray released\n");
     }
   }
 
@@ -119,9 +127,9 @@ public:
     return dev_ptr + num_of_elems_;
   }
 
-  __host__ __device__ thrust::device_ptr<Type> get_ptr(const std::initializer_list<int>& ind) {
+  __host__ __device__ thrust::device_ptr<Type> get_ptr(const std::initializer_list<int>& ind) const {
     int nd = num_of_dims_;
-    int* strides = strides_;
+    const int* strides = strides_;
     thrust::device_ptr<Type> dptr = dev_ptr;
     auto it = ind.begin();
     while (nd--) {
@@ -130,8 +138,13 @@ public:
     return dptr;
   }
 
-  __host__ __device__ Type get_val(const std::initializer_list<int>& ind) {
+  __host__ __device__ Type get_val(const std::initializer_list<int>& ind) const {
     return *(get_ptr(ind));
+  }
+
+  __host__ __device__ Type get_val(int ind) const {
+      //printf("val[%d] = %f\n", ind, (float) dev_ptr[ind]);
+    return dev_ptr[ind];
   }
 
   __host__ __device__ void set_val(
@@ -173,6 +186,10 @@ public:
 
   //   return new NdArray(get_ptr(from), num_of_dims_, dims, strides);
   // }
+
+  // for shared pointer
+  NdArray<Type>& operator=( const NdArray<Type>& ptr );
+  NdArray(const NdArray<Type> &ptr );
 
  private:
   __host__ __device__ void init_shape(const std::initializer_list<int>& dims) {
@@ -219,6 +236,24 @@ public:
 
 };
 
-}  // namespace dv
+
+// shared pointer:
+template<class T>
+NdArray<T>& NdArray<T>::operator=( const NdArray<T>& ptr )
+{
+  memcpy(this, &ptr, sizeof(NdArray<T>));
+  (*(ptr.refCount))++;
+  return *this;
+}
+
+template<class T>
+NdArray<T>::NdArray( const NdArray<T>& ptr )
+{
+  memcpy(this, &ptr, sizeof(NdArray<T>));
+  (*(ptr.refCount))++;
+}
+
+
+}  // namespace edda
 
 #endif  // NDARRAY_H_

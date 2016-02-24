@@ -3,7 +3,7 @@
 
 #include <memory>
 #include <thrust/iterator/constant_iterator.h>
-#include <vtkDataArray.h>
+#include <thrust/host_vector.h>
 
 #include <core/ndarray.h>
 #include <core/thrust_common.h>
@@ -11,80 +11,35 @@
 
 namespace edda{
 
-#if 0
 namespace detail {
-  struct MakeStridedGmm : public thrust::unary_function<int,dist::Variant > {
+
+  struct MakeStridedGmm: public thrust::unary_function<int, dist::GaussianMixture<MAX_GMMs> > {
     // [GMMs][n] array
-    const std::vector<NdArray<Real> > &dataArray;
-    MakeStridedGmm(const std::vector<NdArray<Real> > &dataArray_) : dataArray(dataArray_) {}
+    thrust::host_vector<NdArray<Real> > &dataArray;
 
     __host__ __device__
-    dist::GaussianMixture<MAX_GMMs> operator() (int idx) {
-      dist::GaussianMixture<MAX_GMMs> gmm;
-      int narray = (int)dataArray.size();
-      for (int i=0; i<narray; i++) {
-        gmm.models[i/3].p[i%3] = dataArray[i].data()[idx];
-      }
-      if (narray==2)
-        gmm.models[0].w = 1.;
-      return gmm;
-    }
-
-#if 0
-    typedef thrust::tuple<Real, Real, Real> Tuple3;
+    MakeStridedGmm(thrust::host_vector<NdArray<Real> > &dataArray_) : dataArray(dataArray_) {}
 
     __host__ __device__
-    inline dist::GMMTuple makeModel(Tuple3 t) {
-      dist::GMMTuple gt;
-      gt.p[0] = thrust::get<0>(t);
-      gt.p[1] = thrust::get<1>(t);
-      gt.p[2] = thrust::get<2>(t);
-      return gt;
-    }
-
-    dist::Variant operator() (const thrust::tuple<Tuple3> &tuple) {
-      dist::GaussianMixture<1> gmm;
-      gmm.models[0] = makeModel(thrust::get<0> (tuple));
-      return dist::Variant(gmm);
-    }
-#endif
+    dist::GaussianMixture<MAX_GMMs> operator() (int idx);
   };
 
 } // detail
-#endif
 
 class GmmNdArray{
 public:
   // [GMMs][n] array
-  std::vector<NdArray<Real> > dataArray;
+  thrust::host_vector<NdArray<Real> > dataArray;
 
-  GmmNdArray(const std::vector<NdArray<Real> > &data_) : dataArray(data_) {}
-
-  thrust::transform_iterator<GmmNdArray, thrust::counting_iterator<int> > begin() {
-    return thrust::make_transform_iterator( thrust::make_counting_iterator(0), *this );
-  }
-
-  thrust::transform_iterator<GmmNdArray, thrust::counting_iterator<int> > end() {
-    return thrust::make_transform_iterator( thrust::make_counting_iterator((int)dataArray[0].num_of_elems()), *this );
-  }
+  GmmNdArray(const thrust::host_vector<NdArray<Real> > &data_) : dataArray(data_) {  }
 
   __host__ __device__
-  dist::GaussianMixture<MAX_GMMs> operator() (int idx) {
-    return get_val(idx);
-  }
+  dist::GaussianMixture<MAX_GMMs> get_val(int idx) const;
 
-  __host__ __device__
-  dist::GaussianMixture<MAX_GMMs> get_val(int idx) {
+  thrust::transform_iterator<detail::MakeStridedGmm, thrust::counting_iterator<int> > begin() ;
 
-    dist::GaussianMixture<MAX_GMMs> gmm;
-    int narray = (int)dataArray.size();
-    for (int i=0; i<narray; i++) {
-      gmm.models[i/3].p[i%3] = dataArray[i].data()[idx];
-    }
-    if (narray==2)
-      gmm.models[0].w = 1.;
-    return gmm;
-  }
+  thrust::transform_iterator<detail::MakeStridedGmm, thrust::counting_iterator<int> > end() ;
+
 };
 
 

@@ -82,7 +82,7 @@ vtkSmartPointer<vtkDataSet> process_vtk_file(string vtk_file, float isov)
     writer->SetFileName("ProbField.vts");
     writer->SetInputData(isocontour->GetOutput());
     writer->Write();
-
+    exit(0);
   }
 
   return cell2point->GetOutput();

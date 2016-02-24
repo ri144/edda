@@ -13,33 +13,85 @@ option (EDDA_BUILD_EXAMPLES "Build the example programs." ON)
 option (EDDA_BUILD_SHARED_LIBS "Build into shared libraries." ON)
 option (EDDA_BUILD_PARAVIEW_PLUGINS "Build Paraview Plugins." OFF)
 option (EDDA_WITH_VTK "Build with VTK integration." OFF)
-option (EDDA_WITH_OPENMP "Build with OpenMP parallelization." ON)
+#option (EDDA_WITH_OPENMP "Build with OpenMP parallelization." ON)
+
+set (THRUST_DEVICE_SYSTEM "CUDA" CACHE STRING "Thrust device backend (CUDA/TBB/OPENMP/CPP).")
+set_property(CACHE THRUST_DEVICE_SYSTEM PROPERTY STRINGS "CUDA;TBB;OPENMP;CPP")
 ###
 
 list(APPEND LINK_LIBS ${PROJECT_NAME})
 
 # Tell the compiler to use C++11.
-if (UNIX)
-  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
-  #set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}  -Wall)
+include(CheckCXXCompilerFlag)
+CHECK_CXX_COMPILER_FLAG("-std=c++11" COMPILER_SUPPORTS_CXX11)
+CHECK_CXX_COMPILER_FLAG("-std=c++0x" COMPILER_SUPPORTS_CXX0X)
+if(COMPILER_SUPPORTS_CXX11)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+elseif(COMPILER_SUPPORTS_CXX0X)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
+else()
+    message(WARNING "The compiler ${CMAKE_CXX_COMPILER} has no C++11 support. Please use a different C++ compiler.")
+endif()
+
+
+# All warnings on
+#set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}  -Wall)
+
+
+# Load settings for the boost project.
+find_package (Boost REQUIRED)
+if (Boost_FOUND)
+  include_directories (${Boost_INCLUDE_DIRS})
+  link_libraries (${Boost_LIBRARIES})
 endif ()
 
-if (EDDA_WITH_OPENMP)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fopenmp")
-endif ()
+set(EDDA_BUILD_WITH_CUDA OFF)
 
-## Thrust
-set(THRUST_INCLUDE_DIR "/usr/local/include" CACHE PATH "Thrust root dir")
-INCLUDE_DIRECTORIES(${THRUST_INCLUDE_DIR})
+## Thrust with CUDA backend
+if (${THRUST_DEVICE_SYSTEM} STREQUAL "CUDA")
+  find_package(CUDA REQUIRED)
+
+  #list(APPEND CUDA_NVCC_FLAGS "-ffast-math")
+  #list(APPEND CUDA_NVCC_FLAGS --compiler-options -fno-strict-aliasing -lineinfo -use_fast_math -Xptxas -dlcm=cg)
+  list(APPEND CUDA_NVCC_FLAGS  "--std=c++11") #cuda 7 feature
+  #list(APPEND CUDA_NVCC_FLAGS  "--relocatable-device-code true") #compile with relocatable device code (Need to link with -lcudadevrt)
+  #list(APPEND CUDA_NVCC_FLAGS -gencode arch=compute_20,code=sm_20)
+  #list(APPEND CUDA_NVCC_FLAGS -gencode arch=compute_30,code=sm_30)
+  list(APPEND CUDA_NVCC_FLAGS -gencode arch=compute_35,code=sm_35)
+  list(APPEND LINK_LIBS ${CUDA_LIBRARIES})
+
+  set(EDDA_BUILD_WITH_CUDA ON)
 
 ## Thrust with TBB backend
-option (THRUST_DEVICE_SYSTEM_TBB "Build with Cuda Thrust parallelization." OFF)
-if (THRUST_DEVICE_SYSTEM_TBB)
-  set(TBB_INSTALL_PATH "/usr/local" CACHE PATH "TBB root dir")
-  INCLUDE_DIRECTORIES(${TBB_INSTALL_PATH}/include)
-  LINK_DIRECTORIES(${TBB_INSTALL_PATH}/lib)
+elseif (${THRUST_DEVICE_SYSTEM} STREQUAL "TBB")
+
   add_definitions(-DTHRUST_DEVICE_SYSTEM=THRUST_DEVICE_SYSTEM_TBB)
+
+  set ( THRUST_INCLUDE_DIR "/usr/local/include" CACHE PATH "Thrust root dir")
+  include_directories ( ${THRUST_INCLUDE_DIR} )
+
+  set ( TBB_INSTALL_PATH "/usr/local" CACHE PATH "TBB root dir")
+  include_directories(${TBB_INSTALL_PATH}/include)
+  link_directories( ${TBB_INSTALL_PATH}/lib)
   list(APPEND LINK_LIBS tbb)
+
+## Thrust with OpenMP backend
+elseif (${THRUST_DEVICE_SYSTEM} STREQUAL "OPENMP")
+  add_definitions ( -DTHRUST_DEVICE_SYSTEM=THRUST_DEVICE_SYSTEM_OPENMP)
+
+  set ( THRUST_INCLUDE_DIR "/usr/local/include" CACHE PATH "Thrust root dir")
+  include_directories ( ${THRUST_INCLUDE_DIR} )
+
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fopenmp")
+
+elseif (${THRUST_DEVICE_SYSTEM} STREQUAL "CPP")
+  add_definitions ( -DTHRUST_DEVICE_SYSTEM=THRUST_DEVICE_SYSTEM_CPP)
+
+  set ( THRUST_INCLUDE_DIR "/usr/local/include" CACHE PATH "Thrust root dir")
+  include_directories ( ${THRUST_INCLUDE_DIR} )
+
+else ()
+  message(ERROR "Invalid setting of THRUST_DEVICE_SYSTEM")  
 endif ()
 
 
@@ -65,26 +117,39 @@ else ()
     set(LIB_TYPE STATIC)
 endif ()
 
-# Load settings for the boost project.
-find_package (Boost REQUIRED)
-if (Boost_FOUND)
-  include_directories (${Boost_INCLUDE_DIRS})
-  link_libraries (${Boost_LIBRARIES})
-endif ()
-
 
 # Choose either Paraview or VTK library
 if (EDDA_BUILD_PARAVIEW_PLUGINS)
-  FIND_PACKAGE(ParaView REQUIRED)
-  INCLUDE(${PARAVIEW_USE_FILE})
+  find_package(ParaView REQUIRED)
+  include(${PARAVIEW_USE_FILE})
+  list(APPEND LINK_LIBS ${VTK_LIBRARIES})
 
-else ()
+elseif (EDDA_WITH_VTK )
   # VTK integration
-  if (EDDA_WITH_VTK )
-    find_package(VTK)
-    include (${VTK_USE_FILE})
-  endif ()
+  find_package(VTK)
+  include (${VTK_USE_FILE})
+  list(APPEND LINK_LIBS ${VTK_LIBRARIES})
+
 endif ()
+
+
+#################### VTK fix for Cuda #######################
+macro(REMOVE_VTK_DEFINITIONS)
+    get_directory_property(_dir_defs DIRECTORY ${CMAKE_SOURCE_DIR} COMPILE_DEFINITIONS)
+    set(_vtk_definitions)
+    foreach(_item ${_dir_defs})
+        if(_item MATCHES "vtk*")
+            list(APPEND _vtk_definitions -D${_item})
+        endif()
+    endforeach()
+    remove_definitions(${_vtk_definitions})
+endmacro(REMOVE_VTK_DEFINITIONS)
+
+if (EDDA_BUILD_PARAVIEW_PLUGINS OR EDDA_WITH_VTK)
+    REMOVE_VTK_DEFINITIONS()
+endif ()
+
+
 
 # Make the configuration file.
 configure_file ("${PROJECT_SOURCE_DIR}/edda.h.in"

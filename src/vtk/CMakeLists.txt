@@ -6,7 +6,6 @@
 
 # List cpp files that will be explosed in plugins
 set( PV_SRC_FILES
-    vtkEddaReader.cpp
     vtkUncertainIsocontour.cpp
     vtkRandomSampleField.cpp
     )
@@ -17,7 +16,12 @@ if (${EDDA_BUILD_PARAVIEW_PLUGINS})
   ADD_PARAVIEW_PLUGIN(eddaPlugin "1.0"
     SERVER_MANAGER_XML eddaPlugin.xml
     SERVER_MANAGER_SOURCES ${PV_SRC_FILES})
-  TARGET_LINK_LIBRARIES(eddaPlugin LINK_PRIVATE ${USE_LIBS})
+  TARGET_LINK_LIBRARIES(eddaPlugin LINK_PRIVATE ${LINK_LIBS})
 
 endif ()
+
+
+#if(VTK_WRAP_PYTHON)
+#  wrap_python(eddaPluginPython "${PV_SRC_FILES}")
+#endif()
 
