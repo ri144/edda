@@ -35,7 +35,7 @@ class EDDA_EXPORT GaussianMixture: public ContinuousDistribution {
 
   void modelReduction(const std::vector<GMMTuple> &models_) {
     if (models_.size() <=  GMMs) {
-      reset();
+      init();
       for (size_t i=0; i<models_.size(); i++)
         models[i] = models_[i];
 
@@ -49,10 +49,10 @@ class EDDA_EXPORT GaussianMixture: public ContinuousDistribution {
   /// \brief Reset all model weights to 0
   ///
   __host__ __device__
-  void reset () {
-    memset(this, 0, sizeof(GaussianMixture<GMMs>));
-    //for (int i=0; i<GMMs; i++)
-    //  models[i].w = 0;
+  void init () {
+    //memset(this, 0, sizeof(GaussianMixture<GMMs>));
+    for (int i=0; i<GMMs; i++)
+      models[i].w = 0;
   }
 
 public:
@@ -60,7 +60,7 @@ public:
 
   // constructor
   __host__ __device__
-  GaussianMixture() { reset(); }
+  GaussianMixture() { init(); }
 
   template <int GMMs_>
   void assign (const Tuple<GMMTuple, GMMs_> &models) {
@@ -180,7 +180,8 @@ template <int GMMs>
 __host__ __device__
 inline double getSample(const GaussianMixture<GMMs> &dist, thrust::default_random_engine &rng)
 {
-  float ratio = rand() / (float)RAND_MAX;
+  thrust::uniform_real_distribution<Real> uniform;
+  float ratio = uniform(rng);
   float accumulated = 0;
   for (int i=0; i<GMMs; i++)
   {

@@ -25,7 +25,7 @@ namespace edda{
 ///
 ///  Compute cell-wise probability of level crossing given distributions on the grid points.
 /// The output will be allocated with size (dim[0]-1)*(dim[1]-1)*(dim[2]-1).
-ReturnStatus levelCrossing(std::shared_ptr<GmmNdArray> gmmArray, int dim[3], double isov, std::shared_ptr<NdArray<float> > &probField);
+ReturnStatus levelCrossing(std::shared_ptr<GmmNdArray> gmmArray_, int dim[3], double isov, std::shared_ptr<NdArray<float> > &probField);
 
 /// \breif Compute level crossing probablility (Not using Thrust).  Compute cell-wise probability of level crossing given distributions on the grid points.
 ///
@@ -33,57 +33,9 @@ ReturnStatus levelCrossing(std::shared_ptr<GmmNdArray> gmmArray, int dim[3], dou
 /// \param isov   isovalue to query
 /// \param[out] probField   output array.
 /// You can pass an empty array of probField.  The output should be allocated with size (dim[0]-1)*(dim[1]-1)*(dim[2]-1).
-inline ReturnStatus levelCrossingSerial(AbstractDataArray *input, int dim[3], double isov, float *probField)
-{
-  int i,j,k;
-  int count=0;
-  int new_dim[3]={dim[0]-1, dim[1]-1, dim[2]-1};
+ReturnStatus levelCrossingSerial(AbstractDataArray *input, int dim[3], double isov, float *probField);
 
-  if (input->getLength() < dim[0]*dim[1]*dim[2]) {
-    return ReturnStatus::FAIL;
-  }
-
-  //precompute cdf for speedup
-  shared_ary<float> cdfField (dim[0]*dim[1]*dim[2]);
-  count = 0;
-  for (k=0; k<dim[2]; k++)
-    for (j=0; j<dim[1]; j++)
-      for (i=0; i<dim[0]; i++) {
-        // compute level crossing
-        cdfField[count] = dist::getCdf( input->getScalar(count) , isov);
-        count++;
-      }
-
-  count = 0;
-  for (k=0; k<new_dim[2]; k++)
-    for (j=0; j<new_dim[1]; j++)
-      for (i=0; i<new_dim[0]; i++) {
-        // compute level crossing
-        // = 1 - prob. of all larger than isovalue - prob. of all less than isovalue
-        double cdf[8];
-#define IJK_TO_IDX(i,j,k)  (i+dim[0]*(j+dim[1]*(k)))
-        cdf[0] = cdfField[IJK_TO_IDX(i  ,j  ,k)];
-        cdf[1] = cdfField[IJK_TO_IDX(i+1,j  ,k  )];
-        cdf[2] = cdfField[IJK_TO_IDX(i  ,j+1,k  )];
-        cdf[3] = cdfField[IJK_TO_IDX(i+1,j+1,k  )];
-        cdf[4] = cdfField[IJK_TO_IDX(i  ,j  ,k+1)];
-        cdf[5] = cdfField[IJK_TO_IDX(i+1,j  ,k+1)];
-        cdf[6] = cdfField[IJK_TO_IDX(i  ,j+1,k+1)];
-        cdf[7] = cdfField[IJK_TO_IDX(i+1,j+1,k+1)];
-#undef IJK_TO_IDX
-        double prob1=1., prob2=1.;
-        for (int l=0; l<8; l++) {
-          prob1 *= cdf[l];
-          prob2 *= 1.-cdf[l];
-        }
-
-        probField[count] = 1.-prob1-prob2;
-        count++;
-      }
-
-  return ReturnStatus::SUCCESS;
-}
-
+// serial
 ///
 /// \brief Compute level crossing probabilities given a Dataset class.
 ///

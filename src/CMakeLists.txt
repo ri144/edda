@@ -27,7 +27,7 @@ endforeach ()
 #message(warning "${SRC_FILES} ")
 
 if (EDDA_BUILD_WITH_CUDA)
-  cuda_add_library (${PROJECT_NAME} ${LIB_TYPE} ${SRC_FILES} ${HEADER_FILES})
+  cuda_add_library (${PROJECT_NAME}  ${SRC_FILES} ${HEADER_FILES})
 else ()
   add_library (${PROJECT_NAME} ${LIB_TYPE} ${SRC_FILES} ${HEADER_FILES})
 endif ()

@@ -24,6 +24,6 @@ foreach (file ${sources})
     add_executable ( ${name} ${EXECUTABLE_FLAG} ${file} )
   endif ()
 
-  target_link_libraries ( ${name} ${LINK_LIBS} )
+  target_link_libraries ( ${name} edda ${LINK_LIBS} )
 endforeach ()
 

@@ -16,49 +16,53 @@
 
 namespace edda{
 
-// cross-platform math
-// singleton class
-namespace Math
-{
 
-  ///
-  /// \brief Return random value between 0..1
-  ///
-  /// Need to pass a unique index value
-  ///
-  struct Rand{
-    __host__ __device__
-    float operator() (int index)
-    {
-      thrust::default_random_engine rng(index<<1);
-      return rng();
-    }
-  };
-
-#if 0
-  namespace detail{
-    struct BoxMullerGPU{
-      __device__
-      void operator() (float& u1, float& u2){
-        float   r = sqrtf(-2.0f * logf(u1));
-        float phi = 2 * M_PI * u2;
-        u1 = r * __cosf(phi);
-        u2 = r * __sinf(phi);
-      }
-    };
+///
+/// \brief Simply return a random value between 0..1
+///
+/// Need to pass a unique index value
+///
+struct Rand{
+  __host__ __device__
+  inline float operator() (int index)
+  {
+    thrust::default_random_engine rng(index<<1);
+    return rng();
   }
+};
 
-  struct BoxMuller{
+namespace detail {
+  ///
+  /// \brief Create a Thrust default random engine with a given seed
+  ///
+  /// The caller should ensure that the seeds provided are not repetative in patterns.
+  ///
+  struct GenRand: public thrust::unary_function<int, thrust::default_random_engine>
+  {
     __device__
-    void operator() (int index){
-      float p = Rand(index);
-      float   r = sqrtf(-2.0f * logf(u1));
-      float phi = 2 * M_PI * u2;
-      u1 = r * __cosf(phi);
-      u2 = r * __sinf(phi);
+    thrust::default_random_engine operator () (int idx)
+    {
+        thrust::default_random_engine randEng;
+        randEng.discard(idx << 1);
+        return randEng;
     }
   };
-#endif
+}
+
+///
+/// \brief randomEngineIterator creates a Thrust default random engine with a given seed
+/// \return A Thrust iterator
+///
+/// Note: The caller should ensure that the seeds provided are not repetative in patterns
+///
+inline thrust::transform_iterator<detail::GenRand, thrust::counting_iterator<int> >
+randomEngineIterator(int seed) {
+  return thrust::make_transform_iterator(thrust::make_counting_iterator(seed), detail::GenRand()) ;
+}
+
+// Calling Cuda math functions
+namespace Math{
+
 } // Math
 
 } // edda

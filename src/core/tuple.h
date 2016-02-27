@@ -21,19 +21,22 @@ protected:
     T vec[N];
 
 public:
-    Tuple()
-    {}
-
     enum { LENGTH = N };
     typedef int IsTuple;  // for compile-time generic type check
 
+    __host__ __device__
+    Tuple()
+    {}
+
     // assign all values as scalar
+    __host__ __device__
     explicit Tuple(const T& scalar)
     {
         for (int i = 0; i < N; ++i)
             this->vec[i] = scalar;
     }
 
+    __host__ __device__
     explicit Tuple(const T* init)
     {
         for (int i = 0; i < N; ++i)
@@ -42,6 +45,7 @@ public:
 
     // assign Tuple
     template<typename U>
+    __host__ __device__
     Tuple(const Tuple<U, N>& v)
     {
         for (int i = 0; i < N; ++i)
@@ -50,7 +54,7 @@ public:
 
     // Get the length of the tuple.
     __host__ __device__
-    inline int length() { return N; }
+    inline int length() const { return N; }
 
     // Get a pointer to the underlying data of the tuple.
     __host__ __device__
@@ -74,6 +78,7 @@ public:
 
     // Cast the tuple to the specified type, returning the result.
     template<typename TR>
+    __host__ __device__
     Tuple<TR, N> cast() const
     {
         Tuple<TR, N> result;

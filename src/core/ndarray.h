@@ -9,6 +9,10 @@
 #include <cassert>
 #include <iostream>
 #include <memory>
+#include <thrust/random/uniform_real_distribution.h>
+#ifdef __CUDACC__
+#include <cuda.h>
+#endif
 
 #include "thrust_common.h"
 
@@ -19,57 +23,65 @@ const int kNdArrayMaxDims = 8;
 template <typename Type>
 class NdArray {
 
-  thrust::device_ptr<Type> dev_ptr;
-  int num_of_dims_ = 0;
-  int num_of_elems_ = 0;
-  int dims_[kNdArrayMaxDims];
-  int strides_[kNdArrayMaxDims];
-  bool ownership_ = false;
-  mutable int* refCount;
+  thrust::device_ptr<Type> dData;
+  NdArray<Type> *dSelfPtr = 0;
+  int num_of_dims = 0;
+  int num_of_elems = 0;
+  int dims[kNdArrayMaxDims];
+  int strides[kNdArrayMaxDims];
+  bool ownership = false;
 
 public:
+  typedef NdArray<Type> *SelfDevicePtr;
+
   ///
   /// \brief Create an empty array
   ///
-  NdArray(int num_of_dims, int* dims) {
+  __host__ __device__
+  NdArray(): ownership(false) { }
 
-    init_shape(num_of_dims, dims);
+  ///
+  /// \brief Create an empty array
+  ///
+  NdArray(int num_of_dims_, int* dims_) {
 
-    dev_ptr = thrust::device_malloc<Type>(num_of_elems_);
+    init_shape(num_of_dims_, dims_);
 
-    ownership_ = true; refCount = new int(); *refCount = 1;
+    dData = thrust::device_malloc<Type>(num_of_elems);
+
+    ownership = true;
     printf("NdArray created\n");
   }
 
   ///
   /// \brief Create an empty array
   ///
-  NdArray(const std::initializer_list<int>& dims) {
+  NdArray(const std::initializer_list<int>& dims_) {
 
-    init_shape(dims);
+    init_shape(dims_);
 
-    dev_ptr = thrust::device_malloc<Type>(num_of_elems_);
+    dData = thrust::device_malloc<Type>(num_of_elems);
 
-    ownership_ = true; refCount = new int(); *refCount = 1;
+    ownership = true;
     printf("NdArray created\n");
   }
 
   ///
   /// \brief Create a device array and copy host content to it.
   ///
-  NdArray(Type* data, int num_of_dims, int* dims)
-    : NdArray(num_of_dims, dims)
+  NdArray(Type* data, int num_of_dims_, int* dims_)
+    : NdArray(num_of_dims_, dims_)
   {
-    thrust::copy(data, data+num_of_elems_, dev_ptr );
+    thrust::copy(data, data+num_of_elems, dData );
   }
 
   ///
   /// \brief Create a device array and copy host content to it.
   ///
-  NdArray(Type* data, const std::initializer_list<int>& dims)
-    : NdArray( dims )
+  NdArray(Type* data, const std::initializer_list<int>& dims_)
+    : NdArray( dims_ )
   {
-    thrust::copy(data, data+num_of_elems_, dev_ptr );
+    thrust::copy(data, data+num_of_elems, dData );
 
   }
 
@@ -78,19 +90,58 @@ public:
   ///
   /// Note: NdArray now owns the array
   ///
-  NdArray(thrust::device_ptr<Type> dev_ptr, int num_of_dims, int* dims)
-    : NdArray( num_of_dims, dims )
+  __host__ __device__
+  NdArray(thrust::device_ptr<Type> dData, int num_of_dims_, int* dims_)
+    : NdArray( num_of_dims_, dims_ )
   {
-    this->dev_ptr  = dev_ptr;
+    this->dData  = dData;
 
   }
 
-  ~NdArray() {
-    if( --(*refCount) == 0 ) {
-      if (this->ownership_ )
-        thrust::device_free( dev_ptr );
-      printf("NdArray released\n");
+  NdArray(const NdArray &obj) {
+    this->operator=( obj );
+  }
+
+  ///
+  /// \brief Assignment will be a shallow copy of the input
+  ///
+  NdArray<Type> &operator=(const NdArray<Type> &obj) {
+    printf("opeartor=\n");
+    this->dData = obj.dData;
+    this->num_of_dims = obj.num_of_dims;
+    this->num_of_elems = obj.num_of_elems;
+    for (int i=0; i<num_of_dims; i++) {
+      this->dims[i] = obj.dims[i];
+      this->strides[i] = obj.strides[i];
     }
+    this->ownership = false;
+    return *this;
+  }
+
+  ///
+  /// \brief Take over the ownership of the input
+  ///
+  void take(NdArray<Type> &obj) {
+    free(); // free the current data
+    *this = obj;
+    this->ownership = true;
+    obj.ownership = false;
+  }
+
+  ~NdArray() {
+    free();
+  }
+
+  void free() {
+    if (this->ownership ) {
+      printf("Release NdArray\n");
+      thrust::device_free( dData );
+    }
+
+#ifdef __CUDACC__
+      if ( dSelfPtr )
+        cudaFree( dSelfPtr );
+#endif
   }
 
   template <typename OutputIterator>
@@ -99,52 +150,55 @@ public:
     thrust::copy(begin(), end(), out);
   }
 
-  __host__ __device__ int num_of_dims() const {
-    return num_of_dims_;
+  __host__ __device__ int get_num_of_dims() const {
+    return num_of_dims;
   }
 
-  __host__ __device__ int num_of_elems() const {
-    return num_of_elems_;
+  __host__ __device__ int get_num_of_elems() const {
+    return num_of_elems;
   }
 
-  __host__ __device__ const int* dims() const {
-    return dims_;
+  __host__ __device__ const int* get_dims() const {
+    return dims;
   }
 
-  __host__ __device__ void set_ownership(bool own) {
-    this->ownership_ = own;
+  __host__ __device__
+  void set_ownership(bool own) {
+    this->ownership = own;
+    printf("Set Ownership\n");
   }
 
-  __host__ __device__ thrust::device_ptr<Type> & data() {
-    return dev_ptr;
+  __host__ __device__
+  thrust::device_ptr<Type> & data() {
+    return dData;
   }
 
-  __host__ __device__ const thrust::device_ptr<Type> begin() const {
-    return dev_ptr;
+  const thrust::device_ptr<Type> begin() const {
+    return dData;
   }
 
-  __host__ __device__ const thrust::device_ptr<Type> end() const {
-    return dev_ptr + num_of_elems_;
+  const thrust::device_ptr<Type> end() const {
+    return dData + num_of_elems;
   }
 
   __host__ __device__ thrust::device_ptr<Type> get_ptr(const std::initializer_list<int>& ind) const {
-    int nd = num_of_dims_;
-    const int* strides = strides_;
-    thrust::device_ptr<Type> dptr = dev_ptr;
+    int nd = num_of_dims;
+    const int* s = strides;
+    thrust::device_ptr<Type> dptr = dData;
     auto it = ind.begin();
     while (nd--) {
-      dptr += (*strides++) * (*it++);
+      dptr += (*s++) * (*it++);
     }
     return dptr;
   }
 
-  __host__ __device__ Type get_val(const std::initializer_list<int>& ind) const {
+  __device__ __host__ Type get_val(const std::initializer_list<int>& ind) const {
     return *(get_ptr(ind));
   }
 
-  __host__ __device__ Type get_val(int ind) const {
-      //printf("val[%d] = %f\n", ind, (float) dev_ptr[ind]);
-    return dev_ptr[ind];
+  __device__ __host__ Type get_val(int ind) const {
+      //printf("val[%d] = %f\n", ind, (float) dData[ind]);
+    return dData[ind];
   }
 
   __host__ __device__ void set_val(
@@ -152,7 +206,8 @@ public:
     *(get_ptr(ind)) = val;
   }
 
-  __host__ __device__ void Reshape(
+  __host__ __device__
+  void Reshape(
       const std::initializer_list<int>& newshape) {
 
     // total size check
@@ -160,98 +215,93 @@ public:
     auto it = newshape.begin();
     for (; it != newshape.end(); ++it)
       newsize *= *it;
-    assert (newsize == num_of_elems_);
+    assert (newsize == num_of_elems);
 
-    num_of_dims_ = newshape.size();
+    num_of_dims = newshape.size();
 
     it = newshape.begin();
-    for (int i = 0; i < num_of_dims_; ++i, ++it)
-      dims_[i] = *it;
+    for (int i = 0; i < num_of_dims; ++i, ++it)
+      dims[i] = *it;
 
     UpdateStrides();
   }
 
   // NdArray* Slice(const std::initializer_list<int>& from,
   //                const std::initializer_list<int>& to) {
-  //   int* dims = new int[num_of_dims_];
+  //   int* dims = new int[num_of_dims];
   //   auto itf = from.begin(), itt = to.begin();
-  //   for (int i = 0; i < num_of_dims_; ++i) {
+  //   for (int i = 0; i < num_of_dims; ++i) {
   //     dims[i] = *(itt + i) - *(itf + i) + 1;
   //   }
 
-  //   int* strides = new int[num_of_dims_];
-  //   for (int i = 0; i < num_of_dims_; ++i) {
+  //   int* strides = new int[num_of_dims];
+  //   for (int i = 0; i < num_of_dims; ++i) {
   //     strides[i] = strides_[i];
   //   }
 
-  //   return new NdArray(get_ptr(from), num_of_dims_, dims, strides);
+  //   return new NdArray(get_ptr(from), num_of_dims, dims, strides);
   // }
 
-  // for shared pointer
-  NdArray<Type>& operator=( const NdArray<Type>& ptr );
-  NdArray(const NdArray<Type> &ptr );
+  __host__
+  SelfDevicePtr get_selft_ptr() {
+#ifdef __CUDACC__
+    if (!dSelfPtr) {
 
- private:
-  __host__ __device__ void init_shape(const std::initializer_list<int>& dims) {
+      cudaMalloc(&dSelfPtr, sizeof(NdArray<Type>));
+      cudaMemcpy(dSelfPtr, this, sizeof(NdArray<Type>), cudaMemcpyHostToDevice);
 
-    assert(dims.size() <= kNdArrayMaxDims);
-
-    num_of_dims_ = dims.size();
-
-    auto it = dims.begin();
-    for (int i = 0; i < num_of_dims_; ++i)
-      dims_[i] = *(it + i);
-
-    UpdateStrides();
-
-    num_of_elems_ = 1;
-    for (int i = 0; i < num_of_dims_; ++i)
-      num_of_elems_ *= dims_[i];
+    }
+    return dSelfPtr;
+#else
+    return this;
+#endif
   }
 
-  __host__ __device__ void init_shape(int num_of_dims, int* dims) {
+ private:
+  void init_shape(const std::initializer_list<int>& dims_) {
 
-    assert(num_of_dims <= kNdArrayMaxDims);
+    assert(dims_.size() <= kNdArrayMaxDims);
 
-    num_of_dims_ = num_of_dims;
+    num_of_dims = dims_.size();
 
-    for (int i = 0; i < num_of_dims_; ++i)
-      dims_[i] = dims[i];
+    auto it = dims_.begin();
+    for (int i = 0; i < num_of_dims; ++i)
+      dims[i] = *(it + i);
 
     UpdateStrides();
 
-    num_of_elems_ = 1;
-    for (int i = 0; i < num_of_dims_; ++i)
-      num_of_elems_ *= dims_[i];
+    num_of_elems = 1;
+    for (int i = 0; i < num_of_dims; ++i)
+      num_of_elems *= dims[i];
+  }
+
+  void init_shape(int num_of_dims_, int* dims_) {
+
+    assert(num_of_dims_ <= kNdArrayMaxDims);
+
+    num_of_dims = num_of_dims_;
+
+    for (int i = 0; i < num_of_dims; ++i)
+      dims[i] = dims_[i];
+
+    UpdateStrides();
+
+    num_of_elems = 1;
+    for (int i = 0; i < num_of_dims; ++i)
+      num_of_elems *= dims[i];
 
   }
 
   __host__ __device__ void UpdateStrides() {
     int stride = 1;
-    for (int i = num_of_dims_ - 1; i >= 0; --i) {
-      strides_[i] = stride;
-      stride *= dims_[i] ? dims_[i] : 1;
+    for (int i = num_of_dims - 1; i >= 0; --i) {
+      strides[i] = stride;
+      stride *= dims[i] ? dims[i] : 1;
     }
   }
 
 };
 
-
-// shared pointer:
-template<class T>
-NdArray<T>& NdArray<T>::operator=( const NdArray<T>& ptr )
-{
-  memcpy(this, &ptr, sizeof(NdArray<T>));
-  (*(ptr.refCount))++;
-  return *this;
-}
-
-template<class T>
-NdArray<T>::NdArray( const NdArray<T>& ptr )
-{
-  memcpy(this, &ptr, sizeof(NdArray<T>));
-  (*(ptr.refCount))++;
-}
 
 
 }  // namespace edda

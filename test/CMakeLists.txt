@@ -10,7 +10,6 @@ include_directories(${CMAKE_SOURCE_DIR}/src)
 if (NOT EDDA_BUILD_WITH_CUDA)
   set(TEST_SOURCES
       test_gaussian.cpp
-      test_variant.cpp
       test_thrust.cpp
       test_NdArray.cpp
   )
@@ -18,7 +17,7 @@ if (NOT EDDA_BUILD_WITH_CUDA)
   foreach (test ${TEST_SOURCES})
     get_filename_component(tname ${test} NAME_WE)
     add_executable(${tname} ${test})
-    target_link_libraries(${tname} ${LINK_LIBS})
+    target_link_libraries(${tname} edda ${LINK_LIBS})
 
     add_test(NAME ${tname}
       COMMAND ${tname}
@@ -36,7 +35,7 @@ if (EDDA_BUILD_WITH_CUDA)
   foreach (test ${TEST_SOURCES_CUDA})
     get_filename_component(tname ${test} NAME_WE)
     cuda_add_executable(${tname} ${test})
-    target_link_libraries(${tname} ${LINK_LIBS})
+    target_link_libraries(${tname} edda ${LINK_LIBS})
 
     add_test(NAME ${tname}
       COMMAND ${tname}
@@ -66,7 +65,7 @@ if (EDDA_WITH_VTK)
       add_executable ( ${name} ${EXECUTABLE_FLAG} ${file} )
     endif ()
 
-    target_link_libraries ( ${name} ${LINK_LIBS} )
+    target_link_libraries ( ${name} edda ${LINK_LIBS} )
   endforeach ()
 
 endif ()

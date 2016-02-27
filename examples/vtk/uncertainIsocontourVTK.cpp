@@ -120,7 +120,7 @@ int main(int argc, char **argv) {
     probField = process_vtk_file(input_file, isov);
   }
   else {
-    probField = process_info_file(input_file, isov);
+    //probField = process_info_file(input_file, isov);
   }
 
 

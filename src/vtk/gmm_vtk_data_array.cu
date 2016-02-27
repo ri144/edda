@@ -4,8 +4,10 @@
 #include <iostream>
 #include <vtkDoubleArray.h>
 #include <vtkFloatArray.h>
+
 #include "gmm_vtk_data_array.h"
-#include "core/thrust_common.h"
+#include <core/ndarray.h>
+#include <core/thrust_common.h>
 using namespace std;
 namespace edda{
 using namespace dist;
@@ -80,6 +82,7 @@ GmmVtkDataArray::GmmVtkDataArray(vtkFieldData *fieldData, const char *arrayNameP
     }
   }
   if (arrays.size() == 0) {
+    length = 0;
     return;
   }
   length = arrays[0]->GetNumberOfTuples();
@@ -146,35 +149,39 @@ dist::Variant GmmVtkDataArray::getScalar(size_t idx) {
 
 
 std::shared_ptr<GmmNdArray> GmmVtkDataArray::genNdArray() {
-  thrust::host_vector<NdArray<Real> > data;
+  //int n= arrays[i]->GetNumberOfTuples();
+  //NdArray ndarray({length, arrays.size()});
+  std::vector<NdArray<Real> > data(arrays.size());
+  int n = length; // array length
+
   for (size_t i=0; i<arrays.size(); i++) {
-    int n= arrays[i]->GetNumberOfTuples();
 
     vtkFloatArray *farray = vtkFloatArray::SafeDownCast( arrays[i].Get() );
     vtkDoubleArray *darray = vtkDoubleArray::SafeDownCast( arrays[i].Get() );
 
-    if ((farray && sizeof(float) == sizeof(Real))
+    if ((farray && sizeof(float) == sizeof(Real))   // alternative: typeid(Real) == typeid(float)
         || (darray && sizeof(double)==sizeof(Real)) ) {
-      NdArray<Real> ndarray((Real *)arrays[i]->GetVoidPointer(0), 1, &n );
-      data.push_back(ndarray);
+      NdArray<Real> ndarray((Real *)arrays[i]->GetVoidPointer(0), {n} );
+
+      data[i].take(ndarray);
     } else if ( sizeof(float) == sizeof(Real) ){
-      // create a temp array in Real
+      // create a temp array in float
       vtkFloatArray *newArray = vtkFloatArray::New();
       newArray->DeepCopy(arrays[i]);
-      NdArray<Real> ndarray((Real *)newArray->GetVoidPointer(0), 1, &n );
-      data.push_back(ndarray);
+      NdArray<Real> ndarray((Real *)newArray->GetVoidPointer(0), {n} );
+      data[i].take(ndarray);
       newArray->Delete();
 
     } else if ( sizeof(double) == sizeof(Real) ) {
-      // create a temp array in Real
+      // create a temp array in double
       vtkDoubleArray *newArray = vtkDoubleArray::New();
       newArray->DeepCopy(arrays[i]);
-      NdArray<Real> ndarray((Real *)newArray->GetVoidPointer(0), 1, &n );
-      data.push_back(ndarray);
+      NdArray<Real> ndarray((Real *)newArray->GetVoidPointer(0), {n} );
+      data[i].take(ndarray);
       newArray->Delete();
 
     } else {
-      throw std::runtime_error("vtk array type not supported.");
+      throw std::runtime_error("Real type not float or double.");
     }
   }
   return std::shared_ptr<GmmNdArray> ( new GmmNdArray(data) );

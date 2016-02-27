@@ -1,34 +1,14 @@
 #ifndef RANDOM_SAMPLE_FIELD
 #define RANDOM_SAMPLE_FIELD
 
-#include <ctime>
 #include <thrust/iterator/zip_iterator.h>
 #include <thrust/iterator/transform_iterator.h>
-#include <thrust/iterator/constant_iterator.h>
 #include "common.h"
 #include "core/thrust_common.h"
 #include "distributions/variant.h"
 #include "distributions/gaussian_mixture.h"
 
 namespace edda {
-
-
-
-struct GenRand: public thrust::unary_function<int, thrust::default_random_engine>
-{
-  __device__
-  thrust::default_random_engine operator () (int idx)
-  {
-      thrust::default_random_engine randEng;
-      randEng.discard(idx*2);
-      return randEng;
-  }
-};
-
-inline thrust::transform_iterator<GenRand, thrust::counting_iterator<int> > randomEngineIterator(int seed) {
-  return thrust::make_transform_iterator(thrust::make_counting_iterator(seed), GenRand()) ;
-}
-
 
 
 struct GetSample_functor {

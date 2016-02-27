@@ -5,13 +5,19 @@ using namespace edda;
 
 int main ()
 {
-  int dim=1;
-  NdArray<Real> p(1, &dim);
+  NdArray<Real> p({1});
   p.set_val({0}, 3);
   {
-          NdArray<Real> q = p;
-          TEST(q.get_val({0})==3);
+    printf("Assigning\n");
+    NdArray<Real> q = p;
+    TEST(q.get_val({0})==3);
   }
+  {
+    printf("with vector\n");
+    std::vector<NdArray<Real> > vec(10, p);
+    vec[0] = NdArray<Real> ({2,2});
+  }
+  printf("Test ends\n");
   return 0;
 
 }

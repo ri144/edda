@@ -19,8 +19,6 @@ set (THRUST_DEVICE_SYSTEM "CUDA" CACHE STRING "Thrust device backend (CUDA/TBB/O
 set_property(CACHE THRUST_DEVICE_SYSTEM PROPERTY STRINGS "CUDA;TBB;OPENMP;CPP")
 ###
 
-list(APPEND LINK_LIBS ${PROJECT_NAME})
-
 # Tell the compiler to use C++11.
 include(CheckCXXCompilerFlag)
 CHECK_CXX_COMPILER_FLAG("-std=c++11" COMPILER_SUPPORTS_CXX11)
@@ -54,11 +52,21 @@ if (${THRUST_DEVICE_SYSTEM} STREQUAL "CUDA")
   #list(APPEND CUDA_NVCC_FLAGS "-ffast-math")
   #list(APPEND CUDA_NVCC_FLAGS --compiler-options -fno-strict-aliasing -lineinfo -use_fast_math -Xptxas -dlcm=cg)
   list(APPEND CUDA_NVCC_FLAGS  "--std=c++11") #cuda 7 feature
-  #list(APPEND CUDA_NVCC_FLAGS  "--relocatable-device-code true") #compile with relocatable device code (Need to link with -lcudadevrt)
   #list(APPEND CUDA_NVCC_FLAGS -gencode arch=compute_20,code=sm_20)
   #list(APPEND CUDA_NVCC_FLAGS -gencode arch=compute_30,code=sm_30)
-  list(APPEND CUDA_NVCC_FLAGS -gencode arch=compute_35,code=sm_35)
-  list(APPEND LINK_LIBS ${CUDA_LIBRARIES})
+  #list(APPEND CUDA_NVCC_FLAGS -gencode arch=compute_35,code=sm_35)
+
+  list(APPEND CUDA_NVCC_FLAGS "-Xcompiler '-fPIC'")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
+
+  list(APPEND LINK_LIBS ${CUDA_LIBRARIES} ${CUDA_CUDART_LIBRARY})
+
+  #list(APPEND LINK_LIBS "cudart;cudadevrt")
+  #list(APPEND CUDA_NVCC_FLAGS  "-rdc=true") #compile with relocatable device code (Need to link with -lcudadevrt)
+
+  # ref: http://stackoverflow.com/questions/13683575/cuda-5-0-separate-compilation-of-library-with-cmake
+  set(CUDA_ATTACH_VS_BUILD_RULE_TO_CUDA_FILE ON)
+  set(CUDA_SEPARABLE_COMPILATION ON)
 
   set(EDDA_BUILD_WITH_CUDA ON)
 

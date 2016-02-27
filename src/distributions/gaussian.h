@@ -29,7 +29,7 @@ struct EDDA_EXPORT Gaussian: public ContinuousDistribution {
   __host__ __device__
   Gaussian(): Gaussian(0, (Real)1.) {}
   __host__ __device__
-  Gaussian(Real m, Real var) { this->mean=m; this->var=var; }
+  Gaussian(Real m, Real var): mean(m), var(var) { }
 
 };
 
@@ -109,13 +109,16 @@ namespace detail {
 ///
 /// \brief Return CDF of x
 ///
+/// The underlining erf() function uses Cuda implementation
+///
 __host__ __device__
 inline double getCdf(const Gaussian &dist, double x)
 {
   if (dist.var==0) {
     return x >= dist.mean ? 1 : 0;
   }
-  return 0.5 * (1 + boost::math::erf((x - dist.mean) / (sqrt(2.*dist.var))));
+  //return 0.5 * (1 + boost::math::erf((x - dist.mean) / (sqrt(2.*dist.var))));
+  return 0.5 * (1 + erf((x - dist.mean) / (sqrt(2.*dist.var))));
 }
 
 ///

@@ -24,7 +24,7 @@ foreach (file ${sources})
     add_executable ( ${name} ${file} )
   endif ()
 
-  target_link_libraries ( ${name} ${LINK_LIBS} )
+  target_link_libraries ( ${name} edda ${LINK_LIBS} )
 endforeach ()
 
 if (EDDA_WITH_VTK)

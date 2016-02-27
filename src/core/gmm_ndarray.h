@@ -11,37 +11,76 @@
 
 namespace edda{
 
+typedef Tuple<NdArray<Real>::SelfDevicePtr, MAX_GMMs*3> DeviceGMMArray;
+
 namespace detail {
 
   struct MakeStridedGmm: public thrust::unary_function<int, dist::GaussianMixture<MAX_GMMs> > {
     // [GMMs][n] array
-    thrust::host_vector<NdArray<Real> > &dataArray;
+    DeviceGMMArray dDataPtrArray;
+    int narrays;
+
+    MakeStridedGmm() {}
+    MakeStridedGmm(const DeviceGMMArray &dDataPtrArray_, int narrays_) : dDataPtrArray(dDataPtrArray_), narrays(narrays_) {}
 
     __host__ __device__
-    MakeStridedGmm(thrust::host_vector<NdArray<Real> > &dataArray_) : dataArray(dataArray_) {}
-
-    __host__ __device__
-    dist::GaussianMixture<MAX_GMMs> operator() (int idx);
+    dist::GaussianMixture<MAX_GMMs> operator() (int idx) const;
   };
 
 } // detail
 
-class GmmNdArray{
-public:
-  // [GMMs][n] array
-  thrust::host_vector<NdArray<Real> > dataArray;
+struct GmmNdArray{
+  ///
+  /// This is a collection of Real arrays in the order of mean0, var0, weight0, mean1, var1, weight1...
+  /// The minimum numbers of arrays is 2 (mean and var)
+  ///
+  Tuple<NdArray<Real>, MAX_GMMs*3> dataArray;
+  Tuple<NdArray<Real>::SelfDevicePtr, MAX_GMMs*3> dDataPtrArray;
 
-  GmmNdArray(const thrust::host_vector<NdArray<Real> > &data_) : dataArray(data_) {  }
+  int narrays;
+  int num_of_elems;
 
-  __host__ __device__
-  dist::GaussianMixture<MAX_GMMs> get_val(int idx) const;
+  GmmNdArray() {}
 
-  thrust::transform_iterator<detail::MakeStridedGmm, thrust::counting_iterator<int> > begin() ;
+  GmmNdArray(std::vector<NdArray<Real> > &data_) {
+    narrays = data_.size();
+    if ( narrays > MAX_GMMs*3 ) {
+      printf ( "Warning: The provided GMM models are larger than the maximum size.  Extra models will be discarded!");
+      narrays = MAX_GMMs*3;
+    }
 
-  thrust::transform_iterator<detail::MakeStridedGmm, thrust::counting_iterator<int> > end() ;
+    assert(narrays >= 2);
+
+    num_of_elems = data_[0].get_num_of_elems();
+
+    for (int i=0; i<narrays; i++)
+    {
+      dataArray[i].take( data_[i] );
+      dDataPtrArray[i] = dataArray[i].get_selft_ptr();
+    }
+  }
+
+  detail::MakeStridedGmm getMakeStridedGmm() {
+    return detail::MakeStridedGmm(dDataPtrArray, narrays);
+  }
+
+
+  inline thrust::transform_iterator<detail::MakeStridedGmm, thrust::counting_iterator<int> >
+  begin() {
+    return thrust::make_transform_iterator( thrust::make_counting_iterator(0),
+                                            detail::MakeStridedGmm(dDataPtrArray, narrays)
+          );
+  }
+
+  inline thrust::transform_iterator<detail::MakeStridedGmm, thrust::counting_iterator<int> >
+  end() {
+    return thrust::make_transform_iterator( thrust::make_counting_iterator(num_of_elems),
+                                            detail::MakeStridedGmm(dDataPtrArray, narrays)
+        );
+  }
+
 
 };
-
 
 } // edda
 

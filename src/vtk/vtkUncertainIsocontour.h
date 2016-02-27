@@ -42,6 +42,9 @@ protected:
   virtual void InitializeData(vtkDataSet* input,
                               vtkDataSet* output);
 
+  virtual void Compute(vtkDataSet* input, int *dim,
+                              vtkDataSet* output);
+
 private:
   vtkUncertainIsocontour(const vtkUncertainIsocontour&);  // Not implemented.
   void operator=(const vtkUncertainIsocontour&);  // Not implemented.

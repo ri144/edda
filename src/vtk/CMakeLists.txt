@@ -2,7 +2,7 @@
 # Use of this source code is governed by a MIT-style license that can be
 # found in the LICENSE file.
 
-# This is only for Paraview plugins
+# This is only for generating Paraview plugins
 
 # List cpp files that will be explosed in plugins
 set( PV_SRC_FILES
@@ -16,7 +16,7 @@ if (${EDDA_BUILD_PARAVIEW_PLUGINS})
   ADD_PARAVIEW_PLUGIN(eddaPlugin "1.0"
     SERVER_MANAGER_XML eddaPlugin.xml
     SERVER_MANAGER_SOURCES ${PV_SRC_FILES})
-  TARGET_LINK_LIBRARIES(eddaPlugin LINK_PRIVATE ${LINK_LIBS})
+  TARGET_LINK_LIBRARIES(eddaPlugin LINK_PRIVATE edda )
 
 endif ()
 
