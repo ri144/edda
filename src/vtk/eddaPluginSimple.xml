@@ -180,7 +180,7 @@ array.
         cannot be generated at this time.</Documentation>
       </IntVectorProperty>
       <StringVectorProperty command="SetResultArrayName"
-                            default_values="Mean"
+                            default_values="Variance"
                             name="ResultArrayName"
                             number_of_elements="1">
         <Documentation>This property contains the name for the output array

@@ -1,1 +1,1 @@
-#include "test_gaussian.cu"
+#include "test_gaussian_cuda.cu"

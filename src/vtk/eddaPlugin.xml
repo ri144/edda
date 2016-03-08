@@ -1,7 +1,7 @@
 <ServerManagerConfiguration>
   <ProxyGroup name="filters">
     <!-- ================================================================== -->
-    <SourceProxy name="EddaUncertainIsocontour" class="vtkUncertainIsocontour" label="EddaUncertainIsocontour">
+    <SourceProxy name="EddaUncertainIsocontour" class="eddaUncertainIsocontour" label="EddaUncertainIsocontour">
       <Documentation
          long_help="Compute uncertain isocontour with level crossing probability."
          short_help="Uncertain Isocontour">
@@ -32,7 +32,7 @@
     </SourceProxy>
 
     <!-- ================================================================== -->
-    <SourceProxy name="EddaRandomSampleField" class="vtkRandomSampleField" label="EddaRandomSampleField">
+    <SourceProxy name="EddaRandomSampleField" class="eddaRandomSampleField" label="EddaRandomSampleField">
       <Documentation
          long_help="Obtain random samples from distribution data."
          short_help="Random sampling">
@@ -57,7 +57,7 @@
     </SourceProxy>
 
     <!-- ==================================================================== -->
-    <SourceProxy class="vtkRandomProbeFilter"
+    <SourceProxy class="eddaRandomProbeFilter"
                  label="EddaRandomProbeFilter"
                  name="EddaRandomProbeFilter">
       <Documentation long_help="Sample data attributes at the points of a dataset."
@@ -166,6 +166,45 @@
         <Visibility replace_input="1" />
       </Hints>
       <!-- End Probe -->
+    </SourceProxy>
+
+    <!-- ================================================================== -->
+    <SourceProxy class="eddaThreshold"
+                 name="EddaThreshold">
+      <Documentation long_help="Threshold"
+                          short_help="Threshold"></Documentation>
+
+      <InputProperty command="SetInputConnection"
+                     name="Input">
+        <ProxyGroupDomain name="groups">
+          <Group name="sources" />
+          <Group name="filters" />
+        </ProxyGroupDomain>
+        <DataTypeDomain name="input_type">
+          <DataType value="vtkDataSet" />
+        </DataTypeDomain>
+        <InputArrayDomain name="input_array"
+                          number_of_components="1">
+        </InputArrayDomain>
+        <Documentation>This property specifies the input to the Threshold
+        filter.</Documentation>
+      </InputProperty>
+
+      <DoubleVectorProperty command="ThresholdBetween"
+                            default_values="-1e-30 1e+30"
+                            label="Threshold Range"
+                            name="ThresholdBetween"
+                            number_of_elements="2"
+                            panel_widget="double_range">
+        <Documentation>The values of this property specify the upper and lower
+        bounds of the thresholding operation.</Documentation>
+      </DoubleVectorProperty>
+
+      <Hints>
+        <Visibility replace_input="1" />
+        <ShowInMenu category="EDDA" />
+      </Hints>
+      <!-- End Threshold -->
     </SourceProxy>
 
   </ProxyGroup>  <!-- End Filters Group -->

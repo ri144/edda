@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cstring>
 
 #include "eddaUncertainIsocontour.h"
 
@@ -142,3 +143,4 @@ void eddaUncertainIsocontour::PrintSelf(ostream& os, vtkIndent indent)
 {
   this->Superclass::PrintSelf(os,indent);
 }
+

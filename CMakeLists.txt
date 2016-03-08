@@ -43,7 +43,15 @@ if (Boost_FOUND)
   link_libraries (${Boost_LIBRARIES})
 endif ()
 
+# default CUDA off
 set(EDDA_BUILD_WITH_CUDA OFF)
+
+# To fix compilation problem: relocation R_X86_64_32 against `a local symbol' can not be
+# used when making a shared object; recompile with -fPIC
+# See http://www.cmake.org/pipermail/cmake/2007-May/014350.html
+IF( CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64" )
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
+ENDIF()
 
 ## Thrust with CUDA backend
 if (${THRUST_DEVICE_SYSTEM} STREQUAL "CUDA")
@@ -60,13 +68,6 @@ if (${THRUST_DEVICE_SYSTEM} STREQUAL "CUDA")
   # See http://stackoverflow.com/questions/13683575/cuda-5-0-separate-compilation-of-library-with-cmake
   set(CUDA_ATTACH_VS_BUILD_RULE_TO_CUDA_FILE ON)
   set(CUDA_SEPARABLE_COMPILATION ON)
-
-  # To fix compilation problem: relocation R_X86_64_32 against `a local symbol' can not be
-  # used when making a shared object; recompile with -fPIC
-  # See http://www.cmake.org/pipermail/cmake/2007-May/014350.html
-  IF( CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64" )
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
-  ENDIF( CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64" )
 
   list(APPEND LINK_LIBS ${CUDA_LIBRARIES} ${CUDA_CUDART_LIBRARY})
 
@@ -87,7 +88,7 @@ elseif (${THRUST_DEVICE_SYSTEM} STREQUAL "TBB")
 
 ## Thrust with OpenMP backend
 elseif (${THRUST_DEVICE_SYSTEM} STREQUAL "OPENMP")
-  add_definitions ( -DTHRUST_DEVICE_SYSTEM=THRUST_DEVICE_SYSTEM_OPENMP)
+  add_definitions ( -DTHRUST_DEVICE_SYSTEM=THRUST_DEVICE_SYSTEM_OMP)
 
   set ( THRUST_INCLUDE_DIR "/usr/local/include" CACHE PATH "Thrust root dir")
   include_directories ( ${THRUST_INCLUDE_DIR} )
