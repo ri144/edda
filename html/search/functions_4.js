@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['data',['data',['../classedda_1_1NdArray.html#adab41970261227bb8cbee61437668836',1,'edda::NdArray']]],
+  ['data',['data',['../classedda_1_1NdArray.html#ae08ff31a4c35850e2fa52619cd1b9e58',1,'edda::NdArray::data()'],['../classedda_1_1NdArray.html#adab41970261227bb8cbee61437668836',1,'edda::NdArray::data()']]],
   ['datachanged',['DataChanged',['../classvtkSamplingArray.html#a9f659ba660b75566ee7b3a8734b207d4',1,'vtkSamplingArray']]],
   ['datasamplingarray',['DataSamplingArray',['../classedda_1_1DataSamplingArray.html#a1f77e38d1c8f2c2f6a56ef5fcbb171a1',1,'edda::DataSamplingArray']]],
   ['dataset',['Dataset',['../classedda_1_1Dataset.html#a6435bda7663a40aecf2cab8ddf4dce86',1,'edda::Dataset']]],

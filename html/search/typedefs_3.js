@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['limits',['limits',['../namespaceedda.html#a87b1c43cf7ee78a656c0ea99a773982e',1,'edda']]]
+  ['istuple',['IsTuple',['../classedda_1_1Tuple.html#a0959313ba74890d7b6910c5334bd5c21',1,'edda::Tuple']]]
 ];

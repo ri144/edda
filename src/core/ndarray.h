@@ -206,8 +206,7 @@ public:
     *(get_ptr(ind)) = val;
   }
 
-  __host__ __device__
-  void Reshape(
+  __host__ __device__ void Reshape(
       const std::initializer_list<int>& newshape) {
 
     // total size check

@@ -2,6 +2,7 @@
 #define VARIANT_H
 
 /// Experimental functionality
+//#define BOOST_VARIANT_USE_RELAXED_GET_BY_DEFAULT
 
 #include <boost/variant.hpp>
 

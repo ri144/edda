@@ -51,22 +51,24 @@ if (${THRUST_DEVICE_SYSTEM} STREQUAL "CUDA")
 
   #list(APPEND CUDA_NVCC_FLAGS "-ffast-math")
   #list(APPEND CUDA_NVCC_FLAGS --compiler-options -fno-strict-aliasing -lineinfo -use_fast_math -Xptxas -dlcm=cg)
-  list(APPEND CUDA_NVCC_FLAGS  "--std=c++11") #cuda 7 feature
+  #list(APPEND CUDA_NVCC_FLAGS  "--std=c++11") #cuda 7 feature
   #list(APPEND CUDA_NVCC_FLAGS -gencode arch=compute_20,code=sm_20)
   #list(APPEND CUDA_NVCC_FLAGS -gencode arch=compute_30,code=sm_30)
   #list(APPEND CUDA_NVCC_FLAGS -gencode arch=compute_35,code=sm_35)
 
-  list(APPEND CUDA_NVCC_FLAGS "-Xcompiler '-fPIC'")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
-
-  list(APPEND LINK_LIBS ${CUDA_LIBRARIES} ${CUDA_CUDART_LIBRARY})
-
-  #list(APPEND LINK_LIBS "cudart;cudadevrt")
-  #list(APPEND CUDA_NVCC_FLAGS  "-rdc=true") #compile with relocatable device code (Need to link with -lcudadevrt)
-
-  # ref: http://stackoverflow.com/questions/13683575/cuda-5-0-separate-compilation-of-library-with-cmake
+  # To successfully build a library, this is required (rdc=true)
+  # See http://stackoverflow.com/questions/13683575/cuda-5-0-separate-compilation-of-library-with-cmake
   set(CUDA_ATTACH_VS_BUILD_RULE_TO_CUDA_FILE ON)
   set(CUDA_SEPARABLE_COMPILATION ON)
+
+  # To fix compilation problem: relocation R_X86_64_32 against `a local symbol' can not be
+  # used when making a shared object; recompile with -fPIC
+  # See http://www.cmake.org/pipermail/cmake/2007-May/014350.html
+  IF( CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64" )
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
+  ENDIF( CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64" )
+
+  list(APPEND LINK_LIBS ${CUDA_LIBRARIES} ${CUDA_CUDART_LIBRARY})
 
   set(EDDA_BUILD_WITH_CUDA ON)
 
@@ -99,7 +101,7 @@ elseif (${THRUST_DEVICE_SYSTEM} STREQUAL "CPP")
   include_directories ( ${THRUST_INCLUDE_DIR} )
 
 else ()
-  message(ERROR "Invalid setting of THRUST_DEVICE_SYSTEM")  
+  message(ERROR "Invalid setting of THRUST_DEVICE_SYSTEM")
 endif ()
 
 

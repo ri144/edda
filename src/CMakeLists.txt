@@ -27,13 +27,13 @@ endforeach ()
 #message(warning "${SRC_FILES} ")
 
 if (EDDA_BUILD_WITH_CUDA)
-  cuda_add_library (${PROJECT_NAME}  ${SRC_FILES} ${HEADER_FILES})
+  cuda_add_library (${PROJECT_NAME} STATIC ${SRC_FILES} ${HEADER_FILES})
 else ()
   add_library (${PROJECT_NAME} ${LIB_TYPE} ${SRC_FILES} ${HEADER_FILES})
 endif ()
 
 ### for building shared library (BUILD_SHARED_LIBS=ON), otherwise this does nothing:
-target_link_libraries(${PROJECT_NAME} ${LINK_LIBS} ${VTK_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} ${LINK_LIBS})
 
 set_target_properties (${PROJECT_NAME} PROPERTIES
     DEBUG_OUTPUT_NAME "${PROJECT_NAME}_d"

@@ -1,9 +1,8 @@
 var searchData=
 [
-  ['length',['length',['../classedda_1_1Tuple.html#a67a186f03a29ff0f57d451d9df648608',1,'edda::Tuple']]],
+  ['length',['length',['../classedda_1_1Tuple.html#a215ff458f27cc0fe956891848c6c7fc9',1,'edda::Tuple']]],
   ['lerp',['lerp',['../namespaceedda.html#a11b2f402dfb2825dd367b2746ea4de3b',1,'edda']]],
-  ['levelcrossing',['levelCrossing',['../namespaceedda.html#a0d4c4d888ef48d315614a7964bcd4e58',1,'edda']]],
-  ['levelcrossingfunctor',['LevelCrossingFunctor',['../classedda_1_1LevelCrossingFunctor.html#a9bcb0c8a332426708effd03b37ef2b96',1,'edda::LevelCrossingFunctor']]],
+  ['levelcrossing',['levelCrossing',['../namespaceedda.html#a9d83a747a9209f7332ebcd36d7c819b4',1,'edda']]],
   ['levelcrossingserial',['levelCrossingSerial',['../namespaceedda.html#ab98de383147768757a0768cf256fad40',1,'edda']]],
   ['loaddata',['loadData',['../namespaceedda.html#af9dab9d3a9c202d56da2edb4137c3e34',1,'edda']]],
   ['loadgaussianrawarray',['loadGaussianRawArray',['../namespaceedda.html#ad0bdbe77e68ea2bc22b1a708e21e6baa',1,'edda::loadGaussianRawArray(string meanfile, string stdfile, size_t len)'],['../namespaceedda.html#a553d9689ba28d5278a6c938e1b2bcdad',1,'edda::loadGaussianRawArray(std::string meanfile, std::string stdfile, size_t len)']]],

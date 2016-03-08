@@ -12,8 +12,6 @@ using namespace std;
 namespace edda{
 using namespace dist;
 
-#define USE_GMMs 4
-
 GmmVtkDataArray::GmmVtkDataArray(vtkFieldData *fieldData, const char *arrayNamePrefix)  {
   char meanArrayName[1024];
   char stdevArrayName[1024];
@@ -122,18 +120,18 @@ std::vector<dist::Variant> GmmVtkDataArray::getVector(size_t idx) {
   std::vector<dist::Variant> v( components );
   for (int c = 0; c < components; c++ )
   {
-    std::vector<GMMTuple> models ( this->getNumComponents() );
+    std::vector<GMMTuple> models(arrays.size()/3) ;
     for (size_t i=0; i<arrays.size(); i++) {
       models[i/3].p[i%3] = arrays[i]->GetComponent(idx, c);
     }
-    v[c] = GaussianMixture<USE_GMMs>(models);
+    v[c] = GaussianMixture<MAX_GMMs>(models);
   }
   return v;
 }
 
 void GmmVtkDataArray::setItem(size_t idx, int component, const boost::any &item) {
   // not tested
-  GaussianMixture<USE_GMMs> gmm = boost::any_cast<GaussianMixture<USE_GMMs> >( item );
+  GaussianMixture<MAX_GMMs> gmm = boost::any_cast<GaussianMixture<MAX_GMMs> >( item );
   for (size_t i=0; i<arrays.size(); i++) {
     arrays[i]->SetComponent(idx, component, gmm.models[i/3].p[i%3]);
   }
@@ -144,7 +142,7 @@ dist::Variant GmmVtkDataArray::getScalar(size_t idx) {
   for (size_t i=0; i<arrays.size(); i++) {
     models[i/3].p[i%3] = arrays[i]->GetComponent(idx, 0);
   }
-  return GaussianMixture<USE_GMMs>(models);
+  return GaussianMixture<MAX_GMMs>(models);
 }
 
 

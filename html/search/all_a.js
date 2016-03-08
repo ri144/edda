@@ -1,13 +1,10 @@
 var searchData=
 [
-  ['length',['length',['../classedda_1_1GmmVtkDataArray.html#a6add24c021c3834d0976f8e889ccda8c',1,'edda::GmmVtkDataArray::length()'],['../classedda_1_1Tuple.html#a67a186f03a29ff0f57d451d9df648608',1,'edda::Tuple::length()'],['../classedda_1_1Tuple.html#afb8ddf6fb80305c89efa8473e3a2cb8ea315f6eceb8fc99af67f42c59586efb29',1,'edda::Tuple::LENGTH()']]],
+  ['length',['length',['../classedda_1_1GmmVtkDataArray.html#a6add24c021c3834d0976f8e889ccda8c',1,'edda::GmmVtkDataArray::length()'],['../classedda_1_1Tuple.html#a215ff458f27cc0fe956891848c6c7fc9',1,'edda::Tuple::length() const '],['../classedda_1_1Tuple.html#afb8ddf6fb80305c89efa8473e3a2cb8ea315f6eceb8fc99af67f42c59586efb29',1,'edda::Tuple::LENGTH()']]],
   ['lerp',['lerp',['../namespaceedda.html#a11b2f402dfb2825dd367b2746ea4de3b',1,'edda']]],
-  ['levelcrossing',['levelCrossing',['../namespaceedda.html#a0d4c4d888ef48d315614a7964bcd4e58',1,'edda']]],
-  ['levelcrossingfunctor',['LevelCrossingFunctor',['../classedda_1_1LevelCrossingFunctor.html',1,'edda']]],
-  ['levelcrossingfunctor',['LevelCrossingFunctor',['../classedda_1_1LevelCrossingFunctor.html#a9bcb0c8a332426708effd03b37ef2b96',1,'edda::LevelCrossingFunctor']]],
+  ['levelcrossing',['levelCrossing',['../namespaceedda.html#a9d83a747a9209f7332ebcd36d7c819b4',1,'edda']]],
   ['levelcrossingserial',['levelCrossingSerial',['../namespaceedda.html#ab98de383147768757a0768cf256fad40',1,'edda']]],
   ['license_2emd',['LICENSE.md',['../LICENSE_8md.html',1,'']]],
-  ['limits',['limits',['../namespaceedda.html#a87b1c43cf7ee78a656c0ea99a773982e',1,'edda']]],
   ['linewidget',['lineWidget',['../streamlineGaussianVTK_8cpp.html#adc16b41b160a388547ee8a05d26f73f3',1,'lineWidget():&#160;streamlineGaussianVTK.cpp'],['../streamlineMonteCarlo_8cpp.html#adc16b41b160a388547ee8a05d26f73f3',1,'lineWidget():&#160;streamlineMonteCarlo.cpp'],['../test__vtk__pipeline_8cpp.html#ae63c6f6b90e2ccc16c4bfa872d63dacd',1,'lineWidget():&#160;test_vtk_pipeline.cpp']]],
   ['loaddata',['loadData',['../namespaceedda.html#af9dab9d3a9c202d56da2edb4137c3e34',1,'edda']]],
   ['loadgaussianrawarray',['loadGaussianRawArray',['../namespaceedda.html#ad0bdbe77e68ea2bc22b1a708e21e6baa',1,'edda::loadGaussianRawArray(string meanfile, string stdfile, size_t len)'],['../namespaceedda.html#a553d9689ba28d5278a6c938e1b2bcdad',1,'edda::loadGaussianRawArray(std::string meanfile, std::string stdfile, size_t len)']]],

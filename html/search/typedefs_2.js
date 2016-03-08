@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['istuple',['IsTuple',['../classedda_1_1Tuple.html#a0959313ba74890d7b6910c5334bd5c21',1,'edda::Tuple']]]
+  ['gaussian3',['Gaussian3',['../loadGaussianVectorField_8cpp.html#affd76c1e25d5b22f077bb34594959ced',1,'Gaussian3():&#160;loadGaussianVectorField.cpp'],['../namespaceedda.html#a6d54e1203ede2af17ea3a993e32d6a19',1,'edda::Gaussian3()']]]
 ];

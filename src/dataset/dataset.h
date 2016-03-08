@@ -8,9 +8,9 @@
 #include <vector>
 #include <iostream>
 #include <memory>
+#include "distributions/variant.h"
 #include "grid.h"
 #include "dataset/data_array.h"
-#include "distributions/distribution.h"
 
 namespace edda {
 
@@ -78,7 +78,9 @@ public:
             int i;
             std::vector<T> vData(vVertices.size());
             for (i=0; i<vVertices.size(); i++)
-                vData[i] = boost::any_cast<T> ( pArray->getItem(vVertices[i]) );
+            {
+              getData(vVertices[i], vData[i]);
+            }
 
             output = triLerp(vData[0], vData[1], vData[2], vData[3],
                              vData[4], vData[5], vData[6], vData[7],
@@ -92,6 +94,7 @@ public:
 
         return SUCCESS;
     }
+
 
     ///
     /// \brief Return the data in the computational space.
@@ -117,6 +120,19 @@ public:
       throw NotImplementedException();
     }
 
+protected:
+    template <typename Type>
+    void getData(int idx, Type &data) const {
+      data = boost::get<Type> ( pArray->getScalar(idx) );
+    }
+
+    template <typename Type, int N>
+    void getData(int idx, Vector<Type, N> &data) const {
+      std::vector<dist::Variant> varvec =  pArray->getVector(idx) ;
+      for (int c=0; c<N; c++) {
+         data[c] = boost::get<Type>( varvec[c] );
+      }
+    }
 };
 
 

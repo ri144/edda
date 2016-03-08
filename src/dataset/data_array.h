@@ -64,7 +64,7 @@ public:
 
   virtual size_t getLength() { return array.getLength(); }
 
-  virtual int getNumComponents() { return 1; }
+  virtual int getNumComponents() { return N; }
 
   virtual dist::Variant getScalar(size_t idx) {
       throw std::runtime_error("Requesting scalar in a VectorArray");
@@ -72,8 +72,9 @@ public:
 
   virtual std::vector<dist::Variant> getVector(size_t idx) {
     std::vector<dist::Variant> v(N);
-    for (int i=0; i<N; i++)
+    for (int i=0; i<N; i++) {
       v[i] = array[idx][i];
+    }
     return v; }
 
   virtual boost::any getItem(size_t idx) { return boost::any( array[idx] );  }

@@ -4,7 +4,7 @@
 
 set(sources
   uncertainIsocontour.cu
-  streamlineGaussian.cu
+  #streamlineGaussian.cu
 )
 
 include_directories(${CMAKE_SOURCE_DIR}/src)

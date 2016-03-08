@@ -35,7 +35,7 @@
 #include "io/path.h"
 #include "filters/uncertain_isocontour.h"
 #include "vtk/vtk_common.h"
-#include "vtk/vtkUncertainIsocontour.h"
+#include "vtk/eddaUncertainIsocontour.h"
 
 using namespace std;
 using namespace edda;
@@ -60,7 +60,7 @@ vtkSmartPointer<vtkDataSet> process_vtk_file(string vtk_file, float isov)
   }
 
   // Edda filter
-  vsp_new(vtkUncertainIsocontour, isocontour);
+  vsp_new(eddaUncertainIsocontour, isocontour);
   isocontour->SetInputData(dataset);
   isocontour->SetIsov(isov);
   isocontour->Update();

@@ -29,13 +29,14 @@ namespace detail {
 
 } // detail
 
-struct GmmNdArray{
+class GmmNdArray{
   ///
   /// This is a collection of Real arrays in the order of mean0, var0, weight0, mean1, var1, weight1...
   /// The minimum numbers of arrays is 2 (mean and var)
   ///
   Tuple<NdArray<Real>, MAX_GMMs*3> dataArray;
   Tuple<NdArray<Real>::SelfDevicePtr, MAX_GMMs*3> dDataPtrArray;
+public:
 
   int narrays;
   int num_of_elems;

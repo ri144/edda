@@ -51,22 +51,6 @@ public:
   }
 };
 
-#if 0 // debug
-class LevelCrossingFunctor {
-  GmmNdArray *gmmArray;
-  int dim[3];
-  int celldim[3];
-  double isov;
-public:
-  LevelCrossingFunctor() {}
-
-  __host__ __device__
-  float operator() (int idx) {
-    return (float)idx;
-  }
-};
-#endif
-
 
 ReturnStatus levelCrossing(std::shared_ptr<GmmNdArray> gmmArray_, int dim[3],
                            double isov, std::shared_ptr<NdArray<float> > &probField)

@@ -181,8 +181,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;    <span class="keywordflow">else</span></div>
 <div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;    {</div>
 <div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;        <span class="keywordflow">do</span> {</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;            x1 = 2.0 * (T)<a class="code" href="classedda_1_1Math.html#a6947dd394339b483d15065201494da72">Math::rand</a>()/RAND_MAX - 1.0;</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;            x2 = 2.0 * (T)<a class="code" href="classedda_1_1Math.html#a6947dd394339b483d15065201494da72">Math::rand</a>()/RAND_MAX - 1.0;</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;            x1 = 2.0 * (T)rand()/RAND_MAX - 1.0;</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;            x2 = 2.0 * (T)rand()/RAND_MAX - 1.0;</div>
 <div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;            w = x1 * x1 + x2 * x2;</div>
 <div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;        } <span class="keywordflow">while</span> ( w &gt;= 1.0 );</div>
 <div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;</div>
@@ -198,7 +198,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;}  <span class="comment">// namespace edda</span></div>
 <div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;</div>
 <div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;<span class="preprocessor">#endif  // STATISTICS_H_</span></div>
-<div class="ttc" id="classedda_1_1Math_html_a6947dd394339b483d15065201494da72"><div class="ttname"><a href="classedda_1_1Math.html#a6947dd394339b483d15065201494da72">edda::Math::rand</a></div><div class="ttdeci">__host__ static __device__ float rand()</div><div class="ttdef"><b>Definition:</b> thrust_common.h:43</div></div>
 <div class="ttc" id="namespaceedda_html_a5df8c10f913b59e8112bfb7eb1b6c765"><div class="ttname"><a href="namespaceedda.html#a5df8c10f913b59e8112bfb7eb1b6c765">edda::getSum</a></div><div class="ttdeci">double getSum(InputIterator first, InputIterator last)</div><div class="ttdef"><b>Definition:</b> statistics.h:17</div></div>
 <div class="ttc" id="namespaceedda_html_a544bbdee89e614002ac663ee74196627"><div class="ttname"><a href="namespaceedda.html#a544bbdee89e614002ac663ee74196627">edda::getDeviation</a></div><div class="ttdeci">double getDeviation(InputIterator first, InputIterator last)</div><div class="ttdef"><b>Definition:</b> statistics.h:55</div></div>
 <div class="ttc" id="namespaceedda_html_a99e63c404645ad326c632c2ce97beaba"><div class="ttname"><a href="namespaceedda.html#a99e63c404645ad326c632c2ce97beaba">edda::box_muller</a></div><div class="ttdeci">T box_muller(T m, T s)</div><div class="ttdef"><b>Definition:</b> statistics.h:78</div></div>
@@ -208,7 +207,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Feb 21 2016 02:38:41 for EDDA by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sat Feb 27 2016 20:46:27 for EDDA by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

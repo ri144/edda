@@ -22,7 +22,7 @@ struct GetSample_functor {
 };
 
 ///
-/// Output iterator must have elements in type 'Real'
+/// Output iterator must point to elements in type 'Real'
 ///
 template <class InputIterator, class OutputIterator>
 void randomSampleField(InputIterator begin, InputIterator end, OutputIterator out)

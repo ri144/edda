@@ -88,7 +88,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="header">
   <div class="summary">
 <a href="#namespaces">Namespaces</a> &#124;
-<a href="#define-members">Macros</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">uncertain_isocontour.h File Reference</div>  </div>
@@ -102,7 +101,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <code>#include &lt;<a class="el" href="abstract__data__array_8h_source.html">dataset/abstract_data_array.h</a>&gt;</code><br/>
 <code>#include &lt;thrust/host_vector.h&gt;</code><br/>
 <code>#include &lt;thrust/device_vector.h&gt;</code><br/>
-<code>#include &quot;<a class="el" href="ndarray_8h_source.html">core/ndarray.h</a>&quot;</code><br/>
+<code>#include &quot;<a class="el" href="src_2core_2ndarray_8h_source.html">core/ndarray.h</a>&quot;</code><br/>
 <code>#include &quot;<a class="el" href="gmm__ndarray_8h_source.html">core/gmm_ndarray.h</a>&quot;</code><br/>
 <code>#include &quot;<a class="el" href="gaussian__mixture_8h_source.html">distributions/gaussian_mixture.h</a>&quot;</code><br/>
 </div>
@@ -114,15 +113,10 @@ Namespaces</h2></td></tr>
 <tr class="memdesc:namespaceedda"><td class="mdescLeft">&#160;</td><td class="mdescRight">Experimental functionality. <br/></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
-Macros</h2></td></tr>
-<tr class="memitem:a1b9a61d5870ac595d332e99b4e808637"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="uncertain__isocontour_8h.html#a1b9a61d5870ac595d332e99b4e808637">IJK_TO_IDX</a>(i, j, k)&#160;&#160;&#160;(i+dim[0]*(j+dim[1]*(k)))</td></tr>
-<tr class="separator:a1b9a61d5870ac595d332e99b4e808637"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a0d4c4d888ef48d315614a7964bcd4e58"><td class="memItemLeft" align="right" valign="top">ReturnStatus&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceedda.html#a0d4c4d888ef48d315614a7964bcd4e58">edda::levelCrossing</a> (std::shared_ptr&lt; GmmNdArray &gt; gmmArray, int dim[3], double isov, std::shared_ptr&lt; NdArray&lt; float &gt; &gt; &amp;probField)</td></tr>
-<tr class="separator:a0d4c4d888ef48d315614a7964bcd4e58"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9d83a747a9209f7332ebcd36d7c819b4"><td class="memItemLeft" align="right" valign="top">ReturnStatus&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceedda.html#a9d83a747a9209f7332ebcd36d7c819b4">edda::levelCrossing</a> (std::shared_ptr&lt; GmmNdArray &gt; gmmArray_, int dim[3], double isov, std::shared_ptr&lt; NdArray&lt; float &gt; &gt; &amp;probField)</td></tr>
+<tr class="separator:a9d83a747a9209f7332ebcd36d7c819b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab98de383147768757a0768cf256fad40"><td class="memItemLeft" align="right" valign="top">ReturnStatus&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceedda.html#ab98de383147768757a0768cf256fad40">edda::levelCrossingSerial</a> (AbstractDataArray *input, int dim[3], double isov, float *probField)</td></tr>
 <tr class="separator:ab98de383147768757a0768cf256fad40"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9ff08f30d263ed3c287cdb377a0ec07f"><td class="memTemplParams" colspan="2">template&lt;typename Dist , ENABLE_IF_BASE_OF(Dist, dist::Distribution) &gt; </td></tr>
@@ -130,43 +124,10 @@ Functions</h2></td></tr>
 <tr class="memdesc:a9ff08f30d263ed3c287cdb377a0ec07f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute level crossing probabilities given a <a class="el" href="classedda_1_1Dataset.html" title="Holds all information of a dataset, which includes: 1) Geometry and 2) Data array. ">Dataset</a> class.  <a href="#a9ff08f30d263ed3c287cdb377a0ec07f">More...</a><br/></td></tr>
 <tr class="separator:a9ff08f30d263ed3c287cdb377a0ec07f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Macro Definition Documentation</h2>
-<a class="anchor" id="a1b9a61d5870ac595d332e99b4e808637"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define IJK_TO_IDX</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">i, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">j, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">k&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td>&#160;&#160;&#160;(i+dim[0]*(j+dim[1]*(k)))</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Feb 21 2016 02:38:42 for EDDA by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sat Feb 27 2016 20:46:27 for EDDA by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

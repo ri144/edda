@@ -16,7 +16,6 @@ namespace edda {
 /// \brief Take a distribution data array and output a sample
 /// \param Dist The distribution type of the input data array.
 ///
-template <class T>
 class DataSamplingArray: public AbstractDataArray
 {
 protected:
@@ -30,22 +29,20 @@ public:
 
   virtual int getNumComponents() { return array->getNumComponents(); }
 
-  virtual dist::Variant getScalar(size_t idx) { return getSample( array->getScalar(idx) );  }
+  virtual dist::Variant getScalar(size_t idx) { return (Real) getSample( array->getScalar(idx) );  }
 
   virtual std::vector<dist::Variant> getVector(size_t idx) {
     std::vector<dist::Variant> v = array->getVector(idx);
-    std::vector<dist::Variant> out;
+    std::vector<dist::Variant> out(v.size());
     for (size_t i=0; i<v.size(); i++)
-      out[i] = getSample(v[i]);
+      out[i] = (Real)getSample(v[i]);
     return out;
   }
 
   ///
   /// getSample returns double or tuple types
   ///
-  virtual boost::any getItem(size_t idx) { return dist::getSample (
-            boost::any_cast<T>( array->getItem(idx) )
-          ); }
+  virtual boost::any getItem(size_t idx) { return array->getItem(idx) ;}
 
   virtual void setItem(size_t idx, int component, const boost::any &item) { array->setItem( idx, component, item );  }
 

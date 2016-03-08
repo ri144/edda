@@ -164,7 +164,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;</div>
 <div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;<span class="preprocessor">#if 0</span></div>
 <div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;<span class="preprocessor"></span><span class="keyword">template</span> &lt;<span class="keyword">class</span> T, ENABLE_IF_BASE_OF(T, Distribution)&gt;</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;<span class="keywordtype">double</span> <a class="code" href="namespaceedda_1_1dist.html#a13f86cbb3abc99a4dea16b298caf52a9">getSample</a>(<span class="keyword">const</span> T &amp;dist)</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;<span class="keywordtype">double</span> <a class="code" href="namespaceedda_1_1dist.html#a9885c551a8bdba31a86d259358b92b3a">getSample</a>(<span class="keyword">const</span> T &amp;dist)</div>
 <div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;{</div>
 <div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    std::cerr &lt;&lt; <span class="stringliteral">&quot;Generic computation not implemented&quot;</span> &lt;&lt; std::endl;</div>
 <div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    <span class="keywordflow">throw</span> <a class="code" href="structedda_1_1NotImplementedException.html">NotImplementedException</a>();</div>
@@ -185,17 +185,17 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;}  <span class="comment">// namespace edda</span></div>
 <div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;</div>
 <div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;<span class="preprocessor">#endif // DISTRIBUTION_H_</span></div>
-<div class="ttc" id="namespaceedda_1_1dist_html_a13f86cbb3abc99a4dea16b298caf52a9"><div class="ttname"><a href="namespaceedda_1_1dist.html#a13f86cbb3abc99a4dea16b298caf52a9">edda::dist::getSample</a></div><div class="ttdeci">double getSample(const Gaussian &amp;dist)</div><div class="ttdoc">Return a sample. </div><div class="ttdef"><b>Definition:</b> gaussian.h:65</div></div>
 <div class="ttc" id="classedda_1_1dist_1_1ContinuousDistribution_html"><div class="ttname"><a href="classedda_1_1dist_1_1ContinuousDistribution.html">edda::dist::ContinuousDistribution</a></div><div class="ttdef"><b>Definition:</b> distribution.h:32</div></div>
 <div class="ttc" id="namespaceedda_1_1dist_html_a7b2538cb9c7683dc03c02554fdea6a1e"><div class="ttname"><a href="namespaceedda_1_1dist.html#a7b2538cb9c7683dc03c02554fdea6a1e">edda::dist::operator-=</a></div><div class="ttdeci">T operator-=(const T &amp;lhs, const T &amp;rhs)</div><div class="ttdoc">random variable -= </div><div class="ttdef"><b>Definition:</b> distribution.h:45</div></div>
 <div class="ttc" id="edda__export_8h_html"><div class="ttname"><a href="edda__export_8h.html">edda_export.h</a></div></div>
 <div class="ttc" id="namespaceedda_1_1dist_html_a78f6668de51fec25ca4aa7b20e8ff0d4"><div class="ttname"><a href="namespaceedda_1_1dist.html#a78f6668de51fec25ca4aa7b20e8ff0d4">edda::dist::operator*</a></div><div class="ttdeci">T operator*(const T &amp;lhs, const double x)</div><div class="ttdoc">random variable * </div><div class="ttdef"><b>Definition:</b> distribution.h:72</div></div>
 <div class="ttc" id="classedda_1_1dist_1_1DiscreteDistribution_html"><div class="ttname"><a href="classedda_1_1dist_1_1DiscreteDistribution.html">edda::dist::DiscreteDistribution</a></div><div class="ttdef"><b>Definition:</b> distribution.h:35</div></div>
 <div class="ttc" id="namespaceedda_1_1dist_html_a47f4afe8c1eae437e92feba150506583"><div class="ttname"><a href="namespaceedda_1_1dist.html#a47f4afe8c1eae437e92feba150506583">edda::dist::operator-</a></div><div class="ttdeci">T operator-(const T &amp;lhs, const T &amp;rhs)</div><div class="ttdoc">random variable - </div><div class="ttdef"><b>Definition:</b> distribution.h:63</div></div>
-<div class="ttc" id="structedda_1_1NotImplementedException_html"><div class="ttname"><a href="structedda_1_1NotImplementedException.html">edda::NotImplementedException</a></div><div class="ttdef"><b>Definition:</b> common.h:38</div></div>
+<div class="ttc" id="structedda_1_1NotImplementedException_html"><div class="ttname"><a href="structedda_1_1NotImplementedException.html">edda::NotImplementedException</a></div><div class="ttdef"><b>Definition:</b> common.h:39</div></div>
 <div class="ttc" id="edda__export_8h_html_a4130eba3dcc4b1e840d3ee6e2a2e4d6b"><div class="ttname"><a href="edda__export_8h.html#a4130eba3dcc4b1e840d3ee6e2a2e4d6b">EDDA_EXPORT</a></div><div class="ttdeci">#define EDDA_EXPORT</div><div class="ttdef"><b>Definition:</b> edda_export.h:17</div></div>
 <div class="ttc" id="namespaceedda_1_1dist_html_a009a15003c26d6a2758d765b7b6a1986"><div class="ttname"><a href="namespaceedda_1_1dist.html#a009a15003c26d6a2758d765b7b6a1986">edda::dist::operator+</a></div><div class="ttdeci">T operator+(const T &amp;lhs, const T &amp;rhs)</div><div class="ttdoc">random variable + </div><div class="ttdef"><b>Definition:</b> distribution.h:54</div></div>
-<div class="ttc" id="classedda_1_1Tuple_html"><div class="ttname"><a href="classedda_1_1Tuple.html">edda::Tuple</a></div><div class="ttdef"><b>Definition:</b> tuple.h:17</div></div>
+<div class="ttc" id="namespaceedda_1_1dist_html_a9885c551a8bdba31a86d259358b92b3a"><div class="ttname"><a href="namespaceedda_1_1dist.html#a9885c551a8bdba31a86d259358b92b3a">edda::dist::getSample</a></div><div class="ttdeci">__host__ double getSample(const Gaussian &amp;dist)</div><div class="ttdoc">Return a random sample. </div><div class="ttdef"><b>Definition:</b> gaussian.h:73</div></div>
+<div class="ttc" id="classedda_1_1Tuple_html"><div class="ttname"><a href="classedda_1_1Tuple.html">edda::Tuple</a></div><div class="ttdef"><b>Definition:</b> tuple.h:18</div></div>
 <div class="ttc" id="classedda_1_1dist_1_1Distribution_html"><div class="ttname"><a href="classedda_1_1dist_1_1Distribution.html">edda::dist::Distribution</a></div><div class="ttdoc">The Distribution class is a root class for all distribution-type classes. </div><div class="ttdef"><b>Definition:</b> distribution.h:28</div></div>
 <div class="ttc" id="common_8h_html"><div class="ttname"><a href="common_8h.html">common.h</a></div></div>
 <div class="ttc" id="classedda_1_1Vector_html"><div class="ttname"><a href="classedda_1_1Vector.html">edda::Vector</a></div><div class="ttdoc">Vectors are Tuples that have geometry concepts. </div><div class="ttdef"><b>Definition:</b> vector_matrix.h:26</div></div>
@@ -205,7 +205,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Feb 21 2016 02:38:42 for EDDA by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sat Feb 27 2016 20:46:27 for EDDA by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

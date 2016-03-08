@@ -21,6 +21,9 @@
 #include <vtkXMLStructuredGridReader.h>
 #include <vtkCellDataToPointData.h>
 #include <vtkXMLStructuredGridWriter.h>
+#include <vtkXMLUnstructuredGridReader.h>
+#include <vtkUnstructuredGrid.h>
+#include <vtkXMLUnstructuredGridWriter.h>
 
 #include <vtkRenderer.h>
 #include <vtkRenderWindow.h>
@@ -36,53 +39,108 @@
 #include "io/file_writer.h"
 #include "io/path.h"
 #include "vtk/vtk_common.h"
-#include "vtk/vtkRandomSampleField.h"
+#include "vtk/eddaRandomProbeFilter.h"
+#include "vtk/eddaRandomSampleField.h"
 
 using namespace std;
 using namespace edda;
 
-vtkSmartPointer<vtkDataSet> process_vtk_file(string vtk_file)
+vtkSmartPointer<vtkDataSet> process_vtk_file(string &vtk_file, string &source_file)
 {
-  vtkSmartPointer <vtkDataSet> dataset;
+  vsp_new(vtkStructuredGrid, sgrid1);
+  vsp_new(vtkImageData, image1);
+  vsp_new(vtkUnstructuredGrid, ugrid1);
+  vtkDataSet *dataset;
   if (getFileExtension(vtk_file).compare("vts")==0) {
     vsp_new(vtkXMLStructuredGridReader, reader);
     reader->SetFileName(vtk_file.c_str());
     reader->Update();
-    dataset = reader->GetOutput();
+    sgrid1->DeepCopy(reader->GetOutput());
+    dataset = sgrid1.Get();
 
   } else if (getFileExtension(vtk_file).compare("vti")==0) {
     vsp_new(vtkXMLImageDataReader, reader);
     reader->SetFileName(vtk_file.c_str());
     reader->Update();
-    dataset = reader->GetOutput();
+    image1->DeepCopy( reader->GetOutput() );
+    dataset = image1.Get();
+  }  else if (getFileExtension(vtk_file).compare("vtu")==0) {
+    vsp_new(vtkXMLUnstructuredGridReader, reader);
+    reader->SetFileName(vtk_file.c_str());
+    reader->Update();
+    ugrid1->DeepCopy( reader->GetOutput() );
+    dataset = ugrid1.Get();
   } else {
     printf("File format not supported\n");
     exit(1);
   }
 
-  // Edda filter: random sample field
-  vsp_new(vtkRandomSampleField , randomSample);
-  randomSample->SetInputData(dataset);
-  randomSample->Update();
+
+  vsp_new(vtkStructuredGrid, sgrid2);
+  vsp_new(vtkImageData, image2);
+  vtkDataSet * dataset2 = NULL;
+  if (getFileExtension(source_file).compare("vts")==0) {
+    vsp_new(vtkXMLStructuredGridReader, reader);
+    reader->SetFileName(source_file.c_str());
+    reader->Update();
+    sgrid2->DeepCopy(reader->GetOutput());
+    dataset2 = sgrid2.Get();
+
+  } else if (getFileExtension(source_file).compare("vti")==0) {
+    vsp_new(vtkXMLImageDataReader, reader);
+    reader->SetFileName(source_file.c_str());
+    reader->Update();
+    image2->DeepCopy( reader->GetOutput() );
+    dataset2 = image2.Get();
+
+  }
+
+  vsp_new(eddaRandomSampleField , randomSample);
+  vsp_new(eddaRandomProbeFilter, randomProbe);
+  vtkDataSet * output;
+  if (dataset2==NULL)  {// test vtkRandomSampleField
+    // Edda filter: random sample field
+    randomSample->SetInputData(dataset);
+    randomSample->Update();
+    output = randomSample->GetOutput() ;
+
+  } else { // test vtkRandomProbeFilter
+
+    randomProbe->SetTolerance(1e-10);
+    randomProbe->ComputeToleranceOff();
+    randomProbe->SetInputData(dataset);
+    randomProbe->SetSourceData(dataset2);
+    randomProbe->Update();
+    output = randomProbe->GetOutput();
+  }
 
   // cell data to point data
   vsp_new(vtkCellDataToPointData, cell2point);
-  cell2point->SetInputData(randomSample->GetOutput());
+  cell2point->SetInputData(output);
   cell2point->Update();
 
   cell2point->GetOutput()->PrintSelf(cout, vtkIndent(0));
 
-  printf("Saving output file\n");
   if (getFileExtension(vtk_file).compare("vti")==0) {
+    printf("Saving output file: sampling.vti\n");
     vsp_new(vtkXMLImageDataWriter, writer);
-    writer->SetFileName("ProbField.vti");
-    writer->SetInputData(randomSample->GetOutput());
+    writer->SetFileName("sampling.vti");
+    writer->SetInputData(output);
     writer->Write();
-  } else {
+  } else if (getFileExtension(vtk_file).compare("vts")==0) {
+    printf("Saving output file: sampling.vts\n");
     vsp_new(vtkXMLStructuredGridWriter, writer);
-    writer->SetFileName("ProbField.vts");
-    writer->SetInputData(randomSample->GetOutput());
+    writer->SetFileName("sampling.vts");
+    writer->SetInputData(output);
     writer->Write();
+    exit(0);
+  } else if (getFileExtension(vtk_file).compare("vtu")==0) {
+    printf("Saving output file: sampling.vtu\n");
+    vsp_new(vtkXMLUnstructuredGridWriter, writer);
+    writer->SetFileName("sampling.vtu");
+    writer->SetInputData(output);
+    writer->Write();
+    exit(0);
 
   }
 
@@ -95,9 +153,13 @@ int main(int argc, char **argv) {
   if (argc<=1)
     return -1;
   string input_file = argv[1];
+  string source_file;
+  if (argc>2)
+    source_file = argv[2];
+
 
   vtkSmartPointer<vtkDataSet> probField;
-  probField = process_vtk_file(input_file);
+  probField = process_vtk_file(input_file, source_file);
 
 
   // Volume render

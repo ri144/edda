@@ -7,6 +7,7 @@ set(sources
   streamlineMonteCarlo.cpp
   streamlineGaussianVTK.cpp
   randomSample.cpp
+  denseSamplingField.cpp
 )
 
 IF(APPLE)

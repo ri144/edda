@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['outofboundexception',['OutOfBoundException',['../classedda_1_1OutOfBoundException.html',1,'edda']]]
+  ['pointinfo',['PointInfo',['../structedda_1_1PointInfo.html',1,'edda']]]
 ];

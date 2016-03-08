@@ -98,7 +98,7 @@ std::shared_ptr<Dataset<T> > loadData(std::string filename, bool bSamplingDistri
       shared_ary<dist::Gaussian> array = loadGaussianRawArray(mfile, sfile, array_size);
       data_array = new ScalarArray<dist::Gaussian> (array);
       if (bSamplingDistribution)
-        data_array = new DataSamplingArray<dist::Gaussian>(data_array);
+        data_array = new DataSamplingArray(data_array);
     } else {
       std::cout << "gtype not supported: " << gtype << std::endl;
       exit(1);
@@ -155,7 +155,7 @@ std::shared_ptr<Dataset<T> > loadVectorData(std::string filename, bool bSampling
       shared_ary<Gaussian3> array = loadVec3GaussianRawArray(mfile, sfile, array_size);
       data_array = new VectorArray<dist::Gaussian, 3> (array);
       if (bSamplingDistribution)
-        data_array = new DataSamplingArray< Vector<dist::Gaussian,3> >(data_array);
+        data_array = new DataSamplingArray(data_array);
     } else {
       std::cout << "gtype not supported: " << gtype << std::endl;
       exit(1);

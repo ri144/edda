@@ -98,6 +98,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <code>#include &lt;cstdlib&gt;</code><br/>
 <code>#include &lt;iostream&gt;</code><br/>
 <code>#include &lt;boost/math/distributions.hpp&gt;</code><br/>
+<code>#include &lt;thrust/random.h&gt;</code><br/>
 <code>#include &quot;<a class="el" href="distribution_8h_source.html">distribution.h</a>&quot;</code><br/>
 <code>#include &quot;<a class="el" href="statistics_8h_source.html">core/statistics.h</a>&quot;</code><br/>
 </div>
@@ -119,41 +120,47 @@ Namespaces</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a2f2cba45ff51741a3ed664c19b4f7a18"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceedda_1_1dist.html#a2f2cba45ff51741a3ed664c19b4f7a18">edda::dist::getMean</a> (const Gaussian &amp;dist)</td></tr>
-<tr class="memdesc:a2f2cba45ff51741a3ed664c19b4f7a18"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return mean.  <a href="#a2f2cba45ff51741a3ed664c19b4f7a18">More...</a><br/></td></tr>
-<tr class="separator:a2f2cba45ff51741a3ed664c19b4f7a18"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab686c9517521ba0df9c87fb2362fd229"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceedda_1_1dist.html#ab686c9517521ba0df9c87fb2362fd229">edda::dist::getVar</a> (const Gaussian &amp;dist)</td></tr>
-<tr class="memdesc:ab686c9517521ba0df9c87fb2362fd229"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return variance.  <a href="#ab686c9517521ba0df9c87fb2362fd229">More...</a><br/></td></tr>
-<tr class="separator:ab686c9517521ba0df9c87fb2362fd229"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a25656a2074113dbb39c8c3d3a06937e5"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceedda_1_1dist.html#a25656a2074113dbb39c8c3d3a06937e5">edda::dist::getPdf</a> (const Gaussian &amp;dist, const double x)</td></tr>
-<tr class="memdesc:a25656a2074113dbb39c8c3d3a06937e5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return PDF of x.  <a href="#a25656a2074113dbb39c8c3d3a06937e5">More...</a><br/></td></tr>
-<tr class="separator:a25656a2074113dbb39c8c3d3a06937e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a13f86cbb3abc99a4dea16b298caf52a9"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceedda_1_1dist.html#a13f86cbb3abc99a4dea16b298caf52a9">edda::dist::getSample</a> (const Gaussian &amp;dist)</td></tr>
-<tr class="memdesc:a13f86cbb3abc99a4dea16b298caf52a9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return a sample.  <a href="#a13f86cbb3abc99a4dea16b298caf52a9">More...</a><br/></td></tr>
-<tr class="separator:a13f86cbb3abc99a4dea16b298caf52a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3be18f96d0ee2dc8bef0568b096c32d9"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceedda_1_1dist.html#a3be18f96d0ee2dc8bef0568b096c32d9">edda::dist::getCdf</a> (const Gaussian &amp;dist, double x)</td></tr>
-<tr class="memdesc:a3be18f96d0ee2dc8bef0568b096c32d9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return CDF of x.  <a href="#a3be18f96d0ee2dc8bef0568b096c32d9">More...</a><br/></td></tr>
-<tr class="separator:a3be18f96d0ee2dc8bef0568b096c32d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a423a9328520a4d4f5d34dda68d135c09"><td class="memItemLeft" align="right" valign="top">std::ostream &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceedda_1_1dist.html#a423a9328520a4d4f5d34dda68d135c09">edda::dist::operator&lt;&lt;</a> (std::ostream &amp;os, const Gaussian &amp;dist)</td></tr>
-<tr class="memdesc:a423a9328520a4d4f5d34dda68d135c09"><td class="mdescLeft">&#160;</td><td class="mdescRight">Print itself.  <a href="#a423a9328520a4d4f5d34dda68d135c09">More...</a><br/></td></tr>
-<tr class="separator:a423a9328520a4d4f5d34dda68d135c09"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a539b0ddc61e08e3c44f293ddfcdc4a9d"><td class="memItemLeft" align="right" valign="top">Gaussian &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceedda_1_1dist.html#a539b0ddc61e08e3c44f293ddfcdc4a9d">edda::dist::operator-</a> (Gaussian &amp;x)</td></tr>
-<tr class="memdesc:a539b0ddc61e08e3c44f293ddfcdc4a9d"><td class="mdescLeft">&#160;</td><td class="mdescRight">random variable with unary -  <a href="#a539b0ddc61e08e3c44f293ddfcdc4a9d">More...</a><br/></td></tr>
-<tr class="separator:a539b0ddc61e08e3c44f293ddfcdc4a9d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5fc27f46890b342ac6a1ad17bbb48f90"><td class="memItemLeft" align="right" valign="top">Gaussian &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceedda_1_1dist.html#a5fc27f46890b342ac6a1ad17bbb48f90">edda::dist::operator+=</a> (Gaussian &amp;x, const Gaussian &amp;rhs)</td></tr>
-<tr class="memdesc:a5fc27f46890b342ac6a1ad17bbb48f90"><td class="mdescLeft">&#160;</td><td class="mdescRight">random variable +=  <a href="#a5fc27f46890b342ac6a1ad17bbb48f90">More...</a><br/></td></tr>
-<tr class="separator:a5fc27f46890b342ac6a1ad17bbb48f90"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5c4375ec59ca6407d378389a32e0745b"><td class="memItemLeft" align="right" valign="top">Gaussian &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceedda_1_1dist.html#a5c4375ec59ca6407d378389a32e0745b">edda::dist::operator+=</a> (Gaussian &amp;x, const double r)</td></tr>
-<tr class="memdesc:a5c4375ec59ca6407d378389a32e0745b"><td class="mdescLeft">&#160;</td><td class="mdescRight">random variable += with scalar  <a href="#a5c4375ec59ca6407d378389a32e0745b">More...</a><br/></td></tr>
-<tr class="separator:a5c4375ec59ca6407d378389a32e0745b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af65b37504a4589295d9dde5d4d93c85e"><td class="memItemLeft" align="right" valign="top">Gaussian &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceedda_1_1dist.html#af65b37504a4589295d9dde5d4d93c85e">edda::dist::operator*=</a> (Gaussian &amp;x, const double r)</td></tr>
-<tr class="memdesc:af65b37504a4589295d9dde5d4d93c85e"><td class="mdescLeft">&#160;</td><td class="mdescRight">random variable *= with scalar  <a href="#af65b37504a4589295d9dde5d4d93c85e">More...</a><br/></td></tr>
-<tr class="separator:af65b37504a4589295d9dde5d4d93c85e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa90608d9ba4ac81988b490f6a431910f"><td class="memItemLeft" align="right" valign="top">__host__ __device__ double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceedda_1_1dist.html#aa90608d9ba4ac81988b490f6a431910f">edda::dist::getMean</a> (const Gaussian &amp;dist)</td></tr>
+<tr class="memdesc:aa90608d9ba4ac81988b490f6a431910f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return mean.  <a href="#aa90608d9ba4ac81988b490f6a431910f">More...</a><br/></td></tr>
+<tr class="separator:aa90608d9ba4ac81988b490f6a431910f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae1a0a4253e7afaee605973f5fdb6ede5"><td class="memItemLeft" align="right" valign="top">__host__ __device__ double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceedda_1_1dist.html#ae1a0a4253e7afaee605973f5fdb6ede5">edda::dist::getVar</a> (const Gaussian &amp;dist)</td></tr>
+<tr class="memdesc:ae1a0a4253e7afaee605973f5fdb6ede5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return variance.  <a href="#ae1a0a4253e7afaee605973f5fdb6ede5">More...</a><br/></td></tr>
+<tr class="separator:ae1a0a4253e7afaee605973f5fdb6ede5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab49c27e7d7ee9b8c26bea6bf735c92dd"><td class="memItemLeft" align="right" valign="top">__host__ __device__ double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceedda_1_1dist.html#ab49c27e7d7ee9b8c26bea6bf735c92dd">edda::dist::getPdf</a> (const Gaussian &amp;dist, const double x)</td></tr>
+<tr class="memdesc:ab49c27e7d7ee9b8c26bea6bf735c92dd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return PDF of x.  <a href="#ab49c27e7d7ee9b8c26bea6bf735c92dd">More...</a><br/></td></tr>
+<tr class="separator:ab49c27e7d7ee9b8c26bea6bf735c92dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9885c551a8bdba31a86d259358b92b3a"><td class="memItemLeft" align="right" valign="top">__host__ double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceedda_1_1dist.html#a9885c551a8bdba31a86d259358b92b3a">edda::dist::getSample</a> (const Gaussian &amp;dist)</td></tr>
+<tr class="memdesc:a9885c551a8bdba31a86d259358b92b3a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return a random sample.  <a href="#a9885c551a8bdba31a86d259358b92b3a">More...</a><br/></td></tr>
+<tr class="separator:a9885c551a8bdba31a86d259358b92b3a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a72b01a24c403bf720b720f3725799d22"><td class="memItemLeft" align="right" valign="top">__host__ __device__ double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceedda_1_1dist.html#a72b01a24c403bf720b720f3725799d22">edda::dist::getSample</a> (const Gaussian &amp;dist, thrust::default_random_engine &amp;rng)</td></tr>
+<tr class="memdesc:a72b01a24c403bf720b720f3725799d22"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return a random sample using random engine.  <a href="#a72b01a24c403bf720b720f3725799d22">More...</a><br/></td></tr>
+<tr class="separator:a72b01a24c403bf720b720f3725799d22"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae5e41075ba1bc83bfc967f3c42c198c6"><td class="memItemLeft" align="right" valign="top">__host__ __device__ double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceedda_1_1dist.html#ae5e41075ba1bc83bfc967f3c42c198c6">edda::dist::getCdf</a> (const Gaussian &amp;dist, double x)</td></tr>
+<tr class="memdesc:ae5e41075ba1bc83bfc967f3c42c198c6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return CDF of x.  <a href="#ae5e41075ba1bc83bfc967f3c42c198c6">More...</a><br/></td></tr>
+<tr class="separator:ae5e41075ba1bc83bfc967f3c42c198c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a963983f8e973f9cf381ef37379ec4b81"><td class="memItemLeft" align="right" valign="top">__host__ double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceedda_1_1dist.html#a963983f8e973f9cf381ef37379ec4b81">edda::dist::getCdfPrecise</a> (const Gaussian &amp;dist, double x)</td></tr>
+<tr class="memdesc:a963983f8e973f9cf381ef37379ec4b81"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return CDF of x.  <a href="#a963983f8e973f9cf381ef37379ec4b81">More...</a><br/></td></tr>
+<tr class="separator:a963983f8e973f9cf381ef37379ec4b81"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab0bc58880769fb054f0cb66abd1bf89d"><td class="memItemLeft" align="right" valign="top">__host__ std::ostream &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceedda_1_1dist.html#ab0bc58880769fb054f0cb66abd1bf89d">edda::dist::operator&lt;&lt;</a> (std::ostream &amp;os, const Gaussian &amp;dist)</td></tr>
+<tr class="memdesc:ab0bc58880769fb054f0cb66abd1bf89d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Print itself.  <a href="#ab0bc58880769fb054f0cb66abd1bf89d">More...</a><br/></td></tr>
+<tr class="separator:ab0bc58880769fb054f0cb66abd1bf89d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac9a05dbf3c74b32366019864fc24620c"><td class="memItemLeft" align="right" valign="top">__host__ __device__ Gaussian &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceedda_1_1dist.html#ac9a05dbf3c74b32366019864fc24620c">edda::dist::operator-</a> (Gaussian &amp;x)</td></tr>
+<tr class="memdesc:ac9a05dbf3c74b32366019864fc24620c"><td class="mdescLeft">&#160;</td><td class="mdescRight">random variable with unary -  <a href="#ac9a05dbf3c74b32366019864fc24620c">More...</a><br/></td></tr>
+<tr class="separator:ac9a05dbf3c74b32366019864fc24620c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af7751f10c483dc2185cac5bfe025c665"><td class="memItemLeft" align="right" valign="top">__host__ __device__ Gaussian &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceedda_1_1dist.html#af7751f10c483dc2185cac5bfe025c665">edda::dist::operator+=</a> (Gaussian &amp;x, const Gaussian &amp;rhs)</td></tr>
+<tr class="memdesc:af7751f10c483dc2185cac5bfe025c665"><td class="mdescLeft">&#160;</td><td class="mdescRight">random variable +=  <a href="#af7751f10c483dc2185cac5bfe025c665">More...</a><br/></td></tr>
+<tr class="separator:af7751f10c483dc2185cac5bfe025c665"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aed2de5205f617c0f8b0522d56bfeb5fc"><td class="memItemLeft" align="right" valign="top">__host__ __device__ Gaussian &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceedda_1_1dist.html#aed2de5205f617c0f8b0522d56bfeb5fc">edda::dist::operator+=</a> (Gaussian &amp;x, const double r)</td></tr>
+<tr class="memdesc:aed2de5205f617c0f8b0522d56bfeb5fc"><td class="mdescLeft">&#160;</td><td class="mdescRight">random variable += with scalar  <a href="#aed2de5205f617c0f8b0522d56bfeb5fc">More...</a><br/></td></tr>
+<tr class="separator:aed2de5205f617c0f8b0522d56bfeb5fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a38c31366442e9ca68ca47078e45fb753"><td class="memItemLeft" align="right" valign="top">__host__ __device__ Gaussian &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceedda_1_1dist.html#a38c31366442e9ca68ca47078e45fb753">edda::dist::operator*=</a> (Gaussian &amp;x, const double r)</td></tr>
+<tr class="memdesc:a38c31366442e9ca68ca47078e45fb753"><td class="mdescLeft">&#160;</td><td class="mdescRight">random variable *= with scalar  <a href="#a38c31366442e9ca68ca47078e45fb753">More...</a><br/></td></tr>
+<tr class="separator:a38c31366442e9ca68ca47078e45fb753"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Feb 21 2016 02:38:42 for EDDA by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sat Feb 27 2016 20:46:27 for EDDA by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>
