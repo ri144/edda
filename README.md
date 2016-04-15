@@ -15,3 +15,6 @@ Required components:
 
 ## Current goal
 Complete a generic data management framework so that in the future we can build uncertainty visualization given any known distribution model. 
+
+Project website
+https://sites.google.com/site/gravityvisdb/edda
