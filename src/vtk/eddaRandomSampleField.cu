@@ -26,10 +26,10 @@ void eddaRandomSampleField::SampleDataArray(shared_ptr<GmmVtkDataArray> dataArra
   out_vtkArray->SetName(ResultName.c_str());
 
 #if 1 // thrust
-  shared_ptr<GmmNdArray> gmmNdArray = dataArray->genNdArray();
+  shared_ptr<GmmArray> gmmArray = dataArray->genNdArray();
   thrust::device_vector<Real> out(dataArray->getLength());
 
-  randomSampleField(gmmNdArray->begin(), gmmNdArray->end(), out.begin());
+  randomSampleField(gmmArray->begin(), gmmArray->end(), out.begin());
 
   thrust::copy(out.begin(), out.end(), (float *)out_vtkArray->GetVoidPointer(0));
 

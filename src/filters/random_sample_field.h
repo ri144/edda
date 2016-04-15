@@ -10,19 +10,24 @@
 
 namespace edda {
 
-
-struct GetSample_functor {
-  template <class Dist> //, ENABLE_IF_BASE_OF(Dist, dist::Distribution)>
-  __host__ __device__
-  double operator() (thrust::tuple<Dist, thrust::default_random_engine> &tuple)
-  {
-    Dist &dist = thrust::get<0>(tuple);
-    return dist::getSample(dist, thrust::get<1>(tuple));
-  }
-};
+namespace detail {
+    struct GetSample_functor {
+      ///
+      /// \param tuple0 distribution
+      /// \param tuple1 Thrust random engine
+      ///
+      template <class Dist> //, ENABLE_IF_BASE_OF(Dist, dist::Distribution)>
+      __host__ __device__
+      double operator() (thrust::tuple<Dist, thrust::default_random_engine> &tuple)
+      {
+        Dist &dist = thrust::get<0>(tuple);
+        return dist::getSample(dist, thrust::get<1>(tuple));
+      }
+    };
+} // namespace detail
 
 ///
-/// Output iterator must point to elements in type 'Real'
+/// Random sampling an array. Output iterator must point to elements in type 'Real'
 ///
 template <class InputIterator, class OutputIterator>
 void randomSampleField(InputIterator begin, InputIterator end, OutputIterator out)
@@ -32,7 +37,7 @@ void randomSampleField(InputIterator begin, InputIterator end, OutputIterator ou
   int n = end-begin;
   thrust::transform( thrust::make_zip_iterator(thrust::make_tuple(begin, randomEngineIterator(seed)) ) ,
                      thrust::make_zip_iterator(thrust::make_tuple(end, randomEngineIterator(seed+n)) ),
-                     out, GetSample_functor()) ;
+                     out, detail::GetSample_functor()) ;
   seed += n;
 }
 

@@ -1,9 +1,11 @@
 var searchData=
 [
-  ['length',['length',['../classedda_1_1GmmVtkDataArray.html#a6add24c021c3834d0976f8e889ccda8c',1,'edda::GmmVtkDataArray::length()'],['../classedda_1_1Tuple.html#a215ff458f27cc0fe956891848c6c7fc9',1,'edda::Tuple::length() const '],['../classedda_1_1Tuple.html#afb8ddf6fb80305c89efa8473e3a2cb8ea315f6eceb8fc99af67f42c59586efb29',1,'edda::Tuple::LENGTH()']]],
+  ['length',['LENGTH',['../classedda_1_1Tuple.html#afb8ddf6fb80305c89efa8473e3a2cb8ea315f6eceb8fc99af67f42c59586efb29',1,'edda::Tuple::LENGTH()'],['../classedda_1_1GmmVtkDataArray.html#a6add24c021c3834d0976f8e889ccda8c',1,'edda::GmmVtkDataArray::length()'],['../classedda_1_1Tuple.html#a215ff458f27cc0fe956891848c6c7fc9',1,'edda::Tuple::length()']]],
   ['lerp',['lerp',['../namespaceedda.html#a11b2f402dfb2825dd367b2746ea4de3b',1,'edda']]],
-  ['levelcrossing',['levelCrossing',['../namespaceedda.html#a9d83a747a9209f7332ebcd36d7c819b4',1,'edda']]],
-  ['levelcrossingserial',['levelCrossingSerial',['../namespaceedda.html#ab98de383147768757a0768cf256fad40',1,'edda']]],
+  ['level_5fcrossing_5fprob_2eh',['level_crossing_prob.h',['../level__crossing__prob_8h.html',1,'']]],
+  ['levelcrossingfunctor',['LevelCrossingFunctor',['../classedda_1_1detail_1_1LevelCrossingFunctor.html',1,'edda::detail']]],
+  ['levelcrossingfunctor',['LevelCrossingFunctor',['../classedda_1_1detail_1_1LevelCrossingFunctor.html#a83000c2b698e25f4965363b9ec9f7d07',1,'edda::detail::LevelCrossingFunctor']]],
+  ['levelcrossingprob',['levelCrossingProb',['../namespaceedda.html#a10964cd6e9d723498536ca77b487f664',1,'edda']]],
   ['license_2emd',['LICENSE.md',['../LICENSE_8md.html',1,'']]],
   ['linewidget',['lineWidget',['../streamlineGaussianVTK_8cpp.html#adc16b41b160a388547ee8a05d26f73f3',1,'lineWidget():&#160;streamlineGaussianVTK.cpp'],['../streamlineMonteCarlo_8cpp.html#adc16b41b160a388547ee8a05d26f73f3',1,'lineWidget():&#160;streamlineMonteCarlo.cpp'],['../test__vtk__pipeline_8cpp.html#ae63c6f6b90e2ccc16c4bfa872d63dacd',1,'lineWidget():&#160;test_vtk_pipeline.cpp']]],
   ['loaddata',['loadData',['../namespaceedda.html#af9dab9d3a9c202d56da2edb4137c3e34',1,'edda']]],
@@ -17,6 +19,7 @@ var searchData=
   ['loadvec3gaussianregulargrids',['loadVec3GaussianRegularGrids',['../namespaceedda.html#ab2fb088e61990e94cc358cf02017af99',1,'edda::loadVec3GaussianRegularGrids(string &amp;meanfile, string &amp;stdfile, int dim[3])'],['../namespaceedda.html#aa084dc0f2ddd1a90149bc0c9913b8965',1,'edda::loadVec3GaussianRegularGrids(std::string &amp;meanfile, std::string &amp;stdfile, int dim[3])']]],
   ['loadvec3gaussiansamplingregulargrids',['loadVec3GaussianSamplingRegularGrids',['../namespaceedda.html#a7594c8d9d0a433f24bebc894d95c781d',1,'edda::loadVec3GaussianSamplingRegularGrids(string &amp;meanfile, string &amp;stdfile, int dim[3])'],['../namespaceedda.html#a2d146a5d586cc1cf8dba62e45393eca1',1,'edda::loadVec3GaussianSamplingRegularGrids(std::string &amp;meanfile, std::string &amp;stdfile, int dim[3])']]],
   ['loadvectordata',['loadVectorData',['../namespaceedda.html#a92a51d8e27341b8b713f144c7919aef4',1,'edda']]],
-  ['lookupvalue',['LookupValue',['../classvtkSamplingArray.html#a9dd53fbbbec73e4605cab387b829d70b',1,'vtkSamplingArray::LookupValue(vtkVariant value)'],['../classvtkSamplingArray.html#a721c8f15feee37c9f3dca448df2b2965',1,'vtkSamplingArray::LookupValue(vtkVariant value, vtkIdList *ids)']]],
+  ['lookupvalue',['LookupValue',['../classvtkSamplingArray.html#a9dd53fbbbec73e4605cab387b829d70b',1,'vtkSamplingArray::LookupValue(vtkVariant value)'],['../classvtkSamplingArray.html#a721c8f15feee37c9f3dca448df2b2965',1,'vtkSamplingArray::LookupValue(vtkVariant value, vtkIdList *ids)'],['../classeddaSamplingArray.html#a8e2d7af44f27052d28b093209b2525ba',1,'eddaSamplingArray::LookupValue(vtkVariant value)'],['../classeddaSamplingArray.html#ad68fe2bb7916ad21caeea2ddea3a655b',1,'eddaSamplingArray::LookupValue(vtkVariant value, vtkIdList *ids)']]],
+  ['lowerthreshold',['LowerThreshold',['../classeddaThreshold.html#a27a4fb8c390c575bf22b8c864c25d13d',1,'eddaThreshold']]],
   ['license',['LICENSE',['../md_LICENSE.html',1,'']]]
 ];

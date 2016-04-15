@@ -13,6 +13,7 @@ if (NOT EDDA_BUILD_WITH_CUDA)
     test_gaussian.cpp
     test_thrust.cpp
     test_NdArray.cpp
+    gmm_raw2vtk.cpp
   )
 else ()
   # CUDA

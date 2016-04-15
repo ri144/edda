@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['pointinfo',['PointInfo',['../structedda_1_1PointInfo.html',1,'edda']]]
+  ['makestridedgmm',['MakeStridedGmm',['../structedda_1_1detail_1_1MakeStridedGmm.html',1,'edda::detail']]]
 ];

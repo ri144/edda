@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['allocate',['Allocate',['../classvtkSamplingArray.html#a346bf9fea7b4774992a9671dff8cf458',1,'vtkSamplingArray']]],
+  ['allocate',['Allocate',['../classvtkSamplingArray.html#a346bf9fea7b4774992a9671dff8cf458',1,'vtkSamplingArray::Allocate()'],['../classeddaSamplingArray.html#a917f0e4abe5eb584b1460e1c9d39efe4',1,'eddaSamplingArray::Allocate()']]],
   ['approx_5fequal',['approx_equal',['../test__common_8h.html#a68842a038cb91a47ccb1f03de6cfc4c0',1,'test_common.h']]],
   ['assign',['assign',['../classedda_1_1dist_1_1GaussianMixture.html#a17d607517f480dc263f56d9aa458102c',1,'edda::dist::GaussianMixture']]],
   ['at_5fcomp',['at_comp',['../classedda_1_1Dataset.html#a1bc76a28b31c0590043d5a8372b5b810',1,'edda::Dataset']]],

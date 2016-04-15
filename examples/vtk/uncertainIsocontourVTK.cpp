@@ -33,7 +33,7 @@
 #include "io/file_reader.h"
 #include "io/file_writer.h"
 #include "io/path.h"
-#include "filters/uncertain_isocontour.h"
+#include "filters/level_crossing_prob.h"
 #include "vtk/vtk_common.h"
 #include "vtk/eddaUncertainIsocontour.h"
 
@@ -88,6 +88,7 @@ vtkSmartPointer<vtkDataSet> process_vtk_file(string vtk_file, float isov)
   return cell2point->GetOutput();
 }
 
+#if 0 // removed
 vtkSmartPointer<vtkDataSet> process_info_file(string info_file, float isov)
 {
   // load data
@@ -107,9 +108,10 @@ vtkSmartPointer<vtkDataSet> process_info_file(string info_file, float isov)
 
   return image;
 }
+#endif
 
 int main(int argc, char **argv) {
-  cout << "isoProbField <info file> <iso-value>" << endl;
+  cout << "isoProbField <vts/vti file> <iso-value>" << endl;
   if (argc<=2)
     return -1;
   string input_file = argv[1];
@@ -124,6 +126,7 @@ int main(int argc, char **argv) {
   }
 
 
+#if 0 // not working in new vtk version
   // Volume render
   vsp_new(vtkPiecewiseFunction, alphaChannelFunc);
   alphaChannelFunc->AddPoint(0, 0);
@@ -187,5 +190,5 @@ int main(int argc, char **argv) {
   //renderWin->Render();
 
   renderInteractor->Start();
-
+#endif
 }

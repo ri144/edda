@@ -146,7 +146,7 @@ dist::Variant GmmVtkDataArray::getScalar(size_t idx) {
 }
 
 
-std::shared_ptr<GmmNdArray> GmmVtkDataArray::genNdArray() {
+std::shared_ptr<GmmArray> GmmVtkDataArray::genNdArray() {
   //int n= arrays[i]->GetNumberOfTuples();
   //NdArray ndarray({length, arrays.size()});
   std::vector<NdArray<Real> > data(arrays.size());
@@ -182,7 +182,7 @@ std::shared_ptr<GmmNdArray> GmmVtkDataArray::genNdArray() {
       throw std::runtime_error("Real type not float or double.");
     }
   }
-  return std::shared_ptr<GmmNdArray> ( new GmmNdArray(data) );
+  return std::shared_ptr<GmmArray> ( new GmmArray(data) );
 
 }
 }; //edda

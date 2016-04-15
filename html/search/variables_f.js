@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['w',['w',['../structedda_1_1dist_1_1GMMTuple.html#a3f52857178189dcb76b5132a60c0a50a',1,'edda::dist::GMMTuple']]]
+  ['upperthreshold',['UpperThreshold',['../classeddaThreshold.html#a24dd718cc876a3e20f07fe807c243498',1,'eddaThreshold']]],
+  ['usenullpoint',['UseNullPoint',['../classeddaRandomProbeFilter.html#a054974d60116bf5a9cbb59b23120bc8f',1,'eddaRandomProbeFilter']]]
 ];

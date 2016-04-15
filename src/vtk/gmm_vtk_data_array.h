@@ -13,7 +13,7 @@
 
 #include <distributions/gaussian_mixture.h>
 #include <dataset/abstract_data_array.h>
-#include <core/gmm_ndarray.h>
+#include <core/gmm_array.h>
 
 namespace edda {
 
@@ -52,7 +52,7 @@ public:
 
   virtual boost::any getRawArray() { return boost::any(arrays); }
 
-  std::shared_ptr<GmmNdArray> genNdArray() ;
+  std::shared_ptr<GmmArray> genNdArray() ;
 };
 
 } // namespace edda

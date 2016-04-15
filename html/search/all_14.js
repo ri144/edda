@@ -4,5 +4,5 @@ var searchData=
   ['weighted_5fsum',['WEIGHTED_SUM',['../namespaceedda.html#a431337c36fb50c77e958d8dfae855781a5cd0cc87f7789a6f7120f6f4f55594ed',1,'edda']]],
   ['write_5fnrrd_5f3d',['write_nrrd_3d',['../namespaceedda.html#aa7d9a6036df168e12c9274b3c867b196',1,'edda']]],
   ['writerawnrrdfile',['writeRawNrrdFile',['../namespaceedda.html#a84955479cafdd0ef664aac47680dfb74',1,'edda']]],
-  ['writevoidpointer',['WriteVoidPointer',['../classvtkSamplingArray.html#a5a9b6f6c5d13d67f508617cf3fb2f5af',1,'vtkSamplingArray']]]
+  ['writevoidpointer',['WriteVoidPointer',['../classvtkSamplingArray.html#a5a9b6f6c5d13d67f508617cf3fb2f5af',1,'vtkSamplingArray::WriteVoidPointer()'],['../classeddaSamplingArray.html#a57dd19cefe182bb6846b618b14d5bcd9',1,'eddaSamplingArray::WriteVoidPointer()']]]
 ];

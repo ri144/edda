@@ -8,6 +8,7 @@ set(sources
   streamlineGaussianVTK.cpp
   randomSample.cpp
   denseSamplingField.cpp
+  fuzzyIsocontourVTK.cpp
 )
 
 IF(APPLE)

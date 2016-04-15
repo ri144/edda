@@ -17,7 +17,7 @@
 #include "vtkStreamingDemandDrivenPipeline.h"
 
 #include "gmm_vtk_data_array.h"
-#include <filters/uncertain_isocontour.h>
+#include <filters/level_crossing_prob.h>
 
 using namespace std;
 using namespace edda;
@@ -28,7 +28,7 @@ void eddaUncertainIsocontour::Compute(vtkDataSet* input, int *dim,
 {
   // process point data
   shared_ptr<GmmVtkDataArray> dataArray(new GmmVtkDataArray(input->GetPointData()) );
-  shared_ptr<GmmNdArray> gmmNdArray = dataArray->genNdArray();
+  shared_ptr<GmmArray> gmmArray = dataArray->genNdArray();
 
   // has point data?
   if (dataArray->getLength() > 0) {
@@ -37,7 +37,7 @@ void eddaUncertainIsocontour::Compute(vtkDataSet* input, int *dim,
     shared_ptr<NdArray<float> > out_ndarray;
 
     //ReturnStatus r = levelCrossingSerial(dataArray.get(), dim, this->Isov, (float *)out_vtkArray->GetVoidPointer(0));
-    ReturnStatus r = levelCrossing(gmmNdArray, dim, this->Isov, out_ndarray);
+    ReturnStatus r = levelCrossingProb(gmmArray->begin(), dim, this->Isov, out_ndarray);
 
     if (r!=ReturnStatus::SUCCESS) {
       return ;

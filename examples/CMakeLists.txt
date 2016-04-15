@@ -3,7 +3,7 @@
 # found in the LICENSE file.
 
 set(sources
-  uncertainIsocontour.cu
+  #uncertainIsocontour.cu
   #streamlineGaussian.cu
 )
 
