@@ -27,7 +27,4 @@ foreach (file ${sources})
   target_link_libraries ( ${name} edda ${LINK_LIBS} )
 endforeach ()
 
-if (EDDA_WITH_VTK)
-  add_subdirectory (vtk)
-endif ()
 

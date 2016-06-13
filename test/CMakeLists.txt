@@ -13,7 +13,6 @@ if (NOT EDDA_BUILD_WITH_CUDA)
     test_gaussian.cpp
     test_thrust.cpp
     test_NdArray.cpp
-    gmm_raw2vtk.cpp
   )
 else ()
   # CUDA
@@ -23,13 +22,6 @@ else ()
       test_NdArray_cuda.cu
       )
 endif ()
-
-# VTK
-if (EDDA_WITH_VTK)
-  set(TEST_SOURCES ${TEST_SOURCES}
-      test_vtk_filters.cpp
-  )
-endif()
 
 ####
 foreach (test ${TEST_SOURCES})

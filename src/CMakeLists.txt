@@ -11,10 +11,6 @@ set (SRC_DIRS
   io
 )
 
-if (EDDA_WITH_VTK OR EDDA_BUILD_PARAVIEW_PLUGINS)
-  set (SRC_DIRS ${SRC_DIRS} vtk)
-endif ()
-
 foreach (dir in ${SRC_DIRS})
   file(GLOB tmp ${dir}/*.cpp ${dir}/*.cu)
   list(APPEND SRC_FILES ${tmp})
@@ -52,8 +48,4 @@ endforeach()
 install (
     TARGETS ${PROJECT_NAME}
     DESTINATION lib/${PROJECT_NAME})
-
-if (EDDA_BUILD_PARAVIEW_PLUGINS)
-  add_subdirectory(vtk)
-endif ()
 
