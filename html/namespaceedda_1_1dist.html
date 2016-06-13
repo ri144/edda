@@ -38,7 +38,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
       <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
-      <li><a href="modules.html"><span>Modules</span></a></li>
       <li class="current"><a href="namespaces.html"><span>Namespaces</span></a></li>
       <li><a href="annotated.html"><span>Classes</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
@@ -71,7 +70,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Friends</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(10)"><span class="SelectionMark">&#160;</span>Macros</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(11)"><span class="SelectionMark">&#160;</span>Groups</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(12)"><span class="SelectionMark">&#160;</span>Pages</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Friends</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(10)"><span class="SelectionMark">&#160;</span>Macros</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(11)"><span class="SelectionMark">&#160;</span>Pages</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -157,9 +156,14 @@ Functions</h2></td></tr>
 <tr class="memitem:aa647a75ef90d5ec917d5d82cee61e35a"><td class="memTemplItemLeft" align="right" valign="top">double&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceedda_1_1dist.html#aa647a75ef90d5ec917d5d82cee61e35a">getMean</a> (const T &amp;dist)</td></tr>
 <tr class="memdesc:aa647a75ef90d5ec917d5d82cee61e35a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the mean of the distribution.  <a href="#aa647a75ef90d5ec917d5d82cee61e35a">More...</a><br/></td></tr>
 <tr class="separator:aa647a75ef90d5ec917d5d82cee61e35a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a97fb97d2f21ff7d6d25a4bdd27cec5e6"><td class="memTemplParams" colspan="2">template&lt;typename T , int N, ENABLE_IF_BASE_OF(T, Distribution) &gt; </td></tr>
+<tr class="memitem:a97fb97d2f21ff7d6d25a4bdd27cec5e6"><td class="memTemplItemLeft" align="right" valign="top">__host__ __device__ <a class="el" href="classedda_1_1Vector.html">Vector</a><br class="typebreak"/>
+&lt; <a class="el" href="namespaceedda.html#aaf50451f174934601d7a0c5a714f35ac">Real</a>, N &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceedda_1_1dist.html#a97fb97d2f21ff7d6d25a4bdd27cec5e6">getSample</a> (const <a class="el" href="classedda_1_1Tuple.html">Tuple</a>&lt; T, N &gt; &amp;distvec, thrust::default_random_engine &amp;rng)</td></tr>
+<tr class="memdesc:a97fb97d2f21ff7d6d25a4bdd27cec5e6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a Monte-Carlo sample of the distribution. We rely on the specific implementation from each distribution.  <a href="#a97fb97d2f21ff7d6d25a4bdd27cec5e6">More...</a><br/></td></tr>
+<tr class="separator:a97fb97d2f21ff7d6d25a4bdd27cec5e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad57b2fa1045786424910800ecb46d95f"><td class="memTemplParams" colspan="2">template&lt;class T , int N, ENABLE_IF_BASE_OF(T, Distribution) &gt; </td></tr>
 <tr class="memitem:ad57b2fa1045786424910800ecb46d95f"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classedda_1_1Vector.html">Vector</a>&lt; double, N &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceedda_1_1dist.html#ad57b2fa1045786424910800ecb46d95f">getMean</a> (const <a class="el" href="classedda_1_1Tuple.html">Tuple</a>&lt; T, N &gt; &amp;dist)</td></tr>
-<tr class="memdesc:ad57b2fa1045786424910800ecb46d95f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a Monte-Carlo sample of the distribution. We rely on the specific implementation from each distribution.  <a href="#ad57b2fa1045786424910800ecb46d95f">More...</a><br/></td></tr>
+<tr class="memdesc:ad57b2fa1045786424910800ecb46d95f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get vector mean.  <a href="#ad57b2fa1045786424910800ecb46d95f">More...</a><br/></td></tr>
 <tr class="separator:ad57b2fa1045786424910800ecb46d95f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa90608d9ba4ac81988b490f6a431910f"><td class="memItemLeft" align="right" valign="top">__host__ __device__ double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceedda_1_1dist.html#aa90608d9ba4ac81988b490f6a431910f">getMean</a> (const <a class="el" href="structedda_1_1dist_1_1Gaussian.html">Gaussian</a> &amp;dist)</td></tr>
 <tr class="memdesc:aa90608d9ba4ac81988b490f6a431910f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return mean.  <a href="#aa90608d9ba4ac81988b490f6a431910f">More...</a><br/></td></tr>
@@ -575,8 +579,41 @@ template&lt;class T , int N, ENABLE_IF_BASE_OF(T, Distribution) &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Get a Monte-Carlo sample of the distribution. We rely on the specific implementation from each distribution. </p>
-<p>Get vector mean </p>
+<p>Get vector mean. </p>
+
+</div>
+</div>
+<a class="anchor" id="a2053d1af598768527673eceecde7c309"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">double edda::dist::getPdf </td>
+          <td>(</td>
+          <td class="paramtype">const Variant &amp;&#160;</td>
+          <td class="paramname"><em>dist</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>x</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -613,40 +650,6 @@ template&lt;class T , int N, ENABLE_IF_BASE_OF(T, Distribution) &gt; </div>
 </div><div class="memdoc">
 
 <p>Return PDF of x. </p>
-
-</div>
-</div>
-<a class="anchor" id="a2053d1af598768527673eceecde7c309"></a>
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">double edda::dist::getPdf </td>
-          <td>(</td>
-          <td class="paramtype">const Variant &amp;&#160;</td>
-          <td class="paramname"><em>dist</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">double&#160;</td>
-          <td class="paramname"><em>x</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
 
 </div>
 </div>
@@ -799,6 +802,45 @@ template&lt;class Dist , int N, ENABLE_IF_BASE_OF(Dist, Distribution) &gt; </div
 </div><div class="memdoc">
 
 <p>Return a vector sample. </p>
+
+</div>
+</div>
+<a class="anchor" id="a97fb97d2f21ff7d6d25a4bdd27cec5e6"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T , int N, ENABLE_IF_BASE_OF(T, Distribution) &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">__host__ __device__ <a class="el" href="classedda_1_1Vector.html">Vector</a>&lt;<a class="el" href="namespaceedda.html#aaf50451f174934601d7a0c5a714f35ac">Real</a>, N&gt; edda::dist::getSample </td>
+          <td>(</td>
+          <td class="paramtype">const Tuple&lt; T, N &gt; &amp;&#160;</td>
+          <td class="paramname"><em>distvec</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">thrust::default_random_engine &amp;&#160;</td>
+          <td class="paramname"><em>rng</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get a Monte-Carlo sample of the distribution. We rely on the specific implementation from each distribution. </p>
+<p>Return a vector sample from a vector of distributions </p>
 
 </div>
 </div>
@@ -1455,7 +1497,7 @@ template&lt;int GMMs&gt; </div>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Apr 15 2016 16:08:33 for EDDA by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Jun 13 2016 02:50:48 for EDDA by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

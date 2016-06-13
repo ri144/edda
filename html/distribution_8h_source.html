@@ -38,7 +38,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
       <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
-      <li><a href="modules.html"><span>Modules</span></a></li>
       <li><a href="namespaces.html"><span>Namespaces</span></a></li>
       <li><a href="annotated.html"><span>Classes</span></a></li>
       <li class="current"><a href="files.html"><span>Files</span></a></li>
@@ -71,7 +70,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Friends</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(10)"><span class="SelectionMark">&#160;</span>Macros</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(11)"><span class="SelectionMark">&#160;</span>Groups</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(12)"><span class="SelectionMark">&#160;</span>Pages</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Friends</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(10)"><span class="SelectionMark">&#160;</span>Macros</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(11)"><span class="SelectionMark">&#160;</span>Pages</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -105,107 +104,120 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="common_8h.html">common.h</a>&quot;</span></div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="edda__export_8h.html">edda_export.h</a>&quot;</span></div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="vector__matrix_8h.html">core/vector_matrix.h</a>&quot;</span></div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;</div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="keyword">namespace </span>edda {</div>
-<div class="line"><a name="l00021"></a><span class="lineno"><a class="line" href="namespaceedda_1_1dist.html">   21</a></span>&#160;<span class="keyword">namespace </span>dist {</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;</div>
-<div class="line"><a name="l00028"></a><span class="lineno"><a class="line" href="classedda_1_1dist_1_1Distribution.html">   28</a></span>&#160;<span class="keyword">class </span><a class="code" href="edda__export_8h.html#a4130eba3dcc4b1e840d3ee6e2a2e4d6b">EDDA_EXPORT</a> <a class="code" href="classedda_1_1dist_1_1Distribution.html">Distribution</a> {</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    <span class="keywordtype">void</span> NotImpError()<span class="keyword"> const </span>{std::cerr &lt;&lt; <span class="stringliteral">&quot;Functions in this class should be overloaded.&quot;</span>; <span class="keywordflow">throw</span> <a class="code" href="structedda_1_1NotImplementedException.html">NotImplementedException</a>(); }</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;};</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;</div>
-<div class="line"><a name="l00032"></a><span class="lineno"><a class="line" href="classedda_1_1dist_1_1ContinuousDistribution.html">   32</a></span>&#160;<span class="keyword">class </span><a class="code" href="edda__export_8h.html#a4130eba3dcc4b1e840d3ee6e2a2e4d6b">EDDA_EXPORT</a> <a class="code" href="classedda_1_1dist_1_1ContinuousDistribution.html">ContinuousDistribution</a> : <span class="keyword">public</span> <a class="code" href="classedda_1_1dist_1_1Distribution.html">Distribution</a>{</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;};</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;</div>
-<div class="line"><a name="l00035"></a><span class="lineno"><a class="line" href="classedda_1_1dist_1_1DiscreteDistribution.html">   35</a></span>&#160;<span class="keyword">class </span><a class="code" href="edda__export_8h.html#a4130eba3dcc4b1e840d3ee6e2a2e4d6b">EDDA_EXPORT</a> <a class="code" href="classedda_1_1dist_1_1DiscreteDistribution.html">DiscreteDistribution</a> : <span class="keyword">public</span> <a class="code" href="classedda_1_1dist_1_1Distribution.html">Distribution</a>{</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;};</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="comment">// Here are generic functions that can be reused by new distributions if not</span></div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="comment">// implemented.</span></div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> T, ENABLE_IF_BASE_OF(T, Distribution) &gt;</div>
-<div class="line"><a name="l00045"></a><span class="lineno"><a class="line" href="namespaceedda_1_1dist.html#a7b2538cb9c7683dc03c02554fdea6a1e">   45</a></span>&#160;<span class="keyword">inline</span> T <a class="code" href="namespaceedda_1_1dist.html#a7b2538cb9c7683dc03c02554fdea6a1e">operator-=</a>(<span class="keyword">const</span> T&amp; lhs, <span class="keyword">const</span> T&amp; rhs) {</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    T h(lhs);</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;      <span class="keywordflow">return</span> h += (-rhs);</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;}</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> T, ENABLE_IF_BASE_OF(T, Distribution) &gt;</div>
-<div class="line"><a name="l00054"></a><span class="lineno"><a class="line" href="namespaceedda_1_1dist.html#a009a15003c26d6a2758d765b7b6a1986">   54</a></span>&#160;<span class="keyword">inline</span> T <a class="code" href="namespaceedda_1_1dist.html#a009a15003c26d6a2758d765b7b6a1986">operator+</a>(<span class="keyword">const</span> T&amp; lhs, <span class="keyword">const</span> T&amp; rhs) {</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    T h(lhs);</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <span class="keywordflow">return</span> h += rhs;</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;}</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> T, ENABLE_IF_BASE_OF(T, Distribution) &gt;</div>
-<div class="line"><a name="l00063"></a><span class="lineno"><a class="line" href="namespaceedda_1_1dist.html#a47f4afe8c1eae437e92feba150506583">   63</a></span>&#160;<span class="keyword">inline</span> T <a class="code" href="namespaceedda_1_1dist.html#a47f4afe8c1eae437e92feba150506583">operator-</a>(<span class="keyword">const</span> T&amp; lhs, <span class="keyword">const</span> T&amp; rhs) {</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    T h(lhs);</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    <span class="keywordflow">return</span> h -= rhs;</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;}</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> T, ENABLE_IF_BASE_OF(T, Distribution) &gt;</div>
-<div class="line"><a name="l00072"></a><span class="lineno"><a class="line" href="namespaceedda_1_1dist.html#a78f6668de51fec25ca4aa7b20e8ff0d4">   72</a></span>&#160;<span class="keyword">inline</span> T <a class="code" href="namespaceedda_1_1dist.html#a78f6668de51fec25ca4aa7b20e8ff0d4">operator*</a>(<span class="keyword">const</span> T&amp; lhs, <span class="keyword">const</span> <span class="keywordtype">double</span> x) {</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    T h(lhs);</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <span class="keywordflow">return</span> h *= x;</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;}</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> T, ENABLE_IF_BASE_OF(T, Distribution) &gt;</div>
-<div class="line"><a name="l00081"></a><span class="lineno"><a class="line" href="namespaceedda_1_1dist.html#a9108a700d9ad1ce168d1a4be549e05ba">   81</a></span>&#160;<span class="keyword">inline</span> <span class="keywordtype">double</span> <a class="code" href="namespaceedda_1_1dist.html#a9108a700d9ad1ce168d1a4be549e05ba">getCdf</a>(<span class="keyword">const</span> T&amp; dist, <span class="keywordtype">double</span> x)</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;{</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    std::cerr &lt;&lt; <span class="stringliteral">&quot;Generic computation not implemented&quot;</span> &lt;&lt; std::endl;</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    <span class="keywordflow">throw</span> <a class="code" href="structedda_1_1NotImplementedException.html">NotImplementedException</a>();</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    <span class="keywordflow">return</span> 0;</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;}</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> T, ENABLE_IF_BASE_OF(T, Distribution) &gt;</div>
-<div class="line"><a name="l00092"></a><span class="lineno"><a class="line" href="namespaceedda_1_1dist.html#aa647a75ef90d5ec917d5d82cee61e35a">   92</a></span>&#160;<span class="keywordtype">double</span> <a class="code" href="namespaceedda_1_1dist.html#aa647a75ef90d5ec917d5d82cee61e35a">getMean</a>(<span class="keyword">const</span> T &amp;dist)</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;{</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;    std::cerr &lt;&lt; <span class="stringliteral">&quot;Generic computation not implemented&quot;</span> &lt;&lt; std::endl;</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    <span class="keywordflow">throw</span> <a class="code" href="structedda_1_1NotImplementedException.html">NotImplementedException</a>();</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    <span class="keywordflow">return</span> 0;</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;}</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;<span class="preprocessor">#if 0</span></div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;<span class="preprocessor"></span><span class="keyword">template</span> &lt;<span class="keyword">class</span> T, ENABLE_IF_BASE_OF(T, Distribution)&gt;</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;<span class="keywordtype">double</span> <a class="code" href="namespaceedda_1_1dist.html#a9885c551a8bdba31a86d259358b92b3a">getSample</a>(<span class="keyword">const</span> T &amp;dist)</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;{</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    std::cerr &lt;&lt; <span class="stringliteral">&quot;Generic computation not implemented&quot;</span> &lt;&lt; std::endl;</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    <span class="keywordflow">throw</span> <a class="code" href="structedda_1_1NotImplementedException.html">NotImplementedException</a>();</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    <span class="keywordflow">return</span> 0;</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;}</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> T, <span class="keywordtype">int</span> N, ENABLE_IF_BASE_OF(T, Distribution) &gt;</div>
-<div class="line"><a name="l00116"></a><span class="lineno"><a class="line" href="namespaceedda_1_1dist.html#ad57b2fa1045786424910800ecb46d95f">  116</a></span>&#160;<span class="keyword">inline</span> <a class="code" href="classedda_1_1Vector.html">Vector&lt;double, N&gt;</a> <a class="code" href="namespaceedda_1_1dist.html#aa647a75ef90d5ec917d5d82cee61e35a">getMean</a>(<span class="keyword">const</span> <a class="code" href="classedda_1_1Tuple.html">Tuple&lt;T, N&gt;</a> &amp;dist)</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;{</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;    <a class="code" href="classedda_1_1Vector.html">Vector&lt;double,N&gt;</a> result;</div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i=0; i&lt;N; i++)</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;        result[i] = <a class="code" href="namespaceedda_1_1dist.html#aa647a75ef90d5ec917d5d82cee61e35a">getMean</a>(dist[i]);</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;    <span class="keywordflow">return</span> result;</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;}</div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;</div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;}  <span class="comment">// namespace dist</span></div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;}  <span class="comment">// namespace edda</span></div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;</div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;<span class="preprocessor">#endif // DISTRIBUTION_H_</span></div>
-<div class="ttc" id="classedda_1_1dist_1_1ContinuousDistribution_html"><div class="ttname"><a href="classedda_1_1dist_1_1ContinuousDistribution.html">edda::dist::ContinuousDistribution</a></div><div class="ttdef"><b>Definition:</b> distribution.h:32</div></div>
-<div class="ttc" id="namespaceedda_1_1dist_html_a7b2538cb9c7683dc03c02554fdea6a1e"><div class="ttname"><a href="namespaceedda_1_1dist.html#a7b2538cb9c7683dc03c02554fdea6a1e">edda::dist::operator-=</a></div><div class="ttdeci">T operator-=(const T &amp;lhs, const T &amp;rhs)</div><div class="ttdoc">random variable -= </div><div class="ttdef"><b>Definition:</b> distribution.h:45</div></div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="tuple_8h.html">core/tuple.h</a>&quot;</span></div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="thrust__common_8h.html">core/thrust_common.h</a>&quot;</span></div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="keyword">namespace </span>edda {</div>
+<div class="line"><a name="l00023"></a><span class="lineno"><a class="line" href="namespaceedda_1_1dist.html">   23</a></span>&#160;<span class="keyword">namespace </span>dist {</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;</div>
+<div class="line"><a name="l00030"></a><span class="lineno"><a class="line" href="classedda_1_1dist_1_1Distribution.html">   30</a></span>&#160;<span class="keyword">class </span><a class="code" href="edda__export_8h.html#a4130eba3dcc4b1e840d3ee6e2a2e4d6b">EDDA_EXPORT</a> <a class="code" href="classedda_1_1dist_1_1Distribution.html">Distribution</a> {</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    <span class="keywordtype">void</span> NotImpError()<span class="keyword"> const </span>{std::cerr &lt;&lt; <span class="stringliteral">&quot;Functions in this class should be overloaded.&quot;</span>; <span class="keywordflow">throw</span> <a class="code" href="structedda_1_1NotImplementedException.html">NotImplementedException</a>(); }</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;};</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;</div>
+<div class="line"><a name="l00034"></a><span class="lineno"><a class="line" href="classedda_1_1dist_1_1ContinuousDistribution.html">   34</a></span>&#160;<span class="keyword">class </span><a class="code" href="edda__export_8h.html#a4130eba3dcc4b1e840d3ee6e2a2e4d6b">EDDA_EXPORT</a> <a class="code" href="classedda_1_1dist_1_1ContinuousDistribution.html">ContinuousDistribution</a> : <span class="keyword">public</span> <a class="code" href="classedda_1_1dist_1_1Distribution.html">Distribution</a>{</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;};</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;</div>
+<div class="line"><a name="l00037"></a><span class="lineno"><a class="line" href="classedda_1_1dist_1_1DiscreteDistribution.html">   37</a></span>&#160;<span class="keyword">class </span><a class="code" href="edda__export_8h.html#a4130eba3dcc4b1e840d3ee6e2a2e4d6b">EDDA_EXPORT</a> <a class="code" href="classedda_1_1dist_1_1DiscreteDistribution.html">DiscreteDistribution</a> : <span class="keyword">public</span> <a class="code" href="classedda_1_1dist_1_1Distribution.html">Distribution</a>{</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;};</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="comment">// Here are generic functions that can be reused by new distributions if not</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="comment">// implemented.</span></div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> T, ENABLE_IF_BASE_OF(T, Distribution) &gt;</div>
+<div class="line"><a name="l00047"></a><span class="lineno"><a class="line" href="namespaceedda_1_1dist.html#a7b2538cb9c7683dc03c02554fdea6a1e">   47</a></span>&#160;<span class="keyword">inline</span> T <a class="code" href="namespaceedda_1_1dist.html#a7b2538cb9c7683dc03c02554fdea6a1e">operator-=</a>(<span class="keyword">const</span> T&amp; lhs, <span class="keyword">const</span> T&amp; rhs) {</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    T h(lhs);</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;      <span class="keywordflow">return</span> h += (-rhs);</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;}</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> T, ENABLE_IF_BASE_OF(T, Distribution) &gt;</div>
+<div class="line"><a name="l00056"></a><span class="lineno"><a class="line" href="namespaceedda_1_1dist.html#a009a15003c26d6a2758d765b7b6a1986">   56</a></span>&#160;<span class="keyword">inline</span> T <a class="code" href="namespaceedda_1_1dist.html#a009a15003c26d6a2758d765b7b6a1986">operator+</a>(<span class="keyword">const</span> T&amp; lhs, <span class="keyword">const</span> T&amp; rhs) {</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    T h(lhs);</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    <span class="keywordflow">return</span> h += rhs;</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;}</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> T, ENABLE_IF_BASE_OF(T, Distribution) &gt;</div>
+<div class="line"><a name="l00065"></a><span class="lineno"><a class="line" href="namespaceedda_1_1dist.html#a47f4afe8c1eae437e92feba150506583">   65</a></span>&#160;<span class="keyword">inline</span> T <a class="code" href="namespaceedda_1_1dist.html#a47f4afe8c1eae437e92feba150506583">operator-</a>(<span class="keyword">const</span> T&amp; lhs, <span class="keyword">const</span> T&amp; rhs) {</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    T h(lhs);</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <span class="keywordflow">return</span> h -= rhs;</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;}</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="keyword">template</span>&lt;<span class="keyword">class</span> T, ENABLE_IF_BASE_OF(T, Distribution) &gt;</div>
+<div class="line"><a name="l00074"></a><span class="lineno"><a class="line" href="namespaceedda_1_1dist.html#a78f6668de51fec25ca4aa7b20e8ff0d4">   74</a></span>&#160;<span class="keyword">inline</span> T <a class="code" href="namespaceedda_1_1dist.html#a78f6668de51fec25ca4aa7b20e8ff0d4">operator*</a>(<span class="keyword">const</span> T&amp; lhs, <span class="keyword">const</span> <span class="keywordtype">double</span> x) {</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    T h(lhs);</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    <span class="keywordflow">return</span> h *= x;</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;}</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> T, ENABLE_IF_BASE_OF(T, Distribution) &gt;</div>
+<div class="line"><a name="l00083"></a><span class="lineno"><a class="line" href="namespaceedda_1_1dist.html#a9108a700d9ad1ce168d1a4be549e05ba">   83</a></span>&#160;<span class="keyword">inline</span> <span class="keywordtype">double</span> <a class="code" href="namespaceedda_1_1dist.html#a9108a700d9ad1ce168d1a4be549e05ba">getCdf</a>(<span class="keyword">const</span> T&amp; dist, <span class="keywordtype">double</span> x)</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;{</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    std::cerr &lt;&lt; <span class="stringliteral">&quot;Generic computation not implemented&quot;</span> &lt;&lt; std::endl;</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    <span class="keywordflow">throw</span> <a class="code" href="structedda_1_1NotImplementedException.html">NotImplementedException</a>();</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <span class="keywordflow">return</span> 0;</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;}</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> T, ENABLE_IF_BASE_OF(T, Distribution) &gt;</div>
+<div class="line"><a name="l00094"></a><span class="lineno"><a class="line" href="namespaceedda_1_1dist.html#aa647a75ef90d5ec917d5d82cee61e35a">   94</a></span>&#160;<span class="keywordtype">double</span> <a class="code" href="namespaceedda_1_1dist.html#aa647a75ef90d5ec917d5d82cee61e35a">getMean</a>(<span class="keyword">const</span> T &amp;dist)</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;{</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    std::cerr &lt;&lt; <span class="stringliteral">&quot;Generic computation not implemented&quot;</span> &lt;&lt; std::endl;</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    <span class="keywordflow">throw</span> <a class="code" href="structedda_1_1NotImplementedException.html">NotImplementedException</a>();</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    <span class="keywordflow">return</span> 0;</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;}</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;<span class="preprocessor">#if 0</span></div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;<span class="preprocessor"></span><span class="keyword">template</span> &lt;<span class="keyword">class</span> T, ENABLE_IF_BASE_OF(T, Distribution)&gt;</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;<span class="keywordtype">double</span> <a class="code" href="namespaceedda_1_1dist.html#a97fb97d2f21ff7d6d25a4bdd27cec5e6">getSample</a>(<span class="keyword">const</span> T &amp;dist)</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;{</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    std::cerr &lt;&lt; <span class="stringliteral">&quot;Generic computation not implemented&quot;</span> &lt;&lt; std::endl;</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;    <span class="keywordflow">throw</span> <a class="code" href="structedda_1_1NotImplementedException.html">NotImplementedException</a>();</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;    <span class="keywordflow">return</span> 0;</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;}</div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;<span class="preprocessor"></span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T, <span class="keywordtype">int</span> N, ENABLE_IF_BASE_OF(T, Distribution)&gt;</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;__host__ __device__</div>
+<div class="line"><a name="l00118"></a><span class="lineno"><a class="line" href="namespaceedda_1_1dist.html#a97fb97d2f21ff7d6d25a4bdd27cec5e6">  118</a></span>&#160;<span class="keyword">inline</span> <a class="code" href="classedda_1_1Vector.html">Vector&lt;Real, N&gt;</a> <a class="code" href="namespaceedda_1_1dist.html#a97fb97d2f21ff7d6d25a4bdd27cec5e6">getSample</a>(<span class="keyword">const</span> <a class="code" href="classedda_1_1Tuple.html">Tuple&lt;T, N&gt;</a> &amp;distvec, thrust::default_random_engine &amp;rng)</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;{</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;  <a class="code" href="classedda_1_1Vector.html">Vector&lt;Real, N&gt;</a> out;</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;  <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i=0; i&lt;N; i++)</div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;    out[i] = <a class="code" href="namespaceedda_1_1dist.html#a97fb97d2f21ff7d6d25a4bdd27cec5e6">getSample</a>(distvec[i], rng);</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;  <span class="keywordflow">return</span> out;</div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;}</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;</div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> T, <span class="keywordtype">int</span> N, ENABLE_IF_BASE_OF(T, Distribution) &gt;</div>
+<div class="line"><a name="l00130"></a><span class="lineno"><a class="line" href="namespaceedda_1_1dist.html#ad57b2fa1045786424910800ecb46d95f">  130</a></span>&#160;<span class="keyword">inline</span> <a class="code" href="classedda_1_1Vector.html">Vector&lt;double, N&gt;</a> <a class="code" href="namespaceedda_1_1dist.html#aa647a75ef90d5ec917d5d82cee61e35a">getMean</a>(<span class="keyword">const</span> <a class="code" href="classedda_1_1Tuple.html">Tuple&lt;T, N&gt;</a> &amp;dist)</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;{</div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;    <a class="code" href="classedda_1_1Vector.html">Vector&lt;double,N&gt;</a> result;</div>
+<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> i=0; i&lt;N; i++)</div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;        result[i] = <a class="code" href="namespaceedda_1_1dist.html#aa647a75ef90d5ec917d5d82cee61e35a">getMean</a>(dist[i]);</div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;    <span class="keywordflow">return</span> result;</div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;}</div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;</div>
+<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;}  <span class="comment">// namespace dist</span></div>
+<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;}  <span class="comment">// namespace edda</span></div>
+<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;</div>
+<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;<span class="preprocessor">#endif // DISTRIBUTION_H_</span></div>
+<div class="ttc" id="classedda_1_1dist_1_1ContinuousDistribution_html"><div class="ttname"><a href="classedda_1_1dist_1_1ContinuousDistribution.html">edda::dist::ContinuousDistribution</a></div><div class="ttdef"><b>Definition:</b> distribution.h:34</div></div>
+<div class="ttc" id="namespaceedda_1_1dist_html_a7b2538cb9c7683dc03c02554fdea6a1e"><div class="ttname"><a href="namespaceedda_1_1dist.html#a7b2538cb9c7683dc03c02554fdea6a1e">edda::dist::operator-=</a></div><div class="ttdeci">T operator-=(const T &amp;lhs, const T &amp;rhs)</div><div class="ttdoc">random variable -= </div><div class="ttdef"><b>Definition:</b> distribution.h:47</div></div>
 <div class="ttc" id="edda__export_8h_html"><div class="ttname"><a href="edda__export_8h.html">edda_export.h</a></div></div>
-<div class="ttc" id="namespaceedda_1_1dist_html_a78f6668de51fec25ca4aa7b20e8ff0d4"><div class="ttname"><a href="namespaceedda_1_1dist.html#a78f6668de51fec25ca4aa7b20e8ff0d4">edda::dist::operator*</a></div><div class="ttdeci">T operator*(const T &amp;lhs, const double x)</div><div class="ttdoc">random variable * </div><div class="ttdef"><b>Definition:</b> distribution.h:72</div></div>
-<div class="ttc" id="classedda_1_1dist_1_1DiscreteDistribution_html"><div class="ttname"><a href="classedda_1_1dist_1_1DiscreteDistribution.html">edda::dist::DiscreteDistribution</a></div><div class="ttdef"><b>Definition:</b> distribution.h:35</div></div>
-<div class="ttc" id="namespaceedda_1_1dist_html_a47f4afe8c1eae437e92feba150506583"><div class="ttname"><a href="namespaceedda_1_1dist.html#a47f4afe8c1eae437e92feba150506583">edda::dist::operator-</a></div><div class="ttdeci">T operator-(const T &amp;lhs, const T &amp;rhs)</div><div class="ttdoc">random variable - </div><div class="ttdef"><b>Definition:</b> distribution.h:63</div></div>
+<div class="ttc" id="namespaceedda_1_1dist_html_a97fb97d2f21ff7d6d25a4bdd27cec5e6"><div class="ttname"><a href="namespaceedda_1_1dist.html#a97fb97d2f21ff7d6d25a4bdd27cec5e6">edda::dist::getSample</a></div><div class="ttdeci">__host__ __device__ Vector&lt; Real, N &gt; getSample(const Tuple&lt; T, N &gt; &amp;distvec, thrust::default_random_engine &amp;rng)</div><div class="ttdoc">Get a Monte-Carlo sample of the distribution. We rely on the specific implementation from each distri...</div><div class="ttdef"><b>Definition:</b> distribution.h:118</div></div>
+<div class="ttc" id="namespaceedda_1_1dist_html_a78f6668de51fec25ca4aa7b20e8ff0d4"><div class="ttname"><a href="namespaceedda_1_1dist.html#a78f6668de51fec25ca4aa7b20e8ff0d4">edda::dist::operator*</a></div><div class="ttdeci">T operator*(const T &amp;lhs, const double x)</div><div class="ttdoc">random variable * </div><div class="ttdef"><b>Definition:</b> distribution.h:74</div></div>
+<div class="ttc" id="classedda_1_1dist_1_1DiscreteDistribution_html"><div class="ttname"><a href="classedda_1_1dist_1_1DiscreteDistribution.html">edda::dist::DiscreteDistribution</a></div><div class="ttdef"><b>Definition:</b> distribution.h:37</div></div>
+<div class="ttc" id="namespaceedda_1_1dist_html_a47f4afe8c1eae437e92feba150506583"><div class="ttname"><a href="namespaceedda_1_1dist.html#a47f4afe8c1eae437e92feba150506583">edda::dist::operator-</a></div><div class="ttdeci">T operator-(const T &amp;lhs, const T &amp;rhs)</div><div class="ttdoc">random variable - </div><div class="ttdef"><b>Definition:</b> distribution.h:65</div></div>
 <div class="ttc" id="structedda_1_1NotImplementedException_html"><div class="ttname"><a href="structedda_1_1NotImplementedException.html">edda::NotImplementedException</a></div><div class="ttdef"><b>Definition:</b> common.h:39</div></div>
+<div class="ttc" id="thrust__common_8h_html"><div class="ttname"><a href="thrust__common_8h.html">thrust_common.h</a></div></div>
 <div class="ttc" id="edda__export_8h_html_a4130eba3dcc4b1e840d3ee6e2a2e4d6b"><div class="ttname"><a href="edda__export_8h.html#a4130eba3dcc4b1e840d3ee6e2a2e4d6b">EDDA_EXPORT</a></div><div class="ttdeci">#define EDDA_EXPORT</div><div class="ttdef"><b>Definition:</b> edda_export.h:17</div></div>
-<div class="ttc" id="namespaceedda_1_1dist_html_a009a15003c26d6a2758d765b7b6a1986"><div class="ttname"><a href="namespaceedda_1_1dist.html#a009a15003c26d6a2758d765b7b6a1986">edda::dist::operator+</a></div><div class="ttdeci">T operator+(const T &amp;lhs, const T &amp;rhs)</div><div class="ttdoc">random variable + </div><div class="ttdef"><b>Definition:</b> distribution.h:54</div></div>
-<div class="ttc" id="namespaceedda_1_1dist_html_a9885c551a8bdba31a86d259358b92b3a"><div class="ttname"><a href="namespaceedda_1_1dist.html#a9885c551a8bdba31a86d259358b92b3a">edda::dist::getSample</a></div><div class="ttdeci">__host__ double getSample(const Gaussian &amp;dist)</div><div class="ttdoc">Return a random sample. </div><div class="ttdef"><b>Definition:</b> gaussian.h:73</div></div>
+<div class="ttc" id="namespaceedda_1_1dist_html_a009a15003c26d6a2758d765b7b6a1986"><div class="ttname"><a href="namespaceedda_1_1dist.html#a009a15003c26d6a2758d765b7b6a1986">edda::dist::operator+</a></div><div class="ttdeci">T operator+(const T &amp;lhs, const T &amp;rhs)</div><div class="ttdoc">random variable + </div><div class="ttdef"><b>Definition:</b> distribution.h:56</div></div>
 <div class="ttc" id="classedda_1_1Tuple_html"><div class="ttname"><a href="classedda_1_1Tuple.html">edda::Tuple</a></div><div class="ttdef"><b>Definition:</b> tuple.h:18</div></div>
-<div class="ttc" id="classedda_1_1dist_1_1Distribution_html"><div class="ttname"><a href="classedda_1_1dist_1_1Distribution.html">edda::dist::Distribution</a></div><div class="ttdoc">The Distribution class is a root class for all distribution-type classes. </div><div class="ttdef"><b>Definition:</b> distribution.h:28</div></div>
+<div class="ttc" id="tuple_8h_html"><div class="ttname"><a href="tuple_8h.html">tuple.h</a></div></div>
+<div class="ttc" id="classedda_1_1dist_1_1Distribution_html"><div class="ttname"><a href="classedda_1_1dist_1_1Distribution.html">edda::dist::Distribution</a></div><div class="ttdoc">The Distribution class is a root class for all distribution-type classes. </div><div class="ttdef"><b>Definition:</b> distribution.h:30</div></div>
 <div class="ttc" id="common_8h_html"><div class="ttname"><a href="common_8h.html">common.h</a></div></div>
 <div class="ttc" id="classedda_1_1Vector_html"><div class="ttname"><a href="classedda_1_1Vector.html">edda::Vector</a></div><div class="ttdoc">Vectors are Tuples that have geometry concepts. </div><div class="ttdef"><b>Definition:</b> vector_matrix.h:26</div></div>
 <div class="ttc" id="vector__matrix_8h_html"><div class="ttname"><a href="vector__matrix_8h.html">vector_matrix.h</a></div></div>
-<div class="ttc" id="namespaceedda_1_1dist_html_aa647a75ef90d5ec917d5d82cee61e35a"><div class="ttname"><a href="namespaceedda_1_1dist.html#aa647a75ef90d5ec917d5d82cee61e35a">edda::dist::getMean</a></div><div class="ttdeci">double getMean(const T &amp;dist)</div><div class="ttdoc">Compute the mean of the distribution. </div><div class="ttdef"><b>Definition:</b> distribution.h:92</div></div>
-<div class="ttc" id="namespaceedda_1_1dist_html_a9108a700d9ad1ce168d1a4be549e05ba"><div class="ttname"><a href="namespaceedda_1_1dist.html#a9108a700d9ad1ce168d1a4be549e05ba">edda::dist::getCdf</a></div><div class="ttdeci">double getCdf(const T &amp;dist, double x)</div><div class="ttdoc">Compute CDF of a distribution. </div><div class="ttdef"><b>Definition:</b> distribution.h:81</div></div>
+<div class="ttc" id="namespaceedda_1_1dist_html_aa647a75ef90d5ec917d5d82cee61e35a"><div class="ttname"><a href="namespaceedda_1_1dist.html#aa647a75ef90d5ec917d5d82cee61e35a">edda::dist::getMean</a></div><div class="ttdeci">double getMean(const T &amp;dist)</div><div class="ttdoc">Compute the mean of the distribution. </div><div class="ttdef"><b>Definition:</b> distribution.h:94</div></div>
+<div class="ttc" id="namespaceedda_1_1dist_html_a9108a700d9ad1ce168d1a4be549e05ba"><div class="ttname"><a href="namespaceedda_1_1dist.html#a9108a700d9ad1ce168d1a4be549e05ba">edda::dist::getCdf</a></div><div class="ttdeci">double getCdf(const T &amp;dist, double x)</div><div class="ttdoc">Compute CDF of a distribution. </div><div class="ttdef"><b>Definition:</b> distribution.h:83</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Apr 15 2016 16:08:32 for EDDA by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Jun 13 2016 02:50:47 for EDDA by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

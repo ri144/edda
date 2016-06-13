@@ -38,7 +38,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
       <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
-      <li><a href="modules.html"><span>Modules</span></a></li>
       <li><a href="namespaces.html"><span>Namespaces</span></a></li>
       <li><a href="annotated.html"><span>Classes</span></a></li>
       <li class="current"><a href="files.html"><span>Files</span></a></li>
@@ -71,7 +70,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Friends</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(10)"><span class="SelectionMark">&#160;</span>Macros</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(11)"><span class="SelectionMark">&#160;</span>Groups</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(12)"><span class="SelectionMark">&#160;</span>Pages</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Typedefs</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Enumerations</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(8)"><span class="SelectionMark">&#160;</span>Enumerator</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(9)"><span class="SelectionMark">&#160;</span>Friends</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(10)"><span class="SelectionMark">&#160;</span>Macros</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(11)"><span class="SelectionMark">&#160;</span>Pages</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -99,6 +98,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <code>#include &quot;<a class="el" href="common_8h_source.html">common.h</a>&quot;</code><br/>
 <code>#include &quot;<a class="el" href="edda__export_8h_source.html">edda_export.h</a>&quot;</code><br/>
 <code>#include &quot;<a class="el" href="vector__matrix_8h_source.html">core/vector_matrix.h</a>&quot;</code><br/>
+<code>#include &quot;<a class="el" href="tuple_8h_source.html">core/tuple.h</a>&quot;</code><br/>
+<code>#include &quot;<a class="el" href="thrust__common_8h_source.html">core/thrust_common.h</a>&quot;</code><br/>
 </div>
 <p><a href="distribution_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
@@ -146,15 +147,20 @@ Functions</h2></td></tr>
 <tr class="memitem:aa647a75ef90d5ec917d5d82cee61e35a"><td class="memTemplItemLeft" align="right" valign="top">double&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceedda_1_1dist.html#aa647a75ef90d5ec917d5d82cee61e35a">edda::dist::getMean</a> (const T &amp;dist)</td></tr>
 <tr class="memdesc:aa647a75ef90d5ec917d5d82cee61e35a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compute the mean of the distribution.  <a href="#aa647a75ef90d5ec917d5d82cee61e35a">More...</a><br/></td></tr>
 <tr class="separator:aa647a75ef90d5ec917d5d82cee61e35a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a97fb97d2f21ff7d6d25a4bdd27cec5e6"><td class="memTemplParams" colspan="2">template&lt;typename T , int N, ENABLE_IF_BASE_OF(T, Distribution) &gt; </td></tr>
+<tr class="memitem:a97fb97d2f21ff7d6d25a4bdd27cec5e6"><td class="memTemplItemLeft" align="right" valign="top">__host__ __device__ Vector<br class="typebreak"/>
+&lt; Real, N &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceedda_1_1dist.html#a97fb97d2f21ff7d6d25a4bdd27cec5e6">edda::dist::getSample</a> (const Tuple&lt; T, N &gt; &amp;distvec, thrust::default_random_engine &amp;rng)</td></tr>
+<tr class="memdesc:a97fb97d2f21ff7d6d25a4bdd27cec5e6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a Monte-Carlo sample of the distribution. We rely on the specific implementation from each distribution.  <a href="#a97fb97d2f21ff7d6d25a4bdd27cec5e6">More...</a><br/></td></tr>
+<tr class="separator:a97fb97d2f21ff7d6d25a4bdd27cec5e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad57b2fa1045786424910800ecb46d95f"><td class="memTemplParams" colspan="2">template&lt;class T , int N, ENABLE_IF_BASE_OF(T, Distribution) &gt; </td></tr>
 <tr class="memitem:ad57b2fa1045786424910800ecb46d95f"><td class="memTemplItemLeft" align="right" valign="top">Vector&lt; double, N &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceedda_1_1dist.html#ad57b2fa1045786424910800ecb46d95f">edda::dist::getMean</a> (const Tuple&lt; T, N &gt; &amp;dist)</td></tr>
-<tr class="memdesc:ad57b2fa1045786424910800ecb46d95f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a Monte-Carlo sample of the distribution. We rely on the specific implementation from each distribution.  <a href="#ad57b2fa1045786424910800ecb46d95f">More...</a><br/></td></tr>
+<tr class="memdesc:ad57b2fa1045786424910800ecb46d95f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get vector mean.  <a href="#ad57b2fa1045786424910800ecb46d95f">More...</a><br/></td></tr>
 <tr class="separator:ad57b2fa1045786424910800ecb46d95f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Apr 15 2016 16:08:32 for EDDA by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Jun 13 2016 02:50:48 for EDDA by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>
