@@ -16,6 +16,8 @@
 #include "common.h"
 #include "edda_export.h"
 #include "core/vector_matrix.h"
+#include "core/tuple.h"
+#include "core/thrust_common.h"
 
 namespace edda {
 namespace dist {
@@ -108,6 +110,18 @@ double getSample(const T &dist)
     return 0;
 }
 #endif
+///
+/// \brief Return a vector sample from a vector of distributions
+///
+template <typename T, int N, ENABLE_IF_BASE_OF(T, Distribution)>
+__host__ __device__
+inline Vector<Real, N> getSample(const Tuple<T, N> &distvec, thrust::default_random_engine &rng)
+{
+  Vector<Real, N> out;
+  for (int i=0; i<N; i++)
+    out[i] = getSample(distvec[i], rng);
+  return out;
+}
 
 ///
 /// \brief Get vector mean

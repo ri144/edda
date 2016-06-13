@@ -149,7 +149,7 @@ vtkSmartPointer<vtkDataSet> process_vtk_file(string &vtk_file, string &source_fi
 
 
 int main(int argc, char **argv) {
-  cout << "randomSample <info file> " << endl;
+  cout << "randomSample <vtk file> " << endl;
   if (argc<=1)
     return -1;
   string input_file = argv[1];
@@ -161,7 +161,7 @@ int main(int argc, char **argv) {
   vtkSmartPointer<vtkDataSet> probField;
   probField = process_vtk_file(input_file, source_file);
 
-
+#if 0 // Following codes not working after new vtk5
   // Volume render
   vsp_new(vtkPiecewiseFunction, alphaChannelFunc);
   alphaChannelFunc->AddPoint(0, 0);
@@ -225,5 +225,5 @@ int main(int argc, char **argv) {
   //renderWin->Render();
 
   renderInteractor->Start();
-
+#endif
 }

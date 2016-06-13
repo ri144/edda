@@ -231,9 +231,8 @@ inline std::ostream& operator<<(std::ostream& os, const GaussianMixture<GMMs> &d
 template <int GMMs>
 inline GaussianMixture<GMMs>& operator-(GaussianMixture<GMMs> &x)
 {
-  for (int i=0; i<GMMs; i++)
-    x.models[i].m = -x.models[i].m;
-  return x;
+  throw NotImplementedException();
+
 }
 
 ///

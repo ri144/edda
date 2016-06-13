@@ -11,7 +11,7 @@
 namespace edda {
 
 namespace detail {
-    struct GetSample_functor {
+    struct GetSample {
       ///
       /// \param tuple0 distribution
       /// \param tuple1 Thrust random engine
@@ -22,6 +22,17 @@ namespace detail {
       {
         Dist &dist = thrust::get<0>(tuple);
         return dist::getSample(dist, thrust::get<1>(tuple));
+      }
+
+      template <class Dist> //, ENABLE_IF_BASE_OF(Dist, dist::Distribution)>
+      __host__ __device__
+      VECTOR3 operator() (thrust::tuple<Tuple3<Dist>, thrust::default_random_engine> &tuple)
+      {
+        Tuple3<Dist> &distvec = thrust::get<0>(tuple);
+        thrust::default_random_engine &randEng = thrust::get<1>(tuple);
+        return VECTOR3(dist::getSample(distvec, randEng),
+                       dist::getSample(distvec, randEng),
+                       dist::getSample(distvec, randEng));
       }
     };
 } // namespace detail
@@ -37,9 +48,10 @@ void randomSampleField(InputIterator begin, InputIterator end, OutputIterator ou
   int n = end-begin;
   thrust::transform( thrust::make_zip_iterator(thrust::make_tuple(begin, randomEngineIterator(seed)) ) ,
                      thrust::make_zip_iterator(thrust::make_tuple(end, randomEngineIterator(seed+n)) ),
-                     out, detail::GetSample_functor()) ;
+                     out, detail::GetSample()) ;
   seed += n;
 }
+
 
 } // edda
 

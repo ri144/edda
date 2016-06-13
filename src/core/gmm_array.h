@@ -41,7 +41,7 @@ namespace detail {
 
 class GmmArray{
   ///
-  /// This is a collection of Real arrays in the order of mean0, var0, weight0, mean1, var1, weight1...
+  /// This is a collection of 1D Real arrays in the order of mean0, var0, weight0, mean1, var1, weight1...
   /// The minimum numbers of arrays is 2 (mean and var)
   ///
   Tuple<NdArray<Real>, MAX_GMMs*3> dataArray;
