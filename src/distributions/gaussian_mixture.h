@@ -229,7 +229,7 @@ inline std::ostream& operator<<(std::ostream& os, const GaussianMixture<GMMs> &d
 /// \brief random variable with unary -
 ///
 template <int GMMs>
-inline GaussianMixture<GMMs>& operator-(GaussianMixture<GMMs> &x)
+inline GaussianMixture<GMMs> operator-(const GaussianMixture<GMMs> &x)
 {
   throw NotImplementedException();
 
