@@ -17,16 +17,18 @@ set (THRUST_DEVICE_SYSTEM "CUDA" CACHE STRING "Thrust device backend (CUDA/TBB/O
 set_property(CACHE THRUST_DEVICE_SYSTEM PROPERTY STRINGS "CUDA;TBB;OPENMP;CPP")
 ###
 
-# Tell the compiler to use C++11.
-include(CheckCXXCompilerFlag)
-CHECK_CXX_COMPILER_FLAG("-std=c++11" COMPILER_SUPPORTS_CXX11)
-CHECK_CXX_COMPILER_FLAG("-std=c++0x" COMPILER_SUPPORTS_CXX0X)
-if(COMPILER_SUPPORTS_CXX11)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
-elseif(COMPILER_SUPPORTS_CXX0X)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
-else()
-    message(WARNING "The compiler ${CMAKE_CXX_COMPILER} has no C++11 support. Please use a different C++ compiler.")
+# Tell the compiler to use C++11, if not using Visual Studio.
+if (NOT MSVC)
+    include(CheckCXXCompilerFlag)
+    CHECK_CXX_COMPILER_FLAG("-std=c++11" COMPILER_SUPPORTS_CXX11)
+    CHECK_CXX_COMPILER_FLAG("-std=c++0x" COMPILER_SUPPORTS_CXX0X)
+    if(COMPILER_SUPPORTS_CXX11)
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+    elseif(COMPILER_SUPPORTS_CXX0X)
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
+    else()
+        message(WARNING "The compiler ${CMAKE_CXX_COMPILER} has no C++11 support. Please use a different C++ compiler.")
+    endif()
 endif()
 
 
@@ -110,14 +112,17 @@ set (LIBRARY_OUTPUT_PATH "${PROJECT_BINARY_DIR}/lib")
 # Set variables for platform detection.
 if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
   set (OS_LINUX ON)
+  add_definitions(OS_LINUX)
 endif ()
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
   set (OS_MACOSX ON)
+  add_definitions(OS_MACOSX)
 endif ()
 
 if (WIN32)
   set (OS_WIN ON)
+  add_definitions(OS_WIN)
 endif ()
 
 if (${EDDA_BUILD_SHARED_LIBS})

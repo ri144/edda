@@ -15,6 +15,7 @@
 #ifndef _VECTOR_MATRIX_H_
 #define _VECTOR_MATRIX_H_
 
+#include <algorithm>
 #include <cmath>
 #include "common.h"
 #include "tuple.h"
