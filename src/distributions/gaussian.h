@@ -5,10 +5,10 @@
 #ifndef DIST_GAUSSIAN_H_
 #define DIST_GAUSSIAN_H_
 
-#define _USE_MATH_DEFINES  // For Visual Studio
-#include <cmath>
 #include <cstdlib>
 #include <iostream>
+#define _USE_MATH_DEFINES  // For Visual Studio
+#include <math.h>
 
 #include <boost/math/distributions.hpp>
 #include <thrust/random.h>
