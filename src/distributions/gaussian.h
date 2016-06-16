@@ -5,7 +5,7 @@
 #ifndef DIST_GAUSSIAN_H_
 #define DIST_GAUSSIAN_H_
 
-
+#define _USE_MATH_DEFINES  // For Visual Studio
 #include <cmath>
 #include <cstdlib>
 #include <iostream>
