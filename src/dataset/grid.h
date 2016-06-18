@@ -17,6 +17,7 @@
 #include "common.h"
 #include "core/interpolator.h"
 #include "core/vector_matrix.h"
+#include "edda_export.h"
 //#include "Cell.h"
 
 namespace edda{
@@ -64,7 +65,7 @@ typedef struct PointInfo
 /// \brief base class for grid
 ///
 //////////////////////////////////////////////////////////////////////////
-class Grid
+class EDDA_EXPORT Grid
 {
 public:
     Grid() {}

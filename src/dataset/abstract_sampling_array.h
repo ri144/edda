@@ -16,14 +16,14 @@ namespace edda {
 /// \brief Take a distribution data array and output a sample
 /// \param Dist The distribution type of the input data array.
 ///
-class DataSamplingArray: public AbstractDataArray
+class AbstractSamplingArray: public AbstractDataArray
 {
 protected:
   AbstractDataArray * array;
 public:
-  DataSamplingArray(AbstractDataArray *array_): array(array_) { }
+  AbstractSamplingArray(AbstractDataArray *array_): array(array_) { }
 
-  virtual ~DataSamplingArray() { if (array) delete array; }
+  virtual ~AbstractSamplingArray() { if (array) delete array; }
 
   virtual size_t getLength() { return array->getLength(); }
 

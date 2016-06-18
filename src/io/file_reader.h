@@ -8,6 +8,7 @@
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/info_parser.hpp>
 
+#include "edda_export.h"
 #include <distributions/distribution.h>
 #include <distributions/gaussian.h>
 #include <dataset/dataset.h>
@@ -33,23 +34,23 @@ shared_ary<T> loadRawFile(const std::string &fname, size_t len) {
   return shared_ary<T>(pData, len);
 }
 
-shared_ary<dist::Gaussian> loadGaussianRawArray(std::string meanfile, std::string stdfile, size_t len) ;
-shared_ary<Gaussian3> loadVec3GaussianRawArray(std::string meanfile, std::string stdfile, size_t len);
+shared_ary<dist::Gaussian> EDDA_EXPORT loadGaussianRawArray(std::string meanfile, std::string stdfile, size_t len) ;
+shared_ary<Gaussian3> EDDA_EXPORT loadVec3GaussianRawArray(std::string meanfile, std::string stdfile, size_t len);
 
 //----------------------------------------------------------------------------------------------------------
 // dataset creators
 
 /// \brief create a regular grid dataset of gaussian distribution
-std::shared_ptr<Dataset<dist::Gaussian> > loadGaussianRegularGrids(std::string &meanfile, std::string &stdfile, int dim[3]);
+std::shared_ptr<Dataset<dist::Gaussian> > EDDA_EXPORT loadGaussianRegularGrids(std::string &meanfile, std::string &stdfile, int dim[3]);
 
 /// \brief create a regular grid dataset of random values from gaussian distributions
-std::shared_ptr<Dataset<double> > loadGaussianSamplingRegularGrids(std::string &meanfile, std::string &stdfile, int dim[3]);
+std::shared_ptr<Dataset<double> > EDDA_EXPORT loadGaussianSamplingRegularGrids(std::string &meanfile, std::string &stdfile, int dim[3]);
 
 /// \brief create a regular grid dataset of 3d gaussian distribution
-std::shared_ptr<Dataset<Gaussian3> > loadVec3GaussianRegularGrids(std::string &meanfile, std::string &stdfile, int dim[3]);
+std::shared_ptr<Dataset<Gaussian3> > EDDA_EXPORT loadVec3GaussianRegularGrids(std::string &meanfile, std::string &stdfile, int dim[3]);
 
 /// \brief create a regular grid dataset of random samples from 3d gaussian distribution
-std::shared_ptr<Dataset<VECTOR3> > loadVec3GaussianSamplingRegularGrids(std::string &meanfile, std::string &stdfile, int dim[3]);
+std::shared_ptr<Dataset<VECTOR3> > EDDA_EXPORT loadVec3GaussianSamplingRegularGrids(std::string &meanfile, std::string &stdfile, int dim[3]);
 
 namespace detail{
   void print(boost::property_tree::ptree const& pt);
@@ -98,7 +99,7 @@ std::shared_ptr<Dataset<T> > loadData(std::string filename, bool bSamplingDistri
       shared_ary<dist::Gaussian> array = loadGaussianRawArray(mfile, sfile, array_size);
       data_array = new ScalarArray<dist::Gaussian> (array);
       if (bSamplingDistribution)
-        data_array = new DataSamplingArray(data_array);
+        data_array = new AbstractSamplingArray(data_array);
     } else {
       std::cout << "gtype not supported: " << gtype << std::endl;
       exit(1);
@@ -155,7 +156,7 @@ std::shared_ptr<Dataset<T> > loadVectorData(std::string filename, bool bSampling
       shared_ary<Gaussian3> array = loadVec3GaussianRawArray(mfile, sfile, array_size);
       data_array = new VectorArray<dist::Gaussian, 3> (array);
       if (bSamplingDistribution)
-        data_array = new DataSamplingArray(data_array);
+        data_array = new AbstractSamplingArray(data_array);
     } else {
       std::cout << "gtype not supported: " << gtype << std::endl;
       exit(1);

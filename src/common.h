@@ -13,6 +13,8 @@
 #include <boost/config.hpp>
 #include <type_traits>
 
+#include "edda.h"
+
 namespace edda {
 
 const double DEG_TO_RAD = 0.0174532925199432957692;  // PI / 180
