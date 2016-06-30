@@ -12,8 +12,8 @@
 //              01-2016         C-M Chen
 //////////////////////////////////////////////////////////////////////////
 
-#ifndef _VECTOR_MATRIX_H_
-#define _VECTOR_MATRIX_H_
+#ifndef EDDA_VECTOR_MATRIX_H_
+#define EDDA_VECTOR_MATRIX_H_
 
 #include <algorithm>
 #include <cmath>
