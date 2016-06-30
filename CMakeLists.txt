@@ -13,7 +13,7 @@ option (EDDA_BUILD_EXAMPLES "Build the example programs." ON)
 option (EDDA_BUILD_SHARED_LIBS "Build into shared libraries." ON)
 #option (EDDA_WITH_OPENMP "Build with OpenMP parallelization." ON)
 
-set (THRUST_DEVICE_SYSTEM "CUDA" CACHE STRING "Thrust device backend (CUDA/TBB/OPENMP/CPP).")
+set (THRUST_DEVICE_SYSTEM "CPP" CACHE STRING "Thrust device backend (CUDA/TBB/OPENMP/CPP).")
 set_property(CACHE THRUST_DEVICE_SYSTEM PROPERTY STRINGS "CUDA;TBB;OPENMP;CPP")
 ###
 
