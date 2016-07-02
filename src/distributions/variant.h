@@ -15,7 +15,7 @@ namespace dist{
 
   typedef boost::variant<Real, Gaussian, GaussianMixture<1>, GaussianMixture<2>, GaussianMixture<3>, GaussianMixture<4>, GaussianMixture<5>  > _Variant;
 
-  struct Variant : public _Variant, public Distribution {
+  struct Variant : public _Variant, public DistributionTag {
     Variant() : _Variant() {}
     Variant(const Real &obj) : _Variant (obj) {}
     Variant(const Gaussian &obj) : _Variant (obj) {}

@@ -27,14 +27,14 @@ namespace dist {
 ///
 /// This is useful for applications to identify whether a class is a distribution-type class, by using ENABLE_IF_BASE_OF()
 ///
-class EDDA_EXPORT Distribution {
+class EDDA_EXPORT DistributionTag {
     void NotImpError() const {std::cerr << "Functions in this class should be overloaded."; throw NotImplementedException(); }
 };
 
-class EDDA_EXPORT ContinuousDistribution : public Distribution{
+class EDDA_EXPORT ContinuousDistributionTag : public DistributionTag{
 };
 
-class EDDA_EXPORT DiscreteDistribution : public Distribution{
+class EDDA_EXPORT DiscreteDistributionTag : public DistributionTag{
 };
 
 // Here are generic functions that can be reused by new distributions if not
@@ -43,7 +43,7 @@ class EDDA_EXPORT DiscreteDistribution : public Distribution{
 ///
 /// \brief random variable -=
 ///
-template<class T, ENABLE_IF_BASE_OF(T, Distribution) >
+template<class T, ENABLE_IF_BASE_OF(T, DistributionTag) >
 inline T operator-=(const T& lhs, const T& rhs) {
     T h(lhs);
       return h += (-rhs);
@@ -52,7 +52,7 @@ inline T operator-=(const T& lhs, const T& rhs) {
 ///
 /// \brief random variable +
 ///
-template<class T, ENABLE_IF_BASE_OF(T, Distribution) >
+template<class T, ENABLE_IF_BASE_OF(T, DistributionTag) >
 inline T operator+(const T& lhs, const T& rhs) {
     T h(lhs);
     return h += rhs;
@@ -61,7 +61,7 @@ inline T operator+(const T& lhs, const T& rhs) {
 ///
 /// \brief random variable -
 ///
-template<class T, ENABLE_IF_BASE_OF(T, Distribution) >
+template<class T, ENABLE_IF_BASE_OF(T, DistributionTag) >
 inline T operator-(const T& lhs, const T& rhs) {
     T h(lhs);
     return h -= rhs;
@@ -70,7 +70,7 @@ inline T operator-(const T& lhs, const T& rhs) {
 ///
 /// \brief random variable *
 ///
-template<class T, ENABLE_IF_BASE_OF(T, Distribution) >
+template<class T, ENABLE_IF_BASE_OF(T, DistributionTag) >
 inline T operator*(const T& lhs, const double x) {
     T h(lhs);
     return h *= x;
@@ -79,7 +79,7 @@ inline T operator*(const T& lhs, const double x) {
 ///
 /// \brief Compute CDF of a distribution
 ///
-template <class T, ENABLE_IF_BASE_OF(T, Distribution) >
+template <class T, ENABLE_IF_BASE_OF(T, DistributionTag) >
 inline double getCdf(const T& dist, double x)
 {
     std::cerr << "Generic computation not implemented" << std::endl;
@@ -90,7 +90,7 @@ inline double getCdf(const T& dist, double x)
 ///
 /// \brief Compute the mean of the distribution
 ///
-template <class T, ENABLE_IF_BASE_OF(T, Distribution) >
+template <class T, ENABLE_IF_BASE_OF(T, DistributionTag) >
 double getMean(const T &dist)
 {
     std::cerr << "Generic computation not implemented" << std::endl;
@@ -102,7 +102,7 @@ double getMean(const T &dist)
 /// \brief Get a Monte-Carlo sample of the distribution. We rely on the specific implementation from each distribution.
 ///
 #if 0
-template <class T, ENABLE_IF_BASE_OF(T, Distribution)>
+template <class T, ENABLE_IF_BASE_OF(T, DistributionTag)>
 double getSample(const T &dist)
 {
     std::cerr << "Generic computation not implemented" << std::endl;
@@ -113,7 +113,7 @@ double getSample(const T &dist)
 ///
 /// \brief Return a vector sample from a vector of distributions
 ///
-template <typename T, int N, ENABLE_IF_BASE_OF(T, Distribution)>
+template <typename T, int N, ENABLE_IF_BASE_OF(T, DistributionTag)>
 __host__ __device__
 inline Vector<Real, N> getSample(const Tuple<T, N> &distvec, thrust::default_random_engine &rng)
 {
@@ -126,7 +126,7 @@ inline Vector<Real, N> getSample(const Tuple<T, N> &distvec, thrust::default_ran
 ///
 /// \brief Get vector mean
 ///
-template <class T, int N, ENABLE_IF_BASE_OF(T, Distribution) >
+template <class T, int N, ENABLE_IF_BASE_OF(T, DistributionTag) >
 inline Vector<double, N> getMean(const Tuple<T, N> &dist)
 {
     Vector<double,N> result;

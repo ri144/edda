@@ -23,7 +23,7 @@ namespace dist {
 ///
 /// \brief Defines a Gaussian class
 ///
-struct EDDA_EXPORT Gaussian: public ContinuousDistribution {
+struct EDDA_EXPORT Gaussian: public ContinuousDistributionTag {
   Real mean, var;
   // constructor
   __host__ __device__

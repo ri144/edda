@@ -31,7 +31,7 @@ struct GMMTuple {
 /// \brief Defines a Gaussian Mixture class
 ///
 template <int GMMs>
-class EDDA_EXPORT GaussianMixture: public ContinuousDistribution {
+class EDDA_EXPORT GaussianMixture: public ContinuousDistributionTag {
 
   void modelReduction(const std::vector<GMMTuple> &models_) {
     if (models_.size() <=  GMMs) {
