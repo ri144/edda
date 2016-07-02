@@ -87,7 +87,7 @@ namespace dist{
   ///
   /// \brief random variable *
   ///
-  template<class T, ENABLE_IF_BASE_OF(T, Distribution) >
+  template<class T, ENABLE_IF_BASE_OF(T, DistributionTag) >
   inline T operator*(const T& lhs, const double x) {
       T h(lhs);
       return h *= x;
@@ -98,7 +98,7 @@ namespace dist{
   ///
   /// \brief Return a vector sample
   ///
-  template <class Dist, int N, ENABLE_IF_BASE_OF(Dist, Distribution) >
+  template <class Dist, int N, ENABLE_IF_BASE_OF(Dist, DistributionTag) >
   inline Vector<Real, N> getSample(const Vector<Dist, N> &v)
   {
     Vector<Real, N> out;
