@@ -124,14 +124,14 @@ std::vector<dist::Variant> GmmVtkDataArray::getVector(size_t idx) {
     for (size_t i=0; i<arrays.size(); i++) {
       models[i/3].p[i%3] = arrays[i]->GetComponent(idx, c);
     }
-    v[c] = GaussianMixture<MAX_GMMs>(models);
+    v[c] = DefaultGaussianMixture(models);
   }
   return v;
 }
 
 void GmmVtkDataArray::setItem(size_t idx, int component, const boost::any &item) {
   // not tested
-  GaussianMixture<MAX_GMMs> gmm = boost::any_cast<GaussianMixture<MAX_GMMs> >( item );
+  DefaultGaussianMixture gmm = boost::any_cast<DefaultGaussianMixture >( item );
   for (size_t i=0; i<arrays.size(); i++) {
     arrays[i]->SetComponent(idx, component, gmm.models[i/3].p[i%3]);
   }
@@ -142,7 +142,7 @@ dist::Variant GmmVtkDataArray::getScalar(size_t idx) {
   for (size_t i=0; i<arrays.size(); i++) {
     models[i/3].p[i%3] = arrays[i]->GetComponent(idx, 0);
   }
-  return GaussianMixture<MAX_GMMs>(models);
+  return DefaultGaussianMixture(models);
 }
 
 

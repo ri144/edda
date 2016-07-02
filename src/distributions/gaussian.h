@@ -13,7 +13,7 @@
 #include <boost/math/distributions.hpp>
 #include <thrust/random.h>
 
-#include "distribution.h"
+#include "distribution_tag.h"
 #include "core/statistics.h"
 
 namespace edda {

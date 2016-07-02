@@ -17,6 +17,7 @@
 #include "core/vector_matrix.h"
 #include "core/tuple.h"
 #include "core/thrust_common.h"
+#include "distribution_tag.h"
 
 namespace edda {
 namespace dist {
@@ -26,7 +27,7 @@ namespace dist {
 ///
 /// This is useful for applications to identify whether a class is a distribution-type class, by using ENABLE_IF_BASE_OF()
 ///
-class EDDA_EXPORT Histogram {
+class EDDA_EXPORT Histogram: public DiscreteDistributionTag {
 
 };
 

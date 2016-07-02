@@ -11,10 +11,10 @@
 
 namespace edda{
 
-typedef Tuple<NdArray<Real>::SelfDevicePtr, MAX_GMMs*3> DeviceGMMArray;
+typedef Tuple<NdArray<Real>::SelfDevicePtr, MAX_GMs*3> DeviceGMMArray;
 
 namespace detail {
-    struct MakeStridedGmm: public thrust::unary_function<int, dist::GaussianMixture<MAX_GMMs> > {
+    struct MakeStridedGmm: public thrust::unary_function<int, dist::DefaultGaussianMixture > {
       // [GMMs][n] array
       DeviceGMMArray dDataPtrArray;
       int narrays;
@@ -23,9 +23,9 @@ namespace detail {
       MakeStridedGmm(const DeviceGMMArray &dDataPtrArray_, int narrays_) : dDataPtrArray(dDataPtrArray_), narrays(narrays_) {}
 
       __host__ __device__
-      dist::GaussianMixture<MAX_GMMs> operator() (int idx) const
+      dist::DefaultGaussianMixture operator() (int idx) const
       {
-        dist::GaussianMixture<MAX_GMMs> gmm;
+        dist::DefaultGaussianMixture gmm;
         int narray = narrays;
         for (int i=0; i<narray; i++) {
           gmm.models[i/3].p[i%3] = dDataPtrArray[i]->get_val(idx);
@@ -44,8 +44,8 @@ class GmmArray{
   /// This is a collection of 1D Real arrays in the order of mean0, var0, weight0, mean1, var1, weight1...
   /// The minimum numbers of arrays is 2 (mean and var)
   ///
-  Tuple<NdArray<Real>, MAX_GMMs*3> dataArray;
-  Tuple<NdArray<Real>::SelfDevicePtr, MAX_GMMs*3> dDataPtrArray;
+  Tuple<NdArray<Real>, MAX_GMs*3> dataArray;
+  Tuple<NdArray<Real>::SelfDevicePtr, MAX_GMs*3> dDataPtrArray;
 
   detail::MakeStridedGmm getMakeStridedGmm() {
     return detail::MakeStridedGmm(dDataPtrArray, narrays);
@@ -59,9 +59,9 @@ public:
 
   GmmArray(std::vector<NdArray<Real> > &data_) {
     narrays = data_.size();
-    if ( narrays > MAX_GMMs*3 ) {
+    if ( narrays > MAX_GMs*3 ) {
       printf ( "Warning: The provided GMM models are larger than the maximum size.  Extra models will be discarded!");
-      narrays = MAX_GMMs*3;
+      narrays = MAX_GMs*3;
     }
 
     assert(narrays >= 2);
