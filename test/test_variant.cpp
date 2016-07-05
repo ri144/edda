@@ -14,16 +14,23 @@
 #include "distributions/distribution.h"
 #include "distributions/variant.h"
 using namespace edda;
-const int iterations_count = 100000000;
+using namespace std;
+const int iterations_count = 10; //0000000;
+
+#define TEST_NEW
 
 double use_virtual() {
 
     dist::DefaultGaussianMixture gmm;
     double out;
+    dist::Distribution *dist = new dist::GaussianMixtureWrapper(gmm);
 
     for (int i = 0; i < iterations_count; i++) {
-        dist::Distribution *dist = new dist::GaussianMixtureWrapper(gmm);
+#ifdef TEST_NEW
+        dist = new dist::GaussianMixtureWrapper(gmm);
+#endif
         //dist->operator<<( std::cout ) << std::endl;
+        cout << sizeof(dist::GaussianMixtureWrapper) << endl;
         out = dist->getSample();
     }
     return out;
@@ -32,11 +39,14 @@ double use_virtual() {
 double use_variant() {
   dist::DefaultGaussianMixture gmm;
   double out;
+  dist::Variant dist = gmm;
 
     for (int i = 0; i < iterations_count; i++) {
-
-        dist::Variant var = gmm;
-        out = getSample(gmm);
+#ifdef TEST_NEW
+        dist = gmm;
+#endif
+        cout << sizeof(dist) << endl;
+        out = getSample(dist);
     }
     return out;
 }

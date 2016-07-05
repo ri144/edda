@@ -14,6 +14,7 @@ if (NOT EDDA_BUILD_WITH_CUDA)
     test_thrust.cpp
     test_NdArray.cpp
     test_variant.cpp
+    test_distribution.cpp
   )
 else ()
   # CUDA
