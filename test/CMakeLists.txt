@@ -13,6 +13,8 @@ if (NOT EDDA_BUILD_WITH_CUDA)
     test_gaussian.cpp
     test_thrust.cpp
     test_NdArray.cpp
+    test_variant.cpp
+    test_distribution.cpp
   )
 else ()
   # CUDA

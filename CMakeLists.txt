@@ -8,15 +8,24 @@ cmake_minimum_required (VERSION 2.8)
 project (edda)
 
 ### Provide options that the user can optionally select.
+option (EDDA_BUILD_MODELING "Build distribution modeling tools." OFF)
+option (EDDA_BUILD_VIS "Build distribution vis tools." OFF)
+
 option (EDDA_BUILD_TESTS "Build the test programs." OFF)
 option (EDDA_BUILD_EXAMPLES "Build the example programs." ON)
-option (EDDA_BUILD_SHARED_LIBS "Build into shared libraries." ON)
+option (EDDA_BUILD_SHARED_LIBS "Build into shared libraries." OFF)
 option (EDDA_BUILD_MODELER "Build the data modeler programs." OFF)
 #option (EDDA_WITH_OPENMP "Build with OpenMP parallelization." ON)
 
-set (THRUST_DEVICE_SYSTEM "CUDA" CACHE STRING "Thrust device backend (CUDA/TBB/OPENMP/CPP).")
+set (THRUST_DEVICE_SYSTEM "CPP" CACHE STRING "Thrust device backend (CUDA/TBB/OPENMP/CPP).")
 set_property(CACHE THRUST_DEVICE_SYSTEM PROPERTY STRINGS "CUDA;TBB;OPENMP;CPP")
 ###
+
+# VTK integration
+find_package(VTK)
+include (${VTK_USE_FILE})
+list(APPEND LINK_LIBS ${VTK_LIBRARIES})
+
 
 # Tell the compiler to use C++11, if not using Visual Studio.
 if (NOT MSVC)
@@ -129,7 +138,11 @@ else ()
     set(LIB_TYPE STATIC)
 endif ()
 
+# for examples
+add_definitions(-DSAMPLE_DATA_PATH="${CMAKE_SOURCE_DIR}/sample_data")
+
 ##############################################
+# sources
 
 # Make the configuration file.
 configure_file ("${PROJECT_SOURCE_DIR}/edda.h.in"
@@ -141,6 +154,19 @@ include_directories ("${PROJECT_SOURCE_DIR}/src")
 # Add the src subdirectory to the build.
 add_subdirectory (src)
 
+##############################################
+# tools
+
+# Build the converter project
+# If EDDA_BUILD_MODELER is on, build the data converter programs.
+if (EDDA_BUILD_MODELER)
+  add_subdirectory (distr_modeler)
+endif ()
+
+if (EDDA_BUILD_VIS)
+  add_subdirectory (vis)
+endif ()
+
 # If EDDA_BUILD_TESTS is on, enable testing.
 if (EDDA_BUILD_TESTS)
   enable_testing ()
@@ -151,10 +177,3 @@ endif ()
 if (EDDA_BUILD_EXAMPLES)
   add_subdirectory (examples)
 endif ()
-
-# Build the converter project
-# If EDDA_BUILD_MODELER is on, build the data converter programs.
-if (EDDA_BUILD_MODELER)
-  add_subdirectory (distr_modeler)
-endif ()
-

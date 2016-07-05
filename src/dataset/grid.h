@@ -8,8 +8,8 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#ifndef _GRID_H_
-#define _GRID_H_
+#ifndef EDDA_GRID_H_
+#define EDDA_GRID_H_
 
 #include <cassert>
 #include <vector>

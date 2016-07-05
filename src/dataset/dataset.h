@@ -79,6 +79,7 @@ public:
             std::vector<T> vData(vVertices.size());
             for (i=0; i<vVertices.size(); i++)
             {
+
               getData(vVertices[i], vData[i]);
             }
 
@@ -103,7 +104,7 @@ public:
     /// Only for structured grids.
     /// If <i,j,k> is out of boundary, the function will throw OutOfBoundException.
     ///
-    const T &at_comp(int i, int j, int k) const {
+    const T at_comp(int i, int j, int k) const {
       ReturnStatus r;
       CartesianGrid *cartesianGrid = dynamic_cast<CartesianGrid *>(pGrid) ;
 
@@ -113,7 +114,10 @@ public:
         if (r!=SUCCESS)
           throw OutOfBoundException();
 
-        return boost::any_cast<const T&>( pArray->getItem(idx) );
+        //return boost::any_cast<const T&>( pArray->getItem(idx) );
+        T data;
+        getData(idx, data);
+        return data;
       }
 
       // TODO for other grid types

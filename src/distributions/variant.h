@@ -6,64 +6,50 @@
 
 #include <boost/variant.hpp>
 
-#include "distribution.h"
+#include "distribution_tag.h"
 #include "gaussian.h"
 #include "gaussian_mixture.h"
+//#include "histogram.h"
 
 namespace edda{
 namespace dist{
 
-  typedef boost::variant<Real, Gaussian, GaussianMixture<1>, GaussianMixture<2>, GaussianMixture<3>, GaussianMixture<4>, GaussianMixture<5>  > _Variant;
+  typedef boost::variant<Real, Gaussian, DefaultGaussianMixture  > _Variant;
 
-  struct Variant : public _Variant, public Distribution {
+  struct Variant : public _Variant, public DistributionTag {
     Variant() : _Variant() {}
     Variant(const Real &obj) : _Variant (obj) {}
     Variant(const Gaussian &obj) : _Variant (obj) {}
-    template <int GMMs>
-    Variant(const GaussianMixture<GMMs> &obj) : _Variant (obj) {}
+    Variant(const DefaultGaussianMixture &obj) : _Variant (obj) {}
+    //Variant(const Histogram &obj) : _Variant (obj) {}
   };
 
   namespace detail{
     struct _getPdf : public boost::static_visitor<double> {
       double x;
-      _getPdf(double _x) : x(_x) {}
       template <class T> inline double operator() (const T& dist) { return getPdf(dist, x); }
-      inline double operator() (const Real& value) { return (x==value)?1.:0; }
     };
     struct _getCdf : public boost::static_visitor<double>  {
       double x;
-      _getCdf(double _x) : x(_x) {}
       template <class T> inline double operator() (const T& dist) { return getCdf(dist, x); }
-      inline double operator() (const Real& value) { return (x<=value)?1.:0; }
     };
     struct _getMean : public boost::static_visitor<double> {
       template <class T> inline double operator() (const T& dist) { return getMean(dist); }
-      inline double operator() (const Real& value) { return value; }
     };
     struct _getVar: public boost::static_visitor<double> {
       template <class T> inline double operator() (const T& dist) { return getVar(dist); }
-      inline double operator() (const Real& value) { return 0; }
     };
     struct _getSample : public boost::static_visitor<double> {
       template <class T> inline double operator() (const T& dist) { return getSample(dist); }
-      inline double operator() (const Real& value) { return value; }
     };
-#if 0
-    struct _plus_assign: public boost::static_visitor<double> {
-      template <class T> inline double operator() (const T& lhs, const T& rhs) { lhs += rhs; return lhs; }
-    };
-    struct _subtract_assign: public boost::static_visitor<Variant> {
-      template <class T> inline Variant operator() (const T& lhs, const T& rhs) { lhs -= rhs; return lhs; }
-    };
-#endif
   } // namespace detail
 
   inline double getPdf(const Variant &dist, double x) {
-    detail::_getPdf f(x);
+    detail::_getPdf f; f.x = x;
     return boost::apply_visitor( f, dist);
   }
   inline double getCdf(const Variant &dist, double x) {
-    detail::_getCdf f(x);
+    detail::_getCdf f; f.x = x;
     return boost::apply_visitor( f, dist );
   }
   inline double getMean(const Variant &dist)  {
@@ -78,27 +64,12 @@ namespace dist{
     detail::_getSample f;
     return boost::apply_visitor( f, dist);
   }
-#if 0
-  inline Variant operator-=(const Variant& lhs, const Variant& rhs) {
-    detail::_subtract_assign f;
-    return boost::apply_visitor( f, lhs, rhs);
-  }
-
-  ///
-  /// \brief random variable *
-  ///
-  template<class T, ENABLE_IF_BASE_OF(T, Distribution) >
-  inline T operator*(const T& lhs, const double x) {
-      T h(lhs);
-      return h *= x;
-  }
-#endif
 
 
   ///
   /// \brief Return a vector sample
   ///
-  template <class Dist, int N, ENABLE_IF_BASE_OF(Dist, Distribution) >
+  template <class Dist, int N, ENABLE_IF_BASE_OF(Dist, DistributionTag) >
   inline Vector<Real, N> getSample(const Vector<Dist, N> &v)
   {
     Vector<Real, N> out;

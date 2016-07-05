@@ -3,8 +3,8 @@
 # found in the LICENSE file.
 
 set(sources
-  #uncertainIsocontour.cu
-  #streamlineGaussian.cu
+  gmm_raw2vtk.cpp  
+  loadScalarDataset.cpp
 )
 
 include_directories(${CMAKE_SOURCE_DIR}/src)
