@@ -34,7 +34,7 @@ class EDDA_EXPORT Histogram: public DiscreteDistributionTag {
 ///
 /// \brief Compute the mean of the distribution
 ///
-double getMean(const Histogram &dist)
+inline double getMean(const Histogram &dist)
 {
     std::cerr << "Generic computation not implemented" << std::endl;
     throw NotImplementedException();
