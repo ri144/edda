@@ -19,7 +19,7 @@
 #include <vtkStructuredGrid.h>
 
 #include <distributions/gaussian_mixture.h>
-#include <dataset/abstract_data_array.h>
+#include <dataset/abstract_distr_array.h>
 #include <core/thrust_gmm_array.h>
 
 namespace edda {
@@ -27,7 +27,7 @@ namespace edda {
 //---------------------------------------------------------------------------------------
 
 /// \brief GmmVtkDataArray implements AbstractDataArray.  It holds vtkDataArrys and returns GMMs with interleaved memory accessing.
-class GmmVtkDataArray: public AbstractDataArray
+class GmmVtkDataArray: public AbstractDistrArray
 {
 protected:
   std::vector<vtkSmartPointer<vtkDataArray> > arrays;
@@ -43,19 +43,19 @@ public:
 
   typedef std::vector<vtkSmartPointer<vtkDataArray> > RawArrayType;
 
-  virtual ~GmmVtkDataArray() { }
+  virtual ~GmmVtkDataArray();
 
-  virtual size_t getLength() { return length; }
+  virtual size_t getLength();
 
-  virtual int getNumComponents() { return this->components; }
+  virtual int getNumComponents() ;
 
-  virtual dist::Variant getScalar(size_t idx);
+  virtual dist::Variant getDistr(size_t idx);
 
-  virtual std::vector<dist::Variant> getVector(size_t idx);
+  virtual std::vector<dist::Variant> getDistrVector(size_t idx);
 
-  virtual boost::any getItem(size_t idx);
+  virtual Real getScalar(size_t idx);
 
-  virtual void setItem(size_t idx, int component, const boost::any &item);
+  virtual std::vector<Real> getVector(size_t idx);
 
   virtual boost::any getRawArray() { return boost::any(arrays); }
 

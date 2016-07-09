@@ -12,6 +12,13 @@ using namespace std;
 namespace edda{
 using namespace dist;
 
+
+GmmVtkDataArray::~GmmVtkDataArray() { }
+
+size_t GmmVtkDataArray::getLength() { return length; }
+
+int GmmVtkDataArray::getNumComponents() { return this->components; }
+
 GmmVtkDataArray::GmmVtkDataArray(vtkFieldData *fieldData, const char *arrayNamePrefix)  {
   char meanArrayName[1024];
   char stdevArrayName[1024];
@@ -111,11 +118,15 @@ GmmVtkDataArray::GmmVtkDataArray(std::vector<vtkSmartPointer<vtkDataArray> > arr
   }
 }
 
-boost::any GmmVtkDataArray::getItem(size_t idx) {
-  return getVector(idx);
+dist::Variant GmmVtkDataArray::getDistr(size_t idx) {
+  std::vector<GMMTuple> models ( arrays.size()/3 );
+  for (size_t i=0; i<arrays.size(); i++) {
+    models[i/3].p[i%3] = arrays[i]->GetComponent(idx, 0);
+  }
+  return DefaultGaussianMixture(models);
 }
 
-std::vector<dist::Variant> GmmVtkDataArray::getVector(size_t idx) {
+std::vector<dist::Variant> GmmVtkDataArray::getDistrVector(size_t idx) {
   int components = this->getNumComponents();
   std::vector<dist::Variant> v( components );
   for (int c = 0; c < components; c++ )
@@ -129,21 +140,25 @@ std::vector<dist::Variant> GmmVtkDataArray::getVector(size_t idx) {
   return v;
 }
 
-void GmmVtkDataArray::setItem(size_t idx, int component, const boost::any &item) {
-  // not tested
-  DefaultGaussianMixture gmm = boost::any_cast<DefaultGaussianMixture >( item );
-  for (size_t i=0; i<arrays.size(); i++) {
-    arrays[i]->SetComponent(idx, component, gmm.models[i/3].p[i%3]);
-  }
+
+Real GmmVtkDataArray::getScalar(size_t idx) {
+  return getSample(getDistr(idx));
 }
 
-dist::Variant GmmVtkDataArray::getScalar(size_t idx) {
-  std::vector<GMMTuple> models ( arrays.size()/3 );
-  for (size_t i=0; i<arrays.size(); i++) {
-    models[i/3].p[i%3] = arrays[i]->GetComponent(idx, 0);
+std::vector<Real> GmmVtkDataArray::getVector(size_t idx) {
+  int components = this->getNumComponents();
+  std::vector<Real> v( components );
+  for (int c = 0; c < components; c++ )
+  {
+    std::vector<GMMTuple> models(arrays.size()/3) ;
+    for (size_t i=0; i<arrays.size(); i++) {
+      models[i/3].p[i%3] = arrays[i]->GetComponent(idx, c);
+    }
+    v[c] = getSample(DefaultGaussianMixture(models));
   }
-  return DefaultGaussianMixture(models);
+  return v;
 }
+
 
 
 std::shared_ptr<GmmArray> GmmVtkDataArray::genNdArray() {

@@ -10,7 +10,7 @@
 #include <memory>
 #include "distributions/variant.h"
 #include "grid.h"
-#include "dataset/data_array.h"
+#include "dataset/abstract_distr_array.h"
 
 namespace edda {
 
@@ -24,9 +24,9 @@ template <typename T>
 class Dataset {
 protected:
     Grid *pGrid;
-    AbstractDataArray *pArray;
+    AbstractDistrArray *pArray;
 public:
-    Dataset(Grid *pGrid, AbstractDataArray *pArray) {
+    Dataset(Grid *pGrid, AbstractDistrArray *pArray) {
       this->pGrid = pGrid;
       this->pArray = pArray;
     }
@@ -38,7 +38,7 @@ public:
     }
 
     Grid *getGrid() { return pGrid; }
-    AbstractDataArray *getArray () {return pArray; }
+    AbstractDistrArray *getArray () {return pArray; }
 
     ///
     /// \brief Get the dimension of the cartesian-grid data.
@@ -80,7 +80,7 @@ public:
             for (i=0; i<vVertices.size(); i++)
             {
 
-              getData(vVertices[i], vData[i]);
+              getSample(vVertices[i], vData[i]);
             }
 
             output = triLerp(vData[0], vData[1], vData[2], vData[3],
@@ -116,7 +116,33 @@ public:
 
         //return boost::any_cast<const T&>( pArray->getItem(idx) );
         T data;
-        getData(idx, data);
+        getSample(idx, data);
+        return data;
+      }
+
+      // TODO for other grid types
+      throw NotImplementedException();
+    }
+
+    ///
+    /// \brief Return the distribution in the computational space.
+    /// \param i,j,k The coordinates in the computational space.
+    /// \return The query result.
+    /// Only for structured grids.
+    /// If <i,j,k> is out of boundary, the function will throw OutOfBoundException.
+    ///
+    const T at_comp_distr(int i, int j, int k) const {
+      ReturnStatus r;
+      CartesianGrid *cartesianGrid = dynamic_cast<CartesianGrid *>(pGrid) ;
+
+      if (cartesianGrid) {
+        size_t idx;
+        r = cartesianGrid->getIndex(i,j,k, idx);
+        if (r!=SUCCESS)
+          throw OutOfBoundException();
+
+        T data;
+        getDistr(idx, data);
         return data;
       }
 
@@ -125,18 +151,32 @@ public:
     }
 
 protected:
-    template <typename Type>
-    void getData(int idx, Type &data) const {
-      data = boost::get<Type> ( pArray->getScalar(idx) );
+    void getSample(int idx, Real &data) const {
+      data = pArray->getScalar(idx) ;
     }
 
-    template <typename Type, int N>
-    void getData(int idx, Vector<Type, N> &data) const {
-      std::vector<dist::Variant> varvec =  pArray->getVector(idx) ;
+    template <int N>
+    void getSample(int idx, Vector<Real, N> &data) const {
+      std::vector<Real> varvec =  pArray->getVector(idx) ;
+      assert(N == varvec.size());
       for (int c=0; c<N; c++) {
-         data[c] = boost::get<Type>( varvec[c] );
+         data[c] = varvec[c];
       }
     }
+
+    void getDistr(int idx, dist::Variant &data) const {
+      data = pArray->getDistr(idx);
+    }
+
+    template <int N>
+    void getDistr(int idx, Vector<dist::Variant, N> &data) {
+      std::vector<dist::Variant> varvec =  pArray->getDistrVector(idx) ;
+      assert(N == varvec.size());
+      for (int c=0; c<N; c++) {
+         data[c] = varvec[c];
+      }
+    }
+
 };
 
 
@@ -145,7 +185,7 @@ protected:
 ///
 template <typename T>  // Return type of at_phys
 inline std::shared_ptr< Dataset<T> >
-make_Dataset(Grid *pGrid, AbstractDataArray *pArray)
+make_Dataset(Grid *pGrid, AbstractDistrArray *pArray)
 {
     return std::shared_ptr< Dataset<T> >(
                 new Dataset<T> (pGrid, pArray) );
