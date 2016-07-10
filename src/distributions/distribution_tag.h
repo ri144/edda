@@ -108,7 +108,7 @@ inline double getCdf(const Real& value, double x) { return (x<=value)?1.:0; }
 inline double getMean(const Real& value) { return value; }
 inline double getVar(const Real& value) { return 0; }
 inline double getSample(const Real& value) { return value; }
-
+inline const char *getName(const Real &x) { return "Real"; }
 }  // namespace dist
 }  // namespace edda
 

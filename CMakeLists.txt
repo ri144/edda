@@ -139,7 +139,7 @@ else ()
 endif ()
 
 # for examples
-add_definitions(-DSAMPLE_DATA_PATH="${CMAKE_SOURCE_DIR}/sample_data")
+add_definitions(-DSAMPLE_DATA_PATH="${CMAKE_SOURCE_DIR}/sample_data/")
 
 ##############################################
 # sources

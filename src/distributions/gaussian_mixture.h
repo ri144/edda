@@ -226,6 +226,12 @@ inline std::ostream& operator<<(std::ostream& os, const GaussianMixture<GMs> &di
   return os;
 }
 
+__host__ __device__
+template <int GMs>
+inline const char *getName(const GaussianMixture<GMs> &x) {
+    return "GaussianMixture";
+}
+
 // ------------------------------------------------------------------------------
 // Below defines Gaussian related arithmetics
 

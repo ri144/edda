@@ -9,7 +9,7 @@
 #include <vtkXMLImageDataWriter.h>
 #include <vtkDataSetWriter.h>
 #include <vtkStringArray.h>
-#include <io/edda_reader.h>
+#include <io/edda_vtk_reader.h>
 #include <cmath>
 
 #define vsp_new(T,x) vtkSmartPointer<T> x = vtkSmartPointer<T>::New()
