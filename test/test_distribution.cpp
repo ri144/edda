@@ -21,6 +21,19 @@ DefaultGaussianMixture gen_gmm()
   return gmm;
 }
 
+GaussianMixture<2> gen_gmm2()
+{
+  GaussianMixture<2> gmm;
+  for (int i=0; i<2; i++)
+  {
+    gmm.models[i].m = i;  gmm.models[i].v = 1; gmm.models[i].w=1;
+  }
+  gmm.normalizeWeights();
+
+  return gmm;
+}
+
+
 AbstractDistrArray *make_Gaussian_array() {
   shared_ary<Gaussian> array (new Gaussian[10], 10);
   AbstractDistrArray * abstract_array = new DistrArray<Gaussian>(array);
@@ -33,6 +46,14 @@ AbstractDistrArray * make_GMM_array() {
   for (int i=0; i<10; i++)
     array[i] = gen_gmm();
   AbstractDistrArray * abstract_array = new DistrArray<DefaultGaussianMixture>(array);
+  return abstract_array;
+}
+
+AbstractDistrArray * make_GMM2_array() {
+  shared_ary<GaussianMixture<2> > array (new GaussianMixture<2>[10], 10);
+  for (int i=0; i<10; i++)
+    array[i] = gen_gmm2();
+  AbstractDistrArray * abstract_array = new DistrArray<GaussianMixture<2> >(array);
   return abstract_array;
 }
 
@@ -53,6 +74,7 @@ int main()
 
   AbstractDistrArray * array1 = make_Gaussian_array();
   AbstractDistrArray * array2 = make_GMM_array();
+  AbstractDistrArray * array22 = make_GMM2_array();
   AbstractDistrArray * array3 = make_hybrid_array();
 
   int i;

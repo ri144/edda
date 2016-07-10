@@ -14,12 +14,17 @@
 namespace edda{
 namespace dist{
 
-  typedef boost::variant<Real, Gaussian, DefaultGaussianMixture  > _Variant;
+  typedef boost::variant<Real, Gaussian,
+  GaussianMixture<1>, GaussianMixture<2>, GaussianMixture<3>, GaussianMixture<4>, DefaultGaussianMixture  > _Variant;
 
   struct Variant : public _Variant, public DistributionTag {
     Variant() : _Variant() {}
     Variant(const Real &obj) : _Variant (obj) {}
     Variant(const Gaussian &obj) : _Variant (obj) {}
+    Variant(const GaussianMixture<1> &obj) : _Variant (obj) {}
+    Variant(const GaussianMixture<2> &obj) : _Variant (obj) {}
+    Variant(const GaussianMixture<3> &obj) : _Variant (obj) {}
+    Variant(const GaussianMixture<4> &obj) : _Variant (obj) {}
     Variant(const DefaultGaussianMixture &obj) : _Variant (obj) {}
     //Variant(const Histogram &obj) : _Variant (obj) {}
   };

@@ -73,6 +73,7 @@ void addVtkGmmArrays(vtkPointData *vtk_point_data, AbstractDistrArray *array, co
 
 void addVtkHistoArrays(vtkPointData *pointData, AbstractDistrArray *array, const string &array_name)
 {
+
 }
 
 void setDistrType(vtkFieldData* vtk_data, const char *distrName, const string &array_name_prefix)
