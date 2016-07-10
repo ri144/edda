@@ -5,7 +5,6 @@
 project (edda_test)
 
 include_directories(${CMAKE_SOURCE_DIR}/src)
-add_definitions(-DSAMPLE_DATA_PATH="${CMAKE_SOURCE_DIR}/sample_data")
 
 
 if (NOT EDDA_BUILD_WITH_CUDA)
@@ -14,6 +13,7 @@ if (NOT EDDA_BUILD_WITH_CUDA)
     test_thrust.cpp
     test_NdArray.cpp
     test_distribution.cpp
+    test_io.cpp
   )
 else ()
   # CUDA

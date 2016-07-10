@@ -24,7 +24,7 @@ namespace edda {
 /// This is the class that holds the actual array, in a smart array.
 /// \param T The element type of an array.
 ///
-template<typename Distr>
+template<typename Distr, ENABLE_IF_BASE_OF(Distr, dist::DistributionTag)>
 class DistrArray: public AbstractDistrArray
 {
 protected:
@@ -51,12 +51,14 @@ public:
   //virtual void setItem(size_t idx, int component, const boost::any &item) { array[idx] = boost::any_cast<T>( item );  }
 
   virtual boost::any getRawArray() { return boost::any(array); }
+
+  virtual const char * getDistrName() { return getName(Distr()); }
 };
 
 
 //---------------------------------------------------------------------------------------
 
-template<typename Distr, int N>
+template<typename Distr, int N, ENABLE_IF_BASE_OF(Distr, dist::DistributionTag)>
 class DistrVectorArray: public AbstractDistrArray
 {
 protected:
@@ -99,6 +101,8 @@ public:
   //virtual void setItem(size_t idx, int component, const boost::any &item) { array[idx] = boost::any_cast<Vector<T,N> >( item );  }
 
   virtual boost::any getRawArray() { return boost::any(array); }
+
+  virtual const char * getDistrName() { return getName(Distr()); }
 };
 
 

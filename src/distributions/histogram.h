@@ -91,6 +91,10 @@ inline std::ostream& operator<<(std::ostream& os, const Histogram &dist)
   return os;
 }
 
+__host__ __device__
+inline const char *getName(const Histogram &x) {
+    return "Histogram";
+}
 
 }  // namespace dist
 }  // namespace edda

@@ -145,6 +145,11 @@ inline std::ostream& operator<<(std::ostream& os, const Gaussian &dist)
     return os;
 }
 
+__host__ __device__
+inline const char *getName(const Gaussian &x) {
+    return "Gaussian";
+}
+
 // ------------------------------------------------------------------------------
 // Below defines Gaussian related arithmetics
 

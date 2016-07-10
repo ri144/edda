@@ -1,6 +1,8 @@
 #ifndef ABSTRACT_DISTR_ARRAY_H
 #define ABSTRACT_DISTR_ARRAY_H
 
+#include <string>
+#include <vector>
 #include <boost/any.hpp>
 #include "distributions/variant.h"
 
@@ -48,6 +50,10 @@ public:
   ///
   virtual boost::any getRawArray() = 0;
 
+  ///
+  /// Get gistribution name for data writer
+  ///
+  virtual const char * getDistrName() = 0;
 };
 
 } // edda

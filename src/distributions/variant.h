@@ -42,11 +42,14 @@ namespace dist{
     struct _getSample : public boost::static_visitor<double> {
       template <class T> inline double operator() (const T& dist) { return getSample(dist); }
     };
+    struct _getName : public boost::static_visitor<const char *> {
+      template <class T> inline const char *operator() (const T& dist) { return getName(dist); }
+    };
   } // namespace detail
 
   inline double getPdf(const Variant &dist, double x) {
     detail::_getPdf f; f.x = x;
-    return boost::apply_visitor( f, dist);
+    return boost::apply_visitor( f, dist );
   }
   inline double getCdf(const Variant &dist, double x) {
     detail::_getCdf f; f.x = x;
@@ -54,15 +57,19 @@ namespace dist{
   }
   inline double getMean(const Variant &dist)  {
     detail::_getMean f;
-    return boost::apply_visitor( f, dist);
+    return boost::apply_visitor( f, dist );
   }
   inline double getVar(const Variant &dist)  {
     detail::_getVar f;
-    return boost::apply_visitor( f, dist);
+    return boost::apply_visitor( f, dist );
   }
   inline double getSample(const Variant &dist) {
     detail::_getSample f;
-    return boost::apply_visitor( f, dist);
+    return boost::apply_visitor( f, dist );
+  }  
+  inline const char *getName(const Variant &dist) {
+    detail::_getName f;
+    return boost::apply_visitor( f, dist );
   }
 
 

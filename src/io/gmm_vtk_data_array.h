@@ -60,6 +60,8 @@ public:
   virtual boost::any getRawArray() { return boost::any(arrays); }
 
   std::shared_ptr<GmmArray> genNdArray() ;
+
+  virtual const char *getDistrName() { return "GaussianMixture"; }
 };
 
 } // namespace edda
