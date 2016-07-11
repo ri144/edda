@@ -32,6 +32,8 @@ typedef float Real;
 
 // You can add more for needed return status
 enum ReturnStatus { SUCCESS = 0, FAIL, OUT_OF_BOUND };
+enum DistrType { GMM, HIST, HYBRID};
+
 
 #ifdef OS_WIN
 typedef long long int64_t;
@@ -50,7 +52,7 @@ class OutOfBoundException{};
 ///
 #define ENABLE_IF_BASE_OF(T, B)  typename std::enable_if<std::is_base_of<B, T>::value>::type* = nullptr
 
-#define MAX_GMs 5
+#define MAX_GMs 2
 
 }  // namespace edda
 
