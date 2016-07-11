@@ -2,6 +2,8 @@
 # Use of this source code is governed by a MIT-style license that can be
 # found in the LICENSE file.
 
+project(edda_examples)
+
 set(sources
   gmm_raw2vtk.cpp  
   loadScalarDataset.cpp
@@ -10,7 +12,7 @@ set(sources
 include_directories(${CMAKE_SOURCE_DIR}/src)
 
 # Force compile .cu files
-add_definitions("-x c++")  
+#add_definitions("-x c++")
 
 
 foreach (file ${sources})
