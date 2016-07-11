@@ -11,8 +11,8 @@
 #include <distributions/estimate_gmm.h>
 #include "distributions/variant.h"
 #include "dataset/dataset.h"
-#include "dataset/abstract_data_array.h"
-#include "dataset/data_array.h"
+#include "dataset/abstract_distr_array.h"
+#include "dataset/distr_array.h"
 #include "core/interpolator.h"
 
 #include <netcdfcpp.h>
@@ -56,7 +56,7 @@ public:
   		yDim = dataFile.get_dim(yDimName.c_str())->size();
   		zDim = dataFile.get_dim(zDimName.c_str())->size();
   		ensDim = dataFile.get_dim(ensDimName.c_str())->size();
-  		//ensDim = 10;
+  		ensDim = 10;
 
   		NcVar *var = dataFile.get_var(varName.c_str());
 
@@ -107,7 +107,7 @@ public:
 	 	//cout << "length = " << pArray.getLength() << endl;
 	 	//cout << "value = " << pArray[11255]<< endl;
 
-	 	AbstractDataArray * abs_array = new ScalarArray<T>(pArray);
+	 	AbstractDistrArray * abs_array = new DistrArray<T>(pArray);
 	 	dataset = make_Dataset<T>(new RegularCartesianGrid(xDim,yDim,zDim), abs_array);
 
 	}
@@ -115,9 +115,9 @@ public:
 	DistrType getType(){
 		return dType;
 	}
-	T getDistributionAt(int i, int j, int k){
-		return dataset->at_comp(i,j,k);
-	}
+	/*T getDistributionAt(int i, int j, int k){
+		return dataset->at_comp_distr(i,j,k);
+	}*/
 
 	void writer(){
 		//TODO: write the dataset to .vti files

@@ -52,7 +52,7 @@ class OutOfBoundException{};
 ///
 #define ENABLE_IF_BASE_OF(T, B)  typename std::enable_if<std::is_base_of<B, T>::value>::type* = nullptr
 
-#define MAX_GMs 2
+#define MAX_GMs 5
 
 }  // namespace edda
 

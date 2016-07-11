@@ -22,7 +22,7 @@ set_property(CACHE THRUST_DEVICE_SYSTEM PROPERTY STRINGS "CUDA;TBB;OPENMP;CPP")
 ###
 
 # VTK integration
-set(VTK_DIR "/home/subhashis/VTK/VTK-build")
+
 find_package(VTK)
 include (${VTK_USE_FILE})
 list(APPEND LINK_LIBS ${VTK_LIBRARIES})
