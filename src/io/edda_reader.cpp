@@ -48,10 +48,28 @@ shared_ptr<Dataset<T> > loadEddaRandomSamplingDataset(const string &edda_file, c
     printf("dim: %d %d %d\n", dim[0], dim[1], dim[2]);
 
     // TODO : check if gmm dataset
+		// TODO: check if is Curvilinear grids
+	int numPoints = dim[0] * dim[1] * dim[2];
+	CVertex* pVertexGeom = new CVertex[numPoints];
+	double tempd[3];
+	for (int k = 0; k < dim[2]; k++){
+		for (int j = 0; j < dim[1]; j++){
+			for (int i = 0; i < dim[0]; i++){
+				int ind = k*dim[1] * dim[0] + j*dim[0] + i;// !!! need to confirm !!!
+				vtkdata->GetPoint(i, j, k, tempd);
+				pVertexGeom[ind].position[0] = tempd[0];
+				pVertexGeom[ind].position[1] = tempd[1];
+				pVertexGeom[ind].position[2] = tempd[2];
+
+			}
+		}
+	}
+
     shared_ptr<Dataset<T> > dataset = make_Dataset<T>(
-                                  new RegularCartesianGrid(dim[0], dim[1], dim[2]), // TODO: Curvilinear grids
-                                  new AbstractSamplingArray( new GmmVtkDataArray( vtkdata->GetPointData(), array_name.c_str() ) )
+			new CurvilinearGrid(dim, pVertexGeom),
+            new AbstractSamplingArray( new GmmVtkDataArray( vtkdata->GetPointData(), array_name.c_str() ) )
         );
+		// or is other structured grids
     // or is histogram dataset
 
     return dataset;

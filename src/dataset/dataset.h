@@ -10,6 +10,8 @@
 #include <memory>
 #include "distributions/variant.h"
 #include "grid.h"
+#include "CurvilinearGrid.h"
+
 #include "dataset/data_array.h"
 
 namespace edda {

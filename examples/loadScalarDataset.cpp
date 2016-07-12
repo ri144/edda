@@ -16,7 +16,9 @@ int main(int argc, char **argv)
   srand(time(NULL));  // random seeding
 
   cout << "Loading sample file" << endl;
-  string filename = string(SAMPLE_DATA_PATH) + "/isabel_pressure_small.vti";
+  //string filename = string(SAMPLE_DATA_PATH) + "/isabel_pressure_small.vti";
+  //string filename = string(SAMPLE_DATA_PATH) + "/out_92651_0.vts";
+  string filename = "D:/Data/Edda/single_passage_turbine/vts_files_generated/out_0_9602.vts";
 
   // load data with random sampling
   shared_ptr<Dataset<Real> > dataset = loadEddaScalarDataset(filename, "");
@@ -25,7 +27,8 @@ int main(int argc, char **argv)
   Real value;
   int i;
 
-  pos = VECTOR3(10,10,10);
+  //pos = VECTOR3(10,10,10);
+  pos = VECTOR3(0.0,0.01,0.01);
   dataset->at_phys(pos, value);
   cout << pos << ": " << value << endl;
 

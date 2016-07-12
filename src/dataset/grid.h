@@ -26,7 +26,7 @@ enum CellType {
 	TRIANGLE,
 	CUBE,
 	POLYGON,
-	TETRAHEDRON
+	TETRAHEDRON,
 };
 
 enum InterpType {
@@ -276,6 +276,7 @@ public:
 };
 
 */ 
+
 
 #if 0
 //////////////////////////////////////////////////////////////////////////
