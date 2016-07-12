@@ -5,8 +5,6 @@
 #include <common.h>
 #include <dataset/dataset.h>
 #include <distributions/distribution.h>
-#include <core/shared_ary.h>
-#include <dataset/abstract_data_array.h>
 
 #include <thrust/host_vector.h>
 #include <thrust/device_vector.h>

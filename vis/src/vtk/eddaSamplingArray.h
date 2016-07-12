@@ -5,8 +5,7 @@
 
 #include <vtkIdList.h>
 
-#include <dataset/abstract_data_array.h>
-#include <dataset/abstract_sampling_array.h>
+#include <dataset/abstract_distr_array.h>
 #include <core/vector_matrix.h>
 using namespace edda;
 
@@ -16,13 +15,13 @@ using namespace edda;
 ///
 class eddaSamplingArray : public vtkDataArray
 {
-  edda::AbstractDataArray *pArray;
+  edda::AbstractDistrArray *pArray;
 public:
   vtkTypeMacro(eddaSamplingArray,vtkDataArray)
   static eddaSamplingArray *New();
 
-  void SetEddaArray(edda::AbstractDataArray *array) {
-    pArray = new AbstractSamplingArray( array );
+  void SetEddaArray(edda::AbstractDistrArray *array) {
+    pArray = array ;
     this->SetNumberOfComponents( array->getNumComponents() );
     this->SetNumberOfTuples(array->getLength());
   }
@@ -130,9 +129,9 @@ public:
   // amount of data being returned.
   virtual void GetTuple(vtkIdType i, double * tuple)
   {
-    std::vector<dist::Variant> varvec = pArray->getVector(i);
+    std::vector<Real> varvec = pArray->getVector(i);
     for (int c = 0; c < this->GetNumberOfComponents(); c++)
-      tuple[c] = boost::get<Real> ( varvec[c] );
+      tuple[c] = varvec[c] ;
   }
 
   // Description:

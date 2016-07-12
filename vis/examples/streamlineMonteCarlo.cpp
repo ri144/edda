@@ -32,10 +32,9 @@
 #include "edda.h"
 #include "distributions/gaussian.h"
 #include "distributions/distribution.h"
-#include "io/edda_reader.h"
+#include "io/edda_vtk_reader.h"
 #include "filters/stream_tracer.h"
 #include "dataset/dataset.h"
-#include "io/edda_reader.h"
 
 #include "vtkTransformFilter.h"
 #include "vtkTransform.h"

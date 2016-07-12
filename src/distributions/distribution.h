@@ -28,6 +28,7 @@ public:
   virtual double getCdf(double x)=0;
   virtual double getMean()=0;
   virtual double getSample()=0;
+  virtual char *getName() = 0;
   virtual std::ostream& operator<<(std::ostream& os)=0;
 };
 
@@ -58,6 +59,10 @@ public:
   virtual std::ostream& operator<<(std::ostream& os) {
     os << dist;
     return os;
+  }
+
+  virtual char *getName() {
+    return dist::getName(dist);
   }
 };
 

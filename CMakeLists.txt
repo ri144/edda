@@ -14,6 +14,7 @@ option (EDDA_BUILD_VIS "Build distribution vis tools." OFF)
 option (EDDA_BUILD_TESTS "Build the test programs." OFF)
 option (EDDA_BUILD_EXAMPLES "Build the example programs." ON)
 option (EDDA_BUILD_SHARED_LIBS "Build into shared libraries." OFF)
+option (EDDA_BUILD_MODELER "Build the data modeler programs." OFF)
 #option (EDDA_WITH_OPENMP "Build with OpenMP parallelization." ON)
 
 set (THRUST_DEVICE_SYSTEM "CPP" CACHE STRING "Thrust device backend (CUDA/TBB/OPENMP/CPP).")
@@ -138,7 +139,7 @@ else ()
 endif ()
 
 # for examples
-add_definitions(-DSAMPLE_DATA_PATH="${CMAKE_SOURCE_DIR}/sample_data")
+add_definitions(-DSAMPLE_DATA_PATH="${CMAKE_SOURCE_DIR}/sample_data/")
 
 ##############################################
 # sources
@@ -155,8 +156,11 @@ add_subdirectory (src)
 
 ##############################################
 # tools
-if (EDDA_BUILD_MODELING)
-  # add related subdirectory
+
+# Build the converter project
+# If EDDA_BUILD_MODELER is on, build the data converter programs.
+if (EDDA_BUILD_MODELER)
+  add_subdirectory (distr_modeler)
 endif ()
 
 if (EDDA_BUILD_VIS)
@@ -173,4 +177,3 @@ endif ()
 if (EDDA_BUILD_EXAMPLES)
   add_subdirectory (examples)
 endif ()
-
