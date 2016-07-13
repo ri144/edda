@@ -80,7 +80,7 @@ shared_ptr<Dataset<T> > loadEddaDataset(const string &edda_file, const string &a
 
     if (type.compare("GaussianMixture")==0) {
       shared_ptr<Dataset<T> > dataset = make_Dataset<T>(
-                                 new RegularCartesianGrid(dim[0], dim[1], dim[2]),// TODO: CurvilinearGrid(dim, point_ary)
+                                 new CurvilinearGrid(dim, point_ary),
                                  new GmmVtkDataArray( vtkdata->GetPointData(), array_name_prefix.c_str() )
        );
       return dataset;

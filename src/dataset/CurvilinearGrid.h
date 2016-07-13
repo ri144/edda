@@ -92,7 +92,8 @@ namespace edda{
 	public:
 
 		CurvilinearGrid(int xdim, int ydim, int zdim);
-		CurvilinearGrid(int* dim, CVertex* pVertexGeom);
+		CurvilinearGrid(int* dim, CVertex* pVertexGeom); //from OSUFlow. maybe can delete
+		CurvilinearGrid(int* dim, float* point_ary);
 
 		CurvilinearGrid();
 		~CurvilinearGrid();

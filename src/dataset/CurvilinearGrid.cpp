@@ -563,6 +563,21 @@ CurvilinearGrid::CurvilinearGrid(int* dim, CVertex* pVertexGeom) :RegularCartesi
 	locate_initialization();
 }
 
+CurvilinearGrid::CurvilinearGrid(int* dim, float* point_ary) :RegularCartesianGrid(dim[0], dim[1], dim[2])
+{
+	int numPoints = dim[0] * dim[1] * dim[2];
+	m_pVertex = new CVertex[numPoints];
+	for (int ind = 0; ind < numPoints; ind++){
+		m_pVertex[ind].position[0] = point_ary[3 * ind];
+		m_pVertex[ind].position[1] = point_ary[3 * ind + 1];
+		m_pVertex[ind].position[2] = point_ary[3 * ind + 2];
+	}
+	
+	ComputeBBox();
+	locate_initialization();
+}
+
+
 CurvilinearGrid::~CurvilinearGrid()
 {
 }
