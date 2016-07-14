@@ -8,7 +8,6 @@ cmake_minimum_required (VERSION 2.8)
 project (edda)
 
 ### Provide options that the user can optionally select.
-option (EDDA_BUILD_MODELING "Build distribution modeling tools." OFF)
 option (EDDA_BUILD_VIS "Build distribution vis tools." OFF)
 
 option (EDDA_BUILD_TESTS "Build the test programs." OFF)

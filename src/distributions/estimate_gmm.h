@@ -9,10 +9,6 @@
 #include <iostream>
 #include <cmath>
 #include <vector>
-#include <sstream>
-
-using namespace std;
-//using namespace edda;
 
 namespace edda
 {
@@ -26,7 +22,7 @@ namespace edda
 
 ///////////////////////////////////////////
 /// EM helper function
-int check_convergence(double fmax, double fmin, double ftol)
+inline int check_convergence(double fmax, double fmin, double ftol)
 {
     double EPS = 1e-10;
     double delta = fabs(fmax - fmin);
@@ -36,7 +32,7 @@ int check_convergence(double fmax, double fmin, double ftol)
 
 ///////////////////////////////////////////
 /// EM helper function
-double eval_gaussian_density(double mean, double sigma, double val)
+inline double eval_gaussian_density(double mean, double sigma, double val)
 {
     double EPS = 1e-10;
     double prob=0.0;
@@ -61,7 +57,7 @@ double eval_gaussian_density(double mean, double sigma, double val)
 
 ///////////////////////////////////////////
 /// EM helper function
-void update_parameters(int n, double * data, int k, double * prob, double * mean, double * sd, double ** class_prob)
+inline void update_parameters(int n, double * data, int k, double * prob, double * mean, double * sd, double ** class_prob)
 {
     double EPS = 1e-6;
 
@@ -98,7 +94,7 @@ void update_parameters(int n, double * data, int k, double * prob, double * mean
 
 ///////////////////////////////////////////
 /// EM helper function
-double classprob(int j, double x, int k, double *prob, double *mean, double *sd)
+inline double classprob(int j, double x, int k, double *prob, double *mean, double *sd)
 {
     double num = prob[j]*eval_gaussian_density(mean[j],sd[j],x);
 
@@ -111,7 +107,7 @@ double classprob(int j, double x, int k, double *prob, double *mean, double *sd)
 
 ///////////////////////////////////////////
 /// EM helper function
-void update_class_prob(int n, double * data, int k, double * prob, double * mean, double * sd, double ** class_prob)
+inline void update_class_prob(int n, double * data, int k, double * prob, double * mean, double * sd, double ** class_prob)
 {
     int i, j;
     for (i = 0; i < n; i++)
@@ -121,7 +117,7 @@ void update_class_prob(int n, double * data, int k, double * prob, double * mean
 
 ///////////////////////////////////////////
 /// EM helper function
-double computeLogLikelihood(int n, double* data,int k, double* prob,double* mean,double* sd)
+inline double computeLogLikelihood(int n, double* data,int k, double* prob,double* mean,double* sd)
 {
     double llk=0;
 
@@ -231,7 +227,7 @@ void eddaComputeEM(double *samples, int numSamples, dist::GaussianMixture<GMMs>*
 ///////////////////////////////////////////
 /// Incremental update helper function
 template <int GMMs>
-bool testforMatch(double val, dist::GaussianMixture<GMMs>* currentGMM, vector<float> *valList, vector<float> *distList)
+bool testforMatch(double val, dist::GaussianMixture<GMMs>* currentGMM, std::vector<float> *valList, std::vector<float> *distList)
 {
     float sigmaTh = 2.0;
     int match=0;
@@ -277,8 +273,8 @@ void eddaUpdateGMMIncremental(double *samples, int numSamples, dist::GaussianMix
 
     for(int i=0;i<numSamples;i++)
     {
-        vector<float> valList;
-        vector<float> distList;
+        std::vector<float> valList;
+        std::vector<float> distList;
         int minIndex=0;
         float minProb=0.0;
         bool match;
