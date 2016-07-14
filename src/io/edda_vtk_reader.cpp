@@ -7,6 +7,7 @@
 #include <vtkFieldData.h>
 #include <vtkStringArray.h>
 #include <vtkStdString.h>
+#include <vtkPoints.h>
 
 #include "io/path.h"
 
@@ -72,14 +73,28 @@ shared_ptr<Dataset<T> > loadEddaDataset(const string &edda_file, const string &a
     int *dim = vtkdata->GetDimensions();
     printf("dim: %d %d %d\n", dim[0], dim[1], dim[2]);
 
-    // TODO : check if gmm dataset
-    shared_ptr<Dataset<T> > dataset = make_Dataset<T>(
-                                  new RegularCartesianGrid(dim[0], dim[1], dim[2]), // TODO: Curvilinear grids
-                                  new GmmVtkDataArray( vtkdata->GetPointData(), array_name_prefix.c_str() )
-        );
-    // or is histogram dataset
+    float *point_ary = (float *)vtkdata->GetPoints()->GetVoidPointer(0);
 
-    return dataset;
+    // check dataset type
+    string type = getDistrType(vtkdata->GetFieldData(), array_name_prefix);
+
+    if (type.compare("GaussianMixture")==0) {
+      shared_ptr<Dataset<T> > dataset = make_Dataset<T>(
+                                 new RegularCartesianGrid(dim[0], dim[1], dim[2]),// TODO: CurvilinearGrid(dim, point_ary)
+                                 new GmmVtkDataArray( vtkdata->GetPointData(), array_name_prefix.c_str() )
+       );
+      return dataset;
+
+    } else if (type.compare("Histogram")==0)
+    {
+      // TODO
+    }
+    else {
+      cout << "Unknown distribution type: " << type << endl;
+      exit(1);
+    }
+
+
   } else {
     printf("File format of %s not supported\n", edda_file.c_str());
     exit(1);
