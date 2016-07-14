@@ -22,9 +22,11 @@ set_property(CACHE THRUST_DEVICE_SYSTEM PROPERTY STRINGS "CUDA;TBB;OPENMP;CPP")
 ###
 
 # VTK integration
+
 find_package(VTK)
 include (${VTK_USE_FILE})
 list(APPEND LINK_LIBS ${VTK_LIBRARIES})
+
 
 
 # Tell the compiler to use C++11, if not using Visual Studio.
