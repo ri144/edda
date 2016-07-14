@@ -26,8 +26,7 @@ set_property(CACHE THRUST_DEVICE_SYSTEM PROPERTY STRINGS "CUDA;TBB;OPENMP;CPP")
 find_package(VTK)
 include (${VTK_USE_FILE})
 list(APPEND LINK_LIBS ${VTK_LIBRARIES})
-message("vtk location: " ${VTK_USE_FILE})
-message("vtk dir: " ${VTK_DIR})
+
 
 
 # Tell the compiler to use C++11, if not using Visual Studio.
