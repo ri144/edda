@@ -1,3 +1,7 @@
+// Copyright 2015 The Edda Authors. All rights reserved.
+// Use of this source code is governed by a MIT-style license that can be
+// found in the LICENSE file.
+
 #ifndef DISTR_MODELER_H
 #define DISTR_MODELER_H
 
@@ -14,6 +18,7 @@
 #include "dataset/abstract_distr_array.h"
 #include "dataset/distr_array.h"
 #include "core/interpolator.h"
+#include "io/edda_vtk_writer.h"
 
 #include <netcdfcpp.h>
 
@@ -22,26 +27,49 @@ using namespace std;
 
 namespace edda{
 
-template <typename T>
+
 class DistrModeler {
 protected:
 	DistrType dType;
 	const int NC_ERR = 2;
-	shared_ptr<Dataset<T> > dataset;
+	shared_ptr<Dataset<Real> > dataset;
 public:
 	DistrModeler(DistrType type){
 		//currently updating the type of distribution (GMM/HIST)
-		//can have more variables in future to hold different settings while modelling like partitioning algortihm etc.
-		dType = type;
-		
+		//can have more variables in future to hold different settings while modelling,  like partitioning algortihm etc.
+		dType = type;		
 	}
+
 	//loader() will be overloaded to handle different types of input data and partitioning styles
+	void loader(string filename, string xDimName, string yDimName, string zDimName, string ensDimName, string varName)
+	{
+		switch(dType){
+			case(GMM):
+				loader<dist::DefaultGaussianMixture>(filename, xDimName, yDimName, zDimName, ensDimName, varName);
+				break;
+			case(GMM1):
+				loader<dist::GaussianMixture<1>>(filename, xDimName, yDimName, zDimName, ensDimName, varName);
+				break;
+			case(GMM2):
+				loader<dist::GaussianMixture<2>>(filename, xDimName, yDimName, zDimName, ensDimName, varName);
+				break;
+			case(GMM3):
+				loader<dist::GaussianMixture<3>>(filename, xDimName, yDimName, zDimName, ensDimName, varName);
+				break;
+			case(GMM4):
+				loader<dist::GaussianMixture<4>>(filename, xDimName, yDimName, zDimName, ensDimName, varName);
+				break;
+			case(GMM5):
+				loader<dist::GaussianMixture<5>>(filename, xDimName, yDimName, zDimName, ensDimName, varName);
+				break;
+		}
+	}
+
+	template <typename T>
 	void loader(string filename, string xDimName, string yDimName, string zDimName, string ensDimName, string varName)
 	{
 		//input data parameters
 		size_t xDim(0), yDim(0), zDim(0), ensDim(0);
-
-		
 
 		//try loading the netcdf file.
 		NcFile dataFile(filename.c_str(), NcFile::ReadOnly);
@@ -68,8 +96,10 @@ public:
 
   		data = new float[ensDim];
   		dataD = new double[ensDim];
-  		
+
+  		//based on the dType provided by the user create appropiate array type.  		
   		shared_ary<T> pArray (new T[xDim*yDim*zDim], xDim*yDim*zDim);
+  		
 
 	 	for(size_t z=0; z<zDim; z++)
 	 	{
@@ -88,40 +118,37 @@ public:
 	 					exit(NC_ERR);
 	 				}
 	        		//TODO::Will have to create an API to handle Histogram
-	 				T new_gmm;
+	 				
 	 				for(size_t i=0; i<ensDim; i++)
 	 					dataD[i] = (double) data[i];
 
-
-    				eddaComputeEM(dataD,ensDim, &new_gmm);
-    				//cout << "[" <<z*xDim*yDim + y*xDim + x << "]" <<new_gmm << endl;
+	 				T new_distr;
+    				eddaComputeEM(dataD,ensDim, &new_distr);
 	 				
-	        		pArray[z*xDim*yDim + y*xDim + x] = new_gmm;
+	        		pArray[z*xDim*yDim + y*xDim + x] = new_distr;
 
 
 	 			}
 	 		}
 	 	}
-
-	 	//cout << "some test results:\n" ;
-	 	//cout << "length = " << pArray.getLength() << endl;
-	 	//cout << "value = " << pArray[11255]<< endl;
-
 	 	AbstractDistrArray * abs_array = new DistrArray<T>(pArray);
-	 	dataset = make_Dataset<T>(new RegularCartesianGrid(xDim,yDim,zDim), abs_array);
+	 	dataset = make_Dataset<Real>(new RegularCartesianGrid(xDim,yDim,zDim), abs_array);
 
 	}
 
 	DistrType getType(){
 		return dType;
 	}
-	/*T getDistributionAt(int i, int j, int k){
-		return dataset->at_comp_distr(i,j,k);
-	}*/
-
-	void writer(){
-		//TODO: write the dataset to .vti files
+	
+	void writeToVTK(const string &edda_fname, const string &array_name_prefix){
+		writeEddaVtkDataset(dataset, edda_fname, array_name_prefix);
 	}
+
+	shared_ptr<Dataset<Real>> getDataset(){
+		return dataset;
+	}
+
+
 };
 
 }
