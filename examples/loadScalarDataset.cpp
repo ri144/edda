@@ -14,39 +14,44 @@ int main(int argc, char **argv)
 {
   srand(time(NULL));  // random seeding
 
+  VECTOR3 pos, pos2, pos3;
+  pos = VECTOR3(5, 5, 5);
+  pos2 = VECTOR3(2.1, 2.1, 2.1);
+  pos3 = VECTOR3(0.0, 0.0, 0.0);
+
   cout << "Loading sample file" << endl;
+
+  ////for testing regular grid
   //string filename = string(SAMPLE_DATA_PATH) + "/isabel_pressure_small.vti";
+  
+  //for testing curvilinear grid
   string filename = string(SAMPLE_DATA_PATH) + "/out_92651_0.vts";
-  //string filename = "D:/Data/Edda/single_passage_turbine/vts_files_generated/out_0_9602.vts";
+  pos2 = VECTOR3(-0.02, -0.4312, 0.006); //for out_92651_0.vts //vert id 1474 (4,7,3)
+  //however, error occurs when testing out_0_9602.vts with pos2 = VECTOR3(-0.03, 0.416, 0.208); //for out_0_9602.vts //vert id 831 (3,8,6)
 
   // load data with random sampling
   shared_ptr<Dataset<Real> > dataset = loadEddaScalarDataset(filename, "");
 
-  VECTOR3 pos;
+  
   Real value;
   int i;
 
-  pos = VECTOR3(5, 5, 5);
+  
   value = dataset->at_comp((int)pos[0], (int)pos[1], (int)pos[2]);
   cout << "at_comp " << pos << " : " << value << endl;
-
-  pos = VECTOR3(-0.02, -0.4312, 0.006); //for out_92651_0.vts //vert id 1474 (4,7,3)
-  //pos = VECTOR3(-0.03, 0.416, 0.208); //for out_0_9602.vts //vert id 831 (3,8,6)
-  //pos = VECTOR3(-0.022, 0.426, 0.186); //another for out_0_9602.vts //vert id 543 (3,4,4)
-
-  if (dataset->at_phys(pos, value) == SUCCESS)
-	  cout << pos << ": " << value << endl;
+  
+  
+  if (dataset->at_phys(pos2, value) == SUCCESS)
+	  cout << pos2 << ": " << value << endl;
   else
-	  cout << pos << ": " << "fail to get value at given position" << endl;
+	  cout << pos2 << ": " << "fail to get value at given position" << endl;
 
-  pos = VECTOR3(0.0, 0.0, 0.0);
-  if (dataset->at_phys(pos, value) == SUCCESS)
-	  cout << pos << ": " << value << endl;
+  
+  if (dataset->at_phys(pos3, value) == SUCCESS)
+	  cout << pos3 << ": " << value << endl;
   else
-	  cout << pos << ": " << "fail to get value at given position" << endl;
+	  cout << pos3 << ": " << "fail to get value at given position" << endl;
 
  
-
-
   return 0;
 }

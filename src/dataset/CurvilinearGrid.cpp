@@ -749,7 +749,7 @@ ReturnStatus CurvilinearGrid::at_vertex(int verIdx, VECTOR3& pos)
 {
 	int totalVer = xdim() * ydim() * zdim();
 	if ((verIdx < 0) || (verIdx >= totalVer))
-		return FAIL;
+		return OUT_OF_BOUND;
 	/*
 	zidx = verIdx / (xdim() * ydim());
 	yidx = verIdx % (xdim() * ydim());
@@ -976,7 +976,7 @@ int CurvilinearGrid::coordinates_at_cell(VECTOR3 cell, VECTOR3* dp)
 	std::vector<int> verIds;
 
 	int cellId = (int)cell[0] + ((int)cell[1])*(xcelldim()) + ((int)cell[2])*(xcelldim())*(ycelldim());
-	if (!getCellVertices(cellId, T4_CELL, verIds))
+	if (getCellVertices(cellId, T4_CELL, verIds) != SUCCESS)
 		return -1;
 
 	if (verIds.size() != 8)//sth wrong
@@ -1008,15 +1008,16 @@ ReturnStatus CurvilinearGrid::phys_to_cell(PointInfo& pInfo)
 
 	//check if it is out of bound
 	if (!isInBBox(pInfo.phyCoord))
-		return FAIL;
+		return OUT_OF_BOUND;
 
 	int fromcellId = pInfo.fromCell;//.inCell;
 
 	Cell fromcell, incell;
 	if (pInfo.fromCell == -1)//first point
 	{
-		if (-1 == locate(pInfo.phyCoord, incell))//pInfo.phyCoord is in cell
-			return FAIL;
+		ReturnStatus rs = locate(pInfo.phyCoord, incell);
+		if (SUCCESS != rs)//pInfo.phyCoord is in cell
+			return rs;
 		//from cell id = incell
 		fromcellId = (int)incell.ijk[0] + ((int)incell.ijk[1])*(xcelldim()) + ((int)incell.ijk[2])*(xcelldim())*(ycelldim());
 
@@ -1029,10 +1030,9 @@ ReturnStatus CurvilinearGrid::phys_to_cell(PointInfo& pInfo)
 
 		fromcell.ijk = fromijk; fromcell.subid = -1; fromcell.type = CELL_HEXAHEDRON;
 
-		if (-1 == locate(pInfo.phyCoord, fromcell, incell))
-			return FAIL;
-
-
+		ReturnStatus rs = locate(pInfo.phyCoord, fromcell, incell);
+		if (SUCCESS != rs)
+			return rs;
 	}
 	//pInfo.fromCell=cell;
 
@@ -1530,7 +1530,7 @@ bool CurvilinearGrid::isInCell(PointInfo& pInfo, const int cellId)
 //		vVertices: the vertex lis of the cell
 //////////////////////////////////////////////////////////////////////////
 //get vertex ids for each cell
-int CurvilinearGrid::getCellVertices(int cellId,
+ReturnStatus CurvilinearGrid::getCellVertices(int cellId,
 	CellTopoType cellType,
 	std::vector<int>& vVertices)
 {
@@ -1538,7 +1538,7 @@ int CurvilinearGrid::getCellVertices(int cellId,
 	int xidx, yidx, zidx, index;
 
 	if ((cellId < 0) || (cellId >= totalCell))
-		return 0;
+		return OUT_OF_BOUND;
 
 	vVertices.clear();
 	zidx = cellId / (xcelldim() * ycelldim());
@@ -1553,10 +1553,10 @@ int CurvilinearGrid::getCellVertices(int cellId,
 		index = (zidx + kFor) * ydim() * xdim() + (yidx + jFor) * xdim() + (xidx + iFor);
 		vVertices.push_back(index);
 	}
-	return 1;
+	return SUCCESS;
 }
 
-int CurvilinearGrid::locate(VECTOR3 pp, Cell& prev_cell, Cell& cell)
+ReturnStatus CurvilinearGrid::locate(VECTOR3 pp, Cell& prev_cell, Cell& cell)
 {
 	int res;
 
@@ -1564,13 +1564,12 @@ int CurvilinearGrid::locate(VECTOR3 pp, Cell& prev_cell, Cell& cell)
 	res = tetrahedral_walk_locate(pp, prev_cell, cell);
 
 	if (res != 1)
-		res = locate(pp, cell);
-
-
-	return res;
+		return locate(pp, cell);
+	else
+		return SUCCESS;
 }
 
-int	CurvilinearGrid::locate(VECTOR3 pp, Cell& cell)
+ReturnStatus CurvilinearGrid::locate(VECTOR3 pp, Cell& cell)
 {
 	Cell    initial_cell;
 	VECTOR3 bb_lo, bb_hi;
@@ -1585,7 +1584,7 @@ int	CurvilinearGrid::locate(VECTOR3 pp, Cell& cell)
 	if (pp[0]<minBound[0] || pp[1]<minBound[1] || pp[2]<minBound[2] ||
 		pp[0]>maxBound[0] || pp[1]>maxBound[1] || pp[2]>maxBound[2])
 
-		return -1;//out of bound
+		return OUT_OF_BOUND;//out of bound
 
 	//debuging
 
@@ -1595,7 +1594,7 @@ int	CurvilinearGrid::locate(VECTOR3 pp, Cell& cell)
 
 	//2. second try
 	if (1 != locate_close_vertex_cell(pp, vc))
-		return -1;
+		return FAIL;
 
 	//debug
 	//VECTOR3 vex[8];
@@ -1607,7 +1606,7 @@ int	CurvilinearGrid::locate(VECTOR3 pp, Cell& cell)
 	//if ((return_iblank && (1 <= res && res <= 15)) || res == 1)
 	// goto done;
 	if (res == 1)//done
-		return 1;
+		return SUCCESS;
 
 	//3. third try
 	const int MAX_ADAPTIVE_WALK_DESTINATIONS = 8;
@@ -1640,7 +1639,7 @@ int	CurvilinearGrid::locate(VECTOR3 pp, Cell& cell)
 		res = tetrahedral_walk_locate(pp, initial_cell, cell);
 		//			if ((return_iblank && (1 <= res && res <= 15)) || res == 1)
 		if (res == 1)
-			return res;
+			return SUCCESS;
 	}
 
 	// fourth try
@@ -1667,7 +1666,9 @@ int	CurvilinearGrid::locate(VECTOR3 pp, Cell& cell)
 	res = tetrahedral_walk_locate(pp, initial_cell, cell);
 
 	//added by Cheng Li
-	return res;
-
+	if (res == 1)
+		return SUCCESS;
+	else
+		return FAIL;
 }
 

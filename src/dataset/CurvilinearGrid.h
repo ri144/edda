@@ -9,11 +9,7 @@ namespace edda{
 #define DIR_J 1
 #define DIR_K 2
 
-	//// !!! TO DO: functions with return type ReturnStatus are not throughly checked when returning FAIL or OUT_OF_BOUND yet. !!!
-
-
-
-	//////////////  This CVertex class is used in OSUFlow for CurvilinearGrid and IrregularGrid. can be placed at another file for more organized code ////////////////
+	//////////////  This CVertex class is used in OSUFlow for CurvilinearGrid and IrregularGrid. In OSUFlow CVertex is defined in Element.h. can be placed at another file for more organized code ////////////////
 	class CVertex
 	{
 	public:
@@ -25,7 +21,7 @@ namespace edda{
 		void SetPos(VECTOR3& pos) { position = pos; }
 	};
 
-	//////////////  This CellTopoType is used in OSUFlow. can be placed at another file for more organized code ////////////////
+	//////////////  This CellTopoType is used in OSUFlow. In OSUFlow CVertex is defined in Grid.h. can be placed at another file for more organized code ////////////////
 	// define the cell type
 	enum CellTopoType
 	{
@@ -103,7 +99,7 @@ namespace edda{
 		// whether the physical point is on the boundary
 		bool at_phys(VECTOR3& pos);
 		// get vertex list of a cell
-		int getCellVertices(int cellId, CellTopoType cellType, std::vector<int>& vVertices);
+		ReturnStatus getCellVertices(int cellId, CellTopoType cellType, std::vector<int>& vVertices);
 		// get the cell id and also interpolating coefficients for the given physical position
 		ReturnStatus phys_to_cell(PointInfo& pInfo);
 		// the volume of cell
@@ -152,8 +148,8 @@ namespace edda{
 
 		int hexahedral_walk_locate(VECTOR3, Cell, Cell&);
 
-		int	locate(VECTOR3, Cell&);
-		int locate(VECTOR3 pp, Cell& prev_cell, Cell& cell);
+		ReturnStatus locate(VECTOR3, Cell&);
+		ReturnStatus locate(VECTOR3 pp, Cell& prev_cell, Cell& cell);
 		//	int	locate(VECTOR3&, VECTOR3&, VECTOR3*) const;
 
 		//auxiliary
