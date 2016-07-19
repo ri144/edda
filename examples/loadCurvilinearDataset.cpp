@@ -53,8 +53,8 @@ int main(int argc, char **argv)
   else
 	  cout << pos3 << ": " << "fail to get value at given position" << endl;
 
-  //dist::Variant distr = dataset->at_comp_distr(i,j,k);
-  //cout << "at_comp_distr " << i << "," << j << "," << k << " : " << distr << endl;
+  dist::Variant distr = dataset->at_comp_distr(i,j,k);
+  cout << "at_comp_distr " << i << "," << j << "," << k << " : " << distr << endl;
 
 
  

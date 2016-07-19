@@ -22,6 +22,7 @@ int main(int argc, char **argv)
 
   VECTOR3 pos;
   Real value;
+  dist::Variant distr;
   int i;
 
   pos = VECTOR3(10,10,10);
@@ -34,6 +35,9 @@ int main(int argc, char **argv)
 
   value = dataset->at_comp(5, 5, 5);
   cout << "at_comp(5,5,5) : " << value << endl;
+
+  distr = dataset->at_comp_distr(5, 5, 5);
+  cout << "at_comp(5,5,5) : " << distr << endl;
 
   return 0;
 }
