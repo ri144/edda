@@ -8,10 +8,10 @@
 #include <vector>
 #include <iostream>
 #include <memory>
+#include "dataset/abstract_distr_array.h"
+#include "CurvilinearGrid.h"
 #include "distributions/variant.h"
 #include "grid.h"
-#include "dataset/abstract_distr_array.h"
-
 namespace edda {
 
 ///
