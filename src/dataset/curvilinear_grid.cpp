@@ -1,5 +1,5 @@
 
-#include "CurvilinearGrid.h"
+#include "curvilinear_grid.h"
 
 
 
@@ -556,7 +556,7 @@ CurvilinearGrid::CurvilinearGrid() :RegularCartesianGrid()
 	locate_initialization();
 }
 
-CurvilinearGrid::CurvilinearGrid(int* dim, CVertex* pVertexGeom) :RegularCartesianGrid(dim[0], dim[1], dim[2])
+CurvilinearGrid::CurvilinearGrid(int* dim, VECTOR3* pVertexGeom) :RegularCartesianGrid(dim[0], dim[1], dim[2])
 {
 	m_pVertex = pVertexGeom;
 	ComputeBBox();
@@ -566,11 +566,11 @@ CurvilinearGrid::CurvilinearGrid(int* dim, CVertex* pVertexGeom) :RegularCartesi
 CurvilinearGrid::CurvilinearGrid(int* dim, float* point_ary) :RegularCartesianGrid(dim[0], dim[1], dim[2])
 {
 	int numPoints = dim[0] * dim[1] * dim[2];
-	m_pVertex = new CVertex[numPoints];
+	m_pVertex = new VECTOR3[numPoints];
 	for (int ind = 0; ind < numPoints; ind++){
-		m_pVertex[ind].position[0] = point_ary[3 * ind];
-		m_pVertex[ind].position[1] = point_ary[3 * ind + 1];
-		m_pVertex[ind].position[2] = point_ary[3 * ind + 2];
+		m_pVertex[ind][0] = point_ary[3 * ind];
+		m_pVertex[ind][1] = point_ary[3 * ind + 1];
+		m_pVertex[ind][2] = point_ary[3 * ind + 2];
 	}
 	
 	ComputeBBox();
@@ -756,9 +756,9 @@ ReturnStatus CurvilinearGrid::at_vertex(int verIdx, VECTOR3& pos)
 	yidx = verIdx / xdim();
 	xidx = verIdx - zidx * xdim() * ydim() - yidx * xdim();
 	*/
-	float xpos = m_pVertex[verIdx].position[0];
-	float ypos = m_pVertex[verIdx].position[1];
-	float zpos = m_pVertex[verIdx].position[2];
+	float xpos = m_pVertex[verIdx][0];
+	float ypos = m_pVertex[verIdx][1];
+	float zpos = m_pVertex[verIdx][2];
 
 	// pos.set((float)xidx, (float)yidx, (float)zidx);
 	pos.set(xpos, ypos, zpos);
@@ -976,7 +976,7 @@ int CurvilinearGrid::coordinates_at_cell(VECTOR3 cell, VECTOR3* dp)
 	std::vector<int> verIds;
 
 	int cellId = (int)cell[0] + ((int)cell[1])*(xcelldim()) + ((int)cell[2])*(xcelldim())*(ycelldim());
-	if (getCellVertices(cellId, T4_CELL, verIds) != SUCCESS)
+	if (getCellVertices(cellId, verIds) != SUCCESS)
 		return -1;
 
 	if (verIds.size() != 8)//sth wrong
@@ -996,7 +996,7 @@ int CurvilinearGrid::coordinates_at_vertex(VECTOR3 vertex, VECTOR3* dp)
 {
 
 	int id = (int)vertex[0] + ((int)vertex[1])*xdim() + ((int)vertex[2])*xdim()*ydim();
-	*dp = m_pVertex[id].position;
+	*dp = m_pVertex[id];
 	return 1;
 }
 ReturnStatus CurvilinearGrid::phys_to_cell(PointInfo& pInfo)
@@ -1531,7 +1531,6 @@ bool CurvilinearGrid::isInCell(PointInfo& pInfo, const int cellId)
 //////////////////////////////////////////////////////////////////////////
 //get vertex ids for each cell
 ReturnStatus CurvilinearGrid::getCellVertices(int cellId,
-	CellTopoType cellType,
 	std::vector<int>& vVertices)
 {
 	int totalCell = xcelldim() * ycelldim() * zcelldim();

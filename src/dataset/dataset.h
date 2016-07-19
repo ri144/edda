@@ -9,7 +9,7 @@
 #include <iostream>
 #include <memory>
 #include "dataset/abstract_distr_array.h"
-#include "CurvilinearGrid.h"
+#include "curvilinear_grid.h"
 #include "distributions/variant.h"
 #include "grid.h"
 namespace edda {
