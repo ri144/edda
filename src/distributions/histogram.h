@@ -31,6 +31,20 @@ namespace dist {
 class EDDA_EXPORT Histogram : public DiscreteDistributionTag {
 public:
 
+  Histogram(){}
+
+  Histogram(double* histData){
+	  m_nBins = histData[0];
+	  m_minValue = histData[1];
+	  m_maxValue = histData[2];
+	  m_binWidth = (m_maxValue - m_minValue) / (Real)(m_nBins);
+
+	  m_cdf.resize(m_nBins);
+	  for (int b = 0; b < m_nBins; b++){
+		  m_cdf[b] = histData[b+3];
+	  }
+  }
+
   Histogram(float *dataPoints, int points, const Real _minValue, const Real _maxValue, const int _nBins){
     m_nBins = _nBins;
 
@@ -134,6 +148,24 @@ public:
   void output(std::ostream& os) const{
     for (int b = 0; b < m_nBins; b++)
       os << "Bin: " << b << ": " << m_cdf[b] << std::endl;
+  }
+
+  int getBins(){
+	  return m_nBins;
+  }
+
+  float getMaxValue(){
+	  return m_maxValue;
+  }
+
+  float getMinValue(){
+	  return m_minValue;
+  }
+
+  
+  float getBinValue(int b){
+	  //This usually return accumlative prob
+	  return m_cdf[b];
   }
 
 private:

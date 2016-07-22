@@ -6,6 +6,7 @@
 #include <vtkStringArray.h>
 #include <vtkFieldData.h>
 #include "distributions/gaussian_mixture.h"
+#include "distributions/histogram.h"
 
 #include "edda_vtk_writer.h"
 
@@ -21,6 +22,10 @@ void addVtkGmmArrays(vtkPointData *vtk_point_data, AbstractDistrArray *array, co
   int i;
   int n = array->getLength();
   int nc = array->getNumComponents();
+
+  printf("%d %d\n", n, nc);
+  getchar();
+
   for (i=0; i<MAX_GMs*3; i++)
   {
     vtkFloatArray *vtk_array = vtkFloatArray::New();
@@ -35,7 +40,7 @@ void addVtkGmmArrays(vtkPointData *vtk_point_data, AbstractDistrArray *array, co
         vector<dist::Variant> vdist = array->getDistrVector(j);
         for (int c=0; c<nc; c++)
         {
-          ((float *)vtk_array->GetVoidPointer(j))[c] = boost::get<dist::DefaultGaussianMixture>( vdist[c] ).models[i/3].m;
+			((float *)vtk_array->GetVoidPointer(j))[c] = boost::get<dist::DefaultGaussianMixture>(vdist[c]).models[i / 3].m;
         }
       }
 
@@ -48,7 +53,7 @@ void addVtkGmmArrays(vtkPointData *vtk_point_data, AbstractDistrArray *array, co
         vector<dist::Variant> vdist = array->getDistrVector(j);
         for (int c=0; c<nc; c++)
         {
-          ((float *)vtk_array->GetVoidPointer(j))[c] = boost::get<dist::DefaultGaussianMixture>( vdist[c] ).models[i/3].v;
+			((float *)vtk_array->GetVoidPointer(j))[c] = boost::get<dist::DefaultGaussianMixture>(vdist[c]).models[i / 3].v;
         }
       }
 
@@ -71,8 +76,39 @@ void addVtkGmmArrays(vtkPointData *vtk_point_data, AbstractDistrArray *array, co
   }
 }
 
-void addVtkHistoArrays(vtkPointData *pointData, AbstractDistrArray *array, const string &array_name)
+void addVtkHistoArrays(vtkPointData *vtk_point_data, AbstractDistrArray *array, const string &array_name)
 {
+	vector<string> filenames;
+	char name[256];
+	vector<dist::Variant> vdist = array->getDistrVector(0);
+	int bins = boost::get<dist::Histogram>(vdist[0]).getBins();
+	int n = array->getLength();
+	int nc = bins + 3; //3 is number of bins, value_min, value_max
+
+	vtkFloatArray *vtk_array = vtkFloatArray::New();
+	vtk_array->SetNumberOfComponents(nc);
+	vtk_array->SetNumberOfTuples(n);
+
+	sprintf(name, "Variable_0" );
+	vtk_array->SetName(name);
+
+	float * tuple = (float*)malloc(sizeof(float)*nc);
+	for (int j = 0; j < n; j++)
+	{
+		vector<dist::Variant> vdist = array->getDistrVector(j);
+
+		tuple[0] = boost::get<dist::Histogram>(vdist[0]).getBins();
+		tuple[1] = boost::get<dist::Histogram>(vdist[0]).getMinValue();
+		tuple[2] = boost::get<dist::Histogram>(vdist[0]).getMaxValue();
+		for (int b = 0; b < bins; b++)
+		{
+			tuple[b+3] = boost::get<dist::Histogram>(vdist[0]).getBinValue(b);
+		}
+
+		vtk_array->SetTuple(j, tuple);
+	}
+	free(tuple);
+	vtk_point_data->AddArray(vtk_array);
 }
 
 void setDistrType(vtkFieldData* vtk_data, const char *distrName, const string &array_name_prefix)
@@ -102,8 +138,8 @@ void writeEddaVtkDataset(shared_ptr<Dataset<Real> > dataset, const string &edda_
       addVtkGmmArrays(image->GetPointData(), array, array_name_prefix);
 
     } else if (strcmp(dName, "Histogram") == 0) {
-      addVtkHistoArrays(image->GetPointData(), array, array_name_prefix);
 
+      addVtkHistoArrays(image->GetPointData(), array, array_name_prefix);
     } else {
       cout << "Edda VTK Writer: Unsupported array type" << endl;
       throw NotImplementedException();

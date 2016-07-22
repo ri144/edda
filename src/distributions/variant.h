@@ -9,19 +9,19 @@
 #include "distribution_tag.h"
 #include "gaussian.h"
 #include "gaussian_mixture.h"
-//#include "histogram.h"
+#include "histogram.h"
 
 namespace edda{
 namespace dist{
 
-  typedef boost::variant<Real, Gaussian, DefaultGaussianMixture  > _Variant;
+  typedef boost::variant<Real, Gaussian, DefaultGaussianMixture, Histogram > _Variant;
 
   struct Variant : public _Variant, public DistributionTag {
     Variant() : _Variant() {}
     Variant(const Real &obj) : _Variant (obj) {}
     Variant(const Gaussian &obj) : _Variant (obj) {}
     Variant(const DefaultGaussianMixture &obj) : _Variant (obj) {}
-    //Variant(const Histogram &obj) : _Variant (obj) {}
+    Variant(const Histogram &obj) : _Variant (obj) {}
   };
 
   namespace detail{
