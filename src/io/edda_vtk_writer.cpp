@@ -23,9 +23,6 @@ void addVtkGmmArrays(vtkPointData *vtk_point_data, AbstractDistrArray *array, co
   int n = array->getLength();
   int nc = array->getNumComponents();
 
-  printf("%d %d\n", n, nc);
-  getchar();
-
   for (i=0; i<MAX_GMs*3; i++)
   {
     vtkFloatArray *vtk_array = vtkFloatArray::New();

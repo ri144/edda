@@ -45,7 +45,6 @@ shared_ptr<Dataset<T> > loadEddaDataset(const string &edda_file, const string &a
     vtkImageData *vtkdata = reader->GetOutput();
 
     int *dim = vtkdata->GetDimensions();
-    printf("dim: %d %d %d\n", dim[0], dim[1], dim[2]);
 
     // check dataset type
     string type = getDistrType(vtkdata->GetFieldData(), array_name_prefix);
