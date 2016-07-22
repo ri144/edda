@@ -7,6 +7,7 @@ project(edda_examples)
 set(sources
   gmm_raw2vtk.cpp  
   loadScalarDataset.cpp
+  loadCurvilinearDataset.cpp
 )
 
 include_directories(${CMAKE_SOURCE_DIR}/src)

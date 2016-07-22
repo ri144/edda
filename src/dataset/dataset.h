@@ -8,10 +8,10 @@
 #include <vector>
 #include <iostream>
 #include <memory>
+#include "dataset/abstract_distr_array.h"
+#include "curvilinear_grid.h"
 #include "distributions/variant.h"
 #include "grid.h"
-#include "dataset/abstract_distr_array.h"
-
 namespace edda {
 
 ///
@@ -131,7 +131,7 @@ public:
     /// Only for structured grids.
     /// If <i,j,k> is out of boundary, the function will throw OutOfBoundException.
     ///
-    const T at_comp_distr(int i, int j, int k) const {
+    const dist::Variant at_comp_distr(int i, int j, int k) const {
       ReturnStatus r;
       CartesianGrid *cartesianGrid = dynamic_cast<CartesianGrid *>(pGrid) ;
 
@@ -141,9 +141,31 @@ public:
         if (r!=SUCCESS)
           throw OutOfBoundException();
 
-        T data;
-        getDistr(idx, data);
-        return data;
+        return pArray->getDistr(idx);
+      }
+
+      // TODO for other grid types
+      throw NotImplementedException();
+    }
+
+    ///
+    /// \brief Return the distribution vector in the computational space.
+    /// \param i,j,k The coordinates in the computational space.
+    /// \return The query result, in std::vector.
+    /// Only for structured grids.
+    /// If <i,j,k> is out of boundary, the function will throw OutOfBoundException.
+    ///
+    const std::vector<dist::Variant>  at_comp_distr_vector(int i, int j, int k) const {
+      ReturnStatus r;
+      CartesianGrid *cartesianGrid = dynamic_cast<CartesianGrid *>(pGrid) ;
+
+      if (cartesianGrid) {
+        size_t idx;
+        r = cartesianGrid->getIndex(i,j,k, idx);
+        if (r!=SUCCESS)
+          throw OutOfBoundException();
+
+        return pArray->getDistrVector(idx);
       }
 
       // TODO for other grid types
@@ -158,19 +180,6 @@ protected:
     template <int N>
     void getSample(int idx, Vector<Real, N> &data) const {
       std::vector<Real> varvec =  pArray->getVector(idx) ;
-      assert(N == varvec.size());
-      for (int c=0; c<N; c++) {
-         data[c] = varvec[c];
-      }
-    }
-
-    void getDistr(int idx, dist::Variant &data) const {
-      data = pArray->getDistr(idx);
-    }
-
-    template <int N>
-    void getDistr(int idx, Vector<dist::Variant, N> &data) {
-      std::vector<dist::Variant> varvec =  pArray->getDistrVector(idx) ;
       assert(N == varvec.size());
       for (int c=0; c<N; c++) {
          data[c] = varvec[c];

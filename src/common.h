@@ -32,6 +32,8 @@ typedef float Real;
 
 // You can add more for needed return status
 enum ReturnStatus { SUCCESS = 0, FAIL, OUT_OF_BOUND };
+enum DistrType { GMM, GMM1, GMM2, GMM3, GMM4, GMM5, HIST, HYBRID};
+
 
 #ifdef OS_WIN
 typedef long long int64_t;

@@ -2,19 +2,19 @@
 # Use of this source code is governed by a MIT-style license that can be
 # found in the LICENSE file.
 
-project (edda_converter)
+project (edda_distr_modeler)
 
 include_directories(${CMAKE_SOURCE_DIR}/src)
 add_definitions(-DSAMPLE_DATA_PATH="${CMAKE_SOURCE_DIR}/sample_data")
 
 ##add VTK to the project
-find_package(VTK)
-include (${VTK_USE_FILE})
-message("vtk location: " ${VTK_USE_FILE})
+#find_package(VTK)
+#include (${VTK_USE_FILE})
+#message("vtk location: " ${VTK_USE_FILE})
 
-#find_package(NetCDF)
+find_package(NetCDF)
 
-set(CONVERTER_SOURCES ensembleNetCDF.cpp )
+set(CONVERTER_SOURCES exampleLoader.cpp )
 
 ####
 foreach (ldsrc ${CONVERTER_SOURCES})
