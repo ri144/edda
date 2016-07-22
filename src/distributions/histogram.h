@@ -70,6 +70,16 @@ public:
 
   }
 
+
+  Histogram(const Histogram &hist)
+  : m_nBins(hist.m_nBins), 
+    m_minValue(hist.m_minValue),
+    m_maxValue(hist.m_maxValue),
+    m_binWidth(hist.m_binWidth)
+  {
+    m_cdf = hist.m_cdf;
+  }
+
   Real getMean() const{
     Real mean = 0;
     Real cValue = m_minValue + m_binWidth / 2.0;
@@ -245,6 +255,12 @@ inline const char *getName(const Histogram &x) {
 }
 
 }  // namespace dist
+
+inline dist::Histogram eddaComputeHistogram(float *dataPoints, int points, const Real _minValue, const Real _maxValue, const int _nBins)
+{
+  return dist::Histogram(dataPoints, points, _minValue, _maxValue, _nBins);
+}
+
 }  // namespace edda
 
 #endif // HISTOGRAM_H
