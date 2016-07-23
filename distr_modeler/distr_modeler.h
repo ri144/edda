@@ -39,10 +39,16 @@ public:
 	DistrModeler(DistrType type){
 		//currently updating the type of distribution (GMM/HIST)
 		//can have more variables in future to hold different settings while modelling,  like partitioning algortihm etc.
-		dType = type;		
+		dType = type;	
+		binCount = 32;	
 	}
 
-	//loader() will be overloaded to handle different types of input data and partitioning styles
+	void initHistogram(size_t bin)
+	{
+		binCount = bin;
+	}
+
+	//loader() is be overloaded to handle different types of input data and partitioning styles
 	void loader(string filename, string xDimName, string yDimName, string zDimName, string ensDimName, string varName)
 	{
 		switch(dType){
@@ -89,7 +95,7 @@ public:
   		yDim = dataFile.get_dim(yDimName.c_str())->size();
   		zDim = dataFile.get_dim(zDimName.c_str())->size();
   		ensDim = dataFile.get_dim(ensDimName.c_str())->size();
-  		ensDim = 10;
+  		//ensDim = 10;
 
   		NcVar *var = dataFile.get_var(varName.c_str());
 
@@ -121,12 +127,10 @@ public:
 	 					cerr << "ERROR[" << NC_ERR << "]" << "getting data" << endl;
 	 					exit(NC_ERR);
 	 				}
-	        		//TODO::Will have to create an API to handle Histogram
-	 				
-	 				
-
+	        		
 	 				T new_distr;
 	 				computeDistribution(data, ensDim, new_distr);
+	 				//cout << "(" << z << "," << y << "," << x << ")" << endl;
 	 				
 	        		pArray[z*xDim*yDim + y*xDim + x] = new_distr;
 
@@ -153,7 +157,18 @@ public:
 
 	void computeDistribution(float *data, size_t ensDim, dist::Histogram &new_distr)
 	{
-		new_distr = eddaComputeHistogram(data, ensDim, -10, 10, 20);
+		//currently find the min and max of the input data elements, later it can be done by the histogram class.
+		float minV = data[0];
+		float maxV = data[0];
+		for(size_t i=1; i<ensDim; i++)
+		{
+			if(data[i] >= maxV)
+				maxV = data[i];
+			if(data[i] <= minV)
+				minV = data[i];
+		}
+
+		new_distr = eddaComputeHistogram(data, ensDim, minV, maxV, binCount);
 	}
 
 	DistrType getType(){
