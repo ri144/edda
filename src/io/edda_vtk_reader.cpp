@@ -49,7 +49,6 @@ shared_ptr<Dataset<T> > loadEddaDataset(const string &edda_file, const string &a
 
     // check dataset type
     string type = getDistrType(vtkdata->GetFieldData(), array_name_prefix);
-	cout << "typtype:"<<type;
 
     if (type.compare("GaussianMixture")==0) {
 		shared_ptr<Dataset<T> > dataset = make_Dataset<T>(

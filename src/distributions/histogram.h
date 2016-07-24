@@ -70,6 +70,35 @@ public:
 
   }
 
+  Histogram(float *dataPoints, int points, const int _nBins){
+	  m_minValue = dataPoints[0];
+	  m_maxValue = dataPoints[0];
+	  for (int i = 1; i < points; i++){
+		  if (m_minValue > dataPoints[i])
+			  m_minValue = dataPoints[i];
+		  if (m_maxValue < dataPoints[i])
+			  m_maxValue = dataPoints[i];
+	  }
+	  m_nBins = _nBins;
+
+	  m_binWidth = (m_maxValue - m_minValue) / (Real)(m_nBins);
+
+	  m_cdf.resize(m_nBins);
+
+	  //modeling and convert to cdf
+	  for (int i = 0; i < points; i++){
+		  int b = valueToBinsIndex(dataPoints[i]);
+		  m_cdf[b] ++;
+	  }
+
+	  for (int b = 1; b < m_nBins; b++)
+		  m_cdf[b] += m_cdf[b - 1];
+
+	  for (int b = 0; b < m_nBins; b++){
+		  m_cdf[b] /= (Real)points;
+	  }
+  }
+
 
   Histogram(const Histogram &hist)
   : m_nBins(hist.m_nBins), 
@@ -260,6 +289,12 @@ inline dist::Histogram eddaComputeHistogram(float *dataPoints, int points, const
 {
   return dist::Histogram(dataPoints, points, _minValue, _maxValue, _nBins);
 }
+
+inline dist::Histogram eddaComputeHistogram(float *dataPoints, int points, const int _nBins)
+{
+	return dist::Histogram(dataPoints, points, _nBins);
+}
+
 
 }  // namespace edda
 
