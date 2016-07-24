@@ -636,8 +636,10 @@ void CurvilinearGrid::ComputeBBox(void)
 {
 	VECTOR3 minB, maxB;
 
-	minB.set(xcelldim(), ycelldim(), zcelldim());
-	maxB.set(0, 0, 0);
+	//minB.set(xcelldim(), ycelldim(), zcelldim());
+	//maxB.set(0, 0, 0);
+	minB.set(FLT_MAX, FLT_MAX, FLT_MAX);
+	maxB.set(-FLT_MAX, -FLT_MAX, -FLT_MAX);
 
 	int j;
 	int x, y, z;
