@@ -36,11 +36,29 @@ string getDistrType(vtkFieldData* vtk_data, const string &array_name_prefix)
   return vtk_array->GetValue(0);
 }
 
+AbstractDistrArray *genHistoArray(vtkPointData *vtk_point_data)
+{
+  char arrayName[1024];
+  sprintf(arrayName, "Variable_0");
+  vtkSmartPointer<vtkDataArray> array = vtk_point_data->GetArray(arrayName);
+  int c = array->GetNumberOfComponents();
+  int n = array->GetNumberOfTuples();
+
+  double* histData = (double*)malloc(sizeof(double)*c);
+  shared_ary<Histogram> histAry(new Histogram[n], n);
+  for (int nn = 0; nn < n; nn++){
+          array->GetTuple(nn, histData);
+          histAry[nn] = Histogram(histData);
+  }
+  free(histData);
+  return new DistrArray<Histogram>(histAry);
+}
 
 template <typename T>
 shared_ptr<Dataset<T> > loadEddaDataset(const string &edda_file, const string &array_name_prefix)
 {
   string ext = getFileExtension(edda_file);
+
   if (ext.compare("vti")==0) {
     vtkNew<vtkXMLImageDataReader> reader;
     reader->SetFileName(edda_file.c_str());
@@ -62,27 +80,10 @@ shared_ptr<Dataset<T> > loadEddaDataset(const string &edda_file, const string &a
 
     } else if (type.compare("Histogram")==0)
     {
-      vtkFieldData *fieldData = vtkdata->GetPointData();
-      char arrayName[1024];
-      sprintf(arrayName, "Variable_0");
-      vtkSmartPointer<vtkDataArray> array = fieldData->GetArray(arrayName);
-      int c = array->GetNumberOfComponents();
-      int n = array->GetNumberOfTuples();
-
-      double* histData = (double*)malloc(sizeof(double)*c);
-      shared_ary<Histogram> histAry(new Histogram[n], n);
-      for (int nn = 0; nn < n; nn++){
-              array->GetTuple(nn, histData);
-              histAry[nn] = Histogram(histData);
-      }
-      AbstractDistrArray * abstract_array = new DistrArray<Histogram>(histAry);
-
       shared_ptr<Dataset<T> > dataset = make_Dataset<T>(
-              new RegularCartesianGrid(dim[0], dim[1], dim[2]),
-              abstract_array
-              );
-
-      free(histData);
+                          new RegularCartesianGrid(dim[0], dim[1], dim[2]),
+                          genHistoArray(vtkdata->GetPointData())
+                          );
       return dataset;
     }
     else {
@@ -106,16 +107,20 @@ shared_ptr<Dataset<T> > loadEddaDataset(const string &edda_file, const string &a
     // check dataset type
     string type = getDistrType(vtkdata->GetFieldData(), array_name_prefix);
 
-    if (type.compare("GaussianMixture")==0) {
+    if (type.compare(0, 15, "GaussianMixture")==0) {
       shared_ptr<Dataset<T> > dataset = make_Dataset<T>(
-                                 new CurvilinearGrid(dim, point_ary),
-                                 new GmmVtkDataArray( vtkdata->GetPointData(), array_name_prefix.c_str() )
+                         new CurvilinearGrid(dim, point_ary),
+                         new GmmVtkDataArray( vtkdata->GetPointData(), array_name_prefix.c_str() )
        );
       return dataset;
 
     } else if (type.compare("Histogram")==0)
     {
-      // TODO
+      shared_ptr<Dataset<T> > dataset = make_Dataset<T>(
+                          new CurvilinearGrid(dim, point_ary),
+                          genHistoArray(vtkdata->GetPointData() )
+                          );
+      return dataset;
     }
     else {
       cout << "Unknown distribution type: " << type << endl;
