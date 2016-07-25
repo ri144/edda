@@ -9,24 +9,25 @@
 #include "distribution_tag.h"
 #include "gaussian.h"
 #include "gaussian_mixture.h"
-//#include "histogram.h"
+#include "histogram.h"
 
 namespace edda{
+enum DistrType { GMM, GMM2, GMM3, GMM4, GMM5, HIST, HYBRID};
+
 namespace dist{
 
-  typedef boost::variant<Real, Gaussian,
-  GaussianMixture<1>, GaussianMixture<2>, GaussianMixture<3>, GaussianMixture<4>, DefaultGaussianMixture  > _Variant;
+  typedef boost::variant<Real, Gaussian, Histogram,
+  GaussianMixture<2>, GaussianMixture<3>, GaussianMixture<4>, DefaultGaussianMixture  > _Variant;
 
   struct Variant : public _Variant, public DistributionTag {
     Variant() : _Variant() {}
     Variant(const Real &obj) : _Variant (obj) {}
     Variant(const Gaussian &obj) : _Variant (obj) {}
-    Variant(const GaussianMixture<1> &obj) : _Variant (obj) {}
     Variant(const GaussianMixture<2> &obj) : _Variant (obj) {}
     Variant(const GaussianMixture<3> &obj) : _Variant (obj) {}
     Variant(const GaussianMixture<4> &obj) : _Variant (obj) {}
     Variant(const DefaultGaussianMixture &obj) : _Variant (obj) {}
-    //Variant(const Histogram &obj) : _Variant (obj) {}
+    Variant(const Histogram &obj) : _Variant (obj) {}
   };
 
   namespace detail{
@@ -47,8 +48,8 @@ namespace dist{
     struct _getSample : public boost::static_visitor<double> {
       template <class T> inline double operator() (const T& dist) { return getSample(dist); }
     };
-    struct _getName : public boost::static_visitor<const char *> {
-      template <class T> inline const char *operator() (const T& dist) { return getName(dist); }
+    struct _getName : public boost::static_visitor<std::string> {
+      template <class T> inline std::string operator() (const T& dist) { return getName(dist); }
     };
   } // namespace detail
 
@@ -72,7 +73,7 @@ namespace dist{
     detail::_getSample f;
     return boost::apply_visitor( f, dist );
   }  
-  inline const char *getName(const Variant &dist) {
+  inline std::string getName(const Variant &dist) {
     detail::_getName f;
     return boost::apply_visitor( f, dist );
   }

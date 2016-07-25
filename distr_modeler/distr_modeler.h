@@ -12,6 +12,7 @@
 #include "distributions/gaussian.h"
 #include "distributions/distribution.h"
 #include <distributions/gaussian_mixture.h>
+#include "distributions/histogram.h"
 #include <distributions/estimate_gmm.h>
 #include "distributions/variant.h"
 #include "dataset/dataset.h"
@@ -27,14 +28,15 @@ using namespace std;
 
 namespace edda{
 
-
+// Distribution modeler
 class DistrModeler {
 protected:
 	DistrType dType;
 	const int NC_ERR = 2;
 	shared_ptr<Dataset<Real> > dataset;
+	size_t binCount;
 public:
-	DistrModeler(DistrType type){
+        DistrModeler(DistrType type){
 		//currently updating the type of distribution (GMM/HIST)
 		//can have more variables in future to hold different settings while modelling,  like partitioning algortihm etc.
 		dType = type;		
@@ -47,9 +49,6 @@ public:
 			case(GMM):
 				loader<dist::DefaultGaussianMixture>(filename, xDimName, yDimName, zDimName, ensDimName, varName);
 				break;
-			case(GMM1):
-				loader<dist::GaussianMixture<1>>(filename, xDimName, yDimName, zDimName, ensDimName, varName);
-				break;
 			case(GMM2):
 				loader<dist::GaussianMixture<2>>(filename, xDimName, yDimName, zDimName, ensDimName, varName);
 				break;
@@ -61,6 +60,9 @@ public:
 				break;
 			case(GMM5):
 				loader<dist::GaussianMixture<5>>(filename, xDimName, yDimName, zDimName, ensDimName, varName);
+				break;
+			case(HIST):
+				loader<dist::Histogram>(filename, xDimName, yDimName, zDimName, ensDimName, varName);
 				break;
 		}
 	}
@@ -84,7 +86,7 @@ public:
   		yDim = dataFile.get_dim(yDimName.c_str())->size();
   		zDim = dataFile.get_dim(zDimName.c_str())->size();
   		ensDim = dataFile.get_dim(ensDimName.c_str())->size();
-  		ensDim = 10;
+                ensDim = 10;
 
   		NcVar *var = dataFile.get_var(varName.c_str());
 
@@ -92,10 +94,9 @@ public:
   		cout << "Ensemble Count : " << ensDim << endl;
   	
   		float *data;
-  		double *dataD;
+  		
 
   		data = new float[ensDim];
-  		dataD = new double[ensDim];
 
   		//based on the dType provided by the user create appropiate array type.  		
   		shared_ary<T> pArray (new T[xDim*yDim*zDim], xDim*yDim*zDim);
@@ -119,11 +120,10 @@ public:
 	 				}
 	        		//TODO::Will have to create an API to handle Histogram
 	 				
-	 				for(size_t i=0; i<ensDim; i++)
-	 					dataD[i] = (double) data[i];
+	 				
 
 	 				T new_distr;
-    				eddaComputeEM(dataD,ensDim, &new_distr);
+	 				computeDistribution(data, ensDim, new_distr);
 	 				
 	        		pArray[z*xDim*yDim + y*xDim + x] = new_distr;
 
@@ -134,6 +134,23 @@ public:
 	 	AbstractDistrArray * abs_array = new DistrArray<T>(pArray);
 	 	dataset = make_Dataset<Real>(new RegularCartesianGrid(xDim,yDim,zDim), abs_array);
 
+	}
+
+	template <int GMs> //GMs: Gaussian models
+	void computeDistribution(float *data, size_t ensDim, dist::GaussianMixture<GMs> &new_distr)
+	{
+		double *dataD;		
+  		dataD = new double[ensDim];
+
+  		for(size_t i=0; i<ensDim; i++)
+	 		dataD[i] = (double) data[i];
+
+		eddaComputeEM(dataD,ensDim, &new_distr);
+	}
+
+	void computeDistribution(float *data, size_t ensDim, dist::Histogram &new_distr)
+	{
+		new_distr = eddaComputeHistogram(data, ensDim, -10, 10, 20);
 	}
 
 	DistrType getType(){

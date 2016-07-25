@@ -31,6 +31,20 @@ namespace dist {
 class EDDA_EXPORT Histogram : public DiscreteDistributionTag {
 public:
 
+  Histogram(){}
+
+  Histogram(double* histData){
+	  m_nBins = histData[0];
+	  m_minValue = histData[1];
+	  m_maxValue = histData[2];
+	  m_binWidth = (m_maxValue - m_minValue) / (Real)(m_nBins);
+
+	  m_cdf.resize(m_nBins);
+	  for (int b = 0; b < m_nBins; b++){
+		  m_cdf[b] = histData[b+3];
+	  }
+  }
+
   Histogram(float *dataPoints, int points, const Real _minValue, const Real _maxValue, const int _nBins){
     m_nBins = _nBins;
 
@@ -54,6 +68,45 @@ public:
       m_cdf[b] /= (Real)points;
     }
 
+  }
+
+  Histogram(float *dataPoints, int points, const int _nBins){
+	  m_minValue = dataPoints[0];
+	  m_maxValue = dataPoints[0];
+	  for (int i = 1; i < points; i++){
+		  if (m_minValue > dataPoints[i])
+			  m_minValue = dataPoints[i];
+		  if (m_maxValue < dataPoints[i])
+			  m_maxValue = dataPoints[i];
+	  }
+	  m_nBins = _nBins;
+
+	  m_binWidth = (m_maxValue - m_minValue) / (Real)(m_nBins);
+
+	  m_cdf.resize(m_nBins);
+
+	  //modeling and convert to cdf
+	  for (int i = 0; i < points; i++){
+		  int b = valueToBinsIndex(dataPoints[i]);
+		  m_cdf[b] ++;
+	  }
+
+	  for (int b = 1; b < m_nBins; b++)
+		  m_cdf[b] += m_cdf[b - 1];
+
+	  for (int b = 0; b < m_nBins; b++){
+		  m_cdf[b] /= (Real)points;
+	  }
+  }
+
+
+  Histogram(const Histogram &hist)
+  : m_nBins(hist.m_nBins), 
+    m_minValue(hist.m_minValue),
+    m_maxValue(hist.m_maxValue),
+    m_binWidth(hist.m_binWidth)
+  {
+    m_cdf = hist.m_cdf;
   }
 
   Real getMean() const{
@@ -136,6 +189,24 @@ public:
       os << "Bin: " << b << ": " << m_cdf[b] << std::endl;
   }
 
+  int getBins(){
+	  return m_nBins;
+  }
+
+  float getMaxValue(){
+	  return m_maxValue;
+  }
+
+  float getMinValue(){
+	  return m_minValue;
+  }
+
+  
+  float getBinValue(int b){
+	  //This usually return accumlative prob
+	  return m_cdf[b];
+  }
+
 private:
   int valueToBinsIndex(Real v) const {
     if (v == m_maxValue)
@@ -208,11 +279,23 @@ inline std::ostream& operator<<(std::ostream& os, const Histogram &dist)
 }
 
 __host__ __device__
-inline const char *getName(const Histogram &x) {
+inline std::string getName(const Histogram &x) {
   return "Histogram";
 }
 
 }  // namespace dist
+
+inline dist::Histogram eddaComputeHistogram(float *dataPoints, int points, const Real _minValue, const Real _maxValue, const int _nBins)
+{
+  return dist::Histogram(dataPoints, points, _minValue, _maxValue, _nBins);
+}
+
+inline dist::Histogram eddaComputeHistogram(float *dataPoints, int points, const int _nBins)
+{
+	return dist::Histogram(dataPoints, points, _nBins);
+}
+
+
 }  // namespace edda
 
 #endif // HISTOGRAM_H

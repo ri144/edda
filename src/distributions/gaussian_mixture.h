@@ -228,8 +228,10 @@ inline std::ostream& operator<<(std::ostream& os, const GaussianMixture<GMs> &di
 
 __host__ __device__
 template <int GMs>
-inline const char *getName(const GaussianMixture<GMs> &x) {
-    return "GaussianMixture";
+inline std::string getName(const GaussianMixture<GMs> &x) {
+  std::stringstream ss;
+  ss << "GaussianMixture" << GMs;
+  return ss.str();
 }
 
 // ------------------------------------------------------------------------------

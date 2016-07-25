@@ -146,7 +146,7 @@ inline std::ostream& operator<<(std::ostream& os, const Gaussian &dist)
 }
 
 __host__ __device__
-inline const char *getName(const Gaussian &x) {
+inline std::string getName(const Gaussian &x) {
     return "Gaussian";
 }
 

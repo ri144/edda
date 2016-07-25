@@ -14,6 +14,7 @@ if (NOT EDDA_BUILD_WITH_CUDA)
     test_NdArray.cpp
     test_distribution.cpp
     test_io.cpp
+    test_histogram_io.cpp
   )
 else ()
   # CUDA
