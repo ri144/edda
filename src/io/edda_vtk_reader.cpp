@@ -29,7 +29,9 @@ string getDistrType(vtkFieldData* vtk_data, const string &array_name_prefix)
   
   vtkStringArray *vtk_array = vtkStringArray::SafeDownCast(vtk_data->GetAbstractArray(array_name.c_str()));
   if (vtk_array==NULL) {
-    return "GaussianMixture"; // default distribution type
+    stringstream ss;
+    ss << "GaussianMixture" << MAX_GMs; // default distribution type
+    return ss.str();
   }
   return vtk_array->GetValue(0);
 }
@@ -50,37 +52,38 @@ shared_ptr<Dataset<T> > loadEddaDataset(const string &edda_file, const string &a
     // check dataset type
     string type = getDistrType(vtkdata->GetFieldData(), array_name_prefix);
 
-    if (type.compare("GaussianMixture")==0) {
-		shared_ptr<Dataset<T> > dataset = make_Dataset<T>(
-                                 new RegularCartesianGrid(dim[0], dim[1], dim[2]),
-                                 new GmmVtkDataArray( vtkdata->GetPointData(), array_name_prefix.c_str() )
+    if (type.compare(0, 15, "GaussianMixture")==0) {
+        shared_ptr<Dataset<T> > dataset = make_Dataset<T>(
+                         new RegularCartesianGrid(dim[0], dim[1], dim[2]),
+                         new GmmVtkDataArray( vtkdata->GetPointData(), array_name_prefix.c_str() )
        );
       return dataset;
 
+
     } else if (type.compare("Histogram")==0)
     {
-		vtkFieldData *fieldData = vtkdata->GetPointData();
-		char arrayName[1024];
-		sprintf(arrayName, "Variable_0");
-		vtkSmartPointer<vtkDataArray> array = fieldData->GetArray(arrayName);
-		int c = array->GetNumberOfComponents();
-		int n = array->GetNumberOfTuples();
+      vtkFieldData *fieldData = vtkdata->GetPointData();
+      char arrayName[1024];
+      sprintf(arrayName, "Variable_0");
+      vtkSmartPointer<vtkDataArray> array = fieldData->GetArray(arrayName);
+      int c = array->GetNumberOfComponents();
+      int n = array->GetNumberOfTuples();
 
-		double* histData = (double*)malloc(sizeof(double)*c);
-		shared_ary<Histogram> histAry(new Histogram[n], n);
-		for (int nn = 0; nn < n; nn++){
-			array->GetTuple(nn, histData);
-			histAry[nn] = Histogram(histData);
-		}
-		AbstractDistrArray * abstract_array = new DistrArray<Histogram>(histAry);
+      double* histData = (double*)malloc(sizeof(double)*c);
+      shared_ary<Histogram> histAry(new Histogram[n], n);
+      for (int nn = 0; nn < n; nn++){
+              array->GetTuple(nn, histData);
+              histAry[nn] = Histogram(histData);
+      }
+      AbstractDistrArray * abstract_array = new DistrArray<Histogram>(histAry);
 
-		shared_ptr<Dataset<T> > dataset = make_Dataset<T>(
-			new RegularCartesianGrid(dim[0], dim[1], dim[2]),
-			abstract_array
-			);
+      shared_ptr<Dataset<T> > dataset = make_Dataset<T>(
+              new RegularCartesianGrid(dim[0], dim[1], dim[2]),
+              abstract_array
+              );
 
-		free(histData);
-		return dataset;
+      free(histData);
+      return dataset;
     }
     else {
       cout << "Unknown distribution type: " << type << endl;
@@ -88,7 +91,8 @@ shared_ptr<Dataset<T> > loadEddaDataset(const string &edda_file, const string &a
     }
 
 
-  } else if (ext.compare("vts")==0){ // structured grids
+  } // end of if (ext.compare("vti")==0)
+  else if (ext.compare("vts")==0){ // structured grids
 
     vtkNew<vtkXMLStructuredGridReader> reader;
     reader->SetFileName(edda_file.c_str());

@@ -36,7 +36,7 @@ protected:
 	shared_ptr<Dataset<Real> > dataset;
 	size_t binCount;
 public:
-	DistrModeler(DistrType type){
+        DistrModeler(DistrType type){
 		//currently updating the type of distribution (GMM/HIST)
 		//can have more variables in future to hold different settings while modelling,  like partitioning algortihm etc.
 		dType = type;		
@@ -48,9 +48,6 @@ public:
 		switch(dType){
 			case(GMM):
 				loader<dist::DefaultGaussianMixture>(filename, xDimName, yDimName, zDimName, ensDimName, varName);
-				break;
-			case(GMM1):
-				loader<dist::GaussianMixture<1>>(filename, xDimName, yDimName, zDimName, ensDimName, varName);
 				break;
 			case(GMM2):
 				loader<dist::GaussianMixture<2>>(filename, xDimName, yDimName, zDimName, ensDimName, varName);
@@ -89,7 +86,7 @@ public:
   		yDim = dataFile.get_dim(yDimName.c_str())->size();
   		zDim = dataFile.get_dim(zDimName.c_str())->size();
   		ensDim = dataFile.get_dim(ensDimName.c_str())->size();
-  		ensDim = 10;
+                ensDim = 10;
 
   		NcVar *var = dataFile.get_var(varName.c_str());
 

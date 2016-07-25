@@ -38,7 +38,7 @@ int main()
 	);
 	writeEddaVtkDataset(dataset, "testHist.vti", "test_");
 	cout << "finish histogram modeling and write into file, press any key to continue!" << endl;
-	getchar();
+	//getchar();
 																															
 																																
 	shared_ptr<Dataset<Real> > dataset2 = loadEddaScalarDataset("testHist.vti", "test_");
@@ -52,7 +52,7 @@ int main()
 			for (int k = 0; k < dim[2]; k++)
 				cout << "at_comp(" <<i << "," << j << "," << k << ") : " << dataset2->at_comp(i, j, k) << endl;
   cout << "load histogram from file and sampling, press any key to finish!" << endl;
-  getchar();
+  //getchar();
   return 0;
 }
 

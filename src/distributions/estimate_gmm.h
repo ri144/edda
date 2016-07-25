@@ -10,12 +10,12 @@
 #include <cmath>
 #include <vector>
 
-namespace edda
-{
-
 //edda includes
 #include <core/interpolator.h>
 #include <distributions/gaussian_mixture.h>
+
+namespace edda
+{
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 ///// Traditional EM algorithm section
