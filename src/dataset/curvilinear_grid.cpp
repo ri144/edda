@@ -1,3 +1,4 @@
+#include <cfloat>
 
 #include "curvilinear_grid.h"
 

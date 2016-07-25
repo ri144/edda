@@ -2,11 +2,15 @@
 #include <fstream>
 #include <string>
 #include <cstdio>
+#include <cfloat>
+
 #include "edda.h"
 #include "distributions/gaussian.h"
 #include "distributions/distribution.h"
 #include "io/edda_vtk_reader.h"
 #include "dataset/dataset.h"
+
+
 
 using namespace std;
 using namespace edda;
@@ -27,7 +31,7 @@ int main(int argc, char **argv)
   pos2 = VECTOR3(-0.02, -0.4312, 0.006); //for out_92651_0.vts //vert id 1474 (4,7,3)
 
   ////however, error occurs when testing out_0_9602.vts with pos2 = VECTOR3(-0.03, 0.416, 0.208); //for out_0_9602.vts //vert id 831 (3,8,6)
-  //string filename = string(SAMPLE_DATA_PATH) + "/out_3_9602.vts";
+  //string filename = string(SAMPLE_DATA_PATH) + "/out_0_9602.vts";
   //pos2 = VECTOR3(-0.03, 0.416, 0.208);
   
   // load data with random sampling
@@ -60,14 +64,14 @@ int main(int argc, char **argv)
   VECTOR3 minB, maxB;
   dataset->getGrid()->boundary(minB, maxB);
 
-  const int numSampleX = 100, numSampleZ = 100;
+  const int numSampleX = 500, numSampleZ = 500;
   bool successfullySampled[numSampleZ][numSampleX];
   float sampleResults[numSampleZ][numSampleX];
   
-  float vmax = FLT_MIN, vmin = FLT_MAX;
+  float vmax = -FLT_MAX, vmin = FLT_MAX;
   float selectedY = (maxB[1] - minB[1]) / 2 + minB[1];
-  for (int j = 0; j < 100; j++){
-	for (int i = 0; i < 100; i++){
+  for (int j = 0; j < numSampleZ; j++){
+	  for (int i = 0; i < numSampleX; i++){
 		VECTOR3 pos = VECTOR3((maxB[0] - minB[0]) / (numSampleX - 1)*i + minB[0], selectedY, (maxB[2] - minB[2]) / (numSampleZ - 1)*j + minB[2]);
 		  Real value;
 		  if (dataset->at_phys(pos, value) == SUCCESS){
@@ -83,8 +87,8 @@ int main(int argc, char **argv)
   }
 
   //at places where sampling is failed, the value is set to vmin - (vmax - vmin) as an indicator 
-  for (int j = 0; j < 100; j++){
-	  for (int i = 0; i < 100; i++){
+  for (int j = 0; j < numSampleZ; j++){
+	  for (int i = 0; i < numSampleX; i++){
 		  if (!successfullySampled[j][i]){
 			  sampleResults[j][i] = vmin - (vmax - vmin);
 		  }
