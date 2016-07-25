@@ -18,8 +18,10 @@ int main()
 	shared_ary<Histogram> array (new Histogram[8], 8);
 	for (int i = 0; i < 8; i++){
 		float data[1];
-		data[0] = 50+i;
-		array[i] = Histogram(data, 1, 50, 60, 20);
+		data[0] = 50 + i;
+		//array[i] = Histogram(data, 1, 50, 60, 20);
+		//array[i] = eddaComputeHistogram(data, 1, 50, 60, 20);
+		array[i] = eddaComputeHistogram(data, 1, 20);
 	}
 	AbstractDistrArray * abstract_array = new DistrArray<Histogram>(array);
 
@@ -35,6 +37,7 @@ int main()
 		abstract_array
 	);
 	writeEddaVtkDataset(dataset, "testHist.vti", "test_");
+	cout << "finish histogram modeling and write into file, press any key to continue!" << endl;
 	getchar();
 																															
 																																
@@ -47,8 +50,9 @@ int main()
 	for (int i = 0; i < dim[0]; i++)
 		for (int j = 0; j < dim[1]; j++)
 			for (int k = 0; k < dim[2]; k++)
-				cout << "at_comp(i,j,k) : " << dataset2->at_comp(i, j, k) << endl;
-	getchar();
+				cout << "at_comp(" <<i << "," << j << "," << k << ") : " << dataset2->at_comp(i, j, k) << endl;
+  cout << "load histogram from file and sampling, press any key to finish!" << endl;
+  getchar();
   return 0;
 }
 
