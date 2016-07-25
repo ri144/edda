@@ -14,16 +14,35 @@ using namespace std;
 
 namespace edda{
 
-// add a GMM array for vtkPointData
-void addVtkGmmArrays(vtkPointData *vtk_point_data, AbstractDistrArray *array, const string &array_name)
+
+const dist::GMMTuple getGmmModels(dist::Variant &distr, int GMs, int model)
 {
-  vector<string> filenames;
+  switch (GMs)
+  {
+    case 2:
+      return boost::get<dist::GaussianMixture<2> >(distr).models[model];
+    case 3:
+      return boost::get<dist::GaussianMixture<3> >(distr).models[model];
+    case 4:
+      return boost::get<dist::GaussianMixture<4> >(distr).models[model];
+    case 5:
+      return boost::get<dist::GaussianMixture<5> >(distr).models[model];
+    default:
+      throw runtime_error("The Gaussian mixture models exceeds default size");
+  }
+
+}
+
+// add a GMM array for vtkPointData
+void addVtkGmmArrays(vtkPointData *vtk_point_data, AbstractDistrArray *array, const string &array_name, int GMs)
+{
+  printf("Gaussian Models in GaussianMixture=%d\n", GMs);
   char name[256];
   int i;
   int n = array->getLength();
   int nc = array->getNumComponents();
 
-  for (i=0; i<MAX_GMs*3; i++)
+  for (i=0; i<GMs*3; i++)
   {
     vtkFloatArray *vtk_array = vtkFloatArray::New();
     vtk_array->SetNumberOfComponents( nc );
@@ -37,7 +56,7 @@ void addVtkGmmArrays(vtkPointData *vtk_point_data, AbstractDistrArray *array, co
         vector<dist::Variant> vdist = array->getDistrVector(j);
         for (int c=0; c<nc; c++)
         {
-			((float *)vtk_array->GetVoidPointer(j))[c] = boost::get<dist::DefaultGaussianMixture>(vdist[c]).models[i / 3].m;
+          ((float *)vtk_array->GetVoidPointer(j))[c] = getGmmModels(vdist[c], GMs, i / 3).m;
         }
       }
 
@@ -50,7 +69,7 @@ void addVtkGmmArrays(vtkPointData *vtk_point_data, AbstractDistrArray *array, co
         vector<dist::Variant> vdist = array->getDistrVector(j);
         for (int c=0; c<nc; c++)
         {
-			((float *)vtk_array->GetVoidPointer(j))[c] = boost::get<dist::DefaultGaussianMixture>(vdist[c]).models[i / 3].v;
+          ((float *)vtk_array->GetVoidPointer(j))[c] = getGmmModels(vdist[c], GMs, i / 3).v;
         }
       }
 
@@ -63,7 +82,7 @@ void addVtkGmmArrays(vtkPointData *vtk_point_data, AbstractDistrArray *array, co
         vector<dist::Variant> vdist = array->getDistrVector(j);
         for (int c=0; c<nc; c++)
         {
-          ((float *)vtk_array->GetVoidPointer(j))[c] = boost::get<dist::DefaultGaussianMixture>( vdist[c] ).models[i/3].w;
+          ((float *)vtk_array->GetVoidPointer(j))[c] = getGmmModels(vdist[c], GMs, i / 3).w;
         }
       }
 
@@ -108,10 +127,10 @@ void addVtkHistoArrays(vtkPointData *vtk_point_data, AbstractDistrArray *array, 
 	vtk_point_data->AddArray(vtk_array);
 }
 
-void setDistrType(vtkFieldData* vtk_data, const char *distrName, const string &array_name_prefix)
+void setDistrType(vtkFieldData* vtk_data, string distrName, const string &array_name_prefix)
 {
   vtkStringArray *vtk_array = vtkStringArray::New();
-  vtk_array->InsertNextValue(distrName);
+  vtk_array->InsertNextValue(distrName.c_str());
   string array_name = array_name_prefix + "distr_type";
   vtk_array->SetName( array_name.c_str() );
   vtk_data->AddArray(vtk_array);
@@ -130,13 +149,16 @@ void writeEddaVtkDataset(shared_ptr<Dataset<Real> > dataset, const string &edda_
     image->SetExtent(0, dims[0]-1, 0, dims[1]-1, 0, dims[2]-1);
 
     AbstractDistrArray *array = dataset->getArray();
-    const char *dName = array->getDistrName();
-    if (strcmp(dName, "GaussianMixture") == 0) {
-      addVtkGmmArrays(image->GetPointData(), array, array_name_prefix);
+    string dName = array->getDistrName();
 
-    } else if (strcmp(dName, "Histogram") == 0) {
+    if (dName.compare(0, 15, "GaussianMixture") == 0) {
+      // Only compare the first 15 chars because this string ends with the number of Gaussian models
+      // Specified in edda::dist::GaussianMixture
+      addVtkGmmArrays(image->GetPointData(), array, array_name_prefix, stoi(dName.substr(15)) );
 
+    } else if (dName.compare("Histogram") == 0) {
       addVtkHistoArrays(image->GetPointData(), array, array_name_prefix);
+
     } else {
       cout << "Edda VTK Writer: Unsupported array type" << endl;
       throw NotImplementedException();

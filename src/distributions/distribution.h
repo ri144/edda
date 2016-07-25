@@ -6,6 +6,7 @@
 #define DISTRIBUTION_H_
 
 #include <iostream>
+#include <string>
 
 #include "gaussian.h"
 #include "gaussian_mixture.h"
@@ -28,7 +29,7 @@ public:
   virtual double getCdf(double x)=0;
   virtual double getMean()=0;
   virtual double getSample()=0;
-  virtual char *getName() = 0;
+  virtual std::string getName() = 0;
   virtual std::ostream& operator<<(std::ostream& os)=0;
 };
 
@@ -61,7 +62,7 @@ public:
     return os;
   }
 
-  virtual char *getName() {
+  virtual std::string getName() {
     return dist::getName(dist);
   }
 };

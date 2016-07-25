@@ -53,7 +53,7 @@ public:
   ///
   /// Get gistribution name for data writer
   ///
-  virtual const char * getDistrName() = 0;
+  virtual std::string getDistrName() = 0;
 };
 
 } // edda
