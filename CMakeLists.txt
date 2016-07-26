@@ -8,12 +8,13 @@ cmake_minimum_required (VERSION 2.8)
 project (edda)
 
 ### Provide options that the user can optionally select.
-option (EDDA_BUILD_MODELER "Build the data modeler programs." OFF)
+option (EDDA_BUILD_MODELING "Build distribution modeling tools." OFF)
 option (EDDA_BUILD_VIS "Build distribution vis tools." OFF)
 
 option (EDDA_BUILD_TESTS "Build the test programs." OFF)
 option (EDDA_BUILD_EXAMPLES "Build the example programs." ON)
 option (EDDA_BUILD_SHARED_LIBS "Build into shared libraries." OFF)
+option (EDDA_BUILD_MODELER "Build the data modeler programs." OFF)
 #option (EDDA_WITH_OPENMP "Build with OpenMP parallelization." ON)
 
 set (THRUST_DEVICE_SYSTEM "CPP" CACHE STRING "Thrust device backend (CUDA/TBB/OPENMP/CPP).")
