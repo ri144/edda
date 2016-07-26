@@ -41,7 +41,7 @@ class EDDA_EXPORT GaussianMixture: public ContinuousDistributionTag {
         models[i] = models_[i];
 
     } else {
-
+      // Too many Gaussian models
       throw NotImplementedException();
     }
   }
@@ -75,12 +75,12 @@ public:
       vmodels_.push_back(t);
     }
     modelReduction(vmodels_);
-	normalizeWeights();
+    normalizeWeights();
   }
 
   GaussianMixture(const std::vector<GMMTuple> &models_) {
     modelReduction(models_);
-	normalizeWeights();
+    normalizeWeights();
   }
 
   ///
@@ -165,7 +165,7 @@ inline double getSample(const GaussianMixture<GMs> &dist)
 {
   float ratio = rand() / (float)RAND_MAX;
   float accumulated = 0;
-  for (int i=0; i<GMs; i++)
+  for (int i=GMs-1; i >= 0; i--)
   {
     accumulated += dist.models[i].w;
     if (ratio < accumulated) {
@@ -173,7 +173,7 @@ inline double getSample(const GaussianMixture<GMs> &dist)
     }
   }
   // return sample from the last model
-  return getSample( Gaussian(dist.models[GMs-1].m, dist.models[GMs-1].v) );
+  return getSample( Gaussian(dist.models[0].m, dist.models[0].v) );
 }
 
 ///
@@ -189,7 +189,7 @@ inline double getSample(const GaussianMixture<GMs> &dist, thrust::default_random
   thrust::uniform_real_distribution<Real> uniform;
   float ratio = uniform(rng);
   float accumulated = 0;
-  for (int i=0; i<GMs; i++)
+  for (int i=GMs-1; i>=0; i--)
   {
     accumulated += dist.models[i].w;
     if (ratio < accumulated) {
@@ -197,7 +197,7 @@ inline double getSample(const GaussianMixture<GMs> &dist, thrust::default_random
     }
   }
   // return sample from the last model
-  return getSample( Gaussian(dist.models[GMs-1].m, dist.models[GMs-1].v), rng );
+  return getSample( Gaussian(dist.models[0].m, dist.models[0].v), rng );
 }
 ///
 /// \brief Return CDF of x
