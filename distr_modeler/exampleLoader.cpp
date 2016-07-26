@@ -16,10 +16,8 @@ int main(int argc, char* argv[])
   DistrModeler dm1(GMM);
   
   //loading a netCDF ensemble file with dimension and variable names.
-
   dm1.loader("/media/WD3/oceanEnsemble/pe_dif_sep2_98.nc", "tlat", "tlon", "outlev", "time", "temp");
   dm1.writeToVTK("tempEnsGmm.vti","tempEnsGmm_");
-
 
   DistrModeler dm2(HIST);
   dm2.initHistogram(64);
@@ -29,4 +27,3 @@ int main(int argc, char* argv[])
     
   return 0;
 }
-
