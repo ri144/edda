@@ -75,10 +75,12 @@ public:
       vmodels_.push_back(t);
     }
     modelReduction(vmodels_);
+	normalizeWeights();
   }
 
   GaussianMixture(const std::vector<GMMTuple> &models_) {
     modelReduction(models_);
+	normalizeWeights();
   }
 
   ///
