@@ -185,8 +185,10 @@ public:
   }
 
   void output(std::ostream& os) const{
+    os << "<Histogram Min:" << this->m_minValue << " Max:" << this->m_maxValue;
     for (int b = 0; b < m_nBins; b++)
-      os << "Bin: " << b << ": " << m_cdf[b] << std::endl;
+      os << ", Bin " << b << ": " << m_cdf[b];
+    os << ">";
   }
 
   int getBins(){

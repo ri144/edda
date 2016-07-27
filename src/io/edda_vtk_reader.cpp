@@ -29,6 +29,7 @@ string getDistrType(vtkFieldData* vtk_data, const string &array_name_prefix)
   
   vtkStringArray *vtk_array = vtkStringArray::SafeDownCast(vtk_data->GetAbstractArray(array_name.c_str()));
   if (vtk_array==NULL) {
+    cout << "Distribution data type not defind in field " << array_name << ".  Use default GaussianMixture." << endl;
     stringstream ss;
     ss << "GaussianMixture" << MAX_GMs; // default distribution type
     return ss.str();
