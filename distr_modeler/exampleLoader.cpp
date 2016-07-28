@@ -13,16 +13,17 @@ using namespace edda;
 
 int main(int argc, char* argv[])
 {
-  DistrModeler dm(GMM);
-  cout << dm.getType() << endl;
-
+  DistrModeler dm1(GMM);
+  
   //loading a netCDF ensemble file with dimension and variable names.
-  dm.loader("/media/WD3/oceanEnsemble/pe_dif_sep2_98.nc", "tlat", "tlon", "outlev", "time", "temp");
+  dm1.loader("/media/WD3/oceanEnsemble/pe_dif_sep2_98.nc", "tlat", "tlon", "outlev", "time", "temp");
+  dm1.writeToVTK("tempEnsGmm.vti","tempEnsGmm_");
 
-  //cout << "distribution at location {45,26,10}: " <<  dm.getDistributionAt(45,26,10) << endl;
-  dm.writeToVTK("tempEns.vti","tempEns_");//TODO: write to .vti files.
+  DistrModeler dm2(HIST);
+  dm2.initHistogram(64);
+  dm2.loader("/media/WD3/oceanEnsemble/pe_dif_sep2_98.nc", "tlat", "tlon", "outlev", "time", "temp");
+  dm2.writeToVTK("tempEnsHist.vti","tempEnsHist_");
 
     
   return 0;
 }
-

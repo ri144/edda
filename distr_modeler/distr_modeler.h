@@ -8,6 +8,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <stdlib.h>
 #include "edda.h"
 #include "distributions/gaussian.h"
 #include "distributions/distribution.h"
@@ -36,21 +37,24 @@ protected:
 	shared_ptr<Dataset<Real> > dataset;
 	size_t binCount;
 public:
-	DistrModeler(DistrType type){
+        DistrModeler(DistrType type){
 		//currently updating the type of distribution (GMM/HIST)
 		//can have more variables in future to hold different settings while modelling,  like partitioning algortihm etc.
-		dType = type;		
+		dType = type;	
+		binCount = 32;	
 	}
 
-	//loader() will be overloaded to handle different types of input data and partitioning styles
+	void initHistogram(size_t bin)
+	{
+		binCount = bin;
+	}
+
+	//loader() is be overloaded to handle different types of input data and partitioning styles
 	void loader(string filename, string xDimName, string yDimName, string zDimName, string ensDimName, string varName)
 	{
 		switch(dType){
 			case(GMM):
 				loader<dist::DefaultGaussianMixture>(filename, xDimName, yDimName, zDimName, ensDimName, varName);
-				break;
-			case(GMM1):
-				loader<dist::GaussianMixture<1>>(filename, xDimName, yDimName, zDimName, ensDimName, varName);
 				break;
 			case(GMM2):
 				loader<dist::GaussianMixture<2>>(filename, xDimName, yDimName, zDimName, ensDimName, varName);
@@ -89,7 +93,7 @@ public:
   		yDim = dataFile.get_dim(yDimName.c_str())->size();
   		zDim = dataFile.get_dim(zDimName.c_str())->size();
   		ensDim = dataFile.get_dim(ensDimName.c_str())->size();
-  		ensDim = 10;
+  		//ensDim = 10;
 
   		NcVar *var = dataFile.get_var(varName.c_str());
 
@@ -121,12 +125,10 @@ public:
 	 					cerr << "ERROR[" << NC_ERR << "]" << "getting data" << endl;
 	 					exit(NC_ERR);
 	 				}
-	        		//TODO::Will have to create an API to handle Histogram
-	 				
-	 				
-
+	        		
 	 				T new_distr;
 	 				computeDistribution(data, ensDim, new_distr);
+	 				//cout << "(" << z << "," << y << "," << x << ")" << endl;
 	 				
 	        		pArray[z*xDim*yDim + y*xDim + x] = new_distr;
 
@@ -138,22 +140,129 @@ public:
 	 	dataset = make_Dataset<Real>(new RegularCartesianGrid(xDim,yDim,zDim), abs_array);
 
 	}
+	//for spatial decomposition
 
-	template <int GMs> //GMs: Gaussian models
-	void computeDistribution(float *data, size_t ensDim, dist::GaussianMixture<GMs> &new_distr)
+
+	//loader() is be overloaded to handle different types of input data and partitioning styles
+	void loader(string filename, int w, int h, int d, int bw, int bh, int bd)
 	{
-		double *dataD;		
-  		dataD = new double[ensDim];
+		switch(dType){
+			case(GMM):
+				loader<dist::DefaultGaussianMixture>(filename, w, h, d, bw, bh, bd);
+				break;
+			case(GMM2):
+				loader<dist::GaussianMixture<2>>(filename, w, h, d, bw, bh, bd);
+				break;
+			case(GMM3):
+				loader<dist::GaussianMixture<3>>(filename, w, h, d, bw, bh, bd);
+				break;
+			case(GMM4):
+				loader<dist::GaussianMixture<4>>(filename, w, h, d, bw, bh, bd);
+				break;
+			case(GMM5):
+				loader<dist::GaussianMixture<5>>(filename, w, h, d, bw, bh, bd);
+				break;
+			case(HIST):
+				loader<dist::Histogram>(filename, w, h, d, bw, bh, bd);
+				break;
+		}
+	}
+	template <typename T>
+	void loader(string filename, int w, int h, int d, int bw, int bh, int bd)
+	{
+		float *inData;
+		inData = new float[w*h*d];
+		
+	    
+	    FILE *fIn = fopen(filename.c_str(),"rb");
+	    if(!fIn)
+	    {
+	        fprintf(stderr, "Error opening file\n");
+	        exit(13);
+	    }
+	    size_t readStatus = fread(inData, sizeof(float), w*h*d, fIn);
+	    fclose(fIn);
 
-  		for(size_t i=0; i<ensDim; i++)
-	 		dataD[i] = (double) data[i];
+	    int newW(0),newH(0),newD(0);
 
-		eddaComputeEM(dataD,ensDim, &new_distr);
+	    if(w%bw == 0)
+	    	newW = w/bw;
+	    else
+	    {
+	    	fprintf(stderr, "Wrong dimension combination\n");
+	        exit(14);
+	    }
+	    if(h%bh == 0)
+	    	newH = h/bh;
+	    else
+	    {
+	    	fprintf(stderr, "Wrong dimension combination\n");
+	        exit(14);
+	    }
+	    if(d%bd == 0)
+	    	newD = d/bd;
+	    else
+	    {
+	    	fprintf(stderr, "Wrong dimension combination\n");
+	        exit(14);
+	    }
+
+	    
+	    //based on the dType provided by the user create appropiate array type.  		
+  		shared_ary<T> pArray (new T[newW*newH*newD], newW*newH*newD);
+  		int counter =0;
+
+
+	    for(size_t z=0; z<d; z += bd)
+	    {
+	    	for(size_t y=0; y<h; y += bh)
+	    	{
+	    		for(size_t x=0; x<w; x += bw)
+	    		{
+
+					float *data;
+					data = new float[bw*bh*bd];
+	    			int i = 0;
+	    			for(size_t zz=z; zz<z+bd; zz++)
+	    			{
+	    				for(size_t yy=y; yy<y+bh; yy++)
+	    				{
+	    					for(size_t xx=x; xx<x+bw; xx++)
+	    					{
+	    						data[i] = inData[zz*w*h + yy*w + xx];
+	    						i++;
+	    					}
+	    				}
+	    			}
+	    			T new_distr;
+	 				computeDistribution(data, bw*bh*bd, new_distr);
+	 				pArray[counter] = new_distr;
+	 				counter++;
+	    		}
+	    	}
+	    }
+	    
+
+	 	AbstractDistrArray * abs_array = new DistrArray<T>(pArray);
+	 	dataset = make_Dataset<Real>(new RegularCartesianGrid(newW,newH,newD), abs_array);
+
 	}
 
-	void computeDistribution(float *data, size_t ensDim, dist::Histogram &new_distr)
+	template <int GMs> //GMs: Gaussian models
+	void computeDistribution(float *data, size_t size, dist::GaussianMixture<GMs> &new_distr)
 	{
-		new_distr = eddaComputeHistogram(data, ensDim, -10, 10, 20);
+		double *dataD;		
+  		dataD = new double[size];
+
+  		for(size_t i=0; i<size; i++)
+	 		dataD[i] = (double) data[i];
+
+		eddaComputeEM(dataD, size, &new_distr);
+	}
+
+	void computeDistribution(float *data, size_t size, dist::Histogram &new_distr)
+	{
+		new_distr = eddaComputeHistogram(data, size, binCount);
 	}
 
 	DistrType getType(){

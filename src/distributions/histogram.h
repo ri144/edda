@@ -273,7 +273,7 @@ inline std::ostream& operator<<(std::ostream& os, const Histogram &dist)
 }
 
 __host__ __device__
-inline const char *getName(const Histogram &x) {
+inline std::string getName(const Histogram &x) {
   return "Histogram";
 }
 

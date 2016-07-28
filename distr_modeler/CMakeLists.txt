@@ -14,7 +14,7 @@ add_definitions(-DSAMPLE_DATA_PATH="${CMAKE_SOURCE_DIR}/sample_data")
 
 find_package(NetCDF)
 
-set(CONVERTER_SOURCES exampleLoader.cpp )
+set(CONVERTER_SOURCES exampleLoader.cpp exampleEnsembleLoader.cpp exampleSpatialDecompLoader.cpp)
 
 ####
 foreach (ldsrc ${CONVERTER_SOURCES})

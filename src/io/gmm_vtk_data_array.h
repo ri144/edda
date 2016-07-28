@@ -61,7 +61,11 @@ public:
 
   std::shared_ptr<GmmArray> genNdArray() ;
 
-  virtual const char *getDistrName() { return "GaussianMixture"; }
+  virtual std::string getDistrName() {
+    std::stringstream ss;
+    ss << "GaussianMixture" << MAX_GMs;
+    return ss.str();
+  }
 };
 
 } // namespace edda

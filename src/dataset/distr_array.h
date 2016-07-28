@@ -52,7 +52,7 @@ public:
 
   virtual boost::any getRawArray() { return boost::any(array); }
 
-  virtual const char * getDistrName() { return getName(Distr()); }
+  virtual std::string getDistrName() { return getName(Distr()); }
 };
 
 
@@ -102,7 +102,7 @@ public:
 
   virtual boost::any getRawArray() { return boost::any(array); }
 
-  virtual const char * getDistrName() { return getName(Distr()); }
+  virtual std::string getDistrName() { return getName(Distr()); }
 };
 
 
