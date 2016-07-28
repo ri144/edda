@@ -14,7 +14,6 @@ using namespace edda::dist;
 
 int main()
 {
-	
 	shared_ary<Histogram> array (new Histogram[8], 8);
 	for (int i = 0; i < 8; i++){
 		float data[1];

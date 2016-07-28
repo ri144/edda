@@ -33,7 +33,7 @@ public:
 
   Histogram(){}
 
-  Histogram(double* histData){
+  Histogram(double* histData){//use when load from vtk
 	  m_nBins = histData[0];
 	  m_minValue = histData[1];
 	  m_maxValue = histData[2];
@@ -45,40 +45,22 @@ public:
 	  }
   }
 
-  Histogram(float *dataPoints, int points, const Real _minValue, const Real _maxValue, const int _nBins){
-    m_nBins = _nBins;
-
-    m_minValue = _minValue;
-    m_maxValue = _maxValue;
-
-    m_binWidth = (m_maxValue - m_minValue) / (Real)(m_nBins);
-
-    m_cdf.resize(m_nBins);
-
-    //modeling and convert to cdf
-    for (int i = 0; i < points; i++){
-      int b = valueToBinsIndex(dataPoints[i]);
-      m_cdf[b] ++;
-    }
-
-    for (int b = 1; b < m_nBins; b++)
-      m_cdf[b] += m_cdf[b - 1];
-
-    for (int b = 0; b < m_nBins; b++){
-      m_cdf[b] /= (Real)points;
-    }
-
-  }
-
-  Histogram(float *dataPoints, int points, const int _nBins){
-	  m_minValue = dataPoints[0];
-	  m_maxValue = dataPoints[0];
-	  for (int i = 1; i < points; i++){
-		  if (m_minValue > dataPoints[i])
-			  m_minValue = dataPoints[i];
-		  if (m_maxValue < dataPoints[i])
-			  m_maxValue = dataPoints[i];
+  Histogram(Real *dataArray, int nElements, const int _nBins, const Real _minValue = 1, const Real _maxValue = -1){
+	  if (_minValue > _maxValue){// no input min/max value
+		  m_minValue = dataArray[0];
+		  m_maxValue = dataArray[0];
+		  for (int i = 1; i < nElements; i++){
+			  if (m_minValue > dataArray[i])
+				  m_minValue = dataArray[i];
+			  if (m_maxValue < dataArray[i])
+				  m_maxValue = dataArray[i];
+		  }
 	  }
+	  else{
+		  m_minValue = _minValue;
+		  m_maxValue = _maxValue;
+	  }
+
 	  m_nBins = _nBins;
 
 	  m_binWidth = (m_maxValue - m_minValue) / (Real)(m_nBins);
@@ -86,8 +68,8 @@ public:
 	  m_cdf.resize(m_nBins);
 
 	  //modeling and convert to cdf
-	  for (int i = 0; i < points; i++){
-		  int b = valueToBinsIndex(dataPoints[i]);
+	  for (int i = 0; i < nElements; i++){
+		  int b = valueToBinsIndex(dataArray[i]);
 		  m_cdf[b] ++;
 	  }
 
@@ -95,10 +77,9 @@ public:
 		  m_cdf[b] += m_cdf[b - 1];
 
 	  for (int b = 0; b < m_nBins; b++){
-		  m_cdf[b] /= (Real)points;
+		  m_cdf[b] /= (Real)nElements;
 	  }
   }
-
 
   Histogram(const Histogram &hist)
   : m_nBins(hist.m_nBins), 
@@ -158,28 +139,39 @@ public:
     int high = m_nBins - 1;
 
     //bineary searh in cdf
-    do{
-      int mid = floor((low + high) / 2.0);
+    //do{
+    //  int mid = floor((low + high) / 2.0);
 
-      Real prevCdf;
-      if (mid == 0) prevCdf = -0.1;
-      else prevCdf = m_cdf[mid - 1];
+    //  Real prevCdf;
+    //  if (mid == 0) prevCdf = -0.1;
+    //  else prevCdf = m_cdf[mid - 1];
 
-      if (prevCdf < r && r <= m_cdf[mid]){
-        //sample here
-        Real subr = rand() / (float)RAND_MAX;
-        Real s, t;
-        rangeOfBin(s, t, mid);
-        sample = s + m_binWidth * subr;
-        break;
-      }
-      else if (m_cdf[mid] > r){
-        high = mid - 1;
-      }
-      else{
-        low = mid + 1;
-      }
-    } while (1);
+    //  if (prevCdf < r && r <= m_cdf[mid]){
+    //    //sample here
+    //    Real subr = rand() / (float)RAND_MAX;
+    //    Real s, t;
+    //    rangeOfBin(s, t, mid);
+    //    sample = s + m_binWidth * subr;
+    //    break;
+    //  }
+    //  else if (m_cdf[mid] > r){
+    //    high = mid - 1;
+    //  }
+    //  else{
+    //    low = mid + 1;
+    //  }
+    //} while (1);
+
+	//sequence search
+	for (int b = 0; b < m_nBins; b++){
+		if (m_cdf[b] >= r){
+			Real subr = rand() / (float)RAND_MAX;
+			Real s, t;
+			rangeOfBin(s, t, b);
+			sample = s + m_binWidth * subr;
+			break;
+		}
+	}
 
     return sample;
   }
@@ -207,12 +199,14 @@ public:
 	  return m_cdf[b];
   }
 
-private:
+protected:
   int valueToBinsIndex(Real v) const {
-    if (v == m_maxValue)
-      return (m_nBins - 1);
-    else
-      return floor((v - m_minValue) / m_binWidth);
+	if (v < m_minValue)
+		  return 0;
+	else if (v >= m_maxValue)
+		  return (m_nBins - 1);
+		else
+		  return floor((v - m_minValue) / m_binWidth);
   }
 
   void rangeOfBin(Real& s, Real &t, int b) const{
@@ -285,16 +279,25 @@ inline const char *getName(const Histogram &x) {
 
 }  // namespace dist
 
-inline dist::Histogram eddaComputeHistogram(float *dataPoints, int points, const Real _minValue, const Real _maxValue, const int _nBins)
+inline dist::Histogram eddaComputeHistogram(float *dataArray, int nElement, const int _nBins, const float _minValue = 1, const float _maxValue = -1)
 {
-  return dist::Histogram(dataPoints, points, _minValue, _maxValue, _nBins);
+	//convert to internal data type
+	Real* _dataArray = (Real*)malloc(sizeof(Real)*nElement);
+	for (int i = 0; i < nElement; i++)_dataArray[i] = (Real)dataArray[i];
+	dist::Histogram h = dist::Histogram(_dataArray, nElement, _nBins, _minValue, _maxValue);
+	free(_dataArray);
+	return h;
 }
 
-inline dist::Histogram eddaComputeHistogram(float *dataPoints, int points, const int _nBins)
+inline dist::Histogram eddaComputeHistogram(double *dataArray, int nElement, const int _nBins, const double _minValue = 1, const double _maxValue = -1)
 {
-	return dist::Histogram(dataPoints, points, _nBins);
+	//convert to internal data type
+	Real* _dataArray = (Real*)malloc(sizeof(Real)*nElement);
+	for (int i = 0; i < nElement; i++)_dataArray[i] = (Real)dataArray[i];
+	dist::Histogram h = dist::Histogram(_dataArray, nElement, _nBins, _minValue, _maxValue);
+	free(_dataArray);
+	return h;
 }
-
 
 }  // namespace edda
 
