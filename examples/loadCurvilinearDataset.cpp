@@ -27,12 +27,11 @@ int main(int argc, char **argv)
   cout << "Loading sample file" << endl;
 
   //for testing curvilinear grid
-  //string filename = string(SAMPLE_DATA_PATH) + "/out_92651_0.vts";
-  //pos2 = VECTOR3(-0.02, -0.4312, 0.006); //for out_92651_0.vts //vert id 1474 (4,7,3)
+  string filename = string(SAMPLE_DATA_PATH) + "/out_92651_0.vts";
+  pos2 = VECTOR3(-0.02, -0.4312, 0.006); //for out_92651_0.vts //vert id 1474 (4,7,3)
 
-  ////however, error occurs when testing out_0_9602.vts with pos2 = VECTOR3(-0.03, 0.416, 0.208); //for out_0_9602.vts //vert id 831 (3,8,6)
-  string filename = string(SAMPLE_DATA_PATH) + "/out_0_9602.vts";
-  pos2 = VECTOR3(-0.03, 0.416, 0.208);
+  //string filename = string(SAMPLE_DATA_PATH) + "/out_0_9602.vts";
+  //pos2 = VECTOR3(-0.03, 0.416, 0.208);
   
   // load data with random sampling
   shared_ptr<Dataset<Real> > dataset = loadEddaScalarDataset(filename, "");

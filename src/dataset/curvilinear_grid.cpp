@@ -551,20 +551,20 @@ int FEL_orient(const VECTOR3& a, const VECTOR3& b,
 //
 //////////////////////////////////////////////////////////////////////////
 // constructor and deconstructor
-CurvilinearGrid::CurvilinearGrid() :RegularCartesianGrid()
+CurvilinearGrid::CurvilinearGrid() :CartesianGrid(0,0,0)
 {
 	Reset();
 	locate_initialization();
 }
 
-CurvilinearGrid::CurvilinearGrid(int* dim, VECTOR3* pVertexGeom) :RegularCartesianGrid(dim[0], dim[1], dim[2])
+CurvilinearGrid::CurvilinearGrid(int* dim, VECTOR3* pVertexGeom):CartesianGrid(dim[0], dim[1], dim[2])
 {
 	m_pVertex = pVertexGeom;
-	ComputeBBox();
+	computeBBox();
 	locate_initialization();
 }
 
-CurvilinearGrid::CurvilinearGrid(int* dim, float* point_ary) :RegularCartesianGrid(dim[0], dim[1], dim[2])
+CurvilinearGrid::CurvilinearGrid(int* dim, float* point_ary) :CartesianGrid(dim[0], dim[1], dim[2])
 {
 	int numPoints = dim[0] * dim[1] * dim[2];
 	m_pVertex = new VECTOR3[numPoints];
@@ -574,7 +574,7 @@ CurvilinearGrid::CurvilinearGrid(int* dim, float* point_ary) :RegularCartesianGr
 		m_pVertex[ind][2] = point_ary[3 * ind + 2];
 	}
 	
-	ComputeBBox();
+	computeBBox();
 	locate_initialization();
 }
 
@@ -583,7 +583,7 @@ CurvilinearGrid::~CurvilinearGrid()
 {
 }
 
-void CurvilinearGrid::SetBoundary(VECTOR3& minB, VECTOR3& maxB)
+void CurvilinearGrid::setBoundary(VECTOR3& minB, VECTOR3& maxB)
 {
 	m_vMinBound = minB;
 	m_vMaxBound = maxB;
@@ -608,12 +608,20 @@ void CurvilinearGrid::SetBoundary(VECTOR3& minB, VECTOR3& maxB)
 	m_vMaxRealBound.set(maxB[0], maxB[1], maxB[2], 0.0);                // ZPL end
 }
 
+void CurvilinearGrid::setRealBoundary(VECTOR4& minB, VECTOR4& maxB)
+{
+	m_vMinRealBound = minB;
+	m_vMaxRealBound = maxB;
+};
+
+
+
 void CurvilinearGrid::Reset(void)
 {
 
 }
 
-void CurvilinearGrid::Boundary(VECTOR3& minB, VECTOR3& maxB)
+void CurvilinearGrid::boundary(VECTOR3& minB, VECTOR3& maxB)
 {
 	minB = m_vMinBound;
 	maxB = m_vMaxBound;
@@ -632,8 +640,31 @@ bool CurvilinearGrid::isInBBox(VECTOR3& pos)
 		return false;
 }
 
+
+bool CurvilinearGrid::isInRealBBox(VECTOR3& pos)
+{
+	if ((pos[0] >= m_vMinRealBound[0]) && (pos[0] <= m_vMaxRealBound[0]) &&
+		(pos[1] >= m_vMinRealBound[1]) && (pos[1] <= m_vMaxRealBound[1]) &&
+		(pos[2] >= m_vMinRealBound[2]) && (pos[2] <= m_vMaxRealBound[2]))
+		return true;
+	else
+		return false;
+};
+
+bool CurvilinearGrid::isInRealBBox(VECTOR3& pos, float t)
+{
+	if ((pos[0] >= m_vMinRealBound[0]) && (pos[0] <= m_vMaxRealBound[0]) &&
+		(pos[1] >= m_vMinRealBound[1]) && (pos[1] <= m_vMaxRealBound[1]) &&
+		(pos[2] >= m_vMinRealBound[2]) && (pos[2] <= m_vMaxRealBound[2]) &&
+		(t >= m_vMinRealBound[3]) && (t <= m_vMaxRealBound[3]))
+		return true;
+	else
+		return false;
+};
+
+
 // compute a default boundary 
-void CurvilinearGrid::ComputeBBox(void)
+void CurvilinearGrid::computeBBox(void)
 {
 	VECTOR3 minB, maxB;
 
@@ -723,7 +754,7 @@ void CurvilinearGrid::ComputeBBox(void)
 		}
 	}
 
-	SetBoundary(minB, maxB);
+	setBoundary(minB, maxB);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -976,7 +1007,7 @@ inverse_jacobian_t(MATRIX3& mi, double r, double s, double t)
 int CurvilinearGrid::coordinates_at_cell(VECTOR3 cell, VECTOR3* dp)
 {
 
-	std::vector<int> verIds;
+	std::vector<size_t> verIds;
 
 	int cellId = (int)cell[0] + ((int)cell[1])*(xcelldim()) + ((int)cell[2])*(xcelldim())*(ycelldim());
 	if (getCellVertices(cellId, verIds) != SUCCESS)
@@ -1489,40 +1520,7 @@ int	CurvilinearGrid::walk_on_z_boundary(VECTOR3 pp, int plane_pos, float& min_d2
 	}
 	return 1;
 }
-//////////////////////////////////////////////////////////////////////////
-// whether the point in the physical position is in the cell
-//
-// input:
-// phyCoord:	physical position
-// interpolant:	interpolation coefficients
-// output:
-// pInfo.interpolant: interpolation coefficient
-// return:		returns 1 if in cell
-//////////////////////////////////////////////////////////////////////////
-bool CurvilinearGrid::isInCell(PointInfo& pInfo, const int cellId)
-{
-	if (!isInBBox(pInfo.phyCoord))
-		return false;
 
-	float cx, cy, cz; // computatnoial space x, y, and z 
-	cx = (pInfo.phyCoord[0] - m_vMinBound[0]) / oneOvermappingFactorX;
-	cy = (pInfo.phyCoord[1] - m_vMinBound[1]) / oneOvermappingFactorY;
-	cz = (pInfo.phyCoord[2] - m_vMinBound[2]) / oneOvermappingFactorZ;
-
-	int xidx, yidx, zidx;
-	xidx = (int)floor(cx);
-	yidx = (int)floor(cy);
-	zidx = (int)floor(cz);
-
-	int inCell = zidx * ycelldim() * xcelldim() + yidx * xcelldim() + xidx;
-	if (cellId == inCell)
-	{
-		pInfo.interpolant.set(cx - (float)xidx, cy - (float)yidx, cz - (float)zidx);
-		return true;
-	}
-	else
-		return true;
-}
 
 //////////////////////////////////////////////////////////////////////////
 // get vertex list of a cell
@@ -1533,8 +1531,7 @@ bool CurvilinearGrid::isInCell(PointInfo& pInfo, const int cellId)
 //		vVertices: the vertex lis of the cell
 //////////////////////////////////////////////////////////////////////////
 //get vertex ids for each cell
-ReturnStatus CurvilinearGrid::getCellVertices(int cellId,
-	std::vector<int>& vVertices)
+ReturnStatus CurvilinearGrid::getCellVertices(int cellId, std::vector<size_t>& vVertices)
 {
 	int totalCell = xcelldim() * ycelldim() * zcelldim();
 	int xidx, yidx, zidx, index;
@@ -1579,7 +1576,7 @@ ReturnStatus CurvilinearGrid::locate(VECTOR3 pp, Cell& cell)
 	int i, res = 0;
 	//1. first test the point against boundingbox
 	VECTOR3 minBound, maxBound, vc;
-	Boundary(minBound, maxBound);
+	boundary(minBound, maxBound);
 
 
 	//1. first try
