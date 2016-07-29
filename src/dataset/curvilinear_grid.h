@@ -57,18 +57,9 @@ typedef struct {
 
 
   */
-class CurvilinearGrid : public RegularCartesianGrid
+class CurvilinearGrid : public CartesianGrid
 {
-
 private:
-  float mappingFactorX;				// mapping from physical space to computational space
-  float mappingFactorY;
-  float mappingFactorZ;
-  float oneOvermappingFactorX;
-  float oneOvermappingFactorY;
-  float oneOvermappingFactorZ;
-  float gridSpacing;			        // the minimal grid spacing of all dimensions
-
   VECTOR3 xyz_o, xyz_r, xyz_s, xyz_t, xyz_rs, xyz_rt, xyz_st, xyz_rst;
   VECTOR3* initial_location;
   VECTOR3* m_pVertex;
@@ -88,26 +79,33 @@ public:
   // whether the physical point is on the boundary
   bool at_phys(VECTOR3& pos);
   // get vertex list of a cell
-  ReturnStatus getCellVertices(int cellId, std::vector<int>& vVertices);
+  ReturnStatus getCellVertices(int cellId, std::vector<size_t>& vVertices);
   // get the cell id and also interpolating coefficients for the given physical position
   ReturnStatus phys_to_cell(PointInfo& pInfo);
   // the volume of cell
   double cellVolume(int cellId);
   // cell type
-  CellType GetCellType(void) { return CUBE; }
+  CellType getCellType() { return CUBE; }
   // set bounding box
-  void SetBoundary(VECTOR3& minB, VECTOR3& maxB);
+  void setBoundary(VECTOR3& minB, VECTOR3& maxB);
+  void setRealBoundary(VECTOR4& minB, VECTOR4& maxB);
   // get min and maximal boundary
-  void Boundary(VECTOR3& minB, VECTOR3& maxB);
-  // get grid spacing in x,y,z dimensions
-  void GetGridSpacing(int cellId, float& xspace, float& yspace, float& zspace)
-  {
-          xspace = oneOvermappingFactorX; yspace = oneOvermappingFactorY; zspace = oneOvermappingFactorZ;
-  }
-  //void BoundaryIntersection(VECTOR3&, VECTOR3&, VECTOR3&, float*, float);
+  void boundary(VECTOR3& minB, VECTOR3& maxB);
   bool isInBBox(VECTOR3& pos);
-  void ComputeBBox();
-  bool isInCell(PointInfo& pInfo, const int cellId);
+  bool isInRealBBox(VECTOR3& pos);
+  bool isInRealBBox(VECTOR3& pos, float t);
+  void computeBBox();
+
+  // boundary intersection
+  void boundaryIntersection(VECTOR3&, VECTOR3&, VECTOR3&, float*, float){};//not implemented in OSUFlow. will do in the future
+  // whether in a cell
+  bool isInCell(PointInfo& pInfo, const int cellId){ return true; };//the implementation in OSUFlow is not correct. will do in the future
+  // get grid spacing in x,y,z dimensions
+  void getGridSpacing(int cellId, float& xspace, float& yspace, float& zspace)
+  {
+	  xspace = 0; yspace = 0; zspace = 0;
+  };//grid spacing is not meaningful for curvilinear grid. need this function to override the abstract method in the parent classes
+ 
 
   int get_ijk_of_vertex(int vertexId, VECTOR3& ijk);
   int get_ijk_of_cell(int cellId, VECTOR3& ijk);
