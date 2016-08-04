@@ -37,6 +37,9 @@ class EDDA_EXPORT ContinuousDistributionTag : public DistributionTag{
 class EDDA_EXPORT DiscreteDistributionTag : public DistributionTag{
 };
 
+class EDDA_EXPORT JointDistributionTag : public DistributionTag{
+};
+
 // Here are generic functions that can be reused by new distributions if not
 // implemented.
 

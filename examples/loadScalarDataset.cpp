@@ -14,11 +14,18 @@ int main(int argc, char **argv)
 {
   srand(time(NULL));  // random seeding
 
-  cout << "Loading sample file" << endl;
-  string filename = string(SAMPLE_DATA_PATH) + "/isabel_pressure_small.vti";
+  string filename;
+  string arrayNamePrefix;
+  if (argc>1) {
+    filename = string(argv[1]);
+    arrayNamePrefix = string(argv[2]);
+  } else {
+    cout << "Loading sample file" << endl;
+    filename = string(SAMPLE_DATA_PATH) + "/isabel_pressure_small.vti";
+  }
 
   // load data with random sampling
-  shared_ptr<Dataset<Real> > dataset = loadEddaScalarDataset(filename, "");
+  shared_ptr<Dataset<Real> > dataset = loadEddaScalarDataset(filename, arrayNamePrefix);
 
   VECTOR3 pos;
   Real value;
