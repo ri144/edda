@@ -10,6 +10,7 @@
 #include "gaussian.h"
 #include "gaussian_mixture.h"
 #include "histogram.h"
+#include "joint_gaussian.h"
 
 namespace edda{
 enum DistrType { GMM, GMM2, GMM3, GMM4, GMM5, HIST, HYBRID};
@@ -17,7 +18,8 @@ enum DistrType { GMM, GMM2, GMM3, GMM4, GMM5, HIST, HYBRID};
 namespace dist{
 
   typedef boost::variant<Real, Gaussian, Histogram,
-  GaussianMixture<2>, GaussianMixture<3>, GaussianMixture<4>, DefaultGaussianMixture  > _Variant;
+  GaussianMixture<2>, GaussianMixture<3>, GaussianMixture<4>, GaussianMixture<5>,
+  JointGaussian> _Variant;
 
   struct Variant : public _Variant, public DistributionTag {
     Variant() : _Variant() {}
@@ -26,8 +28,9 @@ namespace dist{
     Variant(const GaussianMixture<2> &obj) : _Variant (obj) {}
     Variant(const GaussianMixture<3> &obj) : _Variant (obj) {}
     Variant(const GaussianMixture<4> &obj) : _Variant (obj) {}
-    Variant(const DefaultGaussianMixture &obj) : _Variant (obj) {}
+    Variant(const GaussianMixture<5> &obj) : _Variant (obj) {}
     Variant(const Histogram &obj) : _Variant (obj) {}
+    Variant(const JointGaussian &obj) : _Variant (obj) {}
   };
 
   namespace detail{
@@ -47,6 +50,16 @@ namespace dist{
     };
     struct _getSample : public boost::static_visitor<double> {
       template <class T> inline double operator() (const T& dist) { return getSample(dist); }
+    };
+    struct _getJointMean : public boost::static_visitor<std::vector<Real> > {
+      template <class T> inline std::vector<Real> operator() (const T& dist) { return getJointMean(dist); }
+    };
+    struct _getJointPdf : public boost::static_visitor<double> {
+      std::vector<Real> x;
+      template <class T> inline double operator() (const T& dist) { return getJointPdf(dist, x); }
+    };
+    struct _getJointSample : public boost::static_visitor<std::vector<Real> > {
+      template <class T> inline std::vector<Real> operator() (const T& dist) { return getJointSample(dist); }
     };
     struct _getName : public boost::static_visitor<std::string> {
       template <class T> inline std::string operator() (const T& dist) { return getName(dist); }
@@ -75,6 +88,18 @@ namespace dist{
   }  
   inline std::string getName(const Variant &dist) {
     detail::_getName f;
+    return boost::apply_visitor( f, dist );
+  }
+  inline std::vector<Real> getJointMean(const Variant &dist) {
+    detail::_getJointMean f;
+    return boost::apply_visitor( f, dist );
+  }
+  inline double getJointPdf(const Variant &dist, const std::vector<Real> &x) {
+    detail::_getJointPdf f; f.x = x;
+    return boost::apply_visitor( f, dist );
+  }
+  inline std::vector<Real> getJointSample(const Variant &dist) {
+    detail::_getJointSample f;
     return boost::apply_visitor( f, dist );
   }
 

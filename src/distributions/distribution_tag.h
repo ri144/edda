@@ -44,6 +44,118 @@ class EDDA_EXPORT JointDistributionTag : public DistributionTag{
 // implemented.
 
 ///
+/// \brief Return mean
+///
+__host__ __device__
+template <class Dist, ENABLE_IF_BASE_OF(Dist, DistributionTag)>
+inline double getMean(const Dist &dist)
+{
+  throw NotImplementedException();
+  return 0;
+}
+
+///
+/// \brief Return variance
+///
+__host__ __device__
+template <class Dist, ENABLE_IF_BASE_OF(Dist, DistributionTag)>
+inline double getVar(const Dist &dist)
+{
+  throw NotImplementedException();
+  return 0;
+}
+
+///
+/// \brief Return PDF of x
+///
+__host__ __device__
+template <class Dist, ENABLE_IF_BASE_OF(Dist, DistributionTag)>
+inline double getPdf(const Dist &dist, const double x)
+{
+  throw NotImplementedException();
+  return 0;
+}
+
+///
+/// \brief Return a random sample
+///
+__host__
+template <class Dist, ENABLE_IF_BASE_OF(Dist, DistributionTag)>
+inline double getSample(const Dist &dist)
+{
+  throw NotImplementedException();
+  return 0;
+}
+
+///
+/// \brief Return a random sample
+///
+__host__
+template <class Dist, ENABLE_IF_BASE_OF(Dist, DistributionTag)>
+inline double getSample(const Dist &dist, thrust::default_random_engine &rng)
+{
+  throw NotImplementedException();
+  return 0;
+}
+
+///
+/// \brief Return CDF of x
+///
+__host__ __device__
+template <class Dist, ENABLE_IF_BASE_OF(Dist, DistributionTag)>
+inline double getCdf(const Dist &dist, double x)
+{
+  throw NotImplementedException();
+  return 0;
+}
+
+///------------------------------------------------------------------
+/// Joint Distribution Functions
+
+__host__ __device__
+template <class Dist>
+inline std::vector<Real> getJointMean(const Dist &dist)
+{
+  throw NotImplementedException();
+  return std::vector<Real>();
+}
+
+///
+/// \brief Return PDF of x
+///
+__host__ __device__
+template <class Dist>
+inline double getJointPdf(const Dist &dist, const std::vector<Real> x_)
+{
+  throw NotImplementedException();
+  return 0;
+}
+
+///
+/// \brief Return a random sample
+///
+__host__
+template <class Dist>
+inline std::vector<Real> getJointSample(const Dist &dist)
+{
+  throw NotImplementedException();
+  return std::vector<Real>();
+}
+
+///
+/// \brief Return a random sample using random engine
+///
+__host__ __device__
+template <class Dist, ENABLE_IF_BASE_OF(Dist, DistributionTag)>
+inline std::vector<Real> getJointSample(const Dist &dist, thrust::default_random_engine &rng)
+{
+  throw NotImplementedException();
+  return std::vector<Real>();
+}
+
+
+///------------------------------------------------------------------
+///
 /// \brief random variable -=
 ///
 template<class T, ENABLE_IF_BASE_OF(T, DistributionTag) >

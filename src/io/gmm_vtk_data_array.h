@@ -34,6 +34,7 @@ protected:
 
   size_t length = 0;
   int components = 1;
+  int target_comp;
 public:
   GmmVtkDataArray(vtkFieldData *fieldData, const char *arrayNamePrefix="")  ;
 
@@ -48,6 +49,10 @@ public:
   virtual size_t getLength();
 
   virtual int getNumComponents() ;
+
+  virtual void SetTargetComponent(int idx) {target_comp = idx;}
+
+  virtual int GetTargetComponent() {return target_comp;}
 
   virtual dist::Variant getDistr(size_t idx);
 

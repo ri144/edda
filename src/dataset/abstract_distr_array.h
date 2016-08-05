@@ -28,6 +28,16 @@ public:
   virtual int getNumComponents() = 0;
 
   ///
+  /// Set the target component index of vector data when calling getScalar()
+  ///
+  virtual void SetTargetComponent(int idx) = 0;
+
+  ///
+  /// Get the target component index of vector data
+  ///
+  virtual int GetTargetComponent() = 0;
+
+  ///
   /// Get random sampling of scalar distribution
   ///
   virtual Real getScalar(size_t idx) =0;
@@ -54,6 +64,7 @@ public:
   /// Get gistribution name for data writer
   ///
   virtual std::string getDistrName() = 0;
+
 };
 
 } // edda

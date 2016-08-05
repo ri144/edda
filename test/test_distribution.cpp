@@ -68,6 +68,11 @@ AbstractDistrArray * make_hybrid_array() {
   return abstract_array;
 }
 
+AbstractDistrArray * make_JointGaussian_array() {
+  shared_ary<JointGaussian> array(new JointGaussian[10], 10);
+  AbstractDistrArray * abstract_array = new JointDistrArray<JointGaussian>(array);
+  return abstract_array;
+}
 
 int main()
 {
@@ -76,30 +81,38 @@ int main()
   AbstractDistrArray * array2 = make_GMM_array();
   AbstractDistrArray * array22 = make_GMM2_array();
   AbstractDistrArray * array3 = make_hybrid_array();
+  AbstractDistrArray * array4 = make_JointGaussian_array();
 
   int i;
   cout << "array1: " << endl;
   for (i=0; i<10; i++)
   {
-    cout << i << ": " << array1->getScalar(i) <<
-            ": sample = " << getSample(array1->getScalar(i)) << endl;
+    cout << i << ": " << array1->getDistr(i) <<
+            ": sample = " << array1->getScalar(i) << endl;
   }
   cout << endl ;
 
   cout << "array2: "<< endl;
   for (i=0; i<10; i++)
   {
-    cout << i << ": " << array2->getScalar(i) <<
-            ": sample = " << getSample(array2->getScalar(i)) << endl;
+    cout << i << ": " << array2->getDistr(i) <<
+            ": sample = " << array2->getScalar(i) << endl;
   }
   cout << endl;
 
   cout << "array3: "<< endl;
   for (i=0; i<2; i++)
   {
-    cout << i << ": " << array3->getScalar(i) <<
-            ": sample = " << getSample(array3->getScalar(i)) << endl;
+    cout << i << ": " << array3->getDistr(i) <<
+            ": sample = " << array3->getScalar(i) << endl;
   }
   cout << endl;
 
+  cout << "array4: " << endl;
+  for (i=0; i<10; i++)
+  {
+    vector<Real> v = array4->getVector(i);
+    cout << i << ": " << array4->getDistr(i) <<
+            ": sample = " << v[0] << " " << v[1] << " " << v[2] << endl;
+  }
 }
