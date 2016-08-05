@@ -17,7 +17,7 @@
 #include <distributions/estimate_gmm.h>
 #include "distributions/variant.h"
 #include "dataset/dataset.h"
-#include "dataset/abstract_distr_array.h"
+#include "dataset/distr_array.h"
 #include "dataset/distr_array.h"
 #include "core/interpolator.h"
 #include "io/edda_vtk_writer.h"
@@ -136,7 +136,7 @@ public:
 	 			}
 	 		}
 	 	}
-	 	AbstractDistrArray * abs_array = new DistrArray<T>(pArray);
+                DistrArray * abs_array = new ScalarDistrArray<T>(pArray);
 	 	dataset = make_Dataset<Real>(new RegularCartesianGrid(xDim,yDim,zDim), abs_array);
 
 	}
@@ -243,7 +243,7 @@ public:
 	    }
 	    
 
-	 	AbstractDistrArray * abs_array = new DistrArray<T>(pArray);
+                DistrArray * abs_array = new ScalarDistrArray<T>(pArray);
 	 	dataset = make_Dataset<Real>(new RegularCartesianGrid(newW,newH,newD), abs_array);
 
 	}

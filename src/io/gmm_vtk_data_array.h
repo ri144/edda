@@ -19,7 +19,7 @@
 #include <vtkStructuredGrid.h>
 
 #include <distributions/gaussian_mixture.h>
-#include <dataset/abstract_distr_array.h>
+#include <dataset/distr_array.h>
 #include <core/thrust_gmm_array.h>
 
 namespace edda {
@@ -27,13 +27,14 @@ namespace edda {
 //---------------------------------------------------------------------------------------
 
 /// \brief GmmVtkDataArray implements AbstractDataArray.  It holds vtkDataArrys and returns GMMs with interleaved memory accessing.
-class GmmVtkDataArray: public AbstractDistrArray
+class GmmVtkDataArray: public DistrArray
 {
 protected:
   std::vector<vtkSmartPointer<vtkDataArray> > arrays;
 
   size_t length = 0;
   int components = 1;
+  int target_comp;
 public:
   GmmVtkDataArray(vtkFieldData *fieldData, const char *arrayNamePrefix="")  ;
 
@@ -48,6 +49,10 @@ public:
   virtual size_t getLength();
 
   virtual int getNumComponents() ;
+
+  virtual void SetTargetComponent(int idx) {target_comp = idx;}
+
+  virtual int GetTargetComponent() {return target_comp;}
 
   virtual dist::Variant getDistr(size_t idx);
 

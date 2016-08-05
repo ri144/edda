@@ -34,7 +34,7 @@ const dist::GMMTuple getGmmModels(dist::Variant &distr, int GMs, int model)
 }
 
 // add a GMM array for vtkPointData
-void addVtkGmmArrays(vtkPointData *vtk_point_data, AbstractDistrArray *array, const string &array_name, int GMs)
+void addVtkGmmArrays(vtkPointData *vtk_point_data, DistrArray *array, const string &array_name, int GMs)
 {
   printf("Gaussian Models in GaussianMixture=%d\n", GMs);
   char name[256];
@@ -92,7 +92,7 @@ void addVtkGmmArrays(vtkPointData *vtk_point_data, AbstractDistrArray *array, co
   }
 }
 
-void addVtkHistoArrays(vtkPointData *vtk_point_data, AbstractDistrArray *array, const string &array_name)
+void addVtkHistoArrays(vtkPointData *vtk_point_data, DistrArray *array, const string &array_name)
 {
 	vector<string> filenames;
 	char name[256];
@@ -148,7 +148,7 @@ void writeEddaVtkDataset(shared_ptr<Dataset<Real> > dataset, const string &edda_
     image->SetDimensions(dims);
     image->SetExtent(0, dims[0]-1, 0, dims[1]-1, 0, dims[2]-1);
 
-    AbstractDistrArray *array = dataset->getArray();
+    DistrArray *array = dataset->getArray();
     string dName = array->getDistrName();
 
     if (dName.compare(0, 15, "GaussianMixture") == 0) {

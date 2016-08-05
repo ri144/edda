@@ -20,6 +20,7 @@ size_t GmmVtkDataArray::getLength() { return length; }
 int GmmVtkDataArray::getNumComponents() { return this->components; }
 
 GmmVtkDataArray::GmmVtkDataArray(vtkFieldData *fieldData, const char *arrayNamePrefix)  {
+  target_comp = 0;
   char meanArrayName[1024];
   char stdevArrayName[1024];
   char varArrayName[1024];
@@ -98,6 +99,7 @@ GmmVtkDataArray::GmmVtkDataArray(vtkFieldData *fieldData, const char *arrayNameP
 }
 
 GmmVtkDataArray::GmmVtkDataArray(std::vector<vtkSmartPointer<vtkDataArray> > arrays_) {
+  target_comp = 0;
   if (arrays_.size() == 0) {
     printf("Warning: no array assigned to GmmVtkArray\n");
     return;

@@ -8,7 +8,7 @@
 #include <vector>
 #include <iostream>
 #include <memory>
-#include "dataset/abstract_distr_array.h"
+#include "dataset/distr_array.h"
 #include "curvilinear_grid.h"
 #include "distributions/variant.h"
 #include "grid.h"
@@ -24,9 +24,9 @@ template <typename T>
 class Dataset {
 protected:
     Grid *pGrid;
-    AbstractDistrArray *pArray;
+    DistrArray *pArray;
 public:
-    Dataset(Grid *pGrid, AbstractDistrArray *pArray) {
+    Dataset(Grid *pGrid, DistrArray *pArray) {
       this->pGrid = pGrid;
       this->pArray = pArray;
     }
@@ -38,7 +38,7 @@ public:
     }
 
     Grid *getGrid() { return pGrid; }
-    AbstractDistrArray *getArray () {return pArray; }
+    DistrArray *getArray () {return pArray; }
 
     ///
     /// \brief Get the dimension of the cartesian-grid data.
@@ -194,7 +194,7 @@ protected:
 ///
 template <typename T>  // Return type of at_phys
 inline std::shared_ptr< Dataset<T> >
-make_Dataset(Grid *pGrid, AbstractDistrArray *pArray)
+make_Dataset(Grid *pGrid, DistrArray *pArray)
 {
     return std::shared_ptr< Dataset<T> >(
                 new Dataset<T> (pGrid, pArray) );

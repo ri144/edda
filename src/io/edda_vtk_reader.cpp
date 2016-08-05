@@ -37,7 +37,7 @@ string getDistrType(vtkFieldData* vtk_data, const string &array_name_prefix)
   return vtk_array->GetValue(0);
 }
 
-AbstractDistrArray *genHistoArray(vtkPointData *vtk_point_data)
+DistrArray *genHistoArray(vtkPointData *vtk_point_data)
 {
   char arrayName[1024];
   sprintf(arrayName, "Variable_0");
@@ -52,7 +52,7 @@ AbstractDistrArray *genHistoArray(vtkPointData *vtk_point_data)
           histAry[nn] = Histogram(histData);
   }
   free(histData);
-  return new DistrArray<Histogram>(histAry);
+  return new ScalarDistrArray<Histogram>(histAry);
 }
 
 template <typename T>

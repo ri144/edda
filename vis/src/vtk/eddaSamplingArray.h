@@ -5,7 +5,7 @@
 
 #include <vtkIdList.h>
 
-#include <dataset/abstract_distr_array.h>
+#include <dataset/distr_array.h>
 #include <core/vector_matrix.h>
 using namespace edda;
 
@@ -15,12 +15,12 @@ using namespace edda;
 ///
 class eddaSamplingArray : public vtkDataArray
 {
-  edda::AbstractDistrArray *pArray;
+  edda::DistrArray *pArray;
 public:
   vtkTypeMacro(eddaSamplingArray,vtkDataArray)
   static eddaSamplingArray *New();
 
-  void SetEddaArray(edda::AbstractDistrArray *array) {
+  void SetEddaArray(edda::DistrArray *array) {
     pArray = array ;
     this->SetNumberOfComponents( array->getNumComponents() );
     this->SetNumberOfTuples(array->getLength());
