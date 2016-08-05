@@ -94,7 +94,7 @@ int main(int argc, char **argv)
 	  }
   }
 
-  char* outputFilename = "crossSectionAtCenterY.raw";
+  const char* outputFilename = "crossSectionAtCenterY.raw";
   ofstream myfile;
   myfile.open(outputFilename, ios::out | ios::binary);
   myfile.write((const char*)sampleResults, sizeof(float)*numSampleZ*numSampleX);

@@ -10,29 +10,88 @@
 #include <memory>
 #include <stdexcept>
 #include <vector>
+#include <boost/any.hpp>
 
-#include "abstract_distr_array.h"
-#include <core/vector_matrix.h>
-#include <core/shared_ary.h>
-#include "distributions/distribution.h"
+#include "distributions/variant.h"
+#include "core/vector_matrix.h"
+#include "core/shared_ary.h"
 
 namespace edda {
 
-//---------------------------------------------------------------------------------------
-/// \brief A simple implementation of DataArray.
 ///
-/// This is the class that holds the actual array, in a smart array.
+/// \brief The class interface of distrbution arrays used by the Dataset class
+///
+class DistrArray
+{
+public:
+
+  virtual ~DistrArray() {}
+
+  ///
+  /// Get the number of elements
+  ///
+  virtual size_t getLength() =0;
+
+  ///
+  /// Get the number of element components.  This is used for elements in variable-length vector or matrix.
+  ///
+  virtual int getNumComponents() = 0;
+
+  ///
+  /// Set the target component index of vector data when calling getScalar()
+  ///
+  virtual void SetTargetComponent(int idx) = 0;
+
+  ///
+  /// Get the target component index of vector data
+  ///
+  virtual int GetTargetComponent() = 0;
+
+  ///
+  /// Get random sampling of scalar distribution
+  ///
+  virtual Real getScalar(size_t idx) =0;
+
+  ///
+  /// Get random sampling of vector distribution
+  ///
+  virtual std::vector<Real> getVector(size_t idx)=0;
+
+  virtual dist::Variant getDistr(size_t idx) =0;
+
+  virtual std::vector<dist::Variant> getDistrVector(size_t idx)=0;
+
+  //virtual void setDistr(size_t idx, dist::Variant) =0;
+
+  //virtual void setDistrVector(size_t idx, std::vector<dist::Variant>)=0;
+
+  ///
+  /// Get the array
+  ///
+  virtual boost::any getRawArray() = 0;
+
+  ///
+  /// Get gistribution name for data writer
+  ///
+  virtual std::string getDistrName() = 0;
+
+};
+
+//---------------------------------------------------------------------------------------
+/// \brief Array of scalar distributions.
+///
+/// This is the class that holds the actual array, with a smart pointer.
 /// \param T The element type of an array.
 ///
 template<typename Distr, ENABLE_IF_BASE_OF(Distr, dist::DistributionTag)>
-class DistrArray: public AbstractDistrArray
+class ScalarDistrArray: public DistrArray
 {
 protected:
   shared_ary<Distr> array;
 public:
-  DistrArray(shared_ary<Distr> array) { this->array = array; }
+  ScalarDistrArray(shared_ary<Distr> array) { this->array = array; }
 
-  virtual ~DistrArray() { }
+  virtual ~ScalarDistrArray() { }
 
   virtual size_t getLength() { return array.getLength(); }
 
@@ -62,16 +121,23 @@ public:
 
 //---------------------------------------------------------------------------------------
 
+///
+/// \brief Array of vector distributions
+///
+/// Note the distributions among vector components are independent,
+/// which is in the contrast of JointDistrArray
+///
+
 template<typename Distr, int N, ENABLE_IF_BASE_OF(Distr, dist::DistributionTag)>
-class DistrVectorArray: public AbstractDistrArray
+class VectorDistrArray: public DistrArray
 {
 protected:
   shared_ary<Vector<Distr,N> > array;
   int target_comp;
 public:
-  DistrVectorArray(shared_ary<Vector<Distr,N> > array) { this->array = array; target_comp = 0;}
+  VectorDistrArray(shared_ary<Vector<Distr,N> > array) { this->array = array; target_comp = 0;}
 
-  virtual ~DistrVectorArray() { }
+  virtual ~VectorDistrArray() { }
 
   virtual size_t getLength() { return array.getLength(); }
 
@@ -118,10 +184,10 @@ public:
 
 //---------------------------------------------------------------------------------------
 ///
-/// \brief An array of joint distribution
+/// \brief An array of joint distributions
 ///
 template<typename Distr, ENABLE_IF_BASE_OF(Distr, dist::JointDistributionTag)>
-class JointDistrArray: public AbstractDistrArray
+class JointDistrArray: public DistrArray
 {
 protected:
   shared_ary<Distr> array;

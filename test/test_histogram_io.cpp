@@ -22,7 +22,7 @@ int main()
 		//array[i] = eddaComputeHistogram(data, 1, 50, 60, 20);
 		array[i] = eddaComputeHistogram(data, 1, 20);
 	}
-	AbstractDistrArray * abstract_array = new DistrArray<Histogram>(array);
+	DistrArray * abstract_array = new ScalarDistrArray<Histogram>(array);
 
 	for (int i = 0; i<8; i++)
 	{
