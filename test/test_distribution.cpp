@@ -74,6 +74,12 @@ DistrArray * make_JointGaussian_array() {
   return abstract_array;
 }
 
+DistrArray * make_JointHistogram_array() {
+  shared_ary<JointHistogram> array(new JointHistogram[10], 10);
+  DistrArray * abstract_array = new JointDistrArray<JointHistogram>(array);
+  return abstract_array;
+}
+
 int main()
 {
 
@@ -82,6 +88,7 @@ int main()
   DistrArray * array22 = make_GMM2_array();
   DistrArray * array3 = make_hybrid_array();
   DistrArray * array4 = make_JointGaussian_array();
+  DistrArray * array5 = make_JointHistogram_array();
 
   int i;
   cout << "array1: " << endl;
@@ -113,6 +120,14 @@ int main()
   {
     vector<Real> v = array4->getVector(i);
     cout << i << ": " << array4->getDistr(i) <<
+            ": sample = " << v[0] << " " << v[1] << " " << v[2] << endl;
+  }
+
+  cout << "array5: " << endl;
+  for (i=0; i<10; i++)
+  {
+    vector<Real> v = array5->getVector(i);
+    cout << i << ": " << array5->getDistr(i) <<
             ": sample = " << v[0] << " " << v[1] << " " << v[2] << endl;
   }
 }
