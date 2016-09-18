@@ -7,6 +7,8 @@
 #include "io/edda_vtk_reader.h"
 #include "dataset/dataset.h"
 
+#include "io/edda_writer.h"
+
 using namespace std;
 using namespace edda;
 
@@ -26,6 +28,9 @@ int main(int argc, char **argv)
 
   // load data with random sampling
   shared_ptr<Dataset<Real> > dataset = loadEddaScalarDataset(filename, arrayNamePrefix);
+
+  writeEddaDataset(dataset, "testData.edda", "");
+
 
   VECTOR3 pos;
   Real value;
