@@ -16,6 +16,7 @@ if (NOT EDDA_BUILD_WITH_CUDA)
     test_io.cpp
     test_histogram_io.cpp
     test_jointGMM.cpp
+    test_joint_histogram.cpp
   )
 else ()
   # CUDA
