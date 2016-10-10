@@ -7,6 +7,7 @@
 #include "io/edda_vtk_writer.h"
 #include "distributions/histogram.h"
 #include "dataset/distr_array.h"
+
 using namespace edda;
 using namespace std;
 using namespace edda::dist;

@@ -5,6 +5,7 @@
 #include "distributions/distribution.h"
 #include "distributions/variant.h"
 #include "dataset/distr_array.h"
+
 using namespace edda;
 using namespace std;
 using namespace edda::dist;
@@ -70,6 +71,7 @@ DistrArray * make_hybrid_array() {
 
 DistrArray * make_JointGaussian_array() {
   shared_ary<JointGaussian> array(new JointGaussian[10], 10);
+  
   DistrArray * abstract_array = new JointDistrArray<JointGaussian>(array);
   return abstract_array;
 }
