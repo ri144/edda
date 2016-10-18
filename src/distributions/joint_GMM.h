@@ -49,10 +49,7 @@ namespace edda {
 			/// \brief Constructor by giving GMM's parameters
 			///
 			JointGMM(const JointGMM &gmm)
-				: weights(gmm.weights),
-				gaus(gmm.gaus),
-				nVar(gmm.nVar),
-				nComp(gmm.nComp)
+				: weights(gmm.weights),	gaus(gmm.gaus),	nVar(gmm.nVar),	nComp(gmm.nComp)
 			{
 			}
 

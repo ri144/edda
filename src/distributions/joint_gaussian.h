@@ -21,7 +21,7 @@
 #include "core/statistics.h"
 #include "invert_matrix.h"
 
-#include "Eigen\Dense"
+#include "Eigen/Dense"
 
 using namespace std;
 using namespace Eigen;
@@ -34,13 +34,12 @@ namespace edda {
 		/// \brief Defines a Gaussian class
 		///
 		struct EDDA_EXPORT JointGaussian : public ContinuousDistributionTag, public JointDistributionTag {
-			ublas_vector mean; // boost's vector
 
 			// constructor
 			__host__ __device__
 				JointGaussian() {
 					mean = ublas::zero_vector<Real>(3);
-					setCovariance(ublas::identity_matrix<Real>(3));
+					setMatrices(ublas::identity_matrix<Real>(3));
 				}
 
 			///
@@ -50,7 +49,7 @@ namespace edda {
 				JointGaussian(const ublas_vector &mean, const ublas_matrix &cov) {
 					assert(mean.size() == cov.size1() && mean.size() == cov.size2());
 					this->mean = mean;
-					setCovariance(cov);
+					setMatrices(cov);
 
 				}
 
@@ -58,16 +57,9 @@ namespace edda {
 			/// \brief set and compute the necessary matrixes (eigenMat: for sampling; uMat: for probability computation)
 			///
 			__host__ __device__
-				void setCovariance(const ublas_matrix &cov) {
+				void setMatrices(const ublas_matrix &cov) {
 					this->cov = cov;
-					bool r = invert_matrix(this->cov, inv_cov);
-					if (!r){
-						std::cout << "Error: inverse covariance cannot be computed for matrix: " << cov << std::endl;
-						std::cout << "sample is still be able to drawn from sigular covariance matrix" << std::endl;
-					}
-
-					this->det = determinant(this->cov);
-
+	
 					int covSize = this->cov.size1(); //cov.size1 == cov.size2
 
 					//BEGIN eigenDecomposition using Eigen Library********************
@@ -145,7 +137,7 @@ namespace edda {
 				}
 
 			///
-			/// \brief Return probability of x
+			/// \brief Return log probability of x (This function is used by EM)
 			///
 			__host__ __device__
 				inline double getJointLogPdf(const std::vector<Real> x_) const
@@ -163,30 +155,26 @@ namespace edda {
 			}
 
 			__host__ __device__
+				const ublas_vector &getMean() const { return this->mean; }
+
+			__host__ __device__
 				const ublas_matrix &getCovariance() const { return this->cov; }
 
 			__host__ __device__
 				const ublas_matrix &getEigenMat() const { return this->eigenMat; }
 
 			__host__ __device__
-				const ublas_matrix &getInvCovariance() const { return this->inv_cov; }
-
-			__host__ __device__
 				const ublas_matrix &getUMat() const { return this->uMat; }
-
-			__host__ __device__
-				double getDet() const { return this->det; }
 
 			__host__ __device__
 				double getLogDet() const { return this->logPDet; }
 
 		private:
+			ublas_vector mean; // boost's vector
 			ublas_matrix cov;		//covariance matrix
-			ublas_matrix inv_cov;	//inverse matrix
 			ublas_matrix eigenMat; //use when draw sample, sample = eigenMat * z + mean
 			ublas_matrix uMat;		//use compute the point probability from Gaussian
 			double logPDet;
-			double det;
 		};
 
 		// ------------------------------------------------------------------------------
@@ -194,8 +182,9 @@ namespace edda {
 		__host__ __device__
 			inline std::vector<Real> getJointMean(const JointGaussian &dist)
 		{
-			std::vector<Real> m(dist.mean.size());
-			std::copy(dist.mean.begin(), dist.mean.end(), m.begin());
+			ublas_vector mean = dist.getMean();
+			std::vector<Real> m(mean.size());
+			std::copy(mean.begin(), mean.end(), m.begin());
 			return m;
 		}
 
@@ -205,11 +194,12 @@ namespace edda {
 		__host__ __device__
 			inline double getJointPdf(const JointGaussian &dist, const std::vector<Real> x_)
 		{
-			int k = dist.mean.size();
+			ublas_vector mean = dist.getMean();
+			int k = mean.size();
 			assert(x_.size() == k);
 			ublas_vector x(k);  
 			std::copy(x_.begin(), x_.end(), x.begin());
-			x = x - dist.mean;
+			x = x - mean;
 			ublas_vector tmp;
 			tmp = ublas::prod(ublas::trans(x), dist.getUMat());
 			double density = ublas::inner_prod(tmp, tmp);
@@ -232,7 +222,7 @@ namespace edda {
 		__host__
 			inline std::ostream& operator<<(std::ostream& os, const JointGaussian &dist)
 		{
-				os << "<JointGaussian: mean=" << dist.mean << ", covariance=" << dist.getCovariance() << " invCov=" << dist.getInvCovariance() << ", eigenMatrix=" << dist.getEigenMat() << ">";
+				os << "<JointGaussian: mean=" << dist.getMean() << ", covariance=" << dist.getCovariance() << ", eigenMatrix=" << dist.getEigenMat() << ">";
 				return os;
 		}
 
