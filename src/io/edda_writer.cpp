@@ -46,7 +46,6 @@ namespace edda{
 		int n = array->getLength();
 		myFile.write((char*)(&n), sizeof (int));
 
-
 		float* gmData = new float[GMs * 3 * nc*n];
 		for (int i = 0; i<GMs * 3; i++){
 			for (int j = 0; j < n; j++){
@@ -138,9 +137,11 @@ namespace edda{
 		//2. version number
 		//3. gridType. 1: Regular CartesianGrid.
 		//if Regular CartesianGrid:
-		//	4. size
+		//	4. dimension
 		//	5. spacing
 		//	6. distr type. 1: GaussianMixture
+		//	if GaussianMixture:
+		//		use the function writeGmmArrays()
 
 		char eddaFileMark[4] = { 'E', 'D', 'D', 'A' };
 		myFile.write(eddaFileMark, sizeof (char)*4);
