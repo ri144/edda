@@ -27,21 +27,24 @@ int main(int argc, char **argv)
     filename = string(SAMPLE_DATA_PATH) + "/isabel_pressure_small.vti";
   }
 
-  // load data with random sampling
+  //filename = string(SAMPLE_DATA_PATH) + "/isabel_pressure_small.vti";
+
+  //original VTK loader
   shared_ptr<Dataset<Real> > dataset = loadEddaScalarDataset(filename, arrayNamePrefix);
 
- // writeEddaDataset(dataset, "testData.edda", "");
+  //write edda dataset with our writer
+//  writeEddaDataset(dataset, "testData.edda");
+  
+  //load edda dataset with our reader
   shared_ptr<Dataset<Real> > dataset2 = loadEddaDataset("testData.edda");
+
+  cout << "data loaded by VTK reader: " << endl;
 
   {
 	  VECTOR3 pos;
 	  Real value;
 	  dist::Variant distr;
 	  int i;
-
-	  pos = VECTOR3(10, 10, 10);
-	  dataset->at_phys(pos, value);
-	  cout << pos << ": " << value << endl;
 
 	  pos = VECTOR3(2.1, 2.1, 2.1);
 	  dataset->at_phys(pos, value);
@@ -56,14 +59,14 @@ int main(int argc, char **argv)
 	  distr = dataset->at_comp_distr(2, 2, 2);
 	  cout << "at_comp(2,2,2) : " << distr << endl;
   }
+
+  cout << endl << "data loaded by our reader: " << endl;
+
   {
 	  VECTOR3 pos;
 	  Real value;
 	  dist::Variant distr;
 	  int i;
-	  pos = VECTOR3(10, 10, 10);
-	  dataset2->at_phys(pos, value);
-	  cout << pos << ": " << value << endl;
 
 	  pos = VECTOR3(2.1, 2.1, 2.1);
 	  dataset2->at_phys(pos, value);

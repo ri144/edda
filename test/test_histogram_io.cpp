@@ -5,6 +5,8 @@
 
 #include "io/edda_vtk_reader.h"
 #include "io/edda_vtk_writer.h"
+#include "io/edda_reader.h"
+#include "io/edda_writer.h"
 #include "distributions/histogram.h"
 #include "dataset/distr_array.h"
 
@@ -40,7 +42,6 @@ int main()
 	cout << "finish histogram modeling and write into file, press any key to continue!" << endl;
 	//getchar();
 
-
 	shared_ptr<Dataset<Real> > dataset2 = loadEddaScalarDataset("testHist.vti", "test_");
 	cout << dataset2->getArray()->getDistrName() << endl;
 	int* dim;
@@ -49,9 +50,32 @@ int main()
 
 	for (int i = 0; i < dim[0]; i++)
 	for (int j = 0; j < dim[1]; j++)
-	for (int k = 0; k < dim[2]; k++)
+	for (int k = 0; k < dim[2]; k++){
 		cout << "at_comp(" << i << "," << j << "," << k << ") : " << dataset2->at_comp(i, j, k) << endl;
+		cout << "at_comp_distr : " << dataset2->at_comp_distr(i, j, k) << endl;
+	}
 	cout << "load histogram from file and sampling, press any key to finish!" << endl;
 	//getchar();
+
+
+	{
+		cout << endl << endl;
+
+		writeEddaDataset(dataset, "testHist.edda");
+		shared_ptr<Dataset<Real> > dataset3 = loadEddaDataset("testHist.edda");
+		cout << dataset3->getArray()->getDistrName() << endl;
+		int* dim;
+		dim = dataset3->getDimension();
+		cout << dim[0] << dim[1] << dim[2] << endl;
+
+		for (int i = 0; i < dim[0]; i++)
+		for (int j = 0; j < dim[1]; j++)
+		for (int k = 0; k < dim[2]; k++){
+			cout << "at_comp(" << i << "," << j << "," << k << ") : " << dataset3->at_comp(i, j, k) << endl;
+			cout << "at_comp_distr : " << dataset3->at_comp_distr(i, j, k) << endl;
+		}
+		cout << "load histogram from file and sampling, press any key to finish!" << endl;
+		//getchar();
+	}
 	return 0;
 }

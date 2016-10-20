@@ -22,10 +22,83 @@ using namespace dist;
 
 namespace edda {
 
+	DistrArray * readGMMArray(ifstream & myfile)
+	{
+		int GMs;
+		myfile.read((char*)(&GMs), sizeof (int));
+		int nc;
+		myfile.read((char*)(&nc), sizeof (int));
+		int n;
+		myfile.read((char*)(&n), sizeof (int));
+		float* gmData = new float[GMs * 3 * nc*n];
+		myfile.read((char*)(gmData), sizeof (float)*GMs * 3 * nc*n);
 
+		if (nc == 1){
+			shared_ary<GaussianMixture<5>> s_gmAry(new GaussianMixture<5>[n], n);
+			//TODO:: based on GMs may use other than GMM5
+
+			for (int j = 0; j < n; j++){
+
+				std::vector<GMMTuple> models;
+				for (int i = 0; i < GMs * 3; i += 3){
+					for (int c = 0; c < nc; c++){
+						int index = i*n*nc + j*nc + c;
+						float p[3] = { gmData[i*n*nc + j*nc + c], gmData[(i + 1)*n*nc + j*nc + c], gmData[(i + 2)*n*nc + j*nc + c] };
+						GMMTuple curG;
+						curG.m = p[0];
+						curG.v = p[1];
+						curG.w = p[2];
+						curG.p[0] = p[0];
+						curG.p[1] = p[1];
+						curG.p[2] = p[2];
+						models.push_back(curG);
+					}
+				}
+
+				GaussianMixture<5> curGM(models);
+				s_gmAry[j] = models;
+
+			}
+			return (DistrArray *)(new ScalarDistrArray<GaussianMixture<5>>(s_gmAry));
+
+		}
+		else{
+			delete gmData;
+			myfile.close();
+			throw NotImplementedException();
+		}
+	}
+
+
+	DistrArray *readHistoArray(ifstream & myfile)//vtkPointData *vtk_point_data)
+	{
+		int nc;
+		myfile.read((char*)(&nc), sizeof (int));
+		int n;
+		myfile.read((char*)(&n), sizeof (int));
+
+		if (nc == 1){
+			shared_ary<Histogram> histAry(new Histogram[n], n);
+
+			for (int nn = 0; nn < n; nn++){
+				int n_bins;
+				myfile.read((char*)(&n_bins), sizeof (int));
+
+				float* histData = new float[n_bins + 2];
+				myfile.read((char*)(histData), sizeof (float)*(n_bins + 2));
+				histAry[nn] = Histogram(histData, n_bins);
+				free(histData);
+			}
+			return new ScalarDistrArray<Histogram>(histAry);
+		}
+		else{
+			myfile.close();
+			throw NotImplementedException();
+		}
+	}
 
 	template <typename T>
-	shared_ptr<Dataset<T> > loadEddaDatasetNew(const string &edda_file, const string &array_name_prefix)
+	shared_ptr<Dataset<T> > loadEddaDatasetNew(const string &edda_file)
 	{
 		ifstream myfile(edda_file.c_str(), ios::binary);
 
@@ -60,57 +133,17 @@ namespace edda {
 				int distrTypeNumber = 1;
 				myfile.read((char*)(&distrTypeNumber), sizeof (int));
 				if (distrTypeNumber == 1){
-					int GMs;
-					myfile.read((char*)(&GMs), sizeof (int));
-					int nc;
-					myfile.read((char*)(&nc), sizeof (int));
-					int n;
-					myfile.read((char*)(&n), sizeof (int));
-					float* gmData = new float[GMs * 3 * nc*n];
-					myfile.read((char*)(gmData), sizeof (float)*GMs * 3 * nc*n);
-
-
-
-					if (nc == 1){
-						shared_ary<GaussianMixture<5>> s_gmAry(new GaussianMixture<5>[n], n);
-						//TODO:: based on GMs may use other than GMM5
-
-						for (int j = 0; j < n; j++){
-
-							std::vector<GMMTuple> models;
-							for (int i = 0; i<GMs * 3; i+=3){
-								for (int c = 0; c < nc; c++){
-									int index = i*n*nc + j*nc + c;
-									float p[3] = { gmData[i*n*nc + j*nc + c], gmData[(i + 1)*n*nc + j*nc + c], gmData[(i + 2)*n*nc + j*nc + c] };
-									GMMTuple curG;
-									curG.m = p[0];
-									curG.v = p[1];
-									curG.w = p[2];
-									curG.p[0] = p[0];
-									curG.p[1] = p[1];
-									curG.p[2] = p[2];
-									models.push_back(curG);
-								}
-							}
-
-							GaussianMixture<5> curGM(models);
-							s_gmAry[j] = models;
-						}
-						DistrArray * abs_array = new ScalarDistrArray<GaussianMixture<5>>(s_gmAry);
-
-						shared_ptr<Dataset<T> > dataset = make_Dataset<T>(
-							new RegularCartesianGrid(dims[0], dims[1], dims[2]),
-							abs_array);
-
-						return dataset;
-
-					}
-					else{
-						delete gmData;
-						myfile.close();
-						throw NotImplementedException();
-					}
-					delete gmData;
+					shared_ptr<Dataset<T> > dataset = make_Dataset<T>(
+						new RegularCartesianGrid(dims[0], dims[1], dims[2]),
+						readGMMArray(myfile));
+					return dataset;
+				}
+				else if (distrTypeNumber == 2){
+					shared_ptr<Dataset<T> > dataset = make_Dataset<T>(
+						new RegularCartesianGrid(dims[0], dims[1], dims[2]),
+						readHistoArray(myfile)
+						);
+					return dataset;
 				}
 				else{
 					myfile.close();
@@ -212,8 +245,8 @@ namespace edda {
 
 
 
-	shared_ptr<Dataset<Real> > loadEddaDataset(const string &edda_file, const string &array_name_prefix)
+	shared_ptr<Dataset<Real> > loadEddaDataset(const string &edda_file)
 	{
-		return loadEddaDatasetNew<Real>(edda_file, array_name_prefix);
+		return loadEddaDatasetNew<Real>(edda_file);
 	}
 }

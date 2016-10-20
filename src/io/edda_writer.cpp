@@ -32,7 +32,7 @@ namespace edda{
 
 	}
 
-	void writeGmmArrays(ofstream & myFile, DistrArray *array, const string &array_name, int GMs)
+	void writeGmmArrays(ofstream & myFile, DistrArray *array, int GMs)
 //		vtkPointData *vtk_point_data, DistrArray *array, const string &array_name, int GMs)
 	{
 		
@@ -46,6 +46,7 @@ namespace edda{
 		int n = array->getLength();
 		myFile.write((char*)(&n), sizeof (int));
 
+		//write data
 		float* gmData = new float[GMs * 3 * nc*n];
 		for (int i = 0; i<GMs * 3; i++){
 			for (int j = 0; j < n; j++){
@@ -127,10 +128,41 @@ namespace edda{
 		*/
 	}
 
+	void writeHistoArrays(ofstream & myFile, DistrArray *array)
+	{
+		//1. number of array components
+		//2. length of array //perhaps check if it fits the dimension size
+		int nc = array->getNumComponents();
+		myFile.write((char*)(&nc), sizeof (int));
+		int n = array->getLength();
+		myFile.write((char*)(&n), sizeof (int));
+		
+		for (int j = 0; j < n; j++)
+		{
+			vector<dist::Variant> vdist = array->getDistrVector(j);
+
+			int bins = boost::get<dist::Histogram>(vdist[0]).getBins();	
+			myFile.write((char*)(&bins), sizeof (int));
+			
+			float * tuple = (float*)malloc(sizeof(float)*(bins + 2));
+			tuple[0] = boost::get<dist::Histogram>(vdist[0]).getMinValue();
+			tuple[1] = boost::get<dist::Histogram>(vdist[0]).getMaxValue();
+			for (int b = 0; b < bins; b++)
+			{
+				tuple[b + 2] = boost::get<dist::Histogram>(vdist[0]).getBinValue(b);
+			}
+
+			myFile.write((char*)(tuple), sizeof(float)*(bins + 2));
+
+			free(tuple);
+		}
+	}
 
 	// edda exported function
-	void writeEddaDataset(shared_ptr<Dataset<Real> > dataset, const string &edda_file, const string &array_name_prefix)
+	void writeEddaDataset(shared_ptr<Dataset<Real> > dataset, const string &edda_file)
 	{
+		const string array_name_prefix = "";
+
 		ofstream myFile(edda_file.c_str(), ios::out | ios::binary);
 
 		//1. "EDDA" as a marker
@@ -139,7 +171,7 @@ namespace edda{
 		//if Regular CartesianGrid:
 		//	4. dimension
 		//	5. spacing
-		//	6. distr type. 1: GaussianMixture
+		//	6. distr type. 1: GaussianMixture. 2: Histogram
 		//	if GaussianMixture:
 		//		use the function writeGmmArrays()
 
@@ -161,54 +193,38 @@ namespace edda{
 			dataset->getSpacing(spacing[0], spacing[1], spacing[2]);
 			myFile.write((char*)(spacing), sizeof (float)*3);
 
-
-
-			
-			// write vti
-
 			DistrArray *array = dataset->getArray();
 			string dName = array->getDistrName();
 
 			if (dName.compare(0, 15, "GaussianMixture") == 0) {
 				// Only compare the first 15 chars because this string ends with the number of Gaussian models
-				// Specified in edda::dist::GaussianMixture
-				
+				// Specified in edda::dist::GaussianMixture			
 
 				int distrTypeNumber = 1;
 				myFile.write((char*)(&distrTypeNumber), sizeof (int));
 
-				writeGmmArrays(myFile, array, array_name_prefix, stoi(dName.substr(15)));
-
-				//addVtkGmmArrays(image->GetPointData(), array, array_name_prefix, stoi(dName.substr(15)));
-
+				writeGmmArrays(myFile, array, stoi(dName.substr(15)));
 			}
-			/*
+			
 			
 			else if (dName.compare("Histogram") == 0) {
-				addVtkHistoArrays(image->GetPointData(), array, array_name_prefix);
+				int distrTypeNumber = 2;
+				myFile.write((char*)(&distrTypeNumber), sizeof (int));
 
+				writeHistoArrays(myFile, array);
 			}
 			else {
 				cout << "Edda VTK Writer: Unsupported array type" << endl;
 				throw NotImplementedException();
 			}
-			setDistrType(image->GetFieldData(), dName, array_name_prefix);
 
-			*/
-			printf("Saving converted file to %s.\n", edda_file.c_str());
-
-			
+			printf("Saving converted file to %s.\n", edda_file.c_str());		
 			myFile.close();
-
 		}
 		else {
 
 			// TODO for other grid types
 			throw NotImplementedException();
-		}
-
-		
+		}		
 	}
-
-
 }
