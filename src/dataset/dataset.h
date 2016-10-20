@@ -52,6 +52,18 @@ public:
       return cartesianGrid->getDimension();
     }
 
+	///
+	/// \brief Get the spacing of the cartesian-grid data.
+	///
+	/// Non-cartesian grid data are currently not supported.
+	void getSpacing(float& xspace, float& yspace, float& zspace) {
+		CartesianGrid *cartesianGrid = dynamic_cast<CartesianGrid *>(pGrid);
+		if (!cartesianGrid)
+			throw NotImplementedException();
+		cartesianGrid->getGridSpacing(0, xspace, yspace, zspace);
+		return;
+	}
+
     ///
     /// \brief Return the interpolated data at a given position
     /// \param pos Position to query
