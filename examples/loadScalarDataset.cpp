@@ -33,7 +33,7 @@ int main(int argc, char **argv)
   shared_ptr<Dataset<Real> > dataset = loadEddaScalarDataset(filename, arrayNamePrefix);
 
   //write edda dataset with our writer
-//  writeEddaDataset(dataset, "testData.edda");
+  writeEddaDataset(dataset, "testData.edda");
   
   //load edda dataset with our reader
   shared_ptr<Dataset<Real> > dataset2 = loadEddaDataset("testData.edda");

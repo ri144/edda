@@ -22,74 +22,126 @@ using namespace dist;
 
 namespace edda {
 
-	DistrArray * readGMMArray(ifstream & myfile)
+	DistrArray * readGMMArray(ifstream & myfile, int n)
 	{
-		int GMs;
-		myfile.read((char*)(&GMs), sizeof (int));
 		int nc;
 		myfile.read((char*)(&nc), sizeof (int));
-		int n;
-		myfile.read((char*)(&n), sizeof (int));
-		float* gmData = new float[GMs * 3 * nc*n];
-		myfile.read((char*)(gmData), sizeof (float)*GMs * 3 * nc*n);
+		int isNumGaussianUniform;
+		myfile.read((char*)(&isNumGaussianUniform), sizeof (int));
+		if (isNumGaussianUniform == 1){
+			int GMs;
+			myfile.read((char*)(&GMs), sizeof (int));
+			float* gmData = new float[GMs * 3 * nc*n];
+			myfile.read((char*)(gmData), sizeof (float)*GMs * 3 * nc*n);
 
-		if (nc == 1){
-			shared_ary<GaussianMixture<5>> s_gmAry(new GaussianMixture<5>[n], n);
-			//TODO:: based on GMs may use other than GMM5
+			if (nc == 1){
+				shared_ary<GaussianMixture<5>> s_gmAry(new GaussianMixture<5>[n], n);
+				//TODO:: based on GMs may use other than GMM5
 
-			for (int j = 0; j < n; j++){
-
-				std::vector<GMMTuple> models;
-				for (int i = 0; i < GMs * 3; i += 3){
-					for (int c = 0; c < nc; c++){
-						int index = i*n*nc + j*nc + c;
-						float p[3] = { gmData[i*n*nc + j*nc + c], gmData[(i + 1)*n*nc + j*nc + c], gmData[(i + 2)*n*nc + j*nc + c] };
-						GMMTuple curG;
-						curG.m = p[0];
-						curG.v = p[1];
-						curG.w = p[2];
-						curG.p[0] = p[0];
-						curG.p[1] = p[1];
-						curG.p[2] = p[2];
-						models.push_back(curG);
+				for (int c = 0; c < nc; c++){
+					for (int j = 0; j < n; j++){
+						std::vector<GMMTuple> models;
+						for (int i = 0; i < GMs * 3; i += 3){
+							int index = c*n*GMs * 3 + j*GMs * 3 + i;
+							float p[3] = { gmData[index], gmData[index + 1], gmData[index+2] };
+							GMMTuple curG;
+							curG.m = p[0];
+							curG.v = p[1];
+							curG.w = p[2];
+							curG.p[0] = p[0];
+							curG.p[1] = p[1];
+							curG.p[2] = p[2];
+							models.push_back(curG);
+						}
+						GaussianMixture<5> curGM(models);
+						s_gmAry[j] = models;
 					}
 				}
 
-				GaussianMixture<5> curGM(models);
-				s_gmAry[j] = models;
+				return (DistrArray *)(new ScalarDistrArray<GaussianMixture<5>>(s_gmAry));
 
 			}
-			return (DistrArray *)(new ScalarDistrArray<GaussianMixture<5>>(s_gmAry));
-
-		}
-		else{
-			delete gmData;
-			myfile.close();
-			throw NotImplementedException();
+			else{
+				delete gmData;
+				myfile.close();
+				throw NotImplementedException();
+			}
 		}
 	}
 
 
-	DistrArray *readHistoArray(ifstream & myfile)//vtkPointData *vtk_point_data)
+	DistrArray *readHistoArray(ifstream & myfile, int n)//vtkPointData *vtk_point_data)
 	{
 		int nc;
 		myfile.read((char*)(&nc), sizeof (int));
-		int n;
-		myfile.read((char*)(&n), sizeof (int));
+		
+		int isNumBinsUniform;
+		myfile.read((char*)(&isNumBinsUniform), sizeof (int));
+		int nbins;
+		if (isNumBinsUniform == 1){
+			myfile.read((char*)(&nbins), sizeof (int));
+		}
+
+		int isMinMaxValueUniform;
+		myfile.read((char*)(&isMinMaxValueUniform), sizeof (int));
+		float minv, maxv;
+		if (isMinMaxValueUniform == 1){
+			myfile.read((char*)(&minv), sizeof (float));
+			myfile.read((char*)(&maxv), sizeof (float));
+		}
 
 		if (nc == 1){
-			shared_ary<Histogram> histAry(new Histogram[n], n);
+			if (isNumBinsUniform == 1 && isMinMaxValueUniform == 1){
+				//not tested yet
+				float* histData = new float[nbins + 2];
+				histData[0] = minv;
+				histData[1] = maxv;
 
-			for (int nn = 0; nn < n; nn++){
-				int n_bins;
-				myfile.read((char*)(&n_bins), sizeof (int));
+				shared_ary<Histogram> histAry(new Histogram[n], n);
+				for (int nn = 0; nn < n; nn++){				
+					myfile.read((char*)(histData + 2), sizeof (float)*nbins);
+					histAry[nn] = Histogram(histData, nbins);
+				}
 
-				float* histData = new float[n_bins + 2];
-				myfile.read((char*)(histData), sizeof (float)*(n_bins + 2));
-				histAry[nn] = Histogram(histData, n_bins);
 				free(histData);
+
+				return new ScalarDistrArray<Histogram>(histAry);
 			}
-			return new ScalarDistrArray<Histogram>(histAry);
+			else if(isNumBinsUniform == 1 && isMinMaxValueUniform != 1){
+				myfile.close();
+				throw NotImplementedException();
+			}
+			else if (isNumBinsUniform != 1 && isMinMaxValueUniform == 1){
+				myfile.close();
+				throw NotImplementedException();
+			}
+			else{ //(isNumBinsUniform == 0 && isMinMaxValueUniform == 0)
+
+				int* headerBinary_nbins = (int*)malloc(sizeof(int)*n);
+				float* headerBinary_minMaxV = (float*)malloc(sizeof(float)* 2 * n);
+				myfile.read((char*)(headerBinary_nbins), sizeof (int)*n);
+				myfile.read((char*)(headerBinary_minMaxV), sizeof (float)* 2 * n);
+
+				shared_ary<Histogram> histAry(new Histogram[n], n);
+
+				for (int j = 0; j < n; j++){
+					int n_bins = headerBinary_nbins[j];
+
+					float* histData = new float[n_bins + 2];
+					histData[0] = headerBinary_minMaxV[2*j];
+					histData[1] = headerBinary_minMaxV[2*j+1];
+
+					myfile.read((char*)(histData+2), sizeof (float)*n_bins);
+					histAry[j] = Histogram(histData, n_bins);
+
+					free(histData);
+				}
+
+				free(headerBinary_nbins);
+				free(headerBinary_minMaxV);
+
+				return new ScalarDistrArray<Histogram>(histAry);
+			}
 		}
 		else{
 			myfile.close();
@@ -135,13 +187,13 @@ namespace edda {
 				if (distrTypeNumber == 1){
 					shared_ptr<Dataset<T> > dataset = make_Dataset<T>(
 						new RegularCartesianGrid(dims[0], dims[1], dims[2]),
-						readGMMArray(myfile));
+						readGMMArray(myfile, dims[0]*dims[1]*dims[2]));
 					return dataset;
 				}
 				else if (distrTypeNumber == 2){
 					shared_ptr<Dataset<T> > dataset = make_Dataset<T>(
 						new RegularCartesianGrid(dims[0], dims[1], dims[2]),
-						readHistoArray(myfile)
+						readHistoArray(myfile, dims[0] * dims[1] * dims[2])
 						);
 					return dataset;
 				}
