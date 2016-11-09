@@ -54,18 +54,50 @@ namespace edda {
 							models.push_back(curG);
 						}
 						GaussianMixture<5> curGM(models);
-						s_gmAry[j] = models;
+						s_gmAry[j] = curGM;
 					}
 				}
-
 				return (DistrArray *)(new ScalarDistrArray<GaussianMixture<5>>(s_gmAry));
+			}
+			else if (nc == 3){
+				shared_ary<Vector<GaussianMixture<5>, 3> > s_gmAry(new Vector<GaussianMixture<5>, 3>[n], n);
+				//TODO:: based on GMs may use other than GMM5
+				//TODO:: saving order of vector data?
+				for (int j = 0; j < n; j++){
+					Vector<GaussianMixture<5>, 3> curVectorDistr;
 
+					for (int c = 0; c < nc; c++){
+						std::vector<GMMTuple> models;
+						for (int i = 0; i < GMs * 3; i += 3){
+							int index = c*n*GMs * 3 + j*GMs * 3 + i;
+							float p[3] = { gmData[index], gmData[index + 1], gmData[index + 2] };
+							GMMTuple curG;
+							curG.m = p[0];
+							curG.v = p[1];
+							curG.w = p[2];
+							curG.p[0] = p[0];
+							curG.p[1] = p[1];
+							curG.p[2] = p[2];
+							models.push_back(curG);
+						}
+						GaussianMixture<5> curGM(models);
+						curVectorDistr[c] = curGM;				
+					}
+
+					s_gmAry[j] = curVectorDistr;
+				}
+
+				return (DistrArray *)(new VectorDistrArray<GaussianMixture<5>, 3>(s_gmAry));
 			}
 			else{
 				delete gmData;
 				myfile.close();
 				throw NotImplementedException();
 			}
+		}
+		else{
+			myfile.close();
+			throw NotImplementedException();
 		}
 	}
 
@@ -150,7 +182,7 @@ namespace edda {
 	}
 
 	template <typename T>
-	shared_ptr<Dataset<T> > loadEddaDatasetNew(const string &edda_file)
+	shared_ptr<Dataset<T> > loadEddaDatasetTemplate(const string &edda_file)
 	{
 		ifstream myfile(edda_file.c_str(), ios::binary);
 
@@ -297,8 +329,13 @@ namespace edda {
 
 
 
-	shared_ptr<Dataset<Real> > loadEddaDataset(const string &edda_file)
+	shared_ptr<Dataset<Real> > loadEddaScalarDataset_noneVTK(const string &edda_file)
 	{
-		return loadEddaDatasetNew<Real>(edda_file);
+		return loadEddaDatasetTemplate<Real>(edda_file);
+	}
+
+	shared_ptr<Dataset<VECTOR3> > loadEddaVector3Dataset_noneVTK(const string &edda_file)
+	{
+		return loadEddaDatasetTemplate<VECTOR3>(edda_file);
 	}
 }

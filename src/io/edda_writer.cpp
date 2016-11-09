@@ -33,9 +33,7 @@ namespace edda{
 	}
 
 	void writeGmmArrays(ofstream & myFile, DistrArray *array, int GMs)
-//		vtkPointData *vtk_point_data, DistrArray *array, const string &array_name, int GMs)
 	{
-		
 		//1. number of array components
 		//2. Is # of Gaussian components uniform (1-yes, 0-no)
 		int nc = array->getNumComponents();
@@ -193,10 +191,12 @@ namespace edda{
 			for (int j = 0; j < n; j++)
 			{
 				vector<dist::Variant> vdist = array->getDistrVector(j);
-				int nbins = boost::get<dist::Histogram>(vdist[0]).getBins();
+
+				dist::Histogram curHist = boost::get<dist::Histogram>(vdist[0]);
+				int nbins = curHist.getBins();
 				headerBinary_nbins[j] = nbins;
-				float minv = boost::get<dist::Histogram>(vdist[0]).getMinValue();
-				float maxv = boost::get<dist::Histogram>(vdist[0]).getMaxValue();
+				float minv = curHist.getMinValue();
+				float maxv = curHist.getMaxValue();
 				headerBinary_minMaxV[2 * j] = minv;
 				headerBinary_minMaxV[2 * j + 1] = maxv;
 			}
@@ -208,13 +208,16 @@ namespace edda{
 			for (int j = 0; j < n; j++)
 			{
 				vector<dist::Variant> vdist = array->getDistrVector(j);
-				int nbins = boost::get<dist::Histogram>(vdist[0]).getBins();
+				dist::Histogram curHist = boost::get<dist::Histogram>(vdist[0]);
+
+				int nbins = curHist.getBins();
 				float * tuple = (float*)malloc(sizeof(float)*nbins);
 
 				for (int b = 0; b < nbins; b++)
 				{
-					tuple[b] = boost::get<dist::Histogram>(vdist[0]).getBinValue(b);
+					tuple[b] = curHist.getBinValue(b);
 				}
+
 				myFile.write((char*)(tuple), sizeof(float)*nbins);
 
 				free(tuple);
@@ -223,7 +226,10 @@ namespace edda{
 	}
 
 	// edda exported function
-	void writeEddaDataset(shared_ptr<Dataset<Real> > dataset, const string &edda_file)
+
+	template <typename T>
+	void writeEddaDatasetTemplate(shared_ptr<Dataset<T> > dataset, const string &edda_file)
+	//void writeEddaDatasetTemplate(shared_ptr<Dataset<Real> > dataset, const string &edda_file)
 	{
 		const string array_name_prefix = "";
 
@@ -278,7 +284,7 @@ namespace edda{
 				writeHistoArrays(myFile, array);
 			}
 			else {
-				cout << "Edda VTK Writer: Unsupported array type" << endl;
+				cout << "Edda Writer: Unsupported array type" << endl;
 				throw NotImplementedException();
 			}
 
@@ -290,5 +296,15 @@ namespace edda{
 			// TODO for other grid types
 			throw NotImplementedException();
 		}		
+	}
+
+	void writeEddaDataset(shared_ptr<Dataset<VECTOR3> > dataset, const string &edda_file)
+	{
+		writeEddaDatasetTemplate(dataset, edda_file);
+	}
+
+	void writeEddaDataset(shared_ptr<Dataset<Real> > dataset, const string &edda_file)
+	{
+		writeEddaDatasetTemplate(dataset, edda_file);
 	}
 }
