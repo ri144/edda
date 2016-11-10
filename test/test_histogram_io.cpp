@@ -62,7 +62,7 @@ int main()
 		cout << endl << endl;
 
 		writeEddaDataset(dataset, "testHist.edda");
-		shared_ptr<Dataset<Real> > dataset3 = loadEddaDataset("testHist.edda");
+		shared_ptr<Dataset<Real> > dataset3 = loadEddaScalarDataset_noneVTK("testHist.edda");
 		cout << dataset3->getArray()->getDistrName() << endl;
 		int* dim;
 		dim = dataset3->getDimension();
@@ -75,7 +75,32 @@ int main()
 			cout << "at_comp_distr : " << dataset3->at_comp_distr(i, j, k) << endl;
 		}
 		cout << "load histogram from file and sampling, press any key to finish!" << endl;
-		//getchar();
+
+
+		int* dims = dataset3->getDimension();
+		double dif = 0;
+		for (int k = 0; k < dims[2]; k++){
+			for (int j = 0; j < dims[1]; j++){
+				for (int i = 0; i < dims[0]; i++){
+					dist::Variant distr = dataset->at_comp_distr(i, j, k);
+					dist::Variant distr2 = dataset2->at_comp_distr(i, j, k);
+
+					dist::Histogram curHist1 = boost::get<dist::Histogram>(distr);
+					dist::Histogram curHist2 = boost::get<dist::Histogram>(distr2);
+					
+					dif = dif + abs(curHist1.getBins() - curHist2.getBins())
+						+ abs(curHist1.getMinValue() - curHist2.getMinValue())
+						+ abs(curHist1.getMaxValue() - curHist2.getMaxValue());
+
+					for (int b = 0; b < curHist1.getBins(); b++)
+					{
+						dif = dif + abs(curHist1.getBinValue(b) - curHist2.getBinValue(b));
+					}
+				}
+			}
+		}
+		cout << "the differences between the old vtk format and the new format is: " << dif << endl;
+
 	}
 	return 0;
 }
