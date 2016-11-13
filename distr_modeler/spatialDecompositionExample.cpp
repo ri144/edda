@@ -61,10 +61,10 @@ int main(int argc, char* argv[])
         exit(14);
     }
 
-    //edda modeling:
-	DistributionModeler<dist::GaussianMixture<2>> dm;
-	dm.assignGrid(newW, newH, newD);
-	//dm.initHistogram(64);
+    //edda ensemble data modeling
+	DistributionModeler<dist::Histogram> dm;   //create a distr modeler class for Histogram.
+	dm.assignGrid(newW, newH, newD);    //define the final distribution grid dimensions.
+    dm.initHistogram(64);       //initialize histogram bin count.
 
 	int counter =0;
     for(size_t z=0; z<zdim; z += blockZdim)
@@ -88,13 +88,13 @@ int main(int argc, char* argv[])
     					}
     				}
     			}
-    			dm.computeGMM(data, blockXdim*blockYdim*blockZdim, counter);
+    			dm.computeHistogram(data, blockXdim*blockYdim*blockZdim, counter);
     			counter++;
     		}
     	}
     }
-    dm.model();
-  	dm.writeToVTK("newIsabelGMM.vti","newIsabelGMM_"); 
+    dm.model();    //combine the distribution array with the assigned grid.
+  	dm.writeToVTK("newIsabelHist.vti","newIsabelHist_");    //store in vtk format. 
     
   	return 0;
 }

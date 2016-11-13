@@ -40,7 +40,7 @@ int main(int argc, char* argv[])
   int yDim = dataFile.get_dim(yDimName.c_str())->size();
   int zDim = dataFile.get_dim(zDimName.c_str())->size();
   int ensDim = dataFile.get_dim(ensDimName.c_str())->size();
-  ensDim = 10;
+  //ensDim = 10;
 
   NcVar *var = dataFile.get_var(varName.c_str());
 
@@ -50,12 +50,9 @@ int main(int argc, char* argv[])
   float *data;
   data = new float[ensDim];
 
-  //edda modeling:
-  DistributionModeler<dist::GaussianMixture<2>> dm;
-  dm.assignGrid(xDim, yDim, zDim);
-  //dm.initHistogram(64);
-
-    
+  //edda ensemble data modeling
+  DistributionModeler<dist::GaussianMixture<2>> dm;   //create a distr modeler class for GMM.
+  dm.assignGrid(xDim, yDim, zDim);    //define the final distribution grid dimensions.
 
   for(size_t z=0; z<zDim; z++)
   {
@@ -63,6 +60,7 @@ int main(int argc, char* argv[])
     {
       for(size_t x=0; x<xDim; x++)
       {
+        //for each (x,y,z) extract the ensemble values and compute their distribution.
         if(!var->set_cur(0, x, y, z))
         {
           cerr << "ERROR[" << NC_ERR << "]" << "setting current pointer" << endl;
@@ -78,10 +76,9 @@ int main(int argc, char* argv[])
       }
     }
   }
-  dm.model();
-  dm.writeToVTK("newTempEnsGMM.vti","newTempEnsGMM_");
 
-  
-    
-    return 0;
+  dm.model();    //combine the distribution array with the assigned grid.
+  dm.writeToVTK("newTempEnsGMM.vti","newTempEnsGMM_");    //store in vtk format.
+
+  return 0;
 }
