@@ -178,10 +178,18 @@ namespace edda {
 	///
 	/// \brief Compute the Gaussian Mixture Model 
 	///
-	inline dist::JointGMM eddaComputeJointGMM(int nComp, ublas_matrix &samples)
+	inline dist::JointGMM eddaComputeJointGMM(std::vector<Real*>& dataAry, int nSamples, int nComp)
+		//inline dist::JointGMM eddaComputeJointGMM(int nComp, ublas_matrix &samples)
 	{
-		int nSamples = samples.size1();
-		int nVar = samples.size2();
+		int nVar = dataAry.size();
+
+		//convert input sample to ublas_matrix
+		ublas_matrix samples(nSamples, nVar);
+		for (int j = 0; j < nVar; j++){
+			for (int i = 0; i < nSamples; i++){
+				samples(i, j) = dataAry[j][i];
+			}
+		}
 
 		dist::JointGMM gmm;
 		//initialization: 

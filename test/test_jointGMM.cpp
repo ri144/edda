@@ -30,24 +30,31 @@ int main()
 	shared_ary<JointGMM> array(new JointGMM[dsVs*dsUs], dsVs*dsUs);
 	thrust::default_random_engine rng;//random engine for getJointSample()
 
+	Real* varR = (Real*)malloc(sizeof(Real)*blockSize*blockSize);
+	Real* varG = (Real*)malloc(sizeof(Real)*blockSize*blockSize);
+	Real* varB = (Real*)malloc(sizeof(Real)*blockSize*blockSize);
+
 	//loop: go through each block
 	for (int dsV = 0; dsV < dsVs; dsV++){
 		for (int dsU = 0; dsU < dsUs; dsU++){
 			printf("%d %d\n", dsV, dsU);
 			//prepare training vectors to OpenCV EM
-			ublas_matrix trainSamples(blockSize* blockSize, nVar);
 			int cnt = 0;
-			for (int v = dsV*blockSize; v < (dsV + 1)*blockSize; v++) {
-				for (int u = dsU*blockSize; u < (dsU + 1)*blockSize; u++) {
-					for (int k = 0; k < nVar; k++){
-						trainSamples(cnt, k) = (Real)(image.bitmapImage[(v*image.width + u) * nVar + k]);
-					}
+			for (int v = dsV*blockSize; v<(dsV + 1)*blockSize; v++) {//row
+				for (int u = dsU*blockSize; u<(dsU + 1)*blockSize; u++) {//col
+					varR[cnt] = (Real)(image.bitmapImage[(v*image.width + u) * 3 + 0]);
+					varG[cnt] = (Real)(image.bitmapImage[(v*image.width + u) * 3 + 1]);
+					varB[cnt] = (Real)(image.bitmapImage[(v*image.width + u) * 3 + 2]);
 					cnt++;
 				}
 			}
 
 			//EM in Edda
-			array[dsV*dsUs + dsU] = eddaComputeJointGMM(nGmmComp, trainSamples);
+			std::vector<Real*> trainSamples;
+			trainSamples.push_back(varR);
+			trainSamples.push_back(varG);
+			trainSamples.push_back(varB);
+			array[dsV*dsUs + dsU] = eddaComputeJointGMM(trainSamples, blockSize*blockSize, nGmmComp);
 
 			//resample this block and write to image		
 			for (int i = 0; i < blockSize; i++){
@@ -69,6 +76,11 @@ int main()
 			}
 		}
 	}
+
+	// safe to free data, after constructing the distribution
+	free(varR);
+	free(varG);
+	free(varB);
 
 	//write three images to disk
 	optImage.writeImage(std::string("jointGMMTestOutput.bmp").c_str());//this is the output file name
