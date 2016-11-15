@@ -45,6 +45,18 @@ public:
 	  }
   }
 
+  Histogram(float* histData, int _nBins){//use when load from .edda file
+	  m_nBins = _nBins;
+	  m_minValue = histData[0];
+	  m_maxValue = histData[1];
+	  m_binWidth = (m_maxValue - m_minValue) / (Real)(m_nBins);
+
+	  m_cdf.resize(m_nBins);
+	  for (int b = 0; b < m_nBins; b++){
+		  m_cdf[b] = histData[b + 2];
+	  }
+  }
+
   Histogram(Real *dataArray, int nElements, const int _nBins, const Real _minValue = 1, const Real _maxValue = -1){
 	  if (_minValue > _maxValue){// no input min/max value
 		  m_minValue = dataArray[0];

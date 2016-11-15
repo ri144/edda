@@ -14,8 +14,8 @@ using namespace std;
 
 namespace edda{
 
-
-const dist::GMMTuple getGmmModels(dist::Variant &distr, int GMs, int model)
+//the function with the same name getGmmModels() is used in edda_writer.cpp. since the VTK writer will be removed later, this function getGmmModels_archival() will also not exist in the future
+const dist::GMMTuple getGmmModels_archival(dist::Variant &distr, int GMs, int model)
 {
   switch (GMs)
   {
@@ -56,7 +56,7 @@ void addVtkGmmArrays(vtkPointData *vtk_point_data, DistrArray *array, const stri
         vector<dist::Variant> vdist = array->getDistrVector(j);
         for (int c=0; c<nc; c++)
         {
-          ((float *)vtk_array->GetVoidPointer(j))[c] = getGmmModels(vdist[c], GMs, i / 3).m;
+          ((float *)vtk_array->GetVoidPointer(j))[c] = getGmmModels_archival(vdist[c], GMs, i / 3).m;
         }
       }
 
@@ -69,7 +69,7 @@ void addVtkGmmArrays(vtkPointData *vtk_point_data, DistrArray *array, const stri
         vector<dist::Variant> vdist = array->getDistrVector(j);
         for (int c=0; c<nc; c++)
         {
-          ((float *)vtk_array->GetVoidPointer(j))[c] = getGmmModels(vdist[c], GMs, i / 3).v;
+          ((float *)vtk_array->GetVoidPointer(j))[c] = getGmmModels_archival(vdist[c], GMs, i / 3).v;
         }
       }
 
@@ -82,7 +82,7 @@ void addVtkGmmArrays(vtkPointData *vtk_point_data, DistrArray *array, const stri
         vector<dist::Variant> vdist = array->getDistrVector(j);
         for (int c=0; c<nc; c++)
         {
-          ((float *)vtk_array->GetVoidPointer(j))[c] = getGmmModels(vdist[c], GMs, i / 3).w;
+          ((float *)vtk_array->GetVoidPointer(j))[c] = getGmmModels_archival(vdist[c], GMs, i / 3).w;
         }
       }
 
