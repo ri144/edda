@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['license_2emd',['LICENSE.md',['../LICENSE_8md.html',1,'']]],
-  ['loadgaussianscalarfield_2ecpp',['loadGaussianScalarField.cpp',['../loadGaussianScalarField_8cpp.html',1,'']]],
-  ['loadgaussianvectorfield_2ecpp',['loadGaussianVectorField.cpp',['../loadGaussianVectorField_8cpp.html',1,'']]]
+  ['histo_5farray_2eh',['histo_array.h',['../histo__array_8h.html',1,'']]],
+  ['histogram_2eh',['histogram.h',['../histogram_8h.html',1,'']]]
 ];
