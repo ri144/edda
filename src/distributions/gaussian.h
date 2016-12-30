@@ -24,12 +24,12 @@ namespace dist {
 /// \brief Defines a Gaussian class
 ///
 struct EDDA_EXPORT Gaussian: public ContinuousDistributionTag {
-  Real mean, var;
+  Real mean, sd;
   // constructor
   __host__ __device__
   Gaussian(): Gaussian(0, (Real)1.) {}
   __host__ __device__
-  Gaussian(Real m, Real var): mean(m), var(var) { }
+  Gaussian(Real m, Real var): mean(m), sd(sd) { }
 
 };
 
@@ -51,7 +51,7 @@ inline double getMean(const Gaussian &dist)
 __host__ __device__
 inline double getVar(const Gaussian &dist)
 {
-    return (double) dist.var;
+    return (double) (dist.sd * dist.sd);
 }
 
 ///
@@ -60,10 +60,13 @@ inline double getVar(const Gaussian &dist)
 __host__ __device__
 inline double getPdf(const Gaussian &dist, const double x)
 {
-    if (dist.var==0) {
+    if (dist.sd==0) {
         return ( fabs(x-dist.mean) < EPS )? 1.: 0;
     }
-    return exp( -0.5 * pow(x-dist.mean, 2) / dist.var ) / sqrt(2. * dist.var * M_PI);
+
+	float var = dist.sd * dist.sd;
+	
+    return exp( -0.5 * pow(x-dist.mean, 2) / var ) / (sqrt(2. * M_PI) * dist.sd );
 }
 
 ///
@@ -72,7 +75,7 @@ inline double getPdf(const Gaussian &dist, const double x)
 __host__
 inline double getSample(const Gaussian &dist)
 {
-    return box_muller((double)dist.mean, (double)sqrt(dist.var) );
+    return box_muller((double)dist.mean, (double)dist.sd );
 }
 
 ///
@@ -81,7 +84,7 @@ inline double getSample(const Gaussian &dist)
 __host__ __device__
 inline double getSample(const Gaussian &dist, thrust::default_random_engine &rng)
 {
-  thrust::random::normal_distribution<double> ndist(dist.mean, sqrt(dist.var) );
+  thrust::random::normal_distribution<double> ndist(dist.mean, dist.sd );
   return ndist(rng);
 }
 
@@ -114,11 +117,11 @@ namespace detail {
 __host__ __device__
 inline double getCdf(const Gaussian &dist, double x)
 {
-  if (dist.var==0) {
+  if (dist.sd==0) {
     return x >= dist.mean ? 1 : 0;
   }
   //return 0.5 * (1 + boost::math::erf((x - dist.mean) / (sqrt(2.*dist.var))));
-  return 0.5 * (1 + erf((x - dist.mean) / (sqrt(2.*dist.var))));
+  return 0.5 * (1 + erf((x - dist.mean) / (sqrt(2.) * dist.sd)));
 }
 
 ///
@@ -127,11 +130,11 @@ inline double getCdf(const Gaussian &dist, double x)
 __host__
 inline double getCdfPrecise(const Gaussian &dist, double x)
 {
-  if (dist.var==0) {
+  if (dist.sd==0) {
     return x >= dist.mean ? 1 : 0;
   }
   // TODO: need to implement on our own for Cuda to work
-  boost::math::normal_distribution<double> normal (dist.mean, sqrt(dist.var) );
+  boost::math::normal_distribution<double> normal (dist.mean, dist.sd );
   return boost::math::cdf<>(normal, x);
 }
 
@@ -150,47 +153,6 @@ inline std::string getName(const Gaussian &x) {
     return "Gaussian";
 }
 
-// ------------------------------------------------------------------------------
-// Below defines Gaussian related arithmetics
-
-///
-/// \brief random variable with unary -
-///
-__host__ __device__
-inline Gaussian& operator-(Gaussian &x)
-{
-    x.mean = -x.mean;
-    return x;
-}
-
-///
-/// \brief random variable +=
-///
-__host__ __device__
-inline Gaussian& operator+=(Gaussian &x, const Gaussian& rhs) {
-    x.mean += rhs.mean;
-    x.var += rhs.var;
-    return x;
-}
-
-///
-/// \brief random variable += with scalar
-///
-__host__ __device__
-inline Gaussian& operator+=(Gaussian &x, const double r) {
-    x.mean += r;
-    return x;
-}
-
-///
-/// \brief random variable *= with scalar
-///
-__host__ __device__
-inline Gaussian& operator*=(Gaussian &x, const double r) {
-    x.mean *= r;
-    x.var *= r*r;
-    return x;
-}
 
 }  // namespace dist
 }  // namespace edda
