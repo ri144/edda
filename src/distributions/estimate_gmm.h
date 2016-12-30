@@ -13,6 +13,7 @@
 //edda includes
 #include <core/interpolator.h>
 #include <distributions/gaussian_mixture.h>
+#include <distributions/gmm.h>
 
 namespace edda
 {
@@ -133,6 +134,96 @@ inline double computeLogLikelihood(int n, double* data,int k, double* prob,doubl
     }
 
     return llk/n;
+}
+
+
+//////////////////////////////////////////////
+/// Main EM function
+///
+dist::GMM eddaComputeGMM(double *dataArray, int nSamples, int nComps)
+{
+	double eps = 1e-6;
+	int GMMs = nComps;
+
+	if (nSamples<GMMs)
+	{
+		std::cout << "Number of samples must be larger than number of clusters..." << std::endl;
+		dist::GMM new_gmm = dist::GMM(nComps);
+		return new_gmm;
+	}
+	else
+	{
+		double llk = 0, prev_llk = 0;
+		double *mean, *sd, *weight;
+		double **class_prob;
+
+		//Allocate memories for computation
+		/////////////////////////////////////////////////////////////
+		class_prob = (double **)malloc(sizeof(double *)*nSamples);
+		for (int i = 0; i<nSamples; i++)
+			class_prob[i] = (double *)malloc(sizeof(double)* GMMs);
+
+		mean = (double *)malloc(sizeof(double)* GMMs);
+		sd = (double *)malloc(sizeof(double)* GMMs);
+		weight = (double *)malloc(sizeof(double)* GMMs);
+
+		//initial estimate of parameters
+		/////////////////////////////////////////////
+		double mean1 = 0.0, sd1 = 0.0;
+
+		for (int i = 0; i < nSamples; i++)
+			mean1 += dataArray[i];
+		mean1 /= nSamples;
+
+		for (int i = 0; i < nSamples; i++)
+			sd1 += (dataArray[i] - mean1)*(dataArray[i] - mean1);
+		sd1 = sqrt(sd1 / nSamples);
+
+		for (int j = 0; j < GMMs; j++)
+		{
+			weight[j] = 1.0 / GMMs;
+			mean[j] = dataArray[rand() % nSamples];
+			sd[j] = sd1;
+		}
+
+		//Do while loop for iterative estimation
+		/////////////////////////////////////////////////
+		do{
+			//save prev likelihood
+			prev_llk = llk;
+
+			//update probabilities
+			update_class_prob(nSamples, dataArray, GMMs, weight, mean, sd, class_prob);
+
+			//update the parameters with newly estimated probabilities
+			update_parameters(nSamples, dataArray, GMMs, weight, mean, sd, class_prob);
+
+			//compute new likelihood
+			llk = computeLogLikelihood(nSamples, dataArray, GMMs, weight, mean, sd);
+
+		} while (!check_convergence(llk, prev_llk, eps));
+
+		//Update the gmm object with estimated values
+		/////////////////////////////////////////////////
+		dist::GMM new_gmm = dist::GMM(nComps);
+		for (int m = 0; m<GMMs; m++)
+		{
+			new_gmm.models[m].m = mean[m];
+			new_gmm.models[m].v = sd[m];
+			new_gmm.models[m].w = weight[m];
+		}
+
+		//Clean up
+		free(mean);
+		free(sd);
+		free(weight);
+
+		for (int i = 0; i < nSamples; i++)
+			free(class_prob[i]);
+		free(class_prob);
+
+		return new_gmm;
+	}
 }
 
 //////////////////////////////////////////////

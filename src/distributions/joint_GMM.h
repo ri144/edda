@@ -25,7 +25,7 @@
 #include <boost/numeric/ublas/matrix.hpp>
 #include <boost/numeric/ublas/io.hpp>
 #include <boost/numeric/ublas/assignment.hpp> 
-using namespace boost::numeric::ublas;
+//using namespace boost::numeric::ublas;
 
 #define EMEPS 0.0000000000222044604
 

@@ -12,15 +12,17 @@
 #include "histogram.h"
 #include "joint_gaussian.h"
 #include "joint_histogram.h"
+#include "joint_GMM.h"
+#include "gmm.h"
 
 namespace edda{
-enum DistrType { GMM, GMM2, GMM3, GMM4, GMM5, HIST, HYBRID};
+enum DistrType { GMM2, GMM3, GMM4, GMM5, HIST, HYBRID};
 
 namespace dist{
 
   typedef boost::variant<Real, Gaussian, Histogram,
   GaussianMixture<2>, GaussianMixture<3>, GaussianMixture<4>, GaussianMixture<5>,
-  JointGaussian, JointHistogram> _Variant;
+  JointGaussian, JointHistogram, JointGMM, GMM> _Variant;
 
   struct Variant : public _Variant, public DistributionTag {
     Variant() : _Variant() {}
@@ -33,6 +35,8 @@ namespace dist{
     Variant(const Histogram &obj) : _Variant (obj) {}
     Variant(const JointGaussian &obj) : _Variant (obj) {}
     Variant(const JointHistogram &obj) : _Variant (obj) {}
+	Variant(const JointGMM &obj) : _Variant(obj) {}
+	Variant(const GMM &obj) : _Variant(obj) {}
   };
 
   namespace detail{
