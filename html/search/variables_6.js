@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['linewidget',['lineWidget',['../test__vtk__pipeline_8cpp.html#ae63c6f6b90e2ccc16c4bfa872d63dacd',1,'test_vtk_pipeline.cpp']]]
+  ['gaus',['gaus',['../classedda_1_1dist_1_1JointGMM.html#a9d7ba4b30097b161f2474b48b04b672d',1,'edda::dist::JointGMM']]]
 ];
