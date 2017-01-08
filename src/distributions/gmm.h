@@ -60,7 +60,7 @@ class EDDA_EXPORT GMM: public ContinuousDistributionTag {
 
 public:
   //Tuple<GMMTuple, GMs> models;
-  vector<GMMTuple> models;
+  std::vector<GMMTuple> models;
   int GMs;
 
   // constructor

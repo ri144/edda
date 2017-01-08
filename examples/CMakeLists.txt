@@ -8,7 +8,11 @@ set(sources
   gmm_raw2vtk.cpp  
   loadScalarDataset.cpp
   loadCurvilinearDataset.cpp
+  createEddaDataset.cpp
+  distrModelerExample.cpp
+  VectorDistrModelerExample
 )
+
 
 include_directories(${CMAKE_SOURCE_DIR}/src)
 
