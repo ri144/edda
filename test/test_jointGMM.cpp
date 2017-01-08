@@ -2,6 +2,13 @@
 #include "distributions/joint_gaussian.h"
 #include "vector"
 #include "bmp_image.h"
+#include "dataset/distr_array.h"
+#include "io/edda_vtk_reader.h"
+#include "io/edda_vtk_writer.h"
+#include "io/edda_reader.h"
+#include "io/edda_writer.h"
+#include "distributions/histogram.h"
+#include "dataset/distr_array.h"
 
 using namespace edda;
 using namespace std;
@@ -76,6 +83,12 @@ int main()
 			}
 		}
 	}
+
+	//shared_ptr<Dataset<std::vector<Real>> > dataset = make_Dataset<std::vector<Real>>(
+	//	new RegularCartesianGrid(1, 1, dsVs*dsUs),
+	//	array
+	//	);
+
 
 	// safe to free data, after constructing the distribution
 	free(varR);
