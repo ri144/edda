@@ -8,7 +8,6 @@ cmake_minimum_required (VERSION 2.8)
 project (edda)
 
 ### Provide options that the user can optionally select.
-option (EDDA_BUILD_MODELER "Build the data modeler programs." OFF)
 option (EDDA_BUILD_VIS "Build distribution vis tools." OFF)
 
 option (EDDA_BUILD_TESTS "Build the test programs." OFF)
@@ -24,6 +23,7 @@ set_property(CACHE THRUST_DEVICE_SYSTEM PROPERTY STRINGS "CUDA;TBB;OPENMP;CPP")
 find_package(VTK)
 include (${VTK_USE_FILE})
 list(APPEND LINK_LIBS ${VTK_LIBRARIES})
+
 
 # Tell the compiler to use C++11, if not using Visual Studio.
 if (NOT MSVC)
@@ -155,20 +155,14 @@ add_subdirectory (src)
 ##############################################
 # tools
 
-# Build the converter project
-# If EDDA_BUILD_MODELER is on, build the data converter programs.
-if (EDDA_BUILD_MODELER)
-  add_subdirectory (distr_modeler)
-endif ()
-
 if (EDDA_BUILD_VIS)
-  add_subdirectory (vis)
+#  add_subdirectory (vis)
 endif ()
 
 # If EDDA_BUILD_TESTS is on, enable testing.
 if (EDDA_BUILD_TESTS)
-  enable_testing ()
-  add_subdirectory (test)
+#  enable_testing ()
+#  add_subdirectory (test)
 endif ()
 
 # If EDDA_BUILD_EXAMPLES is on, add the examples subdirectory to the build.
