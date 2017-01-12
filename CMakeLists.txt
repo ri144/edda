@@ -161,8 +161,8 @@ endif ()
 
 # If EDDA_BUILD_TESTS is on, enable testing.
 if (EDDA_BUILD_TESTS)
-#  enable_testing ()
-#  add_subdirectory (test)
+  enable_testing ()
+  add_subdirectory (test)
 endif ()
 
 # If EDDA_BUILD_EXAMPLES is on, add the examples subdirectory to the build.
