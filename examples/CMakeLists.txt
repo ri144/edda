@@ -8,7 +8,6 @@ set(sources
   gmm_raw2vtk.cpp  
   loadScalarDataset.cpp
   loadCurvilinearDataset.cpp
-  createEddaDataset.cpp
   distrModelerExample.cpp
   VectorDistrModelerExample
 )
