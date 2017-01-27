@@ -6,6 +6,13 @@
 
 #include "distributions/distribution_modeler.h"
 
+#define IOTEST
+
+#ifdef IOTEST
+#include "io/edda_writer.h"
+#include "io/edda_reader.h"
+#endif
+
 using namespace std;
 using namespace edda;
 
@@ -13,18 +20,37 @@ using namespace edda;
 
 int main(int argc, char* argv[])
 {
+	string filename;
+	int xdim;
+	int ydim;
+	int zdim;
+	int blockXdim;
+	int blockYdim;
+	int blockZdim;
+
 	if(argc < 8)
 	{
-		cout << "USAGE: check the parameter list!!\n";
-		exit(11);
+		//cout << "USAGE: check the parameter list!!\n";
+		//exit(11);
+		cout << "USAGE: default settings\n";
+		filename = string(SAMPLE_DATA_PATH) + "/subIsabel.raw";
+		xdim = 100;
+		ydim = 100;
+		zdim = 20;
+		blockXdim = 10;
+		blockYdim = 10;
+		blockZdim = 10;
 	}
-	string filename = argv[1];
-	int xdim = atoi(argv[2]);
-	int ydim = atoi(argv[3]);
-	int zdim = atoi(argv[4]);
-	int blockXdim = atoi(argv[5]);
-	int blockYdim = atoi(argv[6]);
-	int blockZdim = atoi(argv[7]);
+	else
+	{
+		filename = argv[1];
+		xdim = atoi(argv[2]);
+		ydim = atoi(argv[3]);
+		zdim = atoi(argv[4]);
+		blockXdim = atoi(argv[5]);
+		blockYdim = atoi(argv[6]);
+		blockZdim = atoi(argv[7]);
+	}
 
 	float *inData;
 	inData = new float[xdim*ydim*zdim];	
@@ -88,7 +114,7 @@ int main(int argc, char* argv[])
     				}
     			}
 
-                std::cout << "dimensions: [" << z << "][" << y << "][" << x << "]\n";
+                //std::cout << "dimensions: [" << z << "][" << y << "][" << x << "]\n";
     			dm.computeGMM(data, blockXdim*blockYdim*blockZdim, 2, counter);
     			counter++;
     		}
@@ -148,6 +174,37 @@ int main(int argc, char* argv[])
     Dataset<Real> *ds = new Dataset<Real> (new RegularCartesianGrid(newW, newH, newD), dVec);*/
 
 
+#ifdef IOTEST
+	shared_ptr<Dataset<Real>> shr_ds(ds);
+
+	writeEddaDataset(shr_ds, "testData.edda");
+
+	shared_ptr<Dataset<Real>> shr_ds2 = loadEddaScalarDataset_noneVTK("testData.edda");
+
+	//one-by-one test of the result of IO functions
+	int* dims = shr_ds2->getDimension();
+	double dif = 0;
+	for (int k = 0; k < dims[2]; k++){
+		for (int j = 0; j < dims[1]; j++){
+			for (int i = 0; i < dims[0]; i++){
+				dist::Variant distr = shr_ds->at_comp_distr_new(i, j, k)[0];
+				dist::Variant distr2 = shr_ds2->at_comp_distr_new(i, j, k)[0];
+				dist::GMM curDist1 = boost::get<dist::GMM >(distr);
+				dist::GMM curDist2 = boost::get<dist::GMM >(distr2);
+				for (int model = 0; model < curDist2.getNumComponenets(); model++){
+					dif = dif + abs(curDist1.models[model].m - curDist2.models[model].m)
+						+ abs(curDist1.models[model].v - curDist2.models[model].v)
+						+ abs(curDist1.models[model].w - curDist2.models[model].w);
+				}
+			}
+		}
+	}
+	cout << "the differences between the old vtk format and the new format is: " << dif << endl;
+
+
+	//!!! there might be some garbage collection problem at the end of this program
+
+#endif
 
     
   	return 0;
