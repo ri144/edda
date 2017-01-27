@@ -49,6 +49,9 @@ find_package (Boost REQUIRED)
 if (Boost_FOUND)
   include_directories (${Boost_INCLUDE_DIRS})
   link_libraries (${Boost_LIBRARIES})
+  
+else ()
+set ( BOOST_ROOT "/usr/local" CACHE PATH "the root directory containing Boost")
 endif ()
 
 # default CUDA off
