@@ -29,7 +29,7 @@ struct EDDA_EXPORT Gaussian: public ContinuousDistributionTag {
   __host__ __device__
   Gaussian(): Gaussian(0, (Real)1.) {}
   __host__ __device__
-  Gaussian(Real m, Real var): mean(m), sd(sd) { }
+  Gaussian(Real m, Real s): mean(m), sd(s) { }
 
 };
 
@@ -151,6 +151,48 @@ inline std::ostream& operator<<(std::ostream& os, const Gaussian &dist)
 __host__ __device__
 inline std::string getName(const Gaussian &x) {
     return "Gaussian";
+}
+
+//-----------------------------------------------------------
+// Below defines Gaussian related arithmetics
+
+///
+/// \brief random variable with unary -
+///
+__host__ __device__
+inline Gaussian& operator-(Gaussian &x)
+{
+	x.mean = -x.mean;
+	return x;
+}
+
+///
+/// \brief random variable +=
+///
+__host__ __device__
+inline Gaussian& operator+=(Gaussian &x, const Gaussian& rhs) {
+	x.mean += rhs.mean;
+	x.sd = sqrt(x.sd*x.sd + rhs.sd*rhs.sd);
+	return x;	
+}
+
+///
+/// \brief random variable += with scalar
+///
+__host__ __device__
+inline Gaussian& operator+=(Gaussian &x, const double r) {
+	x.mean += r;
+	return x;
+}
+
+///
+/// \brief random variable *= with scalar
+///
+__host__ __device__
+inline Gaussian& operator*=(Gaussian &x, const double r) {
+	x.mean *= r;
+	x.sd = sqrt(x.sd*x.sd*r*r);
+	return x;
 }
 
 
