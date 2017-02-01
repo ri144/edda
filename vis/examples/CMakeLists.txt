@@ -4,6 +4,7 @@
 
 set(sources
   uncertainIsocontourVTK.cpp
+  uncertainIsocontour.cpp
   randomSampleField.cpp
   fuzzyIsocontourVTK.cpp
   test_vtk_filters.cpp
