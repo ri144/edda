@@ -24,7 +24,7 @@ template <typename T>
 class Dataset {
 protected:
 	Grid *pGrid;
-	DistrArray *pArray;
+	DistrArray *pArray = 0;
 	std::vector<DistrArray *> pVector;
 public:
 	Dataset(){

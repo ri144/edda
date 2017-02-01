@@ -36,7 +36,7 @@ int main(int argc, char* argv[])
 		filename = string(SAMPLE_DATA_PATH) + "/subIsabel.raw";
 		xdim = 100;
 		ydim = 100;
-		zdim = 20;
+		zdim = 100;
 		blockXdim = 10;
 		blockYdim = 10;
 		blockZdim = 10;

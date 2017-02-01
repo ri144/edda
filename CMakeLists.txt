@@ -159,7 +159,7 @@ add_subdirectory (src)
 # tools
 
 if (EDDA_BUILD_VIS)
-#  add_subdirectory (vis)
+  add_subdirectory (vis)
 endif ()
 
 # If EDDA_BUILD_TESTS is on, enable testing.
