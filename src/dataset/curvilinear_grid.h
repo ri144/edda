@@ -57,7 +57,7 @@ typedef struct {
 
 
   */
-class CurvilinearGrid : public CartesianGrid
+class EDDA_EXPORT CurvilinearGrid : public CartesianGrid
 {
 private:
   VECTOR3 xyz_o, xyz_r, xyz_s, xyz_t, xyz_rs, xyz_rt, xyz_st, xyz_rst;

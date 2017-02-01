@@ -181,21 +181,20 @@ namespace edda {
 		}
 	}
 
-
 	DistrArray * readMixArray(ifstream & myfile, int n)
 	{
-		dist::Variant* distArray = new dist::Variant[n];
+		shared_ary<dist::Variant> pArray(new dist::Variant[n], n);
 
 		int nc;
 		myfile.read((char*)(&nc), sizeof (int));
 		if (nc == 1){
-			float* gmData = new float[10 * 3]; /// !!!!! NOTE !!!! 10 as a max possiblity of gaussian componenets, may need to change
-			
+			float* gmData = new float[333 * 3]; // !!! this array is designed to avoid the time cost by multiple memory allocation and deletion. better check if the size is big enough before each time using it !!!
+
 			for (int j = 0; j < n; j++){
 				int distrTypeNumber = 1;
 				myfile.read((char*)(&distrTypeNumber), sizeof (int));
-				if (distrTypeNumber == 1){
-
+				if (distrTypeNumber == 1){ //gaussian
+					
 					int nGM;
 					myfile.read((char*)(&nGM), sizeof (int));
 
@@ -208,8 +207,17 @@ namespace edda {
 						new_gmm.models[m].v = gmData[3 * m + 1];
 						new_gmm.models[m].w = gmData[3 * m + 2];
 					}
+					pArray[j] = new_gmm;
+				}
+				else if (distrTypeNumber == 2){ //histogram
+					int nbins;
+					myfile.read((char*)(&nbins), sizeof (int));
 
-					distArray[j] = new_gmm;
+					myfile.read((char*)(gmData), sizeof (float));
+					myfile.read((char*)(gmData+1), sizeof (float));			
+					myfile.read((char*)(gmData+2), sizeof (float)*nbins);
+
+					pArray[j] = Histogram(gmData, nbins);
 				}
 				else{
 					myfile.close();
@@ -217,17 +225,9 @@ namespace edda {
 				}
 			}
 
-			delete [] gmData;
+			delete[] gmData;
 
-			shared_ary<dist::Variant> pArray(new dist::Variant[n], n);
-			for (int i = 0; i < n; i++)
-			{
-				pArray[i] = distArray[i];
-			}
-
-			/// !!!!! NOTE !!!! here only works for Scalar
-			DistrArray * abs_array = new ScalarDistrArray<dist::Variant>(pArray);
-			return abs_array;
+			return (DistrArray *)(new ScalarDistrArray<dist::Variant>(pArray));		
 		}
 		else{
 			myfile.close();

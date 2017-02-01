@@ -180,7 +180,7 @@ namespace edda{
 		int nc = array->getNumComponents();
 		myFile.write((char*)(&nc), sizeof (int));
 
-		float* gmData = new float[1000];
+		float* gmData = new float[1000]; // !!! this array is designed to avoid the time cost by multiple memory allocation and deletion. better check if the size is big enough before each time using it !!!
 
 		//write data
 		int n = array->getLength();
@@ -197,10 +197,11 @@ namespace edda{
 					int distrTypeNumber = 1;
 					myFile.write((char*)(&distrTypeNumber), sizeof (int));
 
-					//	9. number of gaussian components
+					//	9.1. number of gaussian components
 					int GMs = stoi(s.substr(15));
 					myFile.write((char*)(&GMs), sizeof (int));
 
+					//	9.2. GMM parameters
 					std::vector<dist::GMMTuple> gmmtv = boost::get<dist::GMM >(vdist[c]).models;
 					for (int i = 0; i < GMs * 3; i++){
 						if (i % 3 == 0)		
@@ -212,10 +213,35 @@ namespace edda{
 					}
 					myFile.write((char*)(gmData), sizeof (float)*GMs * 3);
 				}
+				else if (s.compare(0, 15, "Histogram") == 0) {
+					//	8. distr type. 1: GaussianMixture. 2: Histogram
+					//	if Histogram:
+					int distrTypeNumber = 2;
+					myFile.write((char*)(&distrTypeNumber), sizeof (int));
+
+					dist::Histogram curHist = boost::get<dist::Histogram>(vdist[c]);
+					
+					int nbins = curHist.getBins();
+					float minv = curHist.getMinValue();
+					float maxv = curHist.getMaxValue();
+					//	9.1. number of bins
+					myFile.write((char*)&nbins, sizeof(int));
+					//	9.2. min/max values
+					myFile.write((char*)&minv, sizeof(float));
+					myFile.write((char*)&maxv, sizeof(float));
+
+					//	9.3. bin values
+					float * tuple = (float*)malloc(sizeof(float)*nbins);
+					for (int b = 0; b < nbins; b++)
+					{
+						tuple[b] = curHist.getBinValue(b);
+					}
+					myFile.write((char*)(tuple), sizeof(float)*nbins);
+					free(tuple);
+				}
 				else{
 					throw NotImplementedException();
 				}
-
 			}
 		}
 
