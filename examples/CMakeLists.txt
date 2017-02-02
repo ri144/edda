@@ -10,6 +10,7 @@ set(sources
   loadCurvilinearDataset.cpp
   distrModelerExample.cpp
   VectorDistrModelerExample
+  scalarIOExample.cpp
 )
 
 

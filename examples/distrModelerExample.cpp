@@ -5,15 +5,6 @@
 #include <sstream>
 
 #include "distributions/distribution_modeler.h"
-#include "dataset/grid.h"
-
-#define IOTEST
-//#define MODELGMM
-
-#ifdef IOTEST
-#include "io/edda_writer.h"
-#include "io/edda_reader.h"
-#endif
 
 using namespace std;
 using namespace edda;
@@ -32,16 +23,8 @@ int main(int argc, char* argv[])
 
 	if(argc < 8)
 	{
-		//cout << "USAGE: check the parameter list!!\n";
-		//exit(11);
-		cout << "USAGE: default settings\n";
-		filename = string(SAMPLE_DATA_PATH) + "/subIsabel.raw";
-		xdim = 100;
-		ydim = 100;
-		zdim = 100;
-		blockXdim = 10;
-		blockYdim = 10;
-		blockZdim = 10;
+		cout << "USAGE: check the parameter list!!\n";
+		exit(11);
 	}
 	else
 	{
@@ -118,13 +101,9 @@ int main(int argc, char* argv[])
 
                 //std::cout << "dimensions: [" << z << "][" << y << "][" << x << "]\n";
     			
-#ifdef MODELGMM
 				dm.computeGMM(data, blockXdim*blockYdim*blockZdim, 2, counter);
-#else				
-				dm.computeHistogram(data, blockXdim*blockYdim*blockZdim, counter, 3);
-#endif
 
-    			counter++;
+				counter++;
     		}
     	}
     }
@@ -134,8 +113,6 @@ int main(int argc, char* argv[])
 
     Dataset<Real> *ds = new Dataset<Real> (new RegularCartesianGrid(newW, newH, newD), dVec);
 	
-
-
     /*//edda ensemble data modeling
     DistributionModelerNew dm1(newW*newH*newD);   
     DistributionModelerNew dm2(newW*newH*newD);   
@@ -182,62 +159,6 @@ int main(int argc, char* argv[])
     dVec.push_back(dm3.getDistrArray());
 
     Dataset<Real> *ds = new Dataset<Real> (new RegularCartesianGrid(newW, newH, newD), dVec);*/
-
-
-#ifdef IOTEST
-	shared_ptr<Dataset<Real>> shr_ds(ds);
-
-	writeEddaDataset(shr_ds, "testData.edda");
-
-	shared_ptr<Dataset<Real>> shr_ds2 = loadEddaScalarDataset_noneVTK("testData.edda");
-	
-	//single test of the result of IO functions
-	dist::Variant distr;
-	distr = shr_ds->at_comp_distr_new(5, 5, 5)[0];
-	cout << "modeler result at_comp(5,5,5) : " << distr << endl;
-	distr = shr_ds2->at_comp_distr_new(5, 5, 5)[0];
-	cout << "IO reuslt at_comp(5,5,5) : " << distr << endl;
- 
-
-	//one-by-one test of the result of IO functions
-	int* dims = shr_ds2->getDimension();
-	double dif = 0;
-	for (int k = 0; k < dims[2]; k++){
-		for (int j = 0; j < dims[1]; j++){
-			for (int i = 0; i < dims[0]; i++){
-				dist::Variant distr = shr_ds->at_comp_distr_new(i, j, k)[0];
-				dist::Variant distr2 = shr_ds2->at_comp_distr_new(i, j, k)[0];
-#ifdef MODELGMM
-				dist::GMM curDist1 = boost::get<dist::GMM >(distr);
-				dist::GMM curDist2 = boost::get<dist::GMM >(distr2);
-				for (int model = 0; model < curDist2.getNumComponenets(); model++){
-					dif = dif + abs(curDist1.models[model].m - curDist2.models[model].m)
-						+ abs(curDist1.models[model].v - curDist2.models[model].v)
-						+ abs(curDist1.models[model].w - curDist2.models[model].w);
-				}
-#else
-				dist::Histogram curDist1 = boost::get<dist::Histogram >(distr);
-				dist::Histogram curDist2 = boost::get<dist::Histogram >(distr2);
-				int nbins1 = curDist1.getBins();
-				int nbins2 = curDist2.getBins();
-				float minv1 = curDist1.getMinValue();
-				float maxv1 = curDist1.getMaxValue();
-				float minv2 = curDist2.getMinValue();
-				float maxv2 = curDist2.getMaxValue();
-				dif = dif + abs(nbins1 - nbins2) + abs(minv1 - minv2) + abs(maxv1 - maxv2);
-				for (int b = 0; b < min(nbins1, nbins2); b++){
-					dif = dif + abs(curDist1.getBinValue(b) - curDist2.getBinValue(b));
-				}
-#endif
-			}
-		}
-	}
-	cout << "the differences between the old vtk format and the new format is: " << dif << endl;
-
-	
-
-	cout << "finish" << endl;
-#endif
 
     
   	return 0;
