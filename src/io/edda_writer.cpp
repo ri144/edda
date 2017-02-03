@@ -357,14 +357,13 @@ namespace edda{
 		//	6. number of distribution arrays
 		int numDistrArray = dataset->getNumDistrArray();
 		myFile.write((char*)(&numDistrArray), sizeof (int));
-		printf("number of distr arrays in the file: %d\n", numDistrArray);
 
 		for (int ida = 0; ida < numDistrArray; ida++){
 			DistrArray *array = dataset->getArray(ida);
 			writeMixArrays(myFile, array);
 		}
 
-		printf("Saving converted file to %s.\n", edda_file.c_str());
+		printf("Saved file to %s.\n", edda_file.c_str());
 		myFile.close();
 	}
 

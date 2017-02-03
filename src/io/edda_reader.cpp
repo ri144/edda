@@ -327,7 +327,8 @@ namespace edda {
 			throw NotImplementedException();
 		}
 
-		
+		printf("Read file from %s.\n", edda_file.c_str());
+
 	}
 
 

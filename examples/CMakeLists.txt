@@ -11,6 +11,7 @@ set(sources
   distrModelerExample.cpp
   VectorDistrModelerExample
   scalarIOExample.cpp
+  vectorIOExample.cpp
 )
 
 
