@@ -216,9 +216,11 @@ public:
 
   virtual dist::Variant getDistr(size_t idx) { return array[idx]; }
 
+
+  /// !!! should be deprecated, since we do not use VECTOR3 any more, but restore the vector type into three independent distr_array
   virtual std::vector<dist::Variant> getDistrVector(size_t idx) {
     throw std::runtime_error("Requesting a vector of distributions in a joint distribution array.");
-  }
+  }  
 
   virtual Real getScalar(size_t idx) { return getJointSample(array[idx])[target_comp]; }
 

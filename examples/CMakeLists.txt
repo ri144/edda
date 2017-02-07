@@ -12,6 +12,7 @@ set(sources
   VectorDistrModelerExample
   scalarIOExample.cpp
   vectorIOExample.cpp
+jointGMMIOExample.cpp
 )
 
 

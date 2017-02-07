@@ -185,9 +185,9 @@ namespace edda {
 	{
 		shared_ary<dist::Variant> pArray(new dist::Variant[n], n);
 
-		int nc;
-		myfile.read((char*)(&nc), sizeof (int));
-		if (nc == 1){
+		//int nc;
+		//myfile.read((char*)(&nc), sizeof (int));
+		//if (nc == 1){
 			float* gmData = new float[333 * 3]; // !!! this array is designed to avoid the time cost by multiple memory allocation and deletion. better check if the size is big enough before each time using it !!!
 
 			for (int j = 0; j < n; j++){
@@ -228,11 +228,11 @@ namespace edda {
 			delete[] gmData;
 
 			return (DistrArray *)(new ScalarDistrArray<dist::Variant>(pArray));		
-		}
-		else{
-			myfile.close();
-			throw NotImplementedException();
-		}
+		//}
+		//else{
+		//	myfile.close();
+		//	throw NotImplementedException();
+		//}
 	}
 	
 

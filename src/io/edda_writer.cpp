@@ -176,18 +176,21 @@ namespace edda{
 
 	void writeMixArrays(ofstream & myFile, DistrArray *array)
 	{
-		//7. number of array components
-		int nc = array->getNumComponents();
-		myFile.write((char*)(&nc), sizeof (int));
+		//7. number of array components //to be removed
+		//int nc = array->getNumComponents();
+		//myFile.write((char*)(&nc), sizeof (int));
 
 		float* gmData = new float[1000]; // !!! this array is designed to avoid the time cost by multiple memory allocation and deletion. better check if the size is big enough before each time using it !!!
 
 		//write data
 		int n = array->getLength();
 		for (int j = 0; j < n; j++){
-			vector<dist::Variant> vdist = array->getDistrVector(j);
+			//vector<dist::Variant> vdist = array->getDistrVector(j);
+			vector<dist::Variant> vdist;
+			vdist.push_back(array->getDistr(j)); //for test
 
-			for (int c = 0; c < nc; c++){
+			//for (int c = 0; c < nc; c++){
+			int c = 0;
 				string s = getName(vdist[c]);
 				if (s.compare(0, 15, "GaussianMixture") == 0) {
 					// Only compare the first 15 chars because this string ends with the number of Gaussian models
@@ -242,7 +245,7 @@ namespace edda{
 				else{
 					throw NotImplementedException();
 				}
-			}
+			//}
 		}
 
 		delete [] gmData;

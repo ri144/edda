@@ -223,20 +223,20 @@ namespace edda {
 				std::copy(mr.begin(), mr.end(), s.begin());
 				std::vector<Real> score = gmm.getCompWgtLogProbability(s);
 				
-				log_likelihoods(smpPtr, 1) = 0;
+				log_likelihoods(smpPtr, 0) = 0;
 				
 				double maxScore = score[0];
 				for (int j = 1; j < nComp; j++){
 					if (score[j] > maxScore)maxScore = score[j];
 				}
 				for (int j = 0; j < nComp; j++){
-					log_likelihoods(smpPtr, 1) += exp(score[j]-maxScore);
+					log_likelihoods(smpPtr, 0) += exp(score[j]-maxScore);
 				}
 
-				log_likelihoods(smpPtr, 1) = log(log_likelihoods(smpPtr, 1)) + maxScore;
-				current_log_likelihood += log_likelihoods(smpPtr, 1);
+				log_likelihoods(smpPtr, 0) = log(log_likelihoods(smpPtr, 0)) + maxScore;
+				current_log_likelihood += log_likelihoods(smpPtr, 0);
 				for (int j = 0; j < nComp; j++){
-					resposibilities(smpPtr, j) = exp(score[j] - log_likelihoods(smpPtr, 1));
+					resposibilities(smpPtr, j) = exp(score[j] - log_likelihoods(smpPtr, 0));
 				}
 			}
 
