@@ -96,7 +96,7 @@ int main()
 	free(varB);
 
 	//write three images to disk
-	optImage.writeImage(std::string("jointGMMTestOutputggg.bmp").c_str());//this is the output file name
+	optImage.writeImage(std::string("jointGMMTestOutput.bmp").c_str());//this is the output file name
 
 	std::cout << "Press any key to finish" << std::endl;
 	getchar();
