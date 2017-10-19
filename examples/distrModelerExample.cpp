@@ -13,18 +13,29 @@ using namespace edda;
 
 int main(int argc, char* argv[])
 {
+	string filename;
+	int xdim;
+	int ydim;
+	int zdim;
+	int blockXdim;
+	int blockYdim;
+	int blockZdim;
+
 	if(argc < 8)
 	{
 		cout << "USAGE: check the parameter list!!\n";
 		exit(11);
 	}
-	string filename = argv[1];
-	int xdim = atoi(argv[2]);
-	int ydim = atoi(argv[3]);
-	int zdim = atoi(argv[4]);
-	int blockXdim = atoi(argv[5]);
-	int blockYdim = atoi(argv[6]);
-	int blockZdim = atoi(argv[7]);
+	else
+	{
+		filename = argv[1];
+		xdim = atoi(argv[2]);
+		ydim = atoi(argv[3]);
+		zdim = atoi(argv[4]);
+		blockXdim = atoi(argv[5]);
+		blockYdim = atoi(argv[6]);
+		blockZdim = atoi(argv[7]);
+	}
 
 	float *inData;
 	inData = new float[xdim*ydim*zdim];	
@@ -88,9 +99,11 @@ int main(int argc, char* argv[])
     				}
     			}
 
-                std::cout << "dimensions: [" << z << "][" << y << "][" << x << "]\n";
-    			dm.computeGMM(data, blockXdim*blockYdim*blockZdim, 2, counter);
-    			counter++;
+                //std::cout << "dimensions: [" << z << "][" << y << "][" << x << "]\n";
+    			
+				dm.computeGMM(data, blockXdim*blockYdim*blockZdim, 2, counter);
+
+				counter++;
     		}
     	}
     }
@@ -99,7 +112,7 @@ int main(int argc, char* argv[])
     dVec.push_back(dm.getDistrArray());
 
     Dataset<Real> *ds = new Dataset<Real> (new RegularCartesianGrid(newW, newH, newD), dVec);
-
+	
     /*//edda ensemble data modeling
     DistributionModelerNew dm1(newW*newH*newD);   
     DistributionModelerNew dm2(newW*newH*newD);   
@@ -146,8 +159,6 @@ int main(int argc, char* argv[])
     dVec.push_back(dm3.getDistrArray());
 
     Dataset<Real> *ds = new Dataset<Real> (new RegularCartesianGrid(newW, newH, newD), dVec);*/
-
-
 
     
   	return 0;

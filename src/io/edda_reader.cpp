@@ -181,6 +181,62 @@ namespace edda {
 		}
 	}
 
+	DistrArray * readMixArray(ifstream & myfile, int n)
+	{
+		shared_ary<dist::Variant> pArray(new dist::Variant[n], n);
+
+		int nc;
+		myfile.read((char*)(&nc), sizeof (int));
+		if (nc == 1){
+			float* gmData = new float[333 * 3]; // !!! this array is designed to avoid the time cost by multiple memory allocation and deletion. better check if the size is big enough before each time using it !!!
+
+			for (int j = 0; j < n; j++){
+				int distrTypeNumber = 1;
+				myfile.read((char*)(&distrTypeNumber), sizeof (int));
+				if (distrTypeNumber == 1){ //gaussian
+					
+					int nGM;
+					myfile.read((char*)(&nGM), sizeof (int));
+
+					myfile.read((char*)(gmData), sizeof (float)*nGM * 3);
+
+					dist::GMM new_gmm = dist::GMM(nGM);
+					for (int m = 0; m<nGM; m++)
+					{
+						new_gmm.models[m].m = gmData[3 * m];
+						new_gmm.models[m].v = gmData[3 * m + 1];
+						new_gmm.models[m].w = gmData[3 * m + 2];
+					}
+					pArray[j] = new_gmm;
+				}
+				else if (distrTypeNumber == 2){ //histogram
+					int nbins;
+					myfile.read((char*)(&nbins), sizeof (int));
+
+					myfile.read((char*)(gmData), sizeof (float));
+					myfile.read((char*)(gmData+1), sizeof (float));			
+					myfile.read((char*)(gmData+2), sizeof (float)*nbins);
+
+					pArray[j] = Histogram(gmData, nbins);
+				}
+				else{
+					myfile.close();
+					throw NotImplementedException();
+				}
+			}
+
+			delete[] gmData;
+
+			return (DistrArray *)(new ScalarDistrArray<dist::Variant>(pArray));		
+		}
+		else{
+			myfile.close();
+			throw NotImplementedException();
+		}
+	}
+	
+
+
 	template <typename T>
 	shared_ptr<Dataset<T> > loadEddaDatasetTemplate(const string &edda_file)
 	{
@@ -239,92 +295,40 @@ namespace edda {
 				throw NotImplementedException();
 			}
 		}
+		else if (majorVersion == 0 && minorVersion == 2){
+			int gridTypeNumber;
+			myfile.read((char*)(&gridTypeNumber), sizeof(int));
+			if (gridTypeNumber == 1){
+				int dims[3];
+				myfile.read((char*)(&dims), sizeof (int)* 3);
+				float spacing[3];
+				myfile.read((char*)(&spacing), sizeof (float)* 3);
+
+				
+				int numDistrArray = 1;
+				myfile.read((char*)(&numDistrArray), sizeof (int));
+				
+				std::vector<DistrArray *> dVec(numDistrArray);
+				for (int i = 0; i < numDistrArray; i++){
+					dVec[i] = readMixArray(myfile, dims[0] * dims[1] * dims[2]);
+				}
+				
+				myfile.close();
+
+				return make_shared<Dataset<T>>(new RegularCartesianGrid(dims[0], dims[1], dims[2]), dVec);
+			}
+			else{
+				myfile.close();
+				throw NotImplementedException();
+			}
+		}
 		else{
 			myfile.close();
 			throw NotImplementedException();
 		}
 
-		myfile.close();
-		/*
-		string ext = getFileExtension(edda_file);
+		printf("Read file from %s.\n", edda_file.c_str());
 
-		if (ext.compare("vti") == 0) {
-			vtkNew<vtkXMLImageDataReader> reader;
-			reader->SetFileName(edda_file.c_str());
-			reader->Update();
-			vtkImageData *vtkdata = reader->GetOutput();
-
-			int *dim = vtkdata->GetDimensions();
-
-			// check dataset type
-			string type = getDistrType(vtkdata->GetFieldData(), array_name_prefix);
-
-			if (type.compare(0, 15, "GaussianMixture") == 0) {
-				shared_ptr<Dataset<T> > dataset = make_Dataset<T>(
-					new RegularCartesianGrid(dim[0], dim[1], dim[2]),
-					new GmmVtkDataArray(vtkdata->GetPointData(), array_name_prefix.c_str())
-					);
-				return dataset;
-
-
-			}
-			else if (type.compare("Histogram") == 0)
-			{
-				shared_ptr<Dataset<T> > dataset = make_Dataset<T>(
-					new RegularCartesianGrid(dim[0], dim[1], dim[2]),
-					genHistoArray(vtkdata->GetPointData())
-					);
-				return dataset;
-			}
-			else {
-				cout << "Unknown distribution type: " << type << endl;
-				exit(1);
-			}
-
-
-		} // end of if (ext.compare("vti")==0)
-		else if (ext.compare("vts") == 0){ // structured grids
-
-			vtkNew<vtkXMLStructuredGridReader> reader;
-			reader->SetFileName(edda_file.c_str());
-			reader->Update();
-			vtkStructuredGrid *vtkdata = reader->GetOutput();
-
-			int *dim = vtkdata->GetDimensions();
-
-			float *point_ary = (float *)vtkdata->GetPoints()->GetVoidPointer(0);
-
-			// check dataset type
-			string type = getDistrType(vtkdata->GetFieldData(), array_name_prefix);
-
-			if (type.compare(0, 15, "GaussianMixture") == 0) {
-				shared_ptr<Dataset<T> > dataset = make_Dataset<T>(
-					new CurvilinearGrid(dim, point_ary),
-					new GmmVtkDataArray(vtkdata->GetPointData(), array_name_prefix.c_str())
-					);
-				return dataset;
-
-			}
-			else if (type.compare("Histogram") == 0)
-			{
-				shared_ptr<Dataset<T> > dataset = make_Dataset<T>(
-					new CurvilinearGrid(dim, point_ary),
-					genHistoArray(vtkdata->GetPointData())
-					);
-				return dataset;
-			}
-			else {
-				cout << "Unknown distribution type: " << type << endl;
-				exit(1);
-			}
-
-
-		}
-		else {
-			printf("File format of %s not supported\n", edda_file.c_str());
-			exit(1);
-		}
-		*/
 	}
 
 

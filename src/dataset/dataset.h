@@ -23,36 +23,47 @@ namespace edda {
 template <typename T>
 class Dataset {
 protected:
-    Grid *pGrid;
-    DistrArray *pArray;
-    std::vector<DistrArray *> pVector;
+	Grid *pGrid;
+	DistrArray *pArray = 0;
+	std::vector<DistrArray *> pVector;
 public:
-    Dataset(){
-      std::cout << "test\n";
-    }
-    Dataset(Grid *pGrid)
-    {
-      this->pGrid = pGrid;
-    }
-    Dataset(Grid *pGrid, DistrArray *pArray) {
-      this->pGrid = pGrid;
-      this->pArray = pArray;
-    }
-    Dataset(Grid *pGrid, std::vector<DistrArray *>& pVector)
-    {
-      this->pGrid = pGrid;
-      this->pVector = pVector;
-    }
-    ~Dataset() {
-      if (pGrid)
-        delete pGrid;
-      if (pArray)
-        delete pArray;
-      pVector.clear();
-    }
+	Dataset(){
+		std::cout << "test\n";
+	}
+	Dataset(Grid *pGrid)
+	{
+		this->pGrid = pGrid;
+	}
+	Dataset(Grid *pGrid, DistrArray *pArray) {
+		this->pGrid = pGrid;
+		this->pArray = pArray;
+	}
+	Dataset(Grid *pGrid, std::vector<DistrArray *>& pVector)
+	{
+		this->pGrid = pGrid;
+		this->pVector = pVector;
+	}
+	~Dataset() {
+		if (pGrid)
+			delete pGrid;
+		if (pArray)
+			delete pArray;
+		pVector.clear();
+	}
 
-    Grid *getGrid() { return pGrid; }
-    DistrArray *getArray () {return pArray; }
+	Grid *getGrid() { return pGrid; }
+	DistrArray *getArray() { return pArray; }
+
+	int getNumDistrArray(){ return pVector.size(); }
+	DistrArray *getArray(int i) {
+		if (i < 0 || i >= pVector.size()){
+			//TODO: throw a proper exception
+		}
+		else{
+			return pVector[i];
+		}
+	}
+
 
     ///
     /// \brief Get the dimension of the cartesian-grid data.

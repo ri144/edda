@@ -49,6 +49,9 @@ find_package (Boost REQUIRED)
 if (Boost_FOUND)
   include_directories (${Boost_INCLUDE_DIRS})
   link_libraries (${Boost_LIBRARIES})
+  
+else ()
+set ( BOOST_ROOT "/usr/local" CACHE PATH "the root directory containing Boost")
 endif ()
 
 # default CUDA off
@@ -156,13 +159,13 @@ add_subdirectory (src)
 # tools
 
 if (EDDA_BUILD_VIS)
-#  add_subdirectory (vis)
+  add_subdirectory (vis)
 endif ()
 
 # If EDDA_BUILD_TESTS is on, enable testing.
 if (EDDA_BUILD_TESTS)
-#  enable_testing ()
-#  add_subdirectory (test)
+  enable_testing ()
+  add_subdirectory (test)
 endif ()
 
 # If EDDA_BUILD_EXAMPLES is on, add the examples subdirectory to the build.

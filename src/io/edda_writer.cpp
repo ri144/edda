@@ -29,7 +29,6 @@ namespace edda{
 		default:
 			throw runtime_error("The Gaussian mixture models exceeds default size");
 		}
-
 	}
 
 	void writeGmmArrays(ofstream & myFile, DistrArray *array, int GMs)
@@ -38,7 +37,7 @@ namespace edda{
 		//2. Is # of Gaussian components uniform (1-yes, 0-no)
 		int nc = array->getNumComponents();
 		myFile.write((char*)(&nc), sizeof (int));
-		int isNumGaussianUniform = 1;
+		int isNumGaussianUniform = 1;	//TODO: should test before executing
 		myFile.write((char*)(&isNumGaussianUniform), sizeof (int));
 
 		if (isNumGaussianUniform == 1){
@@ -67,63 +66,9 @@ namespace edda{
 
 			delete gmData;
 		}
-		/*
-		printf("Gaussian Models in GaussianMixture=%d\n", GMs);
-		char name[256];
-		int i;
-
-		for (i = 0; i<GMs * 3; i++)
-		{
-			vtkFloatArray *vtk_array = vtkFloatArray::New();
-			vtk_array->SetNumberOfComponents(nc);
-			vtk_array->SetNumberOfTuples(n);
-
-			if (i % 3 == 0) {
-				sprintf(name, "%smean%d", array_name.c_str(), i / 3);
-				vtk_array->SetName(name);
-				for (int j = 0; j<n; j++)
-				{
-					vector<dist::Variant> vdist = array->getDistrVector(j);
-					for (int c = 0; c<nc; c++)
-					{
-						((float *)vtk_array->GetVoidPointer(j))[c] = getGmmModels(vdist[c], GMs, i / 3).m;
-					}
-				}
-
-			}
-			else if (i % 3 == 1) {
-				sprintf(name, "%svar%d", array_name.c_str(), i / 3);
-				vtk_array->SetName(name);
-
-				for (int j = 0; j<n; j++)
-				{
-					vector<dist::Variant> vdist = array->getDistrVector(j);
-					for (int c = 0; c<nc; c++)
-					{
-						((float *)vtk_array->GetVoidPointer(j))[c] = getGmmModels(vdist[c], GMs, i / 3).v;
-					}
-				}
-
-			}
-			else {
-				sprintf(name, "%sweight%d", array_name.c_str(), i / 3);
-				vtk_array->SetName(name);
-
-				for (int j = 0; j<n; j++)
-				{
-					vector<dist::Variant> vdist = array->getDistrVector(j);
-					for (int c = 0; c<nc; c++)
-					{
-						((float *)vtk_array->GetVoidPointer(j))[c] = getGmmModels(vdist[c], GMs, i / 3).w;
-					}
-				}
-
-			}
-
-			vtk_point_data->AddArray(vtk_array);
+		else{
+			throw NotImplementedException();
 		}
-
-		*/
 	}
 
 	void writeHistoArrays(ofstream & myFile, DistrArray *array)
@@ -182,54 +127,130 @@ namespace edda{
 			throw NotImplementedException();
 		}
 		else{ //(isNumBinsUniform == 0 && isMinMaxValueUniform == 0)
+			int n = array->getLength();
+			for (int c = 0; c < nc; c++){
+				int* headerBinary_nbins = (int*)malloc(sizeof(int)*n);
+				float* headerBinary_minMaxV = (float*)malloc(sizeof(float)* 2 * n);
 
-			int n = array->getLength(); //may need to process fake dataset such as n==0?
-			
-			int* headerBinary_nbins = (int*)malloc(sizeof(int)*n);
-			float* headerBinary_minMaxV = (float*)malloc(sizeof(float)*2*n);
-
-			for (int j = 0; j < n; j++)
-			{
-				vector<dist::Variant> vdist = array->getDistrVector(j);
-
-				dist::Histogram curHist = boost::get<dist::Histogram>(vdist[0]);
-				int nbins = curHist.getBins();
-				headerBinary_nbins[j] = nbins;
-				float minv = curHist.getMinValue();
-				float maxv = curHist.getMaxValue();
-				headerBinary_minMaxV[2 * j] = minv;
-				headerBinary_minMaxV[2 * j + 1] = maxv;
-			}
-			myFile.write((char*)(headerBinary_nbins), sizeof(float)*n);
-			myFile.write((char*)(headerBinary_minMaxV), sizeof(float)*2*n);
-			free(headerBinary_nbins);
-			free(headerBinary_minMaxV);
-
-			for (int j = 0; j < n; j++)
-			{
-				vector<dist::Variant> vdist = array->getDistrVector(j);
-				dist::Histogram curHist = boost::get<dist::Histogram>(vdist[0]);
-
-				int nbins = curHist.getBins();
-				float * tuple = (float*)malloc(sizeof(float)*nbins);
-
-				for (int b = 0; b < nbins; b++)
+				for (int j = 0; j < n; j++)
 				{
-					tuple[b] = curHist.getBinValue(b);
+					vector<dist::Variant> vdist = array->getDistrVector(j);
+
+					dist::Histogram curHist = boost::get<dist::Histogram>(vdist[c]);
+					int nbins = curHist.getBins();
+					headerBinary_nbins[j] = nbins;
+					float minv = curHist.getMinValue();
+					float maxv = curHist.getMaxValue();
+					headerBinary_minMaxV[2 * j] = minv;
+					headerBinary_minMaxV[2 * j + 1] = maxv;
 				}
+				myFile.write((char*)(headerBinary_nbins), sizeof(float)*n);
+				myFile.write((char*)(headerBinary_minMaxV), sizeof(float)* 2 * n);
+				free(headerBinary_nbins);
+				free(headerBinary_minMaxV);
+			}
+			
+			for (int c = 0; c < nc; c++){
+				for (int j = 0; j < n; j++)
+				{
+					vector<dist::Variant> vdist = array->getDistrVector(j);
+					dist::Histogram curHist = boost::get<dist::Histogram>(vdist[c]);
 
-				myFile.write((char*)(tuple), sizeof(float)*nbins);
+					int nbins = curHist.getBins();
+					float * tuple = (float*)malloc(sizeof(float)*nbins);
 
-				free(tuple);
+					for (int b = 0; b < nbins; b++)
+					{
+						tuple[b] = curHist.getBinValue(b);
+					}
+
+					myFile.write((char*)(tuple), sizeof(float)*nbins);
+
+					free(tuple);
+				}
 			}
 		}
 	}
 
-	// edda exported function
+
+
+	void writeMixArrays(ofstream & myFile, DistrArray *array)
+	{
+		//7. number of array components
+		int nc = array->getNumComponents();
+		myFile.write((char*)(&nc), sizeof (int));
+
+		float* gmData = new float[1000]; // !!! this array is designed to avoid the time cost by multiple memory allocation and deletion. better check if the size is big enough before each time using it !!!
+
+		//write data
+		int n = array->getLength();
+		for (int j = 0; j < n; j++){
+			vector<dist::Variant> vdist = array->getDistrVector(j);
+
+			for (int c = 0; c < nc; c++){
+				string s = getName(vdist[c]);
+				if (s.compare(0, 15, "GaussianMixture") == 0) {
+					// Only compare the first 15 chars because this string ends with the number of Gaussian models
+
+					//	8. distr type. 1: GaussianMixture. 2: Histogram
+					//	if GaussianMixture:
+					int distrTypeNumber = 1;
+					myFile.write((char*)(&distrTypeNumber), sizeof (int));
+
+					//	9.1. number of gaussian components
+					int GMs = stoi(s.substr(15));
+					myFile.write((char*)(&GMs), sizeof (int));
+
+					//	9.2. GMM parameters
+					std::vector<dist::GMMTuple> gmmtv = boost::get<dist::GMM >(vdist[c]).models;
+					for (int i = 0; i < GMs * 3; i++){
+						if (i % 3 == 0)		
+							gmData[i] = gmmtv[ i / 3].m;
+						else if (i % 3 == 1)
+							gmData[i] = gmmtv[i / 3].v;
+						else
+							gmData[i] = gmmtv[i / 3].w;
+					}
+					myFile.write((char*)(gmData), sizeof (float)*GMs * 3);
+				}
+				else if (s.compare(0, 15, "Histogram") == 0) {
+					//	8. distr type. 1: GaussianMixture. 2: Histogram
+					//	if Histogram:
+					int distrTypeNumber = 2;
+					myFile.write((char*)(&distrTypeNumber), sizeof (int));
+
+					dist::Histogram curHist = boost::get<dist::Histogram>(vdist[c]);
+					
+					int nbins = curHist.getBins();
+					float minv = curHist.getMinValue();
+					float maxv = curHist.getMaxValue();
+					//	9.1. number of bins
+					myFile.write((char*)&nbins, sizeof(int));
+					//	9.2. min/max values
+					myFile.write((char*)&minv, sizeof(float));
+					myFile.write((char*)&maxv, sizeof(float));
+
+					//	9.3. bin values
+					float * tuple = (float*)malloc(sizeof(float)*nbins);
+					for (int b = 0; b < nbins; b++)
+					{
+						tuple[b] = curHist.getBinValue(b);
+					}
+					myFile.write((char*)(tuple), sizeof(float)*nbins);
+					free(tuple);
+				}
+				else{
+					throw NotImplementedException();
+				}
+			}
+		}
+
+		delete [] gmData;
+	}
+
 
 	template <typename T>
 	void writeEddaDatasetTemplate(shared_ptr<Dataset<T> > dataset, const string &edda_file)
-	//void writeEddaDatasetTemplate(shared_ptr<Dataset<Real> > dataset, const string &edda_file)
 	{
 		const string array_name_prefix = "";
 
@@ -274,9 +295,7 @@ namespace edda{
 				myFile.write((char*)(&distrTypeNumber), sizeof (int));
 
 				writeGmmArrays(myFile, array, stoi(dName.substr(15)));
-			}
-			
-			
+			}		
 			else if (dName.compare("Histogram") == 0) {
 				int distrTypeNumber = 2;
 				myFile.write((char*)(&distrTypeNumber), sizeof (int));
@@ -298,13 +317,63 @@ namespace edda{
 		}		
 	}
 
+
+	template <typename T>
+	void writeEddaDatasetTemplateNew(shared_ptr<Dataset<T> > dataset, const string &edda_file)
+	{
+		const string array_name_prefix = "";
+
+		ofstream myFile(edda_file.c_str(), ios::out | ios::binary);
+
+		//1. "EDDA" as a marker
+		//2. version number	
+
+		char eddaFileMark[4] = { 'E', 'D', 'D', 'A' };
+		myFile.write(eddaFileMark, sizeof (char)* 4);
+		char majorVersion = 0, minorVersion = 2;
+		myFile.write(&majorVersion, sizeof (char));
+		myFile.write(&minorVersion, sizeof (char));
+
+		CartesianGrid *cartesianGrid = dynamic_cast<CartesianGrid *>(dataset->getGrid());
+		if (cartesianGrid) {
+			//3. gridType. 1: Regular CartesianGrid.
+			//if Regular CartesianGrid:
+			//	4. dimension
+			//	5. spacing
+
+			int gridTypeNumber = 1;
+			myFile.write((char*)(&gridTypeNumber), sizeof (int));
+			int *dims = dataset->getDimension();
+			myFile.write((char*)(dims), sizeof (int)* 3);
+			float spacing[3];
+			dataset->getSpacing(spacing[0], spacing[1], spacing[2]);
+			myFile.write((char*)(spacing), sizeof (float)* 3);
+		}
+		else {
+			// TODO for other grid types
+			throw NotImplementedException();
+		}
+
+		//	6. number of distribution arrays
+		int numDistrArray = dataset->getNumDistrArray();
+		myFile.write((char*)(&numDistrArray), sizeof (int));
+
+		for (int ida = 0; ida < numDistrArray; ida++){
+			DistrArray *array = dataset->getArray(ida);
+			writeMixArrays(myFile, array);
+		}
+
+		printf("Saved file to %s.\n", edda_file.c_str());
+		myFile.close();
+	}
+
 	void writeEddaDataset(shared_ptr<Dataset<VECTOR3> > dataset, const string &edda_file)
 	{
-		writeEddaDatasetTemplate(dataset, edda_file);
+		writeEddaDatasetTemplateNew(dataset, edda_file);
 	}
 
 	void writeEddaDataset(shared_ptr<Dataset<Real> > dataset, const string &edda_file)
 	{
-		writeEddaDatasetTemplate(dataset, edda_file);
+		writeEddaDatasetTemplateNew(dataset, edda_file);
 	}
 }

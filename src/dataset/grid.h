@@ -115,7 +115,7 @@ protected:
 /// \brief Cartesian Grid (Regular and Irregular)
 ///
 //////////////////////////////////////////////////////////////////////////
-class CartesianGrid : public Grid
+class EDDA_EXPORT CartesianGrid : public Grid
 {
 public:
   // constructor and destructor
@@ -182,7 +182,7 @@ protected:
 // map coordinates in computational space to physical space
 #define UCGridPhy2Comp(x, y, f) (((x) - (y))*(f))
 
-class RegularCartesianGrid : public CartesianGrid
+class EDDA_EXPORT RegularCartesianGrid : public CartesianGrid
 {
 private:
   float mappingFactorX;				// mapping from physical space to computational space
