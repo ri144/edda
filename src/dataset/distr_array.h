@@ -59,7 +59,7 @@ public:
 
   virtual dist::Variant getDistr(size_t idx) =0;
 
-  virtual std::vector<dist::Variant> getDistrVector(size_t idx)=0;
+  virtual std::vector<dist::Variant> getDistrVector(size_t idx)=0;  //!!! should be deprecated !!!
 
   //virtual void setDistr(size_t idx, dist::Variant) =0;
 
@@ -128,6 +128,8 @@ public:
 /// which is in the contrast of JointDistrArray
 ///
 
+
+//!!! should be deprecated !!!
 template<typename Distr, int N, ENABLE_IF_BASE_OF(Distr, dist::DistributionTag)>
 class VectorDistrArray: public DistrArray
 {

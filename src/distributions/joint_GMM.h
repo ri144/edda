@@ -133,6 +133,10 @@ namespace edda {
 				}
 			}
 
+			int getNumVariables(){ return nVar; };
+			int getNumComponents(){ return nComp; };
+			Real getWeight(int i){ return weights[i]; };//may need to add check to i
+			JointGaussian getJointGaussian(int i) { return gaus[i]; };//may need to  add check to i
 		protected:
 			std::vector<Real> weights;
 			std::vector<JointGaussian> gaus;

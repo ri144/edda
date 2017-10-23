@@ -12,6 +12,9 @@
 
 #include <string>
 
+//this file uses components that are currently under construction, so it is temporarily turned off. Will be back soon.
+
+
 using namespace edda;
 using namespace std;
 using namespace edda::dist;
@@ -37,7 +40,7 @@ int main()
 	//number of row and col after down-sampleing
 	int dsVs = image.height / blockSize;
 	int dsUs = image.width / blockSize;
-	
+	dsUs = 2, dsVs = 2;
 	//Joint GMM array
 	shared_ary<JointGMM> array(new JointGMM[dsVs*dsUs], dsVs*dsUs);
 	thrust::default_random_engine rng;//random engine for getJointSample()
@@ -93,6 +96,25 @@ int main()
 	//	new RegularCartesianGrid(1, 1, dsVs*dsUs),
 	//	array
 	//	);
+
+	std::vector<DistrArray *> dVec;
+	shared_ary<dist::Variant> pArray(new dist::Variant[dsVs*dsUs], dsVs*dsUs);
+	for (int i = 0; i<dsVs*dsUs; i++)
+	{
+		pArray[i] = array[i];
+	}
+	DistrArray * abs_array = new ScalarDistrArray<dist::Variant>(pArray);
+	dVec.push_back(abs_array);
+
+	Dataset<Real> *ds = new Dataset<Real>(new RegularCartesianGrid(dsUs, dsVs, 1), dVec);
+	shared_ptr<Dataset<Real>> shr_ds(ds);
+
+
+	//write the dataset using the writer
+	writeEddaDataset(shr_ds, "testDataImage.edda");
+
+	//read the dataset using the reader
+	//shared_ptr<Dataset<Real>> shr_ds2 = loadEddaScalarDataset_noneVTK("testDataImage.edda");
 
 
 	// safe to free data, after constructing the distribution

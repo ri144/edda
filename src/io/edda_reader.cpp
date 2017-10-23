@@ -219,6 +219,13 @@ namespace edda {
 
 					pArray[j] = Histogram(gmData, nbins);
 				}
+				else if (distrTypeNumber == 3){ //joint gmm
+					int nVar, nComp;
+					myfile.read((char*)(&nVar), sizeof (int));
+					myfile.read((char*)(nComp), sizeof (int));
+
+					//... to be done
+				}
 				else{
 					myfile.close();
 					throw NotImplementedException();

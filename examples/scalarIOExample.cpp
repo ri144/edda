@@ -45,7 +45,7 @@ int main(int argc, char* argv[])
     FILE *fIn = fopen(filename.c_str(),"rb");
     if(!fIn)
     {
-        fprintf(stderr, "Error opening file\n");
+		fprintf(stderr, "Error opening file %s\n", filename);
         exit(13);
     }
     size_t readStatus = fread(inData, sizeof(float), xdim*ydim*zdim, fIn);
@@ -81,6 +81,7 @@ int main(int argc, char* argv[])
     			}
 
 				int re = counter % 4;
+				//based on counter, apply different distribution models and different distribution parameters
 				if (re == 0){
 					dm.computeGMM(data, blockXdim*blockYdim*blockZdim, 2, counter);
 				}
