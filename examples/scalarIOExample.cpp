@@ -45,7 +45,7 @@ int main(int argc, char* argv[])
     FILE *fIn = fopen(filename.c_str(),"rb");
     if(!fIn)
     {
-		fprintf(stderr, "Error opening file %s\n", filename);
+		fprintf(stderr, "Error opening file %s\n", filename.c_str());
         exit(13);
     }
     size_t readStatus = fread(inData, sizeof(float), xdim*ydim*zdim, fIn);
