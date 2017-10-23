@@ -59,7 +59,7 @@ public:
 
   virtual dist::Variant getDistr(size_t idx) =0;
 
-  virtual std::vector<dist::Variant> getDistrVector(size_t idx)=0;
+  virtual std::vector<dist::Variant> getDistrVector(size_t idx)=0;  //!!! should be deprecated !!!
 
   //virtual void setDistr(size_t idx, dist::Variant) =0;
 
@@ -128,6 +128,8 @@ public:
 /// which is in the contrast of JointDistrArray
 ///
 
+
+//!!! should be deprecated !!!
 template<typename Distr, int N, ENABLE_IF_BASE_OF(Distr, dist::DistributionTag)>
 class VectorDistrArray: public DistrArray
 {
@@ -216,9 +218,11 @@ public:
 
   virtual dist::Variant getDistr(size_t idx) { return array[idx]; }
 
+
+  /// !!! should be deprecated, since we do not use VECTOR3 any more, but restore the vector type into three independent distr_array
   virtual std::vector<dist::Variant> getDistrVector(size_t idx) {
     throw std::runtime_error("Requesting a vector of distributions in a joint distribution array.");
-  }
+  }  
 
   virtual Real getScalar(size_t idx) { return getJointSample(array[idx])[target_comp]; }
 

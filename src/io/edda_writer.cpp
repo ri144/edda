@@ -5,8 +5,11 @@
 #include <vtkFloatArray.h>
 #include <vtkStringArray.h>
 #include <vtkFieldData.h>
+
 #include "distributions/gaussian_mixture.h"
 #include "distributions/histogram.h"
+//#include "distributions/joint_gaussian.h"
+#include "distributions/joint_GMM.h"
 
 #include "edda_writer.h"
 
@@ -46,7 +49,7 @@ namespace edda{
 
 			//write data
 			int n = array->getLength();
-			float* gmData = new float[GMs * 3 * nc*n];		
+			float* gmData = new float[GMs * 3 * nc*n];
 			for (int c = 0; c < nc; c++){
 				for (int j = 0; j < n; j++){
 					for (int i = 0; i < GMs * 3; i++){
@@ -77,7 +80,7 @@ namespace edda{
 		//2. Is # of bins components uniform (1-yes, 0-no)
 		int nc = array->getNumComponents();
 		myFile.write((char*)(&nc), sizeof (int));
-				
+
 		int isNumBinsUniform = 0;
 		myFile.write((char*)(&isNumBinsUniform), sizeof (int));
 
@@ -121,7 +124,7 @@ namespace edda{
 			free(tuple);
 		}
 		else if (isNumBinsUniform == 1 && isMinMaxValueUniform != 1){
-			throw NotImplementedException();		
+			throw NotImplementedException();
 		}
 		else if (isNumBinsUniform != 1 && isMinMaxValueUniform == 1){
 			throw NotImplementedException();
@@ -149,7 +152,7 @@ namespace edda{
 				free(headerBinary_nbins);
 				free(headerBinary_minMaxV);
 			}
-			
+
 			for (int c = 0; c < nc; c++){
 				for (int j = 0; j < n; j++)
 				{
@@ -176,76 +179,101 @@ namespace edda{
 
 	void writeMixArrays(ofstream & myFile, DistrArray *array)
 	{
-		//7. number of array components
-		int nc = array->getNumComponents();
-		myFile.write((char*)(&nc), sizeof (int));
-
 		float* gmData = new float[1000]; // !!! this array is designed to avoid the time cost by multiple memory allocation and deletion. better check if the size is big enough before each time using it !!!
 
 		//write data
 		int n = array->getLength();
 		for (int j = 0; j < n; j++){
-			vector<dist::Variant> vdist = array->getDistrVector(j);
+			dist::Variant curDist = array->getDistr(j);
 
-			for (int c = 0; c < nc; c++){
-				string s = getName(vdist[c]);
-				if (s.compare(0, 15, "GaussianMixture") == 0) {
-					// Only compare the first 15 chars because this string ends with the number of Gaussian models
+			string s = getName(curDist);
+			if (s.compare(0, 15, "GaussianMixture") == 0) {
+				// Only compare the first 15 chars because this string ends with the number of Gaussian models
 
-					//	8. distr type. 1: GaussianMixture. 2: Histogram
-					//	if GaussianMixture:
-					int distrTypeNumber = 1;
-					myFile.write((char*)(&distrTypeNumber), sizeof (int));
+				//	8. distr type. 1: GaussianMixture. 2: Histogram
+				//	if GaussianMixture:
+				int distrTypeNumber = 1;
+				myFile.write((char*)(&distrTypeNumber), sizeof (int));
 
-					//	9.1. number of gaussian components
-					int GMs = stoi(s.substr(15));
-					myFile.write((char*)(&GMs), sizeof (int));
+				//	9.1. number of gaussian components
+				int GMs = stoi(s.substr(15));
+				myFile.write((char*)(&GMs), sizeof (int));
 
-					//	9.2. GMM parameters
-					std::vector<dist::GMMTuple> gmmtv = boost::get<dist::GMM >(vdist[c]).models;
-					for (int i = 0; i < GMs * 3; i++){
-						if (i % 3 == 0)		
-							gmData[i] = gmmtv[ i / 3].m;
-						else if (i % 3 == 1)
-							gmData[i] = gmmtv[i / 3].v;
-						else
-							gmData[i] = gmmtv[i / 3].w;
+				//	9.2. GMM parameters
+				std::vector<dist::GMMTuple> gmmtv = boost::get<dist::GMM >(curDist).models;
+				for (int i = 0; i < GMs * 3; i++){
+					if (i % 3 == 0)
+						gmData[i] = gmmtv[i / 3].m;
+					else if (i % 3 == 1)
+						gmData[i] = gmmtv[i / 3].v;
+					else
+						gmData[i] = gmmtv[i / 3].w;
+				}
+				myFile.write((char*)(gmData), sizeof (float)*GMs * 3);
+			}
+			else if (s.compare(0, 15, "Histogram") == 0) {
+				//	8. distr type. 1: GaussianMixture. 2: Histogram
+				//	if Histogram:
+				int distrTypeNumber = 2;
+				myFile.write((char*)(&distrTypeNumber), sizeof (int));
+
+				dist::Histogram curHist = boost::get<dist::Histogram>(curDist);
+
+				int nbins = curHist.getBins();
+				float minv = curHist.getMinValue();
+				float maxv = curHist.getMaxValue();
+				//	9.1. number of bins
+				myFile.write((char*)&nbins, sizeof(int));
+				//	9.2. min/max values
+				myFile.write((char*)&minv, sizeof(float));
+				myFile.write((char*)&maxv, sizeof(float));
+
+				//	9.3. bin values
+				float * values = (float*)malloc(sizeof(float)*nbins);
+				for (int b = 0; b < nbins; b++)
+				{
+					values[b] = curHist.getBinValue(b);
+				}
+				myFile.write((char*)(values), sizeof(float)*nbins);
+				free(values);
+			}
+			else if (s.compare(0, 15, "JointGMM") == 0) {
+				int distrTypeNumber = 3;
+				myFile.write((char*)(&distrTypeNumber), sizeof (int));
+
+				//dist::JointGMM curJGMM = boost::get<dist::JointGMM>(vdist[c]);
+				dist::JointGMM curJGMM = boost::get<dist::JointGMM>(curDist);
+
+				//	9.1. number of variales and number of gaussian components
+				int nVar = curJGMM.getNumVariables();
+				int nComp = curJGMM.getNumComponents();
+
+				//	9.2. weights, mean, covariance matrix
+				int sizeEachComp = 1 + nVar + nVar*nVar;
+				float * values = (float*)malloc(sizeof(float)*sizeEachComp*nComp);
+				for (int c = 0; c < nComp; c++)
+				{
+					values[c*sizeEachComp] = curJGMM.getWeight(c);
+					dist::JointGaussian jg = curJGMM.getJointGaussian(c);
+					const ublas_vector curMean = jg.getMean();
+					const ublas_matrix curCov = jg.getCovariance();
+					for (int i = 0; i < nVar; i++){
+						values[c*sizeEachComp + i] = curMean(i);
 					}
-					myFile.write((char*)(gmData), sizeof (float)*GMs * 3);
-				}
-				else if (s.compare(0, 15, "Histogram") == 0) {
-					//	8. distr type. 1: GaussianMixture. 2: Histogram
-					//	if Histogram:
-					int distrTypeNumber = 2;
-					myFile.write((char*)(&distrTypeNumber), sizeof (int));
-
-					dist::Histogram curHist = boost::get<dist::Histogram>(vdist[c]);
-					
-					int nbins = curHist.getBins();
-					float minv = curHist.getMinValue();
-					float maxv = curHist.getMaxValue();
-					//	9.1. number of bins
-					myFile.write((char*)&nbins, sizeof(int));
-					//	9.2. min/max values
-					myFile.write((char*)&minv, sizeof(float));
-					myFile.write((char*)&maxv, sizeof(float));
-
-					//	9.3. bin values
-					float * tuple = (float*)malloc(sizeof(float)*nbins);
-					for (int b = 0; b < nbins; b++)
-					{
-						tuple[b] = curHist.getBinValue(b);
+					for (int j = 0; j < nVar; j++){
+						for (int i = 0; i < nVar; i++){
+							values[c*sizeEachComp + j*nVar + i] = curCov(j, i);//row major
+						}
 					}
-					myFile.write((char*)(tuple), sizeof(float)*nbins);
-					free(tuple);
 				}
-				else{
-					throw NotImplementedException();
-				}
+				myFile.write((char*)(values), sizeof(float)*sizeEachComp*nComp);
+				free(values);
+			}
+			else{
+				throw NotImplementedException();
 			}
 		}
-
-		delete [] gmData;
+		delete[] gmData;
 	}
 
 
@@ -267,12 +295,12 @@ namespace edda{
 		//		use the function writeGmmArrays()
 
 		char eddaFileMark[4] = { 'E', 'D', 'D', 'A' };
-		myFile.write(eddaFileMark, sizeof (char)*4);
+		myFile.write(eddaFileMark, sizeof (char)* 4);
 		char majorVersion = 0, minorVersion = 1;
 		myFile.write(&majorVersion, sizeof (char));
 		myFile.write(&minorVersion, sizeof (char));
 
-		
+
 		CartesianGrid *cartesianGrid = dynamic_cast<CartesianGrid *>(dataset->getGrid());
 
 		if (cartesianGrid) {
@@ -282,7 +310,7 @@ namespace edda{
 			myFile.write((char*)(dims), sizeof (int)* 3);
 			float spacing[3];
 			dataset->getSpacing(spacing[0], spacing[1], spacing[2]);
-			myFile.write((char*)(spacing), sizeof (float)*3);
+			myFile.write((char*)(spacing), sizeof (float)* 3);
 
 			DistrArray *array = dataset->getArray();
 			string dName = array->getDistrName();
@@ -295,7 +323,7 @@ namespace edda{
 				myFile.write((char*)(&distrTypeNumber), sizeof (int));
 
 				writeGmmArrays(myFile, array, stoi(dName.substr(15)));
-			}		
+			}
 			else if (dName.compare("Histogram") == 0) {
 				int distrTypeNumber = 2;
 				myFile.write((char*)(&distrTypeNumber), sizeof (int));
@@ -307,14 +335,14 @@ namespace edda{
 				throw NotImplementedException();
 			}
 
-			printf("Saving converted file to %s.\n", edda_file.c_str());		
+			printf("Saving converted file to %s.\n", edda_file.c_str());
 			myFile.close();
 		}
 		else {
 
 			// TODO for other grid types
 			throw NotImplementedException();
-		}		
+		}
 	}
 
 
