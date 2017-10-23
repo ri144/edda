@@ -13,6 +13,8 @@
 using namespace std;
 using namespace edda;
 
+//this file use old VTK IO type, which is not supported anymore. This file may be deleted in the future
+
 int main(int argc, char **argv)
 {
   srand(time(NULL));  // random seeding

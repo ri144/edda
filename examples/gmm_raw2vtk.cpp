@@ -12,6 +12,9 @@
 #include <io/edda_vtk_reader.h>
 #include <cmath>
 
+//this file use old VTK IO type, which is not supported anymore. This file may be deleted in the future
+
+
 #define vsp_new(T,x) vtkSmartPointer<T> x = vtkSmartPointer<T>::New()
 
 using namespace std;
