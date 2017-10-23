@@ -226,11 +226,10 @@ namespace edda {
 				boost::numeric::ublas::matrix_row<boost::numeric::ublas::matrix<float> > mr(samples, smpPtr);
 				std::copy(mr.begin(), mr.end(), s.begin());
 				std::vector<Real> score = gmm.getCompWgtLogProbability(s);
-				
-				log_likelihoods(smpPtr, 0) = 0;
-				
+				log_likelihoods(smpPtr, 0) = 0;		
+
 				double maxScore = score[0];
-				for (int j = 1; j < nComp; j++){
+				for (int j = 0; j < nComp; j++){
 					if (score[j] > maxScore)maxScore = score[j];
 				}
 				for (int j = 0; j < nComp; j++){
@@ -254,7 +253,7 @@ namespace edda {
 				}
 			}
 
-			//E step
+			//M step
 			ublas_vector weights(nComp);
 			for (int j = 0; j < nComp; j++){
 				weights(j) = 0;
