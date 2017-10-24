@@ -45,7 +45,7 @@ int main(int argc, char* argv[])
     FILE *fIn = fopen(filename.c_str(),"rb");
     if(!fIn)
     {
-        fprintf(stderr, "Error opening file\n");
+		fprintf(stderr, "Error opening file %s\n", filename.c_str());
         exit(13);
     }
     size_t readStatus = fread(inData, sizeof(float), xdim*ydim*zdim, fIn);
@@ -77,10 +77,10 @@ int main(int argc, char* argv[])
     				{
     					for(size_t xx=x; xx<x+blockXdim; xx++)
     					{
-							//duplicate the same number 3 times to fake a vector3 data
+							//duplicate the same number 3 times with a little change, to fake a vector3 data
     						data1[i] = inData[zz*xdim*ydim + yy*xdim + xx];
-							data2[i] = inData[zz*xdim*ydim + yy*xdim + xx];
-							data3[i] = inData[zz*xdim*ydim + yy*xdim + xx];
+							data2[i] = inData[zz*xdim*ydim + yy*xdim + xx]+1;
+							data3[i] = inData[zz*xdim*ydim + yy*xdim + xx]+2;
 							i++;
     					}
     				}

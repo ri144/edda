@@ -43,6 +43,8 @@ endif()
 # All warnings on
 #set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}  -Wall)
 
+set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}  -fext-numeric-literals")
+
 
 # Load settings for the boost project.
 find_package (Boost REQUIRED)
@@ -53,6 +55,7 @@ if (Boost_FOUND)
 else ()
 set ( BOOST_ROOT "/usr/local" CACHE PATH "the root directory containing Boost")
 endif ()
+set ( BOOST_ROOT "/usr/local" CACHE PATH "the root directory containing Boost")
 
 # default CUDA off
 set(EDDA_BUILD_WITH_CUDA OFF)

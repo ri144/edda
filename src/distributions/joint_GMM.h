@@ -133,6 +133,10 @@ namespace edda {
 				}
 			}
 
+			int getNumVariables(){ return nVar; };
+			int getNumComponents(){ return nComp; };
+			Real getWeight(int i){ return weights[i]; };//may need to add check to i
+			JointGaussian getJointGaussian(int i) { return gaus[i]; };//may need to  add check to i
 		protected:
 			std::vector<Real> weights;
 			std::vector<JointGaussian> gaus;
@@ -222,8 +226,7 @@ namespace edda {
 				boost::numeric::ublas::matrix_row<boost::numeric::ublas::matrix<float> > mr(samples, smpPtr);
 				std::copy(mr.begin(), mr.end(), s.begin());
 				std::vector<Real> score = gmm.getCompWgtLogProbability(s);
-
-				log_likelihoods(smpPtr, 0) = 0;
+				log_likelihoods(smpPtr, 0) = 0;		
 
 				double maxScore = score[0];
 				for (int j = 0; j < nComp; j++){

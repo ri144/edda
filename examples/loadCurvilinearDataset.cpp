@@ -10,7 +10,7 @@
 #include "io/edda_vtk_reader.h"
 #include "dataset/dataset.h"
 
-
+//this file use old VTK IO type, which is not supported anymore. This file may be deleted in the future
 
 using namespace std;
 using namespace edda;
