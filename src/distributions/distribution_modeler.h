@@ -17,6 +17,11 @@
 #include "distributions/histogram.h"
 #include <distributions/estimate_gmm.h>
 #include "distributions/variant.h"
+
+#include "distributions/joint_GMM.h"
+#include "distributions/joint_gaussian.h"
+#include "distributions/joint_histogram.h"
+
 #include "dataset/dataset.h"
 #include "dataset/distr_array.h"
 #include "core/interpolator.h"
@@ -61,6 +66,20 @@ public:
 		dist::Histogram new_distr;
 		new_distr = eddaComputeHistogram(data, size, binCount);
 
+		distArray[index] = new_distr;
+	}
+	void computeJointGMM(std::vector<Real*>& data, size_t size, size_t nGmm, size_t index)
+	{
+		dist::JointGMM new_distr;
+		new_distr = eddaComputeJointGMM(data, size, nGmm);
+		
+		distArray[index] = new_distr;
+	}
+	void computeJointHistogram(std::vector<Real*>& data, size_t size, const std::vector<Real>& mins, const std::vector<Real>& maxs, const std::vector<int>& nBins, size_t index)
+	{
+		dist::JointHistogram new_distr;
+		new_distr = dist::eddaComputeJointHistogram(data, size, mins, maxs, nBins);
+		
 		distArray[index] = new_distr;
 	}
 	DistrArray * getDistrArray()
