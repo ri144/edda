@@ -72,7 +72,7 @@ int main(int argc, char* argv[])
     	fprintf(stderr, "Wrong dimension combination\n");
         exit(14);
     }
-
+	std::cout << "successfully read the file\n";
     //edda data modeling
 	DistributionModeler dm(newW*newH*newD);   
 	
@@ -99,9 +99,10 @@ int main(int argc, char* argv[])
     				}
     			}
 
-                //std::cout << "dimensions: [" << z << "][" << y << "][" << x << "]\n";
+                std::cout << "dimensions: [" << z << "][" << y << "][" << x << "]\n";
+
     			
-				dm.computeGMM(data, blockXdim*blockYdim*blockZdim, 2, counter);
+				dm.computeGMM(data, blockXdim*blockYdim*blockZdim, 3, counter);
 
 				counter++;
     		}
