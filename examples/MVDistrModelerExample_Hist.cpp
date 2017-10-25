@@ -90,9 +90,7 @@ int main(int argc, char* argv[])
 
 
     //edda ensemble data modeling
-    DistributionModeler dm1(newW*newH*newD);   
-    DistributionModeler dm2(newW*newH*newD);   
-    DistributionModeler dm3(newW*newH*newD);   
+    DistributionModeler mv_dm(newW*newH*newD);      
 
     cout << "starting partitioning\n";
     int counter =0;
@@ -104,9 +102,13 @@ int main(int argc, char* argv[])
             for(size_t x=0; x<xdim; x += blockXdim)
             {
 
-                float *data1 = new float[blockXdim*blockYdim*blockZdim];
-                float *data2 = new float[blockXdim*blockYdim*blockZdim];
-                float *data3 = new float[blockXdim*blockYdim*blockZdim];
+                Real* data1 = (Real*)malloc(sizeof(Real)*blockXdim*blockYdim*blockZdim);
+		Real* data2 = (Real*)malloc(sizeof(Real)*blockXdim*blockYdim*blockZdim);
+		Real* data3 = (Real*)malloc(sizeof(Real)*blockXdim*blockYdim*blockZdim);
+		std::vector<Real> min_val(3, FLT_MAX);
+		std::vector<Real> max_val(3, -FLT_MAX);
+		std::vector<int> bins(3, 30);		
+		
 
                 int i = 0;
                 for(size_t zz=z; zz<z+blockZdim; zz++)
@@ -115,27 +117,37 @@ int main(int argc, char* argv[])
                     {
                         for(size_t xx=x; xx<x+blockXdim; xx++)
                         {
-                            data1[i] = inData1[zz*xdim*ydim + yy*xdim + xx];
-                            data2[i] = inData2[zz*xdim*ydim + yy*xdim + xx];
-                            data3[i] = inData3[zz*xdim*ydim + yy*xdim + xx];
+                            data1[i] = (Real)(inData1[zz*xdim*ydim + yy*xdim + xx]);
+                            data2[i] = (Real)(inData2[zz*xdim*ydim + yy*xdim + xx]);
+                            data3[i] = (Real)(inData3[zz*xdim*ydim + yy*xdim + xx]);
+			    if(data1[i]<min_val[0]) min_val[0] = data1[i];
+			    if(data1[i]>max_val[0]) max_val[0] = data1[i];
+			    if(data2[i]<min_val[1]) min_val[1] = data2[i];
+			    if(data2[i]>max_val[1]) max_val[1] = data2[i];
+			    if(data3[i]<min_val[2]) min_val[2] = data3[i];
+			    if(data3[i]>max_val[2]) max_val[2] = data3[i];
                             i++;
                         }
                     }
                 }
+
+		std::vector<Real*> trainSamples;
+		trainSamples.push_back(data1);
+		trainSamples.push_back(data2);
+		trainSamples.push_back(data3);
+		
                 std::cout << "dimensions: [" << z << "][" << y << "][" << x << "]\n";
-                dm1.computeGMM(data1, blockXdim*blockYdim*blockZdim, 2, counter);
-                dm2.computeGMM(data2, blockXdim*blockYdim*blockZdim, 2, counter);
-                dm3.computeGMM(data3, blockXdim*blockYdim*blockZdim, 2, counter);
-                counter++;
+                                
+		mv_dm.computeJointHistogram(trainSamples, blockXdim*blockYdim*blockZdim, min_val, max_val, bins, counter);
+		
+		counter++;
             }
         }
     }
-    std::vector<DistrArray *> dVec;
-    dVec.push_back(dm1.getDistrArray());
-    dVec.push_back(dm2.getDistrArray());
-    dVec.push_back(dm3.getDistrArray());
-
-    Dataset<Real> *ds = new Dataset<Real> (new RegularCartesianGrid(newW, newH, newD), dVec);
+	std::vector<DistrArray *> dVec;
+	dVec.push_back(mv_dm.getDistrArray());
+	
+	Dataset<Real> *ds = new Dataset<Real> (new RegularCartesianGrid(newW, newH, newD), dVec);
     
-  	return 0;
+	return 0;
 }
