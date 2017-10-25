@@ -34,6 +34,8 @@ namespace edda{
 		}
 	}
 
+
+	//writeGmmArrays() and writeHistoArrays() are used for early versions which did not support mixed array. Since when the array is not mixed, some space saving can be done, we saved these two functions in case in the future we will do space optimization
 	void writeGmmArrays(ofstream & myFile, DistrArray *array, int GMs)
 	{
 		//1. number of array components
@@ -73,7 +75,6 @@ namespace edda{
 			throw NotImplementedException();
 		}
 	}
-
 	void writeHistoArrays(ofstream & myFile, DistrArray *array)
 	{
 		//1. number of array components
@@ -241,28 +242,36 @@ namespace edda{
 				int distrTypeNumber = 3;
 				myFile.write((char*)(&distrTypeNumber), sizeof (int));
 
+
+				///!!!here this step cannot get correct JointGMM
 				//dist::JointGMM curJGMM = boost::get<dist::JointGMM>(vdist[c]);
 				dist::JointGMM curJGMM = boost::get<dist::JointGMM>(curDist);
 
 				//	9.1. number of variales and number of gaussian components
 				int nVar = curJGMM.getNumVariables();
 				int nComp = curJGMM.getNumComponents();
+				myFile.write((char*)(&nVar), sizeof(int));
+				myFile.write((char*)(&nComp), sizeof(int));
 
 				//	9.2. weights, mean, covariance matrix
-				int sizeEachComp = 1 + nVar + nVar*nVar;
+				int sizeEachComp = 1 + nVar + (nVar*nVar - (nVar - 1)*(nVar - 1));
 				float * values = (float*)malloc(sizeof(float)*sizeEachComp*nComp);
 				for (int c = 0; c < nComp; c++)
 				{
 					values[c*sizeEachComp] = curJGMM.getWeight(c);
+
 					dist::JointGaussian jg = curJGMM.getJointGaussian(c);
 					const ublas_vector curMean = jg.getMean();
 					const ublas_matrix curCov = jg.getCovariance();
 					for (int i = 0; i < nVar; i++){
 						values[c*sizeEachComp + i] = curMean(i);
 					}
+					//since the cov matrix must be symmetric, only save half
+					int count = 0;
 					for (int j = 0; j < nVar; j++){
-						for (int i = 0; i < nVar; i++){
-							values[c*sizeEachComp + j*nVar + i] = curCov(j, i);//row major
+						for (int i = j; i < nVar; i++){
+							values[c*sizeEachComp + 1 + nVar + count] = curCov(j, i);//row major
+							count++;
 						}
 					}
 				}
@@ -274,75 +283,6 @@ namespace edda{
 			}
 		}
 		delete[] gmData;
-	}
-
-
-	template <typename T>
-	void writeEddaDatasetTemplate(shared_ptr<Dataset<T> > dataset, const string &edda_file)
-	{
-		const string array_name_prefix = "";
-
-		ofstream myFile(edda_file.c_str(), ios::out | ios::binary);
-
-		//1. "EDDA" as a marker
-		//2. version number
-		//3. gridType. 1: Regular CartesianGrid.
-		//if Regular CartesianGrid:
-		//	4. dimension
-		//	5. spacing
-		//	6. distr type. 1: GaussianMixture. 2: Histogram
-		//	if GaussianMixture:
-		//		use the function writeGmmArrays()
-
-		char eddaFileMark[4] = { 'E', 'D', 'D', 'A' };
-		myFile.write(eddaFileMark, sizeof (char)* 4);
-		char majorVersion = 0, minorVersion = 1;
-		myFile.write(&majorVersion, sizeof (char));
-		myFile.write(&minorVersion, sizeof (char));
-
-
-		CartesianGrid *cartesianGrid = dynamic_cast<CartesianGrid *>(dataset->getGrid());
-
-		if (cartesianGrid) {
-			int gridTypeNumber = 1;
-			myFile.write((char*)(&gridTypeNumber), sizeof (int));
-			int *dims = dataset->getDimension();
-			myFile.write((char*)(dims), sizeof (int)* 3);
-			float spacing[3];
-			dataset->getSpacing(spacing[0], spacing[1], spacing[2]);
-			myFile.write((char*)(spacing), sizeof (float)* 3);
-
-			DistrArray *array = dataset->getArray();
-			string dName = array->getDistrName();
-
-			if (dName.compare(0, 15, "GaussianMixture") == 0) {
-				// Only compare the first 15 chars because this string ends with the number of Gaussian models
-				// Specified in edda::dist::GaussianMixture			
-
-				int distrTypeNumber = 1;
-				myFile.write((char*)(&distrTypeNumber), sizeof (int));
-
-				writeGmmArrays(myFile, array, stoi(dName.substr(15)));
-			}
-			else if (dName.compare("Histogram") == 0) {
-				int distrTypeNumber = 2;
-				myFile.write((char*)(&distrTypeNumber), sizeof (int));
-
-				writeHistoArrays(myFile, array);
-			}
-			else {
-				cout << "Edda Writer: Unsupported array type" << endl;
-				throw NotImplementedException();
-			}
-
-			printf("Saving converted file to %s.\n", edda_file.c_str());
-			myFile.close();
-		}
-		else {
-
-			// TODO for other grid types
-			throw NotImplementedException();
-		}
 	}
 
 

@@ -71,24 +71,10 @@ int main()
 			trainSamples.push_back(varB);
 			array[dsV*dsUs + dsU] = eddaComputeJointGMM(trainSamples, blockSize*blockSize, nGmmComp);
 
-			//resample this block and write to image		
-			for (int i = 0; i < blockSize; i++){
-				for (int j = 0; j < blockSize; j++){
-					std::vector<Real> sample = getJointSample(array[dsV*dsUs + dsU], rng);
+			JointGMM test = eddaComputeJointGMM(trainSamples, blockSize*blockSize, nGmmComp);
+			array[dsV*dsUs + dsU] = test;
 
-					int rawV = dsV*blockSize + i;//u and v in the original image resolution
-					int rawU = dsU*blockSize + j;
-
-					//trim value to 0-255, it possible to sample any value from gaussian
-					//and store back to image buffer
-					for (int k = 0; k < nVar; k++){
-						if (sample[k] < 0)  sample[k] = 0;
-						if (sample[k] > 255)sample[k] = 255;
-
-						optImage.bitmapImage[(rawV*image.width + rawU) * 3 + k] = sample[k];
-					}
-				}
-			}
+			int s = 9;
 		}
 	}
 
@@ -103,6 +89,8 @@ int main()
 	{
 		pArray[i] = array[i];
 	}
+
+	///!!!here this step is probably wrong
 	DistrArray * abs_array = new ScalarDistrArray<dist::Variant>(pArray);
 	dVec.push_back(abs_array);
 
@@ -114,7 +102,7 @@ int main()
 	writeEddaDataset(shr_ds, "testDataImage.edda");
 
 	//read the dataset using the reader
-	//shared_ptr<Dataset<Real>> shr_ds2 = loadEddaScalarDataset_noneVTK("testDataImage.edda");
+	shared_ptr<Dataset<Real>> shr_ds2 = loadEddaScalarDataset_noneVTK("testDataImage.edda");
 
 
 	// safe to free data, after constructing the distribution
@@ -123,7 +111,7 @@ int main()
 	free(varB);
 
 	//write three images to disk
-	optImage.writeImage(std::string("jointGMMTestOutput.bmp").c_str());//this is the output file name
+	//optImage.writeImage(std::string("jointGMMTestOutput.bmp").c_str());//this is the output file name
 
 	std::cout << "Press any key to finish" << std::endl;
 	getchar();

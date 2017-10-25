@@ -53,6 +53,14 @@ namespace edda {
 			{
 			}
 
+
+			///
+			/// \brief Constructor by giving parameters
+			///
+			JointGMM(std::vector<Real> _weights, std::vector<JointGaussian> _gaus, int _nVar, int _nComp) : weights(_weights), gaus(_gaus), nVar(_nVar), nComp(_nComp)
+			{
+			}
+
 			///
 			/// \brief Return probability of x
 			///

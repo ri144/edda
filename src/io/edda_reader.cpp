@@ -185,61 +185,89 @@ namespace edda {
 	{
 		shared_ary<dist::Variant> pArray(new dist::Variant[n], n);
 
-		//int nc;
-		//myfile.read((char*)(&nc), sizeof (int));
-		//if (nc == 1){
-			float* gmData = new float[333 * 3]; // !!! this array is designed to avoid the time cost by multiple memory allocation and deletion. better check if the size is big enough before each time using it !!!
+		float* distData = new float[333 * 3]; // !!! this array is designed to avoid the time cost by multiple memory allocation and deletion. better check if the size is big enough before each time using it !!!
 
-			for (int j = 0; j < n; j++){
-				int distrTypeNumber = 1;
-				myfile.read((char*)(&distrTypeNumber), sizeof (int));
-				if (distrTypeNumber == 1){ //gaussian
-					
-					int nGM;
-					myfile.read((char*)(&nGM), sizeof (int));
+		for (int j = 0; j < n; j++){
+			int distrTypeNumber = 1;
+			myfile.read((char*)(&distrTypeNumber), sizeof (int));
+			if (distrTypeNumber == 1){ //gaussian
 
-					myfile.read((char*)(gmData), sizeof (float)*nGM * 3);
+				int nGM;
+				myfile.read((char*)(&nGM), sizeof (int));
 
-					dist::GMM new_gmm = dist::GMM(nGM);
-					for (int m = 0; m<nGM; m++)
-					{
-						new_gmm.models[m].m = gmData[3 * m];
-						new_gmm.models[m].v = gmData[3 * m + 1];
-						new_gmm.models[m].w = gmData[3 * m + 2];
-					}
-					pArray[j] = new_gmm;
+				myfile.read((char*)(distData), sizeof (float)*nGM * 3);
+
+				dist::GMM new_gmm = dist::GMM(nGM);
+				for (int m = 0; m<nGM; m++)
+				{
+					new_gmm.models[m].m = distData[3 * m];
+					new_gmm.models[m].v = distData[3 * m + 1];
+					new_gmm.models[m].w = distData[3 * m + 2];
 				}
-				else if (distrTypeNumber == 2){ //histogram
-					int nbins;
-					myfile.read((char*)(&nbins), sizeof (int));
-
-					myfile.read((char*)(gmData), sizeof (float));
-					myfile.read((char*)(gmData+1), sizeof (float));			
-					myfile.read((char*)(gmData+2), sizeof (float)*nbins);
-
-					pArray[j] = Histogram(gmData, nbins);
-				}
-				else if (distrTypeNumber == 3){ //joint gmm
-					int nVar, nComp;
-					myfile.read((char*)(&nVar), sizeof (int));
-					myfile.read((char*)(nComp), sizeof (int));
-
-					//... to be done
-				}
-				else{
-					myfile.close();
-					throw NotImplementedException();
-				}
+				pArray[j] = new_gmm;
 			}
+			else if (distrTypeNumber == 2){ //histogram
+				int nbins;
+				myfile.read((char*)(&nbins), sizeof (int));
 
-			delete[] gmData;
+				myfile.read((char*)(distData), sizeof (float));
+				myfile.read((char*)(distData + 1), sizeof (float));
+				myfile.read((char*)(distData + 2), sizeof (float)*nbins);
 
-			return (DistrArray *)(new ScalarDistrArray<dist::Variant>(pArray));		
-		//}
-		//else{
-		//	myfile.close();
-		//	throw NotImplementedException();
-		//}
+				pArray[j] = Histogram(distData, nbins);
+			}
+			else if (distrTypeNumber == 3){ //joint gmm
+				int nVar, nComp;
+				myfile.read((char*)(&nVar), sizeof (int));
+				myfile.read((char*)(&nComp), sizeof (int));
+
+				int sizeEachComp = 1 + nVar + (nVar*nVar - (nVar - 1)*(nVar - 1));
+
+				myfile.read((char*)(distData), sizeof (float)* sizeEachComp * nComp);
+
+
+				std::vector<Real> weights(nComp);
+				std::vector<JointGaussian> gaus(nComp);
+
+				for (int c = 0; c < nComp; c++)
+				{
+					weights[c] = distData[sizeEachComp * c];
+
+					ublas_vector mean = ublas_vector(nVar, 0);
+					ublas_matrix cov = ublas::zero_matrix<Real>(nVar, nVar);;
+					for (int j = 0; j < nVar; j++){
+						mean(j) = distData[sizeEachComp * c + 1 + j];
+					}
+
+					int count = 0;
+					for (int j = 0; j < nVar; j++){
+						for (int i = j; i < nVar; i++){
+							cov(j, i) = distData[c*sizeEachComp + j*nVar + count];//cov row major
+							count++;
+						}
+					}
+
+					for (int j = 0; j < nVar; j++){
+						for (int i = 0; i < j; i++){
+							cov(j, i) = cov(i, j);
+						}
+					}
+
+					gaus[c] = JointGaussian(mean, cov);
+				}
+
+				pArray[j] = JointGMM(weights, gaus, nVar, nComp);
+
+			}
+			else{
+				myfile.close();
+				throw NotImplementedException();
+			}
+		}
+
+		delete[] distData;
+
+		return (DistrArray *)(new ScalarDistrArray<dist::Variant>(pArray));
 	}
 	
 
@@ -269,6 +297,8 @@ namespace edda {
 		myfile.read(&minorVersion, sizeof(char));
 
 		if (majorVersion == 0 && minorVersion == 1){
+			/*
+			//not supported any more
 			int gridTypeNumber;
 			myfile.read((char*)(&gridTypeNumber), sizeof(int));
 			if (gridTypeNumber == 1){
@@ -301,6 +331,7 @@ namespace edda {
 				myfile.close();
 				throw NotImplementedException();
 			}
+			*/
 		}
 		else if (majorVersion == 0 && minorVersion == 2){
 			int gridTypeNumber;
@@ -335,7 +366,6 @@ namespace edda {
 		}
 
 		printf("Read file from %s.\n", edda_file.c_str());
-
 	}
 
 
