@@ -99,9 +99,10 @@ int main(int argc, char* argv[])
     				}
     			}
 
-                		std::cout << "dimensions: [" << z << "][" << y << "][" << x << "]\n";
+                std::cout << "dimensions: [" << z << "][" << y << "][" << x << "]\n";
+
     			
-				dm.computeGMM(data, blockXdim*blockYdim*blockZdim, 2, counter);
+				dm.computeGMM(data, blockXdim*blockYdim*blockZdim, 3, counter);
 
 				counter++;
     		}

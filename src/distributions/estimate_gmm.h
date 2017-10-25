@@ -143,7 +143,7 @@ inline double computeLogLikelihood(int n, double* data,int k, double* prob,doubl
 dist::GMM eddaComputeGMM(double *dataArray, int nSamples, int nComps)
 {
 	double eps = 1e-6;
-	int GMMs = nComps;
+    int GMMs = nComps;
 
 	if (nSamples<GMMs)
 	{
@@ -186,8 +186,9 @@ dist::GMM eddaComputeGMM(double *dataArray, int nSamples, int nComps)
 			sd[j] = sd1;
 		}
 
-		//Do while loop for iterative estimation
-		/////////////////////////////////////////////////
+		//Do while loop for iterative estimation (limit the maximum interations as 100)
+        /////////////////////////////////////////////////
+        int iters = 0;
 		do{
 			//save prev likelihood
 			prev_llk = llk;
@@ -199,9 +200,10 @@ dist::GMM eddaComputeGMM(double *dataArray, int nSamples, int nComps)
 			update_parameters(nSamples, dataArray, GMMs, weight, mean, sd, class_prob);
 
 			//compute new likelihood
-			llk = computeLogLikelihood(nSamples, dataArray, GMMs, weight, mean, sd);
-
-		} while (!check_convergence(llk, prev_llk, eps));
+            llk = computeLogLikelihood(nSamples, dataArray, GMMs, weight, mean, sd);
+            
+            iters ++;
+		} while (!check_convergence(llk, prev_llk, eps) && iters <100);
 
 		//Update the gmm object with estimated values
 		/////////////////////////////////////////////////
@@ -244,7 +246,7 @@ void eddaComputeEM(double *samples, int numSamples, dist::GaussianMixture<GMMs>*
         double llk = 0, prev_llk = 0;
         double *mean,*sd,*weight;
         double **class_prob;
-
+        
         //Allocate memories for computation
         /////////////////////////////////////////////////////////////
         class_prob = (double **) malloc(sizeof(double *)*numSamples);
@@ -258,24 +260,25 @@ void eddaComputeEM(double *samples, int numSamples, dist::GaussianMixture<GMMs>*
         //initial estimate of parameters
         /////////////////////////////////////////////
         double mean1 = 0.0, sd1 = 0.0;
-
+        
         for (int i = 0; i < numSamples; i++)
             mean1 += samples[i];
         mean1 /= numSamples;
-
+        
         for (int i = 0; i < numSamples; i++)
             sd1 += (samples[i] - mean1)*(samples[i] - mean1);
         sd1 = sqrt(sd1 / numSamples);
-
+        
         for (int j = 0; j < GMMs; j++)
         {
             weight[j] = 1.0 / GMMs;
             mean[j] = samples[rand() % numSamples];
             sd[j] = sd1;
         }
-
-        //Do while loop for iterative estimation
+        
+        //Do while loop for iterative estimation (limit the maximum interations as 100)
         /////////////////////////////////////////////////
+        int iters = 0;
         do{
             //save prev likelihood
             prev_llk = llk;
@@ -289,8 +292,9 @@ void eddaComputeEM(double *samples, int numSamples, dist::GaussianMixture<GMMs>*
             //compute new likelihood
             llk = computeLogLikelihood(numSamples, samples, GMMs, weight, mean, sd);
 
-        } while (!check_convergence(llk, prev_llk, eps));
-
+            iters ++;
+        } while (!check_convergence(llk, prev_llk, eps) && iters < 100 );
+        
         //Update the gmm object with estimated values
         /////////////////////////////////////////////////
         for(int m=0;m<GMMs;m++)
