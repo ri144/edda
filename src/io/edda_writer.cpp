@@ -35,149 +35,6 @@ namespace edda{
 	}
 
 
-	//writeGmmArrays() and writeHistoArrays() are used for early versions which did not support mixed array. Since when the array is not mixed, some space saving can be done, we saved these two functions in case in the future we will do space optimization
-	void writeGmmArrays(ofstream & myFile, DistrArray *array, int GMs)
-	{
-		//1. number of array components
-		//2. Is # of Gaussian components uniform (1-yes, 0-no)
-		int nc = array->getNumComponents();
-		myFile.write((char*)(&nc), sizeof (int));
-		int isNumGaussianUniform = 1;	//TODO: should test before executing
-		myFile.write((char*)(&isNumGaussianUniform), sizeof (int));
-
-		if (isNumGaussianUniform == 1){
-			//3. # of Gaussian components
-			myFile.write((char*)(&GMs), sizeof (int));
-
-			//write data
-			int n = array->getLength();
-			float* gmData = new float[GMs * 3 * nc*n];
-			for (int c = 0; c < nc; c++){
-				for (int j = 0; j < n; j++){
-					for (int i = 0; i < GMs * 3; i++){
-						int index = c*n*GMs * 3 + j*GMs * 3 + i;
-						vector<dist::Variant> vdist = array->getDistrVector(j);
-						if (i % 3 == 0)
-							gmData[index] = getGmmModels(vdist[c], GMs, i / 3).m;
-						else if (i % 3 == 1)
-							gmData[index] = getGmmModels(vdist[c], GMs, i / 3).v;
-						else
-							gmData[index] = getGmmModels(vdist[c], GMs, i / 3).w;
-					}
-				}
-			}
-
-			myFile.write((char*)(gmData), sizeof (float)*GMs * 3 * nc*n);
-
-			delete gmData;
-		}
-		else{
-			throw NotImplementedException();
-		}
-	}
-	void writeHistoArrays(ofstream & myFile, DistrArray *array)
-	{
-		//1. number of array components
-		//2. Is # of bins components uniform (1-yes, 0-no)
-		int nc = array->getNumComponents();
-		myFile.write((char*)(&nc), sizeof (int));
-
-		int isNumBinsUniform = 0;
-		myFile.write((char*)(&isNumBinsUniform), sizeof (int));
-
-		if (isNumBinsUniform == 1){
-			//3. # of Gaussian components
-			vector<dist::Variant> vdist = array->getDistrVector(0);
-			int nbins = boost::get<dist::Histogram>(vdist[0]).getBins();
-			myFile.write((char*)(&nbins), sizeof (int));
-		}
-
-		//4. Is min and max value uniform (1-yes, 0-no)
-		int isMinMaxValueUniform = 0;
-		myFile.write((char*)(&isMinMaxValueUniform), sizeof (int));
-
-		if (isMinMaxValueUniform == 1){
-			//5. Min value & Max value
-			vector<dist::Variant> vdist = array->getDistrVector(0);
-			float minv = boost::get<dist::Histogram>(vdist[0]).getMinValue();
-			float maxv = boost::get<dist::Histogram>(vdist[0]).getMaxValue();
-			myFile.write((char*)(&minv), sizeof (float));
-			myFile.write((char*)(&maxv), sizeof (float));
-		}
-
-		if (isNumBinsUniform == 1 && isMinMaxValueUniform == 1){
-			//not tested yet
-			vector<dist::Variant> vdist = array->getDistrVector(0);
-			int nbins = boost::get<dist::Histogram>(vdist[0]).getBins();
-			float* tuple = (float*)malloc(sizeof(float)*nbins);
-
-			int n = array->getLength(); //may need to process fake dataset such as n==0?
-			for (int j = 0; j < n; j++)
-			{
-				vector<dist::Variant> vdist = array->getDistrVector(j);
-				for (int b = 0; b < nbins; b++)
-				{
-					tuple[b] = boost::get<dist::Histogram>(vdist[0]).getBinValue(b);
-				}
-				myFile.write((char*)(tuple), sizeof(float)*nbins);
-			}
-
-			free(tuple);
-		}
-		else if (isNumBinsUniform == 1 && isMinMaxValueUniform != 1){
-			throw NotImplementedException();
-		}
-		else if (isNumBinsUniform != 1 && isMinMaxValueUniform == 1){
-			throw NotImplementedException();
-		}
-		else{ //(isNumBinsUniform == 0 && isMinMaxValueUniform == 0)
-			int n = array->getLength();
-			for (int c = 0; c < nc; c++){
-				int* headerBinary_nbins = (int*)malloc(sizeof(int)*n);
-				float* headerBinary_minMaxV = (float*)malloc(sizeof(float)* 2 * n);
-
-				for (int j = 0; j < n; j++)
-				{
-					vector<dist::Variant> vdist = array->getDistrVector(j);
-
-					dist::Histogram curHist = boost::get<dist::Histogram>(vdist[c]);
-					int nbins = curHist.getBins();
-					headerBinary_nbins[j] = nbins;
-					float minv = curHist.getMinValue();
-					float maxv = curHist.getMaxValue();
-					headerBinary_minMaxV[2 * j] = minv;
-					headerBinary_minMaxV[2 * j + 1] = maxv;
-				}
-				myFile.write((char*)(headerBinary_nbins), sizeof(float)*n);
-				myFile.write((char*)(headerBinary_minMaxV), sizeof(float)* 2 * n);
-				free(headerBinary_nbins);
-				free(headerBinary_minMaxV);
-			}
-
-			for (int c = 0; c < nc; c++){
-				for (int j = 0; j < n; j++)
-				{
-					vector<dist::Variant> vdist = array->getDistrVector(j);
-					dist::Histogram curHist = boost::get<dist::Histogram>(vdist[c]);
-
-					int nbins = curHist.getBins();
-					float * tuple = (float*)malloc(sizeof(float)*nbins);
-
-					for (int b = 0; b < nbins; b++)
-					{
-						tuple[b] = curHist.getBinValue(b);
-					}
-
-					myFile.write((char*)(tuple), sizeof(float)*nbins);
-
-					free(tuple);
-				}
-			}
-		}
-	}
-
-
-
 	void writeMixArrays(ofstream & myFile, DistrArray *array)
 	{
 		float* gmData = new float[1000]; // !!! this array is designed to avoid the time cost by multiple memory allocation and deletion. better check if the size is big enough before each time using it !!!
@@ -242,9 +99,7 @@ namespace edda{
 				int distrTypeNumber = 3;
 				myFile.write((char*)(&distrTypeNumber), sizeof (int));
 
-
 				///!!!here this step cannot get correct JointGMM
-				//dist::JointGMM curJGMM = boost::get<dist::JointGMM>(vdist[c]);
 				dist::JointGMM curJGMM = boost::get<dist::JointGMM>(curDist);
 
 				//	9.1. number of variales and number of gaussian components
@@ -254,7 +109,7 @@ namespace edda{
 				myFile.write((char*)(&nComp), sizeof(int));
 
 				//	9.2. weights, mean, covariance matrix
-				int sizeEachComp = 1 + nVar + (nVar*nVar - (nVar - 1)*(nVar - 1));
+				int sizeEachComp = 1 + nVar + (nVar + 1)*nVar / 2;
 				float * values = (float*)malloc(sizeof(float)*sizeEachComp*nComp);
 				for (int c = 0; c < nComp; c++)
 				{
@@ -264,7 +119,7 @@ namespace edda{
 					const ublas_vector curMean = jg.getMean();
 					const ublas_matrix curCov = jg.getCovariance();
 					for (int i = 0; i < nVar; i++){
-						values[c*sizeEachComp + i] = curMean(i);
+						values[c*sizeEachComp + 1 + i] = curMean(i);
 					}
 					//since the cov matrix must be symmetric, only save half
 					int count = 0;

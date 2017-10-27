@@ -75,6 +75,27 @@ public:
 		
 		distArray[index] = new_distr;
 	}
+
+	//temporary test function. will be deleted afterwards
+	void setJointGMM(dist::JointGMM  new_d, size_t index)
+	{
+		//distArray[index] = new_distr;
+		dist::JointGMM new_distr;
+		new_distr = new_d;
+		distArray[index] = new_distr;
+
+		cout << "in modeler func, joint GMM No. " << index << ":" << endl;
+		cout << distArray[index] << endl;
+	}
+
+	//temporary test function. will be deleted afterwards
+	void setJointGMM(int nVar, int nComp, ublas_vector &w, ublas_matrix &m, ublas_matrix &covs, size_t index)
+	{
+		dist::JointGMM new_distr;
+		new_distr.setGMM(nVar, nComp, w, m, covs);
+		distArray[index] = new_distr;
+	}
+
 	void computeJointHistogram(std::vector<Real*>& data, size_t size, const std::vector<Real>& mins, const std::vector<Real>& maxs, const std::vector<int>& nBins, size_t index)
 	{
 		dist::JointHistogram new_distr;
