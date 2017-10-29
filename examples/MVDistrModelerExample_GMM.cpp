@@ -140,6 +140,8 @@ int main(int argc, char* argv[])
 	
 
 	Dataset<Real> *ds = new Dataset<Real> (new RegularCartesianGrid(newW, newH, newD), dVec);
-    
+
+	shared_ptr<Dataset<Real>> shr_ds(ds);
+
 	return 0;
 }
