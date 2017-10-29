@@ -7,9 +7,11 @@
 #include <vtkFieldData.h>
 
 #include "distributions/gaussian_mixture.h"
+#include "distributions/gmm.h"
 #include "distributions/histogram.h"
-//#include "distributions/joint_gaussian.h"
+#include "distributions/joint_gaussian.h"
 #include "distributions/joint_GMM.h"
+#include "distributions/joint_histogram.h"
 
 #include "edda_writer.h"
 
@@ -99,7 +101,6 @@ namespace edda{
 				int distrTypeNumber = 3;
 				myFile.write((char*)(&distrTypeNumber), sizeof (int));
 
-				///!!!here this step cannot get correct JointGMM
 				dist::JointGMM curJGMM = boost::get<dist::JointGMM>(curDist);
 
 				//	9.1. number of variales and number of gaussian components
@@ -133,6 +134,76 @@ namespace edda{
 				myFile.write((char*)(values), sizeof(float)*sizeEachComp*nComp);
 				free(values);
 			}
+			else if (s.compare(0, 15, "JointHistogram") == 0) {
+				int distrTypeNumber = 4;
+				myFile.write((char*)(&distrTypeNumber), sizeof(int));
+
+				dist::JointHistogram curJHist = boost::get<dist::JointHistogram>(curDist);
+
+				//	number of variales
+				int num_vars = curJHist.getNumVars();
+				myFile.write((char*)(&num_vars), sizeof(int));
+
+				std::vector<float> temp(num_vars);//convert to float for the current version
+
+				std::vector<Real> min_vals = curJHist.getMinVals();
+				for (int v = 0; v < num_vars; v++) {
+					temp[v] = min_vals[v];
+				}
+				myFile.write((char*)(&(temp[0])), sizeof(float)*num_vars);
+
+				std::vector<Real> max_vals = curJHist.getMaxVals();
+				for (int v = 0; v < num_vars; v++) {
+					temp[v] = max_vals[v];
+				}
+				myFile.write((char*)(&(temp[0])), sizeof(float)*num_vars); 
+				
+				std::vector<Real> bin_widths = curJHist.getBinWidths();
+				for (int v = 0; v < num_vars; v++) {
+					temp[v] = bin_widths[v];
+				}
+				myFile.write((char*)(&(temp[0])), sizeof(float)*num_vars);
+
+				std::vector<int> num_bins = curJHist.getNumBins();
+				myFile.write((char*)(&(num_bins[0])), sizeof(int)*num_vars);
+
+				//next store the pdf
+				boost::unordered_map<std::vector<int>, Real> pdf = curJHist.getDistr();
+				//size of the map
+				int n_pdf = pdf.size();
+				myFile.write((char*)(&n_pdf), sizeof(int));
+				//each pair of the map
+				for (auto it = pdf.begin(); it != pdf.end(); ++it) {
+					std::vector<int> vint = it->first;
+					float r = (float)(it->second);
+					int n_vint = vint.size();
+					myFile.write((char*)(&n_vint), sizeof(int));
+					myFile.write((char*)(&(vint[0])), sizeof(int)*n_vint);
+					myFile.write((char*)(&r), sizeof(float));
+				}
+
+				//mean
+				std::vector<Real> mean = getJointMean(curJHist);
+				for (int v = 0; v < num_vars; v++) {
+					temp[v] = mean[v];
+				}
+				myFile.write((char*)(&(temp[0])), sizeof(float)*num_vars);
+
+				//cov matrix
+				ublas_matrix cov = curJHist.getCovariance();
+				int sizeHalfCovMat = (num_vars + 1)*num_vars / 2;
+				float * values = (float*)malloc(sizeof(float)*sizeHalfCovMat);
+				//since the cov matrix must be symmetric, only save half
+				int count = 0;
+				for (int j = 0; j < num_vars; j++) {
+					for (int i = j; i < num_vars; i++) {
+						values[count] = cov(j, i);//row major
+						count++;
+					}
+				}
+				myFile.write((char*)(values), sizeof(float)*sizeHalfCovMat);
+				free(values);
+			}
 			else{
 				throw NotImplementedException();
 			}
@@ -142,7 +213,7 @@ namespace edda{
 
 
 	template <typename T>
-	void writeEddaDatasetTemplateNew(shared_ptr<Dataset<T> > dataset, const string &edda_file)
+	void writeEddaDatasetTemplate(shared_ptr<Dataset<T> > dataset, const string &edda_file)
 	{
 		const string array_name_prefix = "";
 
@@ -190,13 +261,8 @@ namespace edda{
 		myFile.close();
 	}
 
-	void writeEddaDataset(shared_ptr<Dataset<VECTOR3> > dataset, const string &edda_file)
-	{
-		writeEddaDatasetTemplateNew(dataset, edda_file);
-	}
-
 	void writeEddaDataset(shared_ptr<Dataset<Real> > dataset, const string &edda_file)
 	{
-		writeEddaDatasetTemplateNew(dataset, edda_file);
+		writeEddaDatasetTemplate(dataset, edda_file);
 	}
 }

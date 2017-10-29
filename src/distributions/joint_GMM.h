@@ -37,7 +37,7 @@ namespace edda {
 		///
 		/// This is useful for applications to identify whether a class is a distribution-type class, by using ENABLE_IF_BASE_OF()
 		///
-		class EDDA_EXPORT JointGMM : public ContinuousDistributionTag, public JointDistributionTag {
+		class EDDA_EXPORT JointGMM : public ContinuousDistributionTag, public JointDistributionTag {		
 		public:
 
 			///
@@ -46,10 +46,18 @@ namespace edda {
 			JointGMM(){}
 
 			///
-			/// \brief Constructor by giving GMM's parameters
+			/// \brief Constructor by giving another JointGMM
 			///
 			JointGMM(const JointGMM &gmm)
 				: weights(gmm.weights),	gaus(gmm.gaus),	nVar(gmm.nVar),	nComp(gmm.nComp)
+			{
+			}
+
+			///
+			/// \brief Constructor by giving GMM's parameters
+			///
+			JointGMM(std::vector<Real> _weights, std::vector<JointGaussian> _gaus, int _nVar, int _nComp)
+				: weights(_weights), gaus(_gaus), nVar(_nVar), nComp(_nComp)
 			{
 			}
 

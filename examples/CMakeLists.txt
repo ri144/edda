@@ -15,6 +15,7 @@ set(sources
   scalarIOExample.cpp
   vectorIOExample.cpp
   jointGMMIOExample.cpp
+  jointHistIOExample.cpp
 )
 
 
