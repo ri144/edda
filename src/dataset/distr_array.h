@@ -188,7 +188,7 @@ public:
 ///
 /// \brief An array of joint distributions
 ///
-template<typename Distr, ENABLE_IF_BASE_OF(Distr, dist::JointDistributionTag)>
+template<typename Distr, ENABLE_IF_BASE_OF(Distr, dist::DistributionTag)>
 class JointDistrArray: public DistrArray
 {
 protected:

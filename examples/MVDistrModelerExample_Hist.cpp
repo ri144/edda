@@ -145,9 +145,17 @@ int main(int argc, char* argv[])
         }
     }
 	std::vector<DistrArray *> dVec;
-	dVec.push_back(mv_dm.getDistrArray());
+	dVec.push_back(mv_dm.getMVDistrArray(3));
 	
 	Dataset<Real> *ds = new Dataset<Real> (new RegularCartesianGrid(newW, newH, newD), dVec);
+
+    //Testing: to see if the edda dataset was properly created with the joint distribution.
+    /*shared_ptr<Dataset<Real>> shr_ds(ds);
+    std::cout<< "number of arrays :\n " << shr_ds->getNumDistrArray() << std::endl;
+
+    DistrArray *testArray = shr_ds->getArray(0);
+    std::cout << "testArray = " << testArray->getDistr(10) << std::endl;
+    std::cout << "=================================\n";*/
     
 	return 0;
 }
