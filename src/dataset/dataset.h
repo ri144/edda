@@ -24,7 +24,7 @@ template <typename T>
 class Dataset {
 protected:
 	Grid *pGrid;
-	DistrArray *pArray = 0;
+	DistrArray *pArray = 0; //will be deprecated
 	std::vector<DistrArray *> pVector;
 public:
 	Dataset(){
@@ -52,7 +52,7 @@ public:
 	}
 
 	Grid *getGrid() { return pGrid; }
-	DistrArray *getArray() { return pArray; }
+	DistrArray *getArray() { return pArray; } //will be deprecated
 
 	int getNumDistrArray(){ return pVector.size(); }
 	DistrArray *getArray(int i) {

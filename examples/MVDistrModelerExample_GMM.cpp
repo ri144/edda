@@ -154,6 +154,5 @@ int main(int argc, char* argv[])
 	std::cout << "testArray = " << testArray->getDistr(10) << std::endl;
 	std::cout << "=================================\n";*/
 
-    
 	return 0;
 }

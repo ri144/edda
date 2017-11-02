@@ -14,7 +14,8 @@ set(sources
   MVDistrModelerExample_Hist.cpp
   scalarIOExample.cpp
   vectorIOExample.cpp
-  #jointGMMIOExample.cpp
+  jointGMMIOExample.cpp
+  jointHistIOExample.cpp
 )
 
 

@@ -42,7 +42,12 @@ typedef long long int64_t;
 struct NotImplementedException: public std::runtime_error {
   NotImplementedException() : std::runtime_error("Sorry, method not implemented.") {}
 };
+
 class OutOfBoundException{};
+
+struct NotSupportException : public std::runtime_error {
+	NotSupportException() : std::runtime_error("Sorry, method not supported.") {}
+};
 
 ///
 /// \brief This is useful to constrain what types are applicable for generic functions or classes.

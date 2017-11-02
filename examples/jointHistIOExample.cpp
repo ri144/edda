@@ -8,6 +8,10 @@
 #include "io/edda_reader.h"
 #include "io/edda_writer.h"
 
+
+#include "distributions/joint_histogram.h"
+
+
 using namespace edda;
 using namespace std;
 using namespace edda::dist;
@@ -48,7 +52,7 @@ int main(int argc, char* argv[])
 	int nComp = 2;
 
 
-	//from here to the creation of "Dataset<Real> *ds" is the same with the example in MVDistrModelerExample_GMM.cpp
+	//from here to the creation of "Dataset<Real> *ds" is the same with the example in MVDistrModelerExample_Hist.cpp
 	float *inData1;
 	inData1 = new float[xdim*ydim*zdim];
 
@@ -109,8 +113,6 @@ int main(int argc, char* argv[])
 		exit(14);
 	}
 
-
-	//edda ensemble data modeling
 	DistributionModeler mv_dm(newW*newH*newD);
 
 	cout << "starting partitioning\n";
@@ -126,6 +128,9 @@ int main(int argc, char* argv[])
 				Real* data1 = (Real*)malloc(sizeof(Real)*blockXdim*blockYdim*blockZdim);
 				Real* data2 = (Real*)malloc(sizeof(Real)*blockXdim*blockYdim*blockZdim);
 				Real* data3 = (Real*)malloc(sizeof(Real)*blockXdim*blockYdim*blockZdim);
+				std::vector<Real> min_val(3, FLT_MAX);
+				std::vector<Real> max_val(3, -FLT_MAX);
+				std::vector<int> bins(3, 30);
 
 
 				int i = 0;
@@ -138,6 +143,12 @@ int main(int argc, char* argv[])
 							data1[i] = (Real)(inData1[zz*xdim*ydim + yy*xdim + xx]);
 							data2[i] = (Real)(inData2[zz*xdim*ydim + yy*xdim + xx]);
 							data3[i] = (Real)(inData3[zz*xdim*ydim + yy*xdim + xx]);
+							if (data1[i]<min_val[0]) min_val[0] = data1[i];
+							if (data1[i]>max_val[0]) max_val[0] = data1[i];
+							if (data2[i]<min_val[1]) min_val[1] = data2[i];
+							if (data2[i]>max_val[1]) max_val[1] = data2[i];
+							if (data3[i]<min_val[2]) min_val[2] = data3[i];
+							if (data3[i]>max_val[2]) max_val[2] = data3[i];
 							i++;
 						}
 					}
@@ -150,7 +161,7 @@ int main(int argc, char* argv[])
 
 				std::cout << "dimensions: [" << z << "][" << y << "][" << x << "]\n";
 
-				mv_dm.computeJointGMM(trainSamples, blockXdim*blockYdim*blockZdim, nComp, counter);
+				mv_dm.computeJointHistogram(trainSamples, blockXdim*blockYdim*blockZdim, min_val, max_val, bins, counter);
 
 				counter++;
 			}
@@ -163,17 +174,17 @@ int main(int argc, char* argv[])
 	shared_ptr<Dataset<Real>> shr_ds(ds);
 
 	//write the dataset using the writer
-	writeEddaDataset(shr_ds, "testDataJointGMM.edda");
+	writeEddaDataset(shr_ds, "testDataJointHist.edda");
 
 	//read the dataset using the reader
-	shared_ptr<Dataset<Real>> shr_ds2 = loadEddaScalarDataset_noneVTK("testDataJointGMM.edda");
-
+	shared_ptr<Dataset<Real>> shr_ds2 = loadEddaScalarDataset_noneVTK("testDataJointHist.edda");
+	
 
 	//basic compare
 	int numDistrArray1 = shr_ds->getNumDistrArray();
 	int numDistrArray2 = shr_ds2->getNumDistrArray();
 	if (numDistrArray1 != numDistrArray2){
-		cout << "Joint GMM IO failed! number of arrays changed! " << endl;
+		cout << "Joint Histogram IO failed! number of arrays changed! " << endl;
 		return 0;
 	}
 
@@ -182,37 +193,23 @@ int main(int argc, char* argv[])
 	int n1 = array1->getLength();
 	int n2 = array2->getLength();
 	if (n1 != n2){
-		cout << "Joint GMM IO failed! length of arrays changed! " << endl;
+		cout << "Joint Histogram IO failed! length of arrays changed! " << endl;
 		return 0;
 	}
 
 	//print and compare one arbitrary candidate
-	cout << endl << "Compare one single GMM from original dataset, and the dataset after IO: " << endl << endl;
+	cout << endl << "Compare one single Histogram from original dataset, and the dataset after IO: " << endl << endl;
+
 	dist::Variant curDist1 = array1->getDistr(n1 / 2);
-	dist::JointGMM curJGMM1 = boost::get<dist::JointGMM>(curDist1);
-	cout << "joint GMM No. " << n1 / 2 << " of the original dataset:" << endl;
-	cout << curJGMM1 << endl << endl;
+	dist::JointHistogram curJHist1 = boost::get<dist::JointHistogram>(curDist1);
+	cout << "joint Histogram No. " << n1 / 2 << " from the original dataset:" << endl;
+	cout << curJHist1 << endl << endl;
 
 	dist::Variant curDist2 = array2->getDistr(n1 / 2);
-	dist::JointGMM curJGMM2 = boost::get<dist::JointGMM>(curDist2);
-	cout << "joint GMM No. " << n1 / 2 << " of the dataset after IO:" << endl;
-	cout << curJGMM2 << endl;
-
-	////compare sample. currently not supported
-	//vector<Real> sample1 = curJGMM1.getJointSample();
-	//vector<Real> sample2 = curJGMM2.getJointSample();
-	//cout << "A sample from joint GMM No. " << n1 / 2 << " of the original dataset:" << endl;
-	//for (int i = 0; i < sample1.size(); i++) {
-	//	cout << sample1[i] << " ";
-	//}
-	//cout << endl;
-	//cout << "A sample from joint GMM No. " << n1 / 2 << " of the dataset after IO:" << endl;
-	//for (int i = 0; i < sample2.size(); i++) {
-	//	cout << sample2[i] << " ";
-	//}
-	//cout << endl;
-
-
+	dist::JointHistogram curJHist2 = boost::get<dist::JointHistogram>(curDist2);
+	cout << "joint Histogram No. " << n1 / 2 << " from the dataset after IO:" << endl;
+	cout << curJHist2 << endl;
+	
 	//compare every parameter one by one
 	double dif = 0.0;
 
@@ -221,42 +218,71 @@ int main(int argc, char* argv[])
 		dist::Variant curDist2 = array2->getDistr(j);
 
 		string s = getName(curDist2);
-		if (s.compare(0, 15, "JointGMM") != 0) {
-			cout << "Joint GMM IO failed! arrays element not joint GMM! " << endl;
+		if (s.compare(0, 15, "JointHistogram") != 0) {
+			cout << "Joint Histogram IO failed! arrays element not joint Histogram! " << endl;
 			return 0;
 		}
 
-		dist::JointGMM curJGMM1 = boost::get<dist::JointGMM>(curDist1);
-		dist::JointGMM curJGMM2 = boost::get<dist::JointGMM>(curDist2);
+		dist::JointHistogram curJHist1 = boost::get<dist::JointHistogram>(curDist1);
+		dist::JointHistogram curJHist2 = boost::get<dist::JointHistogram>(curDist2);
 		
-		int nVar1 = curJGMM1.getNumVariables();
-		int nComp1 = curJGMM1.getNumComponents();
-		int nVar2 = curJGMM2.getNumVariables();
-		int nComp2 = curJGMM2.getNumComponents();
-		if (nVar1 != nVar2 || nComp1 != nComp2){
-			cout << "Joint GMM IO failed! nVar or nComp of at least one joint GMM changed! " << endl;
+		int num_vars1 = curJHist1.getNumVars();
+		int num_vars2 = curJHist2.getNumVars();
+		if (num_vars1 != num_vars2){
+			cout << "Joint Histogram IO failed! num_vars of at least one joint Histogram changed! " << endl;
 			return 0;
 		}
 
-		for (int c = 0; c < nComp1; c++)
-		{
-			dif += abs(curJGMM1.getWeight(c) - curJGMM2.getWeight(c));
+		std::vector<Real> min_vals1 = curJHist1.getMinVals();
+		std::vector<Real> min_vals2 = curJHist2.getMinVals();
+		std::vector<Real> max_vals1 = curJHist1.getMaxVals();
+		std::vector<Real> max_vals2 = curJHist2.getMaxVals();
+		std::vector<Real> bin_widths1 = curJHist1.getBinWidths();
+		std::vector<Real> bin_widths2 = curJHist2.getBinWidths();
+		std::vector<int> num_bins1 = curJHist1.getNumBins();
+		std::vector<int> num_bins2 = curJHist2.getNumBins();
 
-			dist::JointGaussian jg1 = curJGMM1.getJointGaussian(c);
-			const ublas_vector curMean1 = jg1.getMean();
-			const ublas_matrix curCov1 = jg1.getCovariance();
-			dist::JointGaussian jg2 = curJGMM2.getJointGaussian(c);
-			const ublas_vector curMean2 = jg2.getMean();
-			const ublas_matrix curCov2 = jg2.getCovariance();
-			for (int i = 0; i < nVar; i++){
-				dif += abs(curMean1(i) - curMean2(i));
-			}
-			for (int j = 0; j < nVar; j++){
-				for (int i = j; i < nVar; i++){
-					dif += abs(curCov1(j, i) - curCov2(j, i));
-				}
-			}
+		for (int v = 0; v < num_vars1; v++) {
+			dif += abs(min_vals1[v] - min_vals2[v]);
+			dif += abs(max_vals1[v] - max_vals2[v]);
+			dif += abs(bin_widths1[v] - bin_widths2[v]);
+			dif += abs(num_bins1[v] - num_bins2[v]);
 		}
+
+		//compare pdf
+		boost::unordered_map<std::vector<int>, Real> pdf1 = curJHist1.getDistr();
+		boost::unordered_map<std::vector<int>, Real> pdf2 = curJHist2.getDistr();
+		int n_pdf1 = pdf1.size();
+		int n_pdf2 = pdf2.size();
+		if (n_pdf1 != n_pdf2) {
+			cout << "Joint Histogram IO failed! pdf size of at least one joint Histogram changed! " << endl;
+			return 0;
+		}
+		for (auto it1 = pdf1.begin(); it1 != pdf1.end(); ++it1) {
+			std::vector<int> vint1 = it1->first;
+			if (pdf2.find(vint1) == pdf2.end()) {
+				cout << "Joint Histogram IO failed! at least one key of at least one pdf of at least one joint Histogram changed! " << endl;
+				return 0;
+			}
+			Real r1 = it1->second;
+			Real r2 = pdf2[vint1];
+			int n_vint1 = vint1.size();
+			dif += abs(r1 - r2);
+		}
+		
+		//compare mean and cov
+		std::vector<Real> curMean1 = getJointMean(curJHist1);
+		ublas_matrix curCov1 = curJHist1.getCovariance();
+		std::vector<Real> curMean2 = getJointMean(curJHist2);
+		ublas_matrix curCov2 = curJHist2.getCovariance();
+		for (int i = 0; i < num_vars1; i++) {
+			dif += abs(curMean1[i] - curMean2[i]);
+		}
+		for (int j = 0; j < num_vars1; j++) {
+			for (int i = j; i < num_vars1; i++) {
+				dif += abs(curCov1(j, i) - curCov2(j, i));
+			}
+		}		
 	}
 
 	cout << "the total difference between parameters of the modeler result and the IO result is: " << dif << endl;
