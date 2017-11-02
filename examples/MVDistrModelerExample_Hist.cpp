@@ -103,11 +103,11 @@ int main(int argc, char* argv[])
             {
 
                 Real* data1 = (Real*)malloc(sizeof(Real)*blockXdim*blockYdim*blockZdim);
-		Real* data2 = (Real*)malloc(sizeof(Real)*blockXdim*blockYdim*blockZdim);
-		Real* data3 = (Real*)malloc(sizeof(Real)*blockXdim*blockYdim*blockZdim);
-		std::vector<Real> min_val(3, FLT_MAX);
-		std::vector<Real> max_val(3, -FLT_MAX);
-		std::vector<int> bins(3, 30);		
+		        Real* data2 = (Real*)malloc(sizeof(Real)*blockXdim*blockYdim*blockZdim);
+		        Real* data3 = (Real*)malloc(sizeof(Real)*blockXdim*blockYdim*blockZdim);
+		        std::vector<Real> min_val(3, FLT_MAX);
+		        std::vector<Real> max_val(3, -FLT_MAX);
+		        std::vector<int> bins(3, 30);		
 		
 
                 int i = 0;
@@ -120,27 +120,27 @@ int main(int argc, char* argv[])
                             data1[i] = (Real)(inData1[zz*xdim*ydim + yy*xdim + xx]);
                             data2[i] = (Real)(inData2[zz*xdim*ydim + yy*xdim + xx]);
                             data3[i] = (Real)(inData3[zz*xdim*ydim + yy*xdim + xx]);
-			    if(data1[i]<min_val[0]) min_val[0] = data1[i];
-			    if(data1[i]>max_val[0]) max_val[0] = data1[i];
-			    if(data2[i]<min_val[1]) min_val[1] = data2[i];
-			    if(data2[i]>max_val[1]) max_val[1] = data2[i];
-			    if(data3[i]<min_val[2]) min_val[2] = data3[i];
-			    if(data3[i]>max_val[2]) max_val[2] = data3[i];
+			                if(data1[i]<min_val[0]) min_val[0] = data1[i];
+			                if(data1[i]>max_val[0]) max_val[0] = data1[i];
+			                if(data2[i]<min_val[1]) min_val[1] = data2[i];
+			                if(data2[i]>max_val[1]) max_val[1] = data2[i];
+			                if(data3[i]<min_val[2]) min_val[2] = data3[i];
+			                if(data3[i]>max_val[2]) max_val[2] = data3[i];
                             i++;
                         }
                     }
                 }
 
-		std::vector<Real*> trainSamples;
-		trainSamples.push_back(data1);
-		trainSamples.push_back(data2);
-		trainSamples.push_back(data3);
+		        std::vector<Real*> trainSamples;
+		        trainSamples.push_back(data1);
+		        trainSamples.push_back(data2);
+		        trainSamples.push_back(data3);
 		
                 std::cout << "dimensions: [" << z << "][" << y << "][" << x << "]\n";
                                 
-		mv_dm.computeJointHistogram(trainSamples, blockXdim*blockYdim*blockZdim, min_val, max_val, bins, counter);
+		        mv_dm.computeJointHistogram(trainSamples, blockXdim*blockYdim*blockZdim, min_val, max_val, bins, counter);
 		
-		counter++;
+		        counter++;
             }
         }
     }
