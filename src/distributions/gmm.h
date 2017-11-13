@@ -29,7 +29,6 @@ namespace dist {
 // ------------------------------------------------------------------------------
 ///
 /// \brief Defines a Gaussian Mixture class
-/// GMs: number of Gaussian Models
 ///
 class EDDA_EXPORT GMM: public ContinuousDistributionTag {
 
@@ -63,7 +62,9 @@ public:
   std::vector<GMMTuple> models;
   int GMs;
 
-  // constructor
+  ///
+  /// \brief Constructor
+  ///
   __host__ __device__
 	  GMM() {
 		  GMs = 1;
@@ -71,7 +72,10 @@ public:
 		  init();
 	  }
 
-
+  ///
+  /// \brief Set GMM by a given GMM
+  /// \param gms number of Gaussians of GMM
+  ///
   __host__ __device__
   GMM(int gms) { 
 	  GMs = gms;
@@ -79,6 +83,10 @@ public:
 	  init(); 
   }
 
+  ///
+  /// \brief Set GMM by a given GMM
+  /// \param models a given GMM
+  ///
   void assign (const std::vector<GMMTuple> &models) {
     std::vector<GMMTuple> vmodels_;
     for (int i=0; i<GMs; i++)
@@ -90,11 +98,18 @@ public:
     normalizeWeights();
   }
 
+  ///
+  /// \brief Constructor
+  /// \param models a given GMM
+  ///
   GMM(const std::vector<GMMTuple> &models_) {
     modelReduction(models_);
     normalizeWeights();
   }
 
+  ///
+  /// \brief Return number of Gaussian components
+  ///
   int getNumComponenets() const
   {
 	  return GMs;
@@ -122,6 +137,7 @@ public:
 
 ///
 /// \brief Return mean
+/// \param dist a distribution
 ///
 inline double getMean(const GMM &dist)
 {
@@ -135,6 +151,7 @@ inline double getMean(const GMM &dist)
 
 ///
 /// \brief Return variance.
+/// \param dist a distribution
 ///
 /// if f(x) = sum_i( w_i * f_i(x) ), v_i = variance of f_i, and m_i = mean of f_i, then
 /// var(f) = sum_i( w_i * v_i + w_i * m_i^2 ) - (sum_i( w_i * m_i) )^2.
@@ -157,6 +174,8 @@ inline double getVar(const GMM &dist)
 
 ///
 /// \brief Return PDF of x
+/// \param dist a distribution
+/// \param x a sample (value)
 ///
 inline double getPdf(const GMM &dist, const double x)
 {
@@ -170,6 +189,7 @@ inline double getPdf(const GMM &dist, const double x)
 
 ///
 /// \brief Return a sample
+/// \param dist a distribution
 ///
 /// Note: To ensure correct sampling distribution, the sum of weights
 /// should be normalized to 1 before calling this function.
@@ -191,6 +211,8 @@ inline double getSample(const GMM &dist)
 
 ///
 /// \brief Return a sample
+/// \param dist a distribution
+/// \param rng a random engine
 ///
 /// Note: To ensure correct sampling distribution, the sum of weights
 /// should be normalized to 1 before calling this function.
@@ -211,8 +233,12 @@ inline double getSample(const GMM &dist, thrust::default_random_engine &rng)
   // return sample from the last model
   return getSample( Gaussian(dist.models[0].m, dist.models[0].v), rng );
 }
+}
+
 ///
 /// \brief Return CDF of x
+/// \param dist a distribution
+/// \param x a sample (value)
 ///
 __host__ __device__
 inline double getCdf(const GMM &dist, double x)
@@ -228,6 +254,8 @@ inline double getCdf(const GMM &dist, double x)
 
 ///
 /// \brief Print itself
+/// \param os outstream
+/// \param dist a distribution
 ///
 inline std::ostream& operator<<(std::ostream& os, const GMM &dist)
 {
@@ -238,6 +266,10 @@ inline std::ostream& operator<<(std::ostream& os, const GMM &dist)
   return os;
 }
 
+///
+/// \brief Return distribution information
+/// \param x a distribution
+///
 __host__ __device__
 inline std::string getName(const GMM &x) {
   std::stringstream ss;
@@ -250,6 +282,7 @@ inline std::string getName(const GMM &x) {
 
 ///
 /// \brief random variable with unary -
+/// \param x a distribution
 ///
 inline GMM operator-(const GMM &x)
 {
@@ -259,6 +292,8 @@ inline GMM operator-(const GMM &x)
 
 ///
 /// \brief random variable +=
+/// \param x distribution1
+/// \param rhs distribution2
 ///
 inline GMM& operator+=(GMM &x, const GMM& rhs) {
   throw NotImplementedException();
@@ -266,6 +301,8 @@ inline GMM& operator+=(GMM &x, const GMM& rhs) {
 
 ///
 /// \brief random variable += with scalar
+/// \param x distribution1
+/// \param r a value which is applied to means of GMM
 ///
 inline GMM& operator+=(GMM &x, const double r) {
 	for (int i = 0; i<x.getNumComponenets(); i++)
@@ -275,6 +312,8 @@ inline GMM& operator+=(GMM &x, const double r) {
 
 ///
 /// \brief random variable *= with scalar
+/// \param x distribution1
+/// \param r a value which is applied to means and variances of GMM
 ///
 inline GMM& operator*=(GMM &x, const double r) {
 	for (int i = 0; i<x.getNumComponenets(); i++) {

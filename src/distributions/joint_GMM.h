@@ -33,9 +33,7 @@ namespace edda {
 	namespace dist {
 
 		///
-		/// \brief The Distribution class is a root class for all distribution-type classes.
-		///
-		/// This is useful for applications to identify whether a class is a distribution-type class, by using ENABLE_IF_BASE_OF()
+		/// \brief Define a Joint GMM class
 		///
 		class EDDA_EXPORT JointGMM : public ContinuousDistributionTag, public JointDistributionTag {
 		public:
@@ -47,6 +45,7 @@ namespace edda {
 
 			///
 			/// \brief Constructor by giving GMM's parameters
+			/// \param gmm a given GMM
 			///
 			JointGMM(const JointGMM &gmm)
 				: weights(gmm.weights),	gaus(gmm.gaus),	nVar(gmm.nVar),	nComp(gmm.nComp)
@@ -54,7 +53,12 @@ namespace edda {
 			}
 
 			///
-			/// \brief Return probability of x
+			/// \brief Setup a Joint GMM
+			/// \param _nVar number of variante
+			/// \param _nComp number of Gaussian components
+			/// \param _weights vector of wegiths
+			/// \param _means mean vectors
+			/// \param _covs covariance matrixs
 			///
 			void setGMM(int _nVar, int _nComp, ublas_vector &_weights, ublas_matrix &_means, ublas_matrix &_covs){
 				nVar = _nVar;
@@ -74,14 +78,16 @@ namespace edda {
 			}
 
 			///
-			/// \brief Return means
+			/// \brief Return means of a Gaussian component
+			/// \param comp index of the Gaussian component
 			///
 			std::vector<Real> getMean(int comp) const{
 				return getJointMean(gaus[comp]);
 			}
 
 			///
-			/// \brief Return probability of x
+			/// \brief Return probability of x (sample)
+			/// \param x samples (a vector)
 			///
 			Real getPdf(const std::vector<Real> x) const{
 				Real pdf = 0;
@@ -94,6 +100,7 @@ namespace edda {
 
 			///
 			/// \brief Return weight probability of each component (only used by EM)
+			/// \param x samples (a vector)
 			///
 			std::vector<Real> getCompWgtLogProbability(const std::vector<Real> x) const{
 				std::vector<Real> wProbs(nComp, 0);
@@ -106,6 +113,7 @@ namespace edda {
 
 			///
 			/// \brief Return a samplel drawn from GMM
+			/// \param rng random engine
 			///
 			std::vector<Real> getJointSample(thrust::default_random_engine &rng) const{
 				Real r = rand() / (float)RAND_MAX;
@@ -124,6 +132,7 @@ namespace edda {
 
 			///
 			/// \brief Print GMM parameters
+			/// \param os outstream
 			///
 			void output(std::ostream& os) const{
 				for (int i = 0; i < nComp; i++){
@@ -133,19 +142,37 @@ namespace edda {
 				}
 			}
 
+			///
+			/// \brief Return number of variante of a Gaussian
+			///
 			int getNumVariables(){ return nVar; };
+
+			///
+			/// \brief Return number of components of a Gaussian
+			///
 			int getNumComponents(){ return nComp; };
-			Real getWeight(int i){ return weights[i]; };//may need to add check to i
-			JointGaussian getJointGaussian(int i) { return gaus[i]; };//may need to  add check to i
+
+			///
+			/// \brief Return weight of components of a Gaussian
+			///
+			Real getWeight(int i){ return weights[i]; };
+
+			///
+			/// \brief Return one Gaussian of the GMM
+			/// \param i the index of the return Gaussian component
+			///
+			JointGaussian getJointGaussian(int i) { return gaus[i]; };
 		protected:
-			std::vector<Real> weights;
-			std::vector<JointGaussian> gaus;
-			int nVar;
-			int nComp;
+			std::vector<Real> weights;			// weight vector of GMM
+			std::vector<JointGaussian> gaus;	// Gaussians of GMM
+			int nVar;							// Number of variante
+			int nComp;							// Number of Gaussian components
 		};
 
 		///
 		/// \brief Return probability of x
+		/// \param dist a distribution
+		/// \param x a input sample
 		///
 		inline Real getPdf(const JointGMM &dist, const std::vector<Real> x)
 		{
@@ -154,6 +181,8 @@ namespace edda {
 
 		///
 		/// \brief Return a sample drawn from dist
+		/// \param dist a distribution
+		/// \param rng random engine
 		///
 		inline std::vector<Real> getJointSample(const JointGMM &dist, thrust::default_random_engine &rng)
 		{
@@ -162,6 +191,8 @@ namespace edda {
 
 		///
 		/// \brief Print itself
+		/// \param os outstream
+		/// \param dist a distribution
 		///
 		inline std::ostream& operator<<(std::ostream& os, const JointGMM &dist)
 		{
@@ -171,6 +202,7 @@ namespace edda {
 
 		///
 		/// \brief Print the distribution typw
+		/// \param x a distribution
 		///
 		__host__ __device__
 		inline std::string getName(const JointGMM &x) {
@@ -181,6 +213,9 @@ namespace edda {
 	
 	///
 	/// \brief Compute the Gaussian Mixture Model 
+	/// \param dataAry input sample vectors for modeling
+	/// \param nSamples number of input samples (vectors)
+	/// \param nComp number of Gaussian component of GMM
 	///
 	inline dist::JointGMM eddaComputeJointGMM(std::vector<Real*>& dataAry, int nSamples, int nComp)
 		//inline dist::JointGMM eddaComputeJointGMM(int nComp, ublas_matrix &samples)

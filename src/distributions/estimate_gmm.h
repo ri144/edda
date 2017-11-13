@@ -22,7 +22,8 @@ namespace edda
 ///// Traditional EM algorithm section
 
 ///////////////////////////////////////////
-/// EM helper function
+/// \brief EM helper function
+///
 inline int check_convergence(double fmax, double fmin, double ftol)
 {
     double EPS = 1e-10;
@@ -32,7 +33,10 @@ inline int check_convergence(double fmax, double fmin, double ftol)
 }
 
 ///////////////////////////////////////////
-/// EM helper function
+/// \brief Evaluate probability of a value from a Gaussian
+/// \mean mean of a Gaussian
+/// \sigma sigma of a Gaussian
+/// \val given sample value
 inline double eval_gaussian_density(double mean, double sigma, double val)
 {
     double EPS = 1e-10;
@@ -57,7 +61,7 @@ inline double eval_gaussian_density(double mean, double sigma, double val)
 }
 
 ///////////////////////////////////////////
-/// EM helper function
+/// \brief Upate parameter of a Gaussian
 inline void update_parameters(int n, double * data, int k, double * prob, double * mean, double * sd, double ** class_prob)
 {
     double EPS = 1e-6;

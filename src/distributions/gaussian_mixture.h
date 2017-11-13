@@ -62,10 +62,16 @@ class EDDA_EXPORT GaussianMixture: public ContinuousDistributionTag {
 public:
   Tuple<GMMTuple, GMs> models;
 
-  // constructor
+  ///
+  /// \brief Constructor
+  ///
   __host__ __device__
   GaussianMixture() { init(); }
 
+  ///
+  /// \brief Set GMM by a given GMM
+  /// \param models a given GMM
+  ///
   template <int GMs_>
   void assign (const Tuple<GMMTuple, GMs_> &models) {
     std::vector<GMMTuple> vmodels_;
@@ -78,6 +84,10 @@ public:
     normalizeWeights();
   }
 
+  ///
+  /// \brief Constructor :by a given GMM
+  /// \param models a given GMM
+  ///
   GaussianMixture(const std::vector<GMMTuple> &models_) {
     modelReduction(models_);
     normalizeWeights();
@@ -105,6 +115,7 @@ public:
 
 ///
 /// \brief Return mean
+/// \param dist a distribution
 ///
 template <int GMs>
 inline double getMean(const GaussianMixture<GMs> &dist)
@@ -119,6 +130,7 @@ inline double getMean(const GaussianMixture<GMs> &dist)
 
 ///
 /// \brief Return variance.
+/// \param dist a distribution
 ///
 /// if f(x) = sum_i( w_i * f_i(x) ), v_i = variance of f_i, and m_i = mean of f_i, then
 /// var(f) = sum_i( w_i * v_i + w_i * m_i^2 ) - (sum_i( w_i * m_i) )^2.
@@ -142,6 +154,8 @@ inline double getVar(const GaussianMixture<GMs> &dist)
 
 ///
 /// \brief Return PDF of x
+/// \param dist a distribution
+/// \param x a sample (value)
 ///
 template <int GMs>
 inline double getPdf(const GaussianMixture<GMs> &dist, const double x)
@@ -156,6 +170,7 @@ inline double getPdf(const GaussianMixture<GMs> &dist, const double x)
 
 ///
 /// \brief Return a sample
+/// \param dist a distribution
 ///
 /// Note: To ensure correct sampling distribution, the sum of weights
 /// should be normalized to 1 before calling this function.
@@ -178,6 +193,8 @@ inline double getSample(const GaussianMixture<GMs> &dist)
 
 ///
 /// \brief Return a sample
+/// \param dist a distribution
+/// \param rng a random engine
 ///
 /// Note: To ensure correct sampling distribution, the sum of weights
 /// should be normalized to 1 before calling this function.
@@ -201,6 +218,8 @@ inline double getSample(const GaussianMixture<GMs> &dist, thrust::default_random
 }
 ///
 /// \brief Return CDF of x
+/// \param dist a distribution
+/// \param x a sample (value)
 ///
 template <int GMs>
 __host__ __device__
@@ -217,6 +236,8 @@ inline double getCdf(const GaussianMixture<GMs> &dist, double x)
 
 ///
 /// \brief Print itself
+/// \param os outstream
+/// \param dist a distribution
 ///
 template <int GMs>
 inline std::ostream& operator<<(std::ostream& os, const GaussianMixture<GMs> &dist)
@@ -228,6 +249,10 @@ inline std::ostream& operator<<(std::ostream& os, const GaussianMixture<GMs> &di
   return os;
 }
 
+///
+/// \brief Return distribution information
+/// \param x a distribution
+///
 __host__ __device__
 template <int GMs>
 inline std::string getName(const GaussianMixture<GMs> &x) {
@@ -241,6 +266,7 @@ inline std::string getName(const GaussianMixture<GMs> &x) {
 
 ///
 /// \brief random variable with unary -
+/// \param x a distribution
 ///
 template <int GMs>
 inline GaussianMixture<GMs> operator-(const GaussianMixture<GMs> &x)
@@ -251,6 +277,8 @@ inline GaussianMixture<GMs> operator-(const GaussianMixture<GMs> &x)
 
 ///
 /// \brief random variable +=
+/// \param x distribution1
+/// \param rhs distribution2
 ///
 template <int GMs>
 inline GaussianMixture<GMs>& operator+=(GaussianMixture<GMs> &x, const GaussianMixture<GMs>& rhs) {
@@ -259,6 +287,8 @@ inline GaussianMixture<GMs>& operator+=(GaussianMixture<GMs> &x, const GaussianM
 
 ///
 /// \brief random variable += with scalar
+/// \param x distribution1
+/// \param r a value which is applied to means of GMM
 ///
 template <int GMs>
 inline GaussianMixture<GMs>& operator+=(GaussianMixture<GMs> &x, const double r) {
@@ -269,6 +299,8 @@ inline GaussianMixture<GMs>& operator+=(GaussianMixture<GMs> &x, const double r)
 
 ///
 /// \brief random variable *= with scalar
+/// \param x distribution1
+/// \param r a value which is applied to means and variances of GMM
 ///
 template <int GMs>
 inline GaussianMixture<GMs>& operator*=(GaussianMixture<GMs> &x, const double r) {
