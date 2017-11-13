@@ -54,7 +54,8 @@ namespace edda {
 				}
 
 			///
-			/// \brief set and compute the necessary matrixes (eigenMat: for sampling; uMat: for probability computation)
+			/// \brief set and use eigen decomposition to compute the necessary matrixes, eigenMat: (for sampling) and "uMat" (for probability computation)
+			/// \param cov the input covariance matrix
 			///
 			__host__ __device__
 				void setMatrices(const ublas_matrix &cov) {
@@ -115,6 +116,7 @@ namespace edda {
 
 			///
 			/// \brief Return a sample drawn from this joint Gaussian
+			/// \param rng random engine
 			///
 			__host__ __device__
 				std::vector<Real> getJointSample(thrust::default_random_engine &rng) const {
@@ -138,6 +140,7 @@ namespace edda {
 
 			///
 			/// \brief Return log probability of x (This function is used by EM)
+			/// \param x_ vector of a sample for probability estimation
 			///
 			__host__ __device__
 				inline double getJointLogPdf(const std::vector<Real> x_) const
@@ -154,27 +157,42 @@ namespace edda {
 					return -0.5 * (k * 1.83787706641 + getLogDet() + density);
 			}
 
+			///
+			/// \brief Return mean vector of this Gaussian
+			///
 			__host__ __device__
 				const ublas_vector &getMean() const { return this->mean; }
 
+			///
+			/// \brief Return covariance matrix of this Gaussian
+			///
 			__host__ __device__
 				const ublas_matrix &getCovariance() const { return this->cov; }
 
+			///
+			/// \brief Return eigen matrix of this Gaussian's covariance matrix
+			///
 			__host__ __device__
 				const ublas_matrix &getEigenMat() const { return this->eigenMat; }
 
+			///
+			/// \brief Return eigen matrix of this Gaussian's covariance matrix
+			///
 			__host__ __device__
 				const ublas_matrix &getUMat() const { return this->uMat; }
 
+			///
+			/// \brief Return U matrix of this Gaussian's covariance matrix
+			///
 			__host__ __device__
 				double getLogDet() const { return this->logPDet; }
 
 		private:
-			ublas_vector mean; // boost's vector
+			ublas_vector mean; 		// boost's vector for mean vector
 			ublas_matrix cov;		//covariance matrix
-			ublas_matrix eigenMat; //use when draw sample, sample = eigenMat * z + mean
-			ublas_matrix uMat;		//use compute the point probability from Gaussian
-			double logPDet;
+			ublas_matrix eigenMat; //Eigen matrix: use when draw sample, sample = eigenMat * z + mean
+			ublas_matrix uMat;	   //U-Matrix: use compute the point probability from Gaussian
+			double logPDet;		   //log determinate of covariance matrix
 		};
 
 		// ------------------------------------------------------------------------------
@@ -190,6 +208,8 @@ namespace edda {
 
 		///
 		/// \brief Return PDF of x
+		/// \param dist a distribution (Gaussian)
+		/// \param x_ vector of a sample for probability estimation
 		///
 		__host__ __device__
 			inline double getJointPdf(const JointGaussian &dist, const std::vector<Real> x_)
@@ -209,6 +229,8 @@ namespace edda {
 
 		///
 		/// \brief Return a random sample using random engine
+		/// \param dist a distribution (Gaussian)
+		/// \param rng random engine
 		///
 		__host__ __device__
 			inline std::vector<Real> getJointSample(const JointGaussian &dist, thrust::default_random_engine &rng)
@@ -218,6 +240,8 @@ namespace edda {
 
 		///
 		/// \brief Print itself
+		/// \param os outstream
+		/// \param dist a distribution
 		///
 		__host__
 			inline std::ostream& operator<<(std::ostream& os, const JointGaussian &dist)
@@ -228,6 +252,7 @@ namespace edda {
 
 		///
 		/// \brief Print the distribution type
+		/// \param dist a distribution
 		///
 		__host__ __device__
 		inline std::string getName(const JointGaussian &dist) {

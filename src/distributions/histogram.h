@@ -26,13 +26,18 @@ namespace dist {
 ///
 /// \brief The Distribution class is a root class for all distribution-type classes.
 ///
-/// This is useful for applications to identify whether a class is a distribution-type class, by using ENABLE_IF_BASE_OF()
-///
 class EDDA_EXPORT Histogram : public DiscreteDistributionTag {
 public:
 
+  ///
+  /// \brief Empty constructor
+  ///
   Histogram(){}
 
+  ///
+  /// \brief Constructor
+  /// \param hist input histogram array
+  ///
   Histogram(double* histData){//use when load from vtk
 	  m_nBins = histData[0];
 	  m_minValue = histData[1];
@@ -45,6 +50,11 @@ public:
 	  }
   }
 
+  ///
+  /// \brief Constructor
+  /// \param hist input histogram array
+  /// \param _nBins number of bins
+  ///
   Histogram(float* histData, int _nBins){//use when load from .edda file
 	  m_nBins = _nBins;
 	  m_minValue = histData[0];
@@ -57,6 +67,14 @@ public:
 	  }
   }
 
+  ///
+  /// \brief Constructor by given min max value of the histogram
+  /// \param dataArray contain samples to construct a hisotgram
+  /// \param nElements number of samples in dataArray
+  /// \param _nBins number of bins
+  /// \param _minValue data range (min)
+  /// \param _maxValue data range (max)
+  ///
   Histogram(Real *dataArray, int nElements, const int _nBins, const Real _minValue = 1, const Real _maxValue = -1){
 	  if (_minValue > _maxValue){// no input min/max value
 		  m_minValue = dataArray[0];
@@ -93,6 +111,10 @@ public:
 	  }
   }
 
+  ///
+  /// \brief Constructor by given a histogram
+  /// \param hist the given histogram
+  ///
   Histogram(const Histogram &hist)
   : m_nBins(hist.m_nBins), 
     m_minValue(hist.m_minValue),
@@ -102,6 +124,9 @@ public:
     m_cdf = hist.m_cdf;
   }
 
+  ///
+  /// \brief Return mean of histogram
+  ///
   Real getMean() const{
     Real mean = 0;
     Real cValue = m_minValue + m_binWidth / 2.0;
@@ -113,6 +138,9 @@ public:
     return mean;
   }
 
+  ///
+  /// \brief Return variance of the histogram
+  ///
   Real getVar() const{
     //using Var(X) = E[X^2] - (E[X])^2  to compute Var
     Real mean = 0;
@@ -130,6 +158,10 @@ public:
     return mSqrt - mean*mean;
   }
 
+  ///
+  /// \brief Return probability of a given value
+  /// \param x given value
+  ///
   Real getPdf(const double x) const{
     int b = valueToBinsIndex(x);
 
@@ -137,12 +169,19 @@ public:
     else return (m_cdf[b] - m_cdf[b - 1]);
   }
 
+  ///
+  /// \brief Return cumulative probability of a given value
+  /// \param x given value
+  ///
   Real getCdf(const double x) const{
     int b = valueToBinsIndex(x);
 
     return m_cdf[b];
   }
 
+  ///
+  /// \brief Return a sample dran from a hisotgram
+  ///
   Real getSample() const{
     Real sample;
     Real r = rand() / (float)RAND_MAX;
@@ -188,6 +227,10 @@ public:
     return sample;
   }
 
+  ///
+  /// \brief Output histogram information
+  /// \param os outstream
+  ///
   void output(std::ostream& os) const{
     os << "<Histogram Min:" << this->m_minValue << " Max:" << this->m_maxValue;
     for (int b = 0; b < m_nBins; b++)
@@ -195,25 +238,41 @@ public:
     os << ">";
   }
 
+  ///
+  /// \brief Return number of bins
+  ///
   int getBins(){
 	  return m_nBins;
   }
 
+  ///
+  /// \brief Return max value of data value range
+  ///
   float getMaxValue(){
 	  return m_maxValue;
   }
 
+  ///
+  /// \brief Return min value of data value range
+  ///
   float getMinValue(){
 	  return m_minValue;
   }
 
-  
+  ///
+  /// \brief Return get probability of a bin
+  /// \param b bin ID
+  ///
   float getBinValue(int b){
 	  //This usually return accumlative prob
 	  return m_cdf[b];
   }
 
 protected:
+  ///
+  /// \brief Return bin ID of a given value
+  /// \param v given scalar value
+  ///
   int valueToBinsIndex(Real v) const {
 	if (v < m_minValue)
 		  return 0;
@@ -223,20 +282,27 @@ protected:
 		  return floor((v - m_minValue) / m_binWidth);
   }
 
+  ///
+  /// \brief Return data value range of a bin
+  /// \param s Return data value low bound of the bin
+  /// \param t Return data value upper bound of the bin
+  /// \param b given bin ID
+  ///
   void rangeOfBin(Real& s, Real &t, int b) const{
     s = m_minValue + b * m_binWidth;
     t = m_minValue + (b + 1) * m_binWidth;
   }
 
-  int m_nBins;
-  Real m_minValue;
-  Real m_maxValue;
-  Real m_binWidth;
-  std::vector<Real> m_cdf;
+  int m_nBins;      // number of bins
+  Real m_minValue;  // min of data value range 
+  Real m_maxValue;  // max of data value range 
+  Real m_binWidth;  // bin width of bins
+  std::vector<Real> m_cdf;  // histogra's cdf vector
 };
 
 ///
 /// \brief Compute the mean of the distribution
+/// \param dist a distribution (histogram)
 ///
 inline double getMean(const Histogram &dist)
 {
@@ -245,6 +311,7 @@ inline double getMean(const Histogram &dist)
 
 ///
 /// \brief Compute Variance
+/// \param dist a distribution (histogram)
 ///
 inline double getVar(const Histogram &dist)
 {
@@ -253,6 +320,8 @@ inline double getVar(const Histogram &dist)
 
 ///
 /// \brief Return PDF of x
+/// \param dist a distribution (histogram)
+/// \param x a input scalar value 
 ///
 inline double getPdf(const Histogram &dist, const double x)
 {
@@ -261,6 +330,7 @@ inline double getPdf(const Histogram &dist, const double x)
 
 ///
 /// \brief Get a Monte-Carlo sample of the distribution. We rely on the specific implementation from each distribution.
+/// \param dist a distribution (histogram)
 ///
 inline double getSample(const Histogram &dist)
 {
@@ -270,6 +340,8 @@ inline double getSample(const Histogram &dist)
 
 ///
 /// \brief Return CDF of x
+/// \param dist a distribution (histogram)
+/// \param x a input scalar value
 ///
 //__host__ __device__
 inline double getCdf(const Histogram &dist, double x)
@@ -278,7 +350,9 @@ inline double getCdf(const Histogram &dist, double x)
 }
 
 ///
-/// \brief Print itself
+/// \brief Print histogram information
+/// \param os outstream
+/// \param dist a distribution (histogram)
 ///
 inline std::ostream& operator<<(std::ostream& os, const Histogram &dist)
 {
@@ -286,6 +360,10 @@ inline std::ostream& operator<<(std::ostream& os, const Histogram &dist)
   return os;
 }
 
+///
+/// \brief Print distribution type
+/// \param os outstream
+///
 __host__ __device__
 inline std::string getName(const Histogram &x) {
   return "Histogram";
@@ -293,6 +371,14 @@ inline std::string getName(const Histogram &x) {
 
 }  // namespace dist
 
+///
+/// \brief Compute a histogram
+/// \param dataArray contain samples to construct a hisotgram
+/// \param nElements number of samples in dataArray
+/// \param _nBins number of bins
+/// \param _minValue data range (min)
+/// \param _maxValue data range (max)
+///
 inline dist::Histogram eddaComputeHistogram(float *dataArray, int nElement, const int _nBins, const float _minValue = 1, const float _maxValue = -1)
 {
 	//convert to internal data type
@@ -303,6 +389,14 @@ inline dist::Histogram eddaComputeHistogram(float *dataArray, int nElement, cons
 	return h;
 }
 
+///
+/// \brief Compute a histogram
+/// \param dataArray contain samples to construct a hisotgram
+/// \param nElements number of samples in dataArray
+/// \param _nBins number of bins
+/// \param _minValue data range (min)
+/// \param _maxValue data range (max)
+///
 inline dist::Histogram eddaComputeHistogram(double *dataArray, int nElement, const int _nBins, const double _minValue = 1, const double _maxValue = -1)
 {
 	//convert to internal data type
