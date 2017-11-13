@@ -4,10 +4,15 @@
 #include <vector>
 #include <sstream>
 
+#include "distributions/distribution.h"
+#include "distributions/variant.h"
+#include "dataset/distr_array.h"
+
 #include "distributions/distribution_modeler.h"
 
 using namespace std;
 using namespace edda;
+using namespace edda::dist;
 
 
 
@@ -90,10 +95,8 @@ int main(int argc, char* argv[])
 
 
     //edda ensemble data modeling
-    DistributionModeler dm1(newW*newH*newD);   
-    DistributionModeler dm2(newW*newH*newD);   
-    DistributionModeler dm3(newW*newH*newD);   
-
+    DistributionModeler mv_dm(newW*newH*newD);   
+    
     cout << "starting partitioning\n";
     int counter =0;
 
@@ -104,10 +107,11 @@ int main(int argc, char* argv[])
             for(size_t x=0; x<xdim; x += blockXdim)
             {
 
-                float *data1 = new float[blockXdim*blockYdim*blockZdim];
-                float *data2 = new float[blockXdim*blockYdim*blockZdim];
-                float *data3 = new float[blockXdim*blockYdim*blockZdim];
-
+                Real* data1 = (Real*)malloc(sizeof(Real)*blockXdim*blockYdim*blockZdim);
+		        Real* data2 = (Real*)malloc(sizeof(Real)*blockXdim*blockYdim*blockZdim);
+		        Real* data3 = (Real*)malloc(sizeof(Real)*blockXdim*blockYdim*blockZdim);
+		
+		
                 int i = 0;
                 for(size_t zz=z; zz<z+blockZdim; zz++)
                 {
@@ -115,27 +119,40 @@ int main(int argc, char* argv[])
                     {
                         for(size_t xx=x; xx<x+blockXdim; xx++)
                         {
-                            data1[i] = inData1[zz*xdim*ydim + yy*xdim + xx];
-                            data2[i] = inData2[zz*xdim*ydim + yy*xdim + xx];
-                            data3[i] = inData3[zz*xdim*ydim + yy*xdim + xx];
+                            data1[i] = (Real)(inData1[zz*xdim*ydim + yy*xdim + xx]);
+                            data2[i] = (Real)(inData2[zz*xdim*ydim + yy*xdim + xx]);
+                            data3[i] = (Real)(inData3[zz*xdim*ydim + yy*xdim + xx]);
                             i++;
                         }
                     }
                 }
+
+        		std::vector<Real*> trainSamples;
+        		trainSamples.push_back(data1);
+        		trainSamples.push_back(data2);
+        		trainSamples.push_back(data3);
+        		
                 std::cout << "dimensions: [" << z << "][" << y << "][" << x << "]\n";
-                dm1.computeGMM(data1, blockXdim*blockYdim*blockZdim, 2, counter);
-                dm2.computeGMM(data2, blockXdim*blockYdim*blockZdim, 2, counter);
-                dm3.computeGMM(data3, blockXdim*blockYdim*blockZdim, 2, counter);
-                counter++;
+                                        
+		        mv_dm.computeJointGMM(trainSamples, blockXdim*blockYdim*blockZdim, 2, counter);
+		
+		        counter++;
             }
         }
     }
-    std::vector<DistrArray *> dVec;
-    dVec.push_back(dm1.getDistrArray());
-    dVec.push_back(dm2.getDistrArray());
-    dVec.push_back(dm3.getDistrArray());
-
+	std::vector<DistrArray *> dVec;
+	dVec.push_back(mv_dm.getMVDistrArray(3));
+    
     Dataset<Real> *ds = new Dataset<Real> (new RegularCartesianGrid(newW, newH, newD), dVec);
     
-  	return 0;
+
+    //Testing: to see if the edda dataset was properly created with the joint distribution.
+	/*shared_ptr<Dataset<Real>> shr_ds(ds);
+	std::cout<< "number of arrays :\n " << shr_ds->getNumDistrArray() << std::endl;
+
+	DistrArray *testArray = shr_ds->getArray(0);
+	std::cout << "testArray = " << testArray->getDistr(10) << std::endl;
+	std::cout << "=================================\n";*/
+
+	return 0;
 }

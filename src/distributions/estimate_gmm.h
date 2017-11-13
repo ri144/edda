@@ -144,7 +144,7 @@ inline double computeLogLikelihood(int n, double* data,int k, double* prob,doubl
 //////////////////////////////////////////////
 /// Main EM function
 ///
-dist::GMM eddaComputeGMM(double *dataArray, int nSamples, int nComps)
+inline dist::GMM eddaComputeGMM(double *dataArray, int nSamples, int nComps)
 {
 	double eps = 1e-6;
     int GMMs = nComps;

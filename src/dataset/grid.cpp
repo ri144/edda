@@ -110,9 +110,13 @@ void RegularCartesianGrid::setBoundary(VECTOR3& minB, VECTOR3& maxB)
   m_vMaxBound = maxB;
   m_vMinRealBound.set(m_vMinBound[0], m_vMinBound[1], m_vMinBound[2], 0.0);
   m_vMaxRealBound.set(m_vMaxBound[0], m_vMaxBound[1], m_vMaxBound[2], 0.0);
-  mappingFactorX = (float)(xdim()-1)/(m_vMaxBound[0] - m_vMinBound[0]);
-  mappingFactorY = (float)(ydim()-1)/(m_vMaxBound[1] - m_vMinBound[1]);
-  mappingFactorZ = (float)(zdim()-1)/(m_vMaxBound[2] - m_vMinBound[2]);
+
+  //mappingFactorX = (float)(xdim() - 1) / (m_vMaxBound[0] - m_vMinBound[0]);
+  //mappingFactorY = (float)(ydim() - 1) / (m_vMaxBound[1] - m_vMinBound[1]);
+  //mappingFactorZ = (float)(zdim() - 1) / (m_vMaxBound[2] - m_vMinBound[2]);
+  mappingFactorX = fmax(1.0, (float)(xdim() - 1)) / fmax(1.0, (m_vMaxBound[0] - m_vMinBound[0]));
+  mappingFactorY = fmax(1.0, (float)(ydim() - 1)) / fmax(1.0, (m_vMaxBound[1] - m_vMinBound[1]));
+  mappingFactorZ = fmax(1.0, (float)(zdim() - 1)) / fmax(1.0, (m_vMaxBound[2] - m_vMinBound[2]));	//max is used to process 2d grid (even 1d grid) uniformly. However currently our code is not designed for 2D or 1d, and there might be other places where bugs can happen. so warning should be provided
   oneOvermappingFactorX = (m_vMaxBound[0] - m_vMinBound[0])/(float)(xdim()-1);
   oneOvermappingFactorY = (m_vMaxBound[1] - m_vMinBound[1])/(float)(ydim()-1);
   oneOvermappingFactorZ = (m_vMaxBound[2] - m_vMinBound[2])/(float)(zdim()-1);

@@ -35,7 +35,7 @@ namespace edda {
 		///
 		/// \brief Define a Joint GMM class
 		///
-		class EDDA_EXPORT JointGMM : public ContinuousDistributionTag, public JointDistributionTag {
+		class EDDA_EXPORT JointGMM : public ContinuousDistributionTag, public JointDistributionTag {		
 		public:
 
 			///
@@ -53,7 +53,19 @@ namespace edda {
 			}
 
 			///
-			/// \brief Setup a Joint GMM
+			/// \brief Constructor by giving GMM's parameters and Gaussians
+			/// \param _weights vector of wegiths
+			/// \param _gaus gaussian vectors which contains multiple Gaussians
+			/// \param _nVar number of variante
+			/// \param _nComp number of Gaussian components
+			///
+			JointGMM(std::vector<Real> _weights, std::vector<JointGaussian> _gaus, int _nVar, int _nComp)
+				: weights(_weights), gaus(_gaus), nVar(_nVar), nComp(_nComp)
+			{
+			}
+
+			///
+			/// \brief Set a Joint GMM
 			/// \param _nVar number of variante
 			/// \param _nComp number of Gaussian components
 			/// \param _weights vector of wegiths

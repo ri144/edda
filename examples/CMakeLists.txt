@@ -9,10 +9,13 @@ set(sources
   #loadScalarDataset.cpp
   #loadCurvilinearDataset.cpp
   distrModelerExample.cpp
-  VectorDistrModelerExample
+  VectorDistrModelerExample.cpp
+  MVDistrModelerExample_GMM.cpp
+  MVDistrModelerExample_Hist.cpp
   scalarIOExample.cpp
   vectorIOExample.cpp
-  #jointGMMIOExample.cpp
+  jointGMMIOExample.cpp
+  jointHistIOExample.cpp
 )
 
 
