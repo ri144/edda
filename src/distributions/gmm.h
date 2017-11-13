@@ -233,7 +233,7 @@ inline double getSample(const GMM &dist, thrust::default_random_engine &rng)
   // return sample from the last model
   return getSample( Gaussian(dist.models[0].m, dist.models[0].v), rng );
 }
-}
+
 
 ///
 /// \brief Return CDF of x
