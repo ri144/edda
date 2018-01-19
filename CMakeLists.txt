@@ -14,6 +14,7 @@ option (EDDA_BUILD_TESTS "Build the test programs." OFF)
 option (EDDA_BUILD_EXAMPLES "Build the example programs." ON)
 option (EDDA_BUILD_SHARED_LIBS "Build into shared libraries." OFF)
 #option (EDDA_WITH_OPENMP "Build with OpenMP parallelization." ON)
+option (EDDA_BUILD_PYTHON_BINDINGS "Build the python bindings for edda." ON)
 
 set (THRUST_DEVICE_SYSTEM "CPP" CACHE STRING "Thrust device backend (CUDA/TBB/OPENMP/CPP).")
 set_property(CACHE THRUST_DEVICE_SYSTEM PROPERTY STRINGS "CUDA;TBB;OPENMP;CPP")
@@ -174,4 +175,9 @@ endif ()
 # If EDDA_BUILD_EXAMPLES is on, add the examples subdirectory to the build.
 if (EDDA_BUILD_EXAMPLES)
   add_subdirectory (examples)
+endif ()
+
+# If EDDA_BUILD_PYTHON_BINDINGS is on, build the python bindings for edda with pybind11.
+if (EDDA_BUILD_PYTHON_BINDINGS)
+  add_subdirectory (pyEdda)
 endif ()
