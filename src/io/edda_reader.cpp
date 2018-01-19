@@ -16,7 +16,7 @@
 #include "distributions/variant.h"
 
 #include "distributions/gmm.h"
-#include "distributions/gaussian_mixture.h""
+#include "distributions/gaussian_mixture.h"
 #include "distributions/joint_gaussian.h"
 #include "distributions/joint_GMM.h"
 #include "distributions/histogram.h"
