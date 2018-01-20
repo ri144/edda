@@ -38,6 +38,7 @@ struct EDDA_EXPORT Gaussian: public ContinuousDistributionTag {
 
 ///
 /// \brief Return mean
+/// \param dist a given distribution (Gaussian)
 ///
 __host__ __device__
 inline double getMean(const Gaussian &dist)
@@ -47,6 +48,7 @@ inline double getMean(const Gaussian &dist)
 
 ///
 /// \brief Return variance
+/// \param dist a given distribution (Gaussian)
 ///
 __host__ __device__
 inline double getVar(const Gaussian &dist)
@@ -56,6 +58,8 @@ inline double getVar(const Gaussian &dist)
 
 ///
 /// \brief Return PDF of x
+/// \param dist a given distribution (Gaussian)
+/// \param x a sample value
 ///
 __host__ __device__
 inline double getPdf(const Gaussian &dist, const double x)
@@ -71,6 +75,7 @@ inline double getPdf(const Gaussian &dist, const double x)
 
 ///
 /// \brief Return a random sample
+/// \param dist a given distribution (Gaussian)
 ///
 __host__
 inline double getSample(const Gaussian &dist)
@@ -80,6 +85,8 @@ inline double getSample(const Gaussian &dist)
 
 ///
 /// \brief Return a random sample using random engine
+/// \param dist a given distribution (Gaussian)
+/// \param rng a random engine
 ///
 __host__ __device__
 inline double getSample(const Gaussian &dist, thrust::default_random_engine &rng)
@@ -111,6 +118,8 @@ namespace detail {
 
 ///
 /// \brief Return CDF of x
+/// \param dist a given distribution (Gaussian)
+/// \param x a given sample value
 ///
 /// The underlining erf() function uses Cuda implementation
 ///
@@ -126,6 +135,8 @@ inline double getCdf(const Gaussian &dist, double x)
 
 ///
 /// \brief Return CDF of x
+/// \param dist a given distribution (Gaussian)
+/// \param x a given sample value
 ///
 __host__
 inline double getCdfPrecise(const Gaussian &dist, double x)
@@ -140,6 +151,8 @@ inline double getCdfPrecise(const Gaussian &dist, double x)
 
 ///
 /// \brief Print itself
+/// \param os outstream
+/// \param dist a given distribution (Gaussian)
 ///
 __host__
 inline std::ostream& operator<<(std::ostream& os, const Gaussian &dist)
@@ -148,6 +161,10 @@ inline std::ostream& operator<<(std::ostream& os, const Gaussian &dist)
     return os;
 }
 
+///
+/// \brief Return distribution information
+/// \param x a given distribution (Gaussian)
+///
 __host__ __device__
 inline std::string getName(const Gaussian &x) {
     return "Gaussian";
@@ -158,6 +175,7 @@ inline std::string getName(const Gaussian &x) {
 
 ///
 /// \brief random variable with unary -
+/// \param x a given distribution (Gaussian)
 ///
 __host__ __device__
 inline Gaussian& operator-(Gaussian &x)
@@ -168,6 +186,8 @@ inline Gaussian& operator-(Gaussian &x)
 
 ///
 /// \brief random variable +=
+/// \param x a given distribution1
+/// \param rhs a given distribution2 
 ///
 __host__ __device__
 inline Gaussian& operator+=(Gaussian &x, const Gaussian& rhs) {
@@ -178,6 +198,8 @@ inline Gaussian& operator+=(Gaussian &x, const Gaussian& rhs) {
 
 ///
 /// \brief random variable += with scalar
+/// \param x a given distribution (Gaussian)
+/// \param r the scale applied to mean
 ///
 __host__ __device__
 inline Gaussian& operator+=(Gaussian &x, const double r) {
@@ -187,6 +209,8 @@ inline Gaussian& operator+=(Gaussian &x, const double r) {
 
 ///
 /// \brief random variable *= with scalar
+/// \param x a given distribution (Gaussian)
+/// \param r the scale applied to mean and var
 ///
 __host__ __device__
 inline Gaussian& operator*=(Gaussian &x, const double r) {
