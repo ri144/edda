@@ -109,7 +109,7 @@ int main(int argc, char* argv[])
 	writeEddaDataset(shr_ds, "testData.edda");
 
 	//read the dataset using the reader
-	shared_ptr<Dataset<Real>> shr_ds2 = loadEddaScalarDataset_noneVTK("testData.edda");
+	shared_ptr<Dataset<Real>> shr_ds2 = loadEddaScalarDataset("testData.edda");
 	
 
 	//single test of the result of IO functions

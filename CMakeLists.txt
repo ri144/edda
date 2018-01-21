@@ -20,10 +20,7 @@ set (THRUST_DEVICE_SYSTEM "CPP" CACHE STRING "Thrust device backend (CUDA/TBB/OP
 set_property(CACHE THRUST_DEVICE_SYSTEM PROPERTY STRINGS "CUDA;TBB;OPENMP;CPP")
 ###
 
-# VTK integration
-find_package(VTK)
-include (${VTK_USE_FILE})
-list(APPEND LINK_LIBS ${VTK_LIBRARIES})
+
 
 
 # Tell the compiler to use C++11, if not using Visual Studio.
@@ -49,15 +46,12 @@ set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}  -fext-numeric-literals")
 
 # Load settings for the boost project.
 find_package (Boost REQUIRED)
-if (Boost_FOUND)
-  include_directories (${Boost_INCLUDE_DIRS})
-  link_libraries (${Boost_LIBRARIES})
-  
-else ()
-set ( BOOST_ROOT "/usr/local" CACHE PATH "the root directory containing Boost")
+if (NOT Boost_FOUND)
+	set ( BOOST_ROOT "/usr/local" CACHE PATH "the root directory containing Boost")
 endif ()
-set ( BOOST_ROOT "/usr/local" CACHE PATH "the root directory containing Boost")
-
+include_directories (${Boost_INCLUDE_DIRS})
+link_libraries (${Boost_LIBRARIES})
+  
 # default CUDA off
 set(EDDA_BUILD_WITH_CUDA OFF)
 

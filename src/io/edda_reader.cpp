@@ -409,6 +409,11 @@ namespace edda {
 
 	shared_ptr<Dataset<Real> > loadEddaScalarDataset_noneVTK(const string &edda_file)
 	{
+		return loadEddaScalarDataset(edda_file);
+	}
+
+	shared_ptr<Dataset<Real> > loadEddaScalarDataset(const string &edda_file)
+	{
 		return loadEddaDatasetTemplate<Real>(edda_file);
 	}
 }
