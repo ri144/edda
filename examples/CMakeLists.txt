@@ -5,7 +5,6 @@
 project(edda_examples)
 
 set(sources
-  #gmm_raw2vtk.cpp  
   #loadScalarDataset.cpp
   #loadCurvilinearDataset.cpp
   distrModelerExample.cpp

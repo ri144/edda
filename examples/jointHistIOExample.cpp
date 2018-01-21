@@ -177,7 +177,7 @@ int main(int argc, char* argv[])
 	writeEddaDataset(shr_ds, "testDataJointHist.edda");
 
 	//read the dataset using the reader
-	shared_ptr<Dataset<Real>> shr_ds2 = loadEddaScalarDataset_noneVTK("testDataJointHist.edda");
+	shared_ptr<Dataset<Real>> shr_ds2 = loadEddaScalarDataset("testDataJointHist.edda");
 	
 
 	//basic compare

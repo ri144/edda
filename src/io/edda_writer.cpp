@@ -1,10 +1,4 @@
-#include <vtkImageData.h>
-#include <vtkXMLImageDataWriter.h>
-#include <vtkSmartPointer.h>
-#include <vtkPointData.h>
-#include <vtkFloatArray.h>
-#include <vtkStringArray.h>
-#include <vtkFieldData.h>
+#include <fstream>
 
 #include "distributions/gaussian_mixture.h"
 #include "distributions/gmm.h"

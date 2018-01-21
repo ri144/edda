@@ -25,7 +25,6 @@
 #include "dataset/dataset.h"
 #include "dataset/distr_array.h"
 #include "core/interpolator.h"
-#include "io/edda_vtk_writer.h"
 
 using namespace std;
 
