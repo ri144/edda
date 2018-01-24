@@ -84,6 +84,22 @@ public:
   }
 
   ///
+  /// \brief Constructor
+  /// \param models a given GMM
+  ///
+  GMM(const std::vector<GMMTuple> &models_) {
+    GMs = models_.size();
+    for( int i=0; i<GMs; i++ )
+    {
+      GMMTuple tuple;
+      tuple.w = models_[i].w;
+      tuple.m = models_[i].m;
+      tuple.v = models_[i].v;
+      models.push_back(tuple);
+    }
+  }
+
+  ///
   /// \brief Set GMM by a given GMM
   /// \param models a given GMM
   ///
@@ -99,18 +115,9 @@ public:
   }
 
   ///
-  /// \brief Constructor
-  /// \param models a given GMM
-  ///
-  GMM(const std::vector<GMMTuple> &models_) {
-    modelReduction(models_);
-    normalizeWeights();
-  }
-
-  ///
   /// \brief Return number of Gaussian components
   ///
-  int getNumComponenets() const
+  int getNumComponents() const
   {
 	  return GMs;
   }
@@ -142,7 +149,7 @@ public:
 inline double getMean(const GMM &dist)
 {
   double mean = 0;
-  for (int i = 0; i<dist.getNumComponenets(); i++)
+  for (int i = 0; i<dist.getNumComponents(); i++)
   {
     mean += dist.models[i].m * dist.models[i].w;
   }
@@ -163,7 +170,7 @@ inline double getVar(const GMM &dist)
 {
   // Let the first summation as term1 and second as term2
   double term1=0, term2=0;
-  for (int i = 0; i<dist.getNumComponenets(); i++)
+  for (int i = 0; i<dist.getNumComponents(); i++)
   {
     const GMMTuple & model = dist.models[i];
     term1 += (double)model.w * model.v + (double)model.w * model.m * model.m ;
@@ -180,7 +187,7 @@ inline double getVar(const GMM &dist)
 inline double getPdf(const GMM &dist, const double x)
 {
   double p=0;
-  for (int i = 0; i<dist.getNumComponenets(); i++)
+  for (int i = 0; i<dist.getNumComponents(); i++)
   {
     p += getPdf( Gaussian(dist.models[i].m, dist.models[i].v), x ) * dist.models[i].w;
   }
@@ -198,7 +205,7 @@ inline double getSample(const GMM &dist)
 {
   float ratio = rand() / (float)RAND_MAX;
   float accumulated = 0;
-  for (int i = dist.getNumComponenets() - 1; i >= 0; i--)
+  for (int i = dist.getNumComponents() - 1; i >= 0; i--)
   {
     accumulated += dist.models[i].w;
     if (ratio < accumulated) {
@@ -223,7 +230,7 @@ inline double getSample(const GMM &dist, thrust::default_random_engine &rng)
   thrust::uniform_real_distribution<Real> uniform;
   float ratio = uniform(rng);
   float accumulated = 0;
-  for (int i = dist.getNumComponenets() - 1; i >= 0; i--)
+  for (int i = dist.getNumComponents() - 1; i >= 0; i--)
   {
     accumulated += dist.models[i].w;
     if (ratio < accumulated) {
@@ -244,7 +251,7 @@ __host__ __device__
 inline double getCdf(const GMM &dist, double x)
 {
   double cdf=0;
-  for (int i = 0; i<dist.getNumComponenets(); i++)
+  for (int i = 0; i<dist.getNumComponents(); i++)
   {
     if (dist.models[i].w >0)
       cdf += getCdf(Gaussian(dist.models[i].m, dist.models[i].v), x) * dist.models[i].w;
@@ -260,7 +267,7 @@ inline double getCdf(const GMM &dist, double x)
 inline std::ostream& operator<<(std::ostream& os, const GMM &dist)
 {
   os <<  "<UnivariateGMM(m,v,w):";
-  for (int i = 0; i<dist.getNumComponenets(); i++)
+  for (int i = 0; i<dist.getNumComponents(); i++)
     os << " (" << dist.models[i].m << "," << dist.models[i].v << "," << dist.models[i].w << ")";
   os << ">";
   return os;
@@ -273,7 +280,7 @@ inline std::ostream& operator<<(std::ostream& os, const GMM &dist)
 __host__ __device__
 inline std::string getName(const GMM &x) {
   std::stringstream ss;
-  ss << "GaussianMixture" << x.getNumComponenets();
+  ss << "GaussianMixture" << x.getNumComponents();
   return ss.str();
 }
 
@@ -305,7 +312,7 @@ inline GMM& operator+=(GMM &x, const GMM& rhs) {
 /// \param r a value which is applied to means of GMM
 ///
 inline GMM& operator+=(GMM &x, const double r) {
-	for (int i = 0; i<x.getNumComponenets(); i++)
+	for (int i = 0; i<x.getNumComponents(); i++)
     x.models[i].m += r;
   return x;
 }
@@ -316,7 +323,7 @@ inline GMM& operator+=(GMM &x, const double r) {
 /// \param r a value which is applied to means and variances of GMM
 ///
 inline GMM& operator*=(GMM &x, const double r) {
-	for (int i = 0; i<x.getNumComponenets(); i++) {
+	for (int i = 0; i<x.getNumComponents(); i++) {
     x.models[i].m *= r;
     x.models[i].v *= r;
   }
