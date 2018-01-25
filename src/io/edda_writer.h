@@ -11,7 +11,23 @@
 
 namespace edda{
 
-	/// \brief Save an object of edda Dataset to disk
+	/// \brief Define a class to save an object of edda Dataset to disk
+
+	/// The dataset can be read to an object of edda Dataset using the EddaReader class, which can recognize the format
+
+	class EddaWriter {
+	public:
+		/// \brief Save an object of edda Dataset to disk
+		/// \param dataset the object of edda Dataset to be saved
+		/// \param edda_file the name of the file to be saved to
+		void writeEddaDataset(std::shared_ptr<Dataset<Real> > dataset, const std::string &edda_file);
+
+	private:
+		const dist::GMMTuple EddaWriter::getGmmModels(dist::Variant &distr, int GMs, int model);
+		void EddaWriter::writeMixArrays(ofstream & myFile, DistrArray *array);
+	};
+
+	/// \brief Historical function to be deprecated. Instead, use the class EddaReader
 	/// \param dataset the object of edda Dataset to be saved
 	/// \param edda_file the name of the file to be saved to
 	void EDDA_EXPORT writeEddaDataset(std::shared_ptr<Dataset<Real> > dataset, const std::string &edda_file);

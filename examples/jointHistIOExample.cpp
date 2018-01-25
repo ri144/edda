@@ -172,13 +172,15 @@ int main(int argc, char* argv[])
 
 	Dataset<Real> *ds = new Dataset<Real>(new RegularCartesianGrid(newW, newH, newD), dVec);
 	shared_ptr<Dataset<Real>> shr_ds(ds);
-
+	
 	//write the dataset using the writer
-	writeEddaDataset(shr_ds, "testDataJointHist.edda");
+	EddaWriter eddaWriter;
+	eddaWriter.writeEddaDataset(shr_ds, "testDataJointHist.edda");
 
 	//read the dataset using the reader
-	shared_ptr<Dataset<Real>> shr_ds2 = loadEddaScalarDataset("testDataJointHist.edda");
-	
+	EddaReader eddaReader;
+	shared_ptr<Dataset<Real>> shr_ds2 = eddaReader.loadEddaDataset("testDataJointHist.edda");
+
 
 	//basic compare
 	int numDistrArray1 = shr_ds->getNumDistrArray();
