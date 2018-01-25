@@ -106,11 +106,12 @@ int main(int argc, char* argv[])
 	shared_ptr<Dataset<Real>> shr_ds(ds);
 
 	//write the dataset using the writer
-	writeEddaDataset(shr_ds, "testData.edda");
+	EddaWriter eddaWriter;
+	eddaWriter.writeEddaDataset(shr_ds, "testData.edda");
 
 	//read the dataset using the reader
-	shared_ptr<Dataset<Real>> shr_ds2 = loadEddaScalarDataset("testData.edda");
-	
+	EddaReader eddaReader;
+	shared_ptr<Dataset<Real>> shr_ds2 = eddaReader.loadEddaDataset("testData.edda");
 
 	//single test of the result of IO functions
 	dist::Variant distr;
