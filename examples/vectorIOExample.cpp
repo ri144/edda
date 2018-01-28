@@ -166,7 +166,7 @@ int main(int argc, char* argv[])
 						if (getName(distrs[i]).compare(0, 15, "GaussianMixture") == 0 && getName(distrs2[i]).compare(0, 15, "GaussianMixture") == 0){
 							dist::GMM curDist1 = boost::get<dist::GMM >(distrs[i]);
 							dist::GMM curDist2 = boost::get<dist::GMM >(distrs2[i]);
-							for (int model = 0; model < curDist2.getNumComponenets(); model++){
+							for (int model = 0; model < curDist2.getNumComponents(); model++){
 								dif = dif + abs(curDist1.models[model].m - curDist2.models[model].m)
 									+ abs(curDist1.models[model].v - curDist2.models[model].v)
 									+ abs(curDist1.models[model].w - curDist2.models[model].w);
