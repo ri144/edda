@@ -23,8 +23,8 @@ namespace edda{
 		void writeEddaDataset(std::shared_ptr<Dataset<Real> > dataset, const std::string &edda_file);
 
 	private:
-		const dist::GMMTuple EddaWriter::getGmmModels(dist::Variant &distr, int GMs, int model);
-		void EddaWriter::writeMixArrays(ofstream & myFile, DistrArray *array);
+		const dist::GMMTuple getGmmModels(dist::Variant &distr, int GMs, int model);
+		void writeMixArrays(ofstream & myFile, DistrArray *array);
 	};
 	/*
 	///// \brief Historical function to be deprecated. Instead, use the class EddaReader
