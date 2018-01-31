@@ -3,8 +3,6 @@
 #include "vector"
 #include "bmp_image.h"
 #include "dataset/distr_array.h"
-#include "io/edda_vtk_reader.h"
-#include "io/edda_vtk_writer.h"
 #include "io/edda_reader.h"
 #include "io/edda_writer.h"
 #include "distributions/gmm.h"

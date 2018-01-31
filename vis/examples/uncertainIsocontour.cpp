@@ -61,7 +61,7 @@ void process_edda_file(string edda_file, float isov)
   for(int i=0; i<dim[0]*dim[1]*dim[2]; i++) {
 	float curmean = 0;
 	float curweight = 0;
-	for(int model=0; model<gmmArray[i].getNumComponenets(); model++) {
+	for(int model=0; model<gmmArray[i].getNumComponents(); model++) {
 	  curmean += gmmArray[i].models[model].w*gmmArray[i].models[model].m;
 	  curweight += gmmArray[i].models[model].w; 
 	}

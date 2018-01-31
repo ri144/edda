@@ -16,7 +16,6 @@
 #include "vtkPointData.h"
 #include "vtkStreamingDemandDrivenPipeline.h"
 
-#include "io/gmm_vtk_data_array.h"
 
 // Compile with C++ compiler if Cuda is not used
 #include "thrust/device_vector.h"

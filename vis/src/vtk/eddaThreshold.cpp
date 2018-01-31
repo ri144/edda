@@ -10,7 +10,6 @@
 #include "vtkObjectFactory.h"
 
 #include "vtk_common.h"
-#include "io/gmm_vtk_data_array.h"
 
 #include "eddaThreshold.h"
 

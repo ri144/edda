@@ -27,15 +27,15 @@ namespace edda{
 		DistrArray * readMixArray(ifstream & myfile, int n);
 	};
 
-	/// \brief Historical function to be deprecated. Instead, use the class EddaReader
-	/// \param edda_file the name of the file to be read
-	/// \return an object of Dataset, storing all info read from the file
-	std::shared_ptr<Dataset<Real> > EDDA_EXPORT loadEddaScalarDataset(const std::string &edda_file);
+	///// \brief Historical function to be deprecated. Instead, use the class EddaReader
+	///// \param edda_file the name of the file to be read
+	///// \return an object of Dataset, storing all info read from the file
+	//std::shared_ptr<Dataset<Real> > EDDA_EXPORT loadEddaScalarDataset(const std::string &edda_file);
 
-	/// \brief Historical function to be deprecated. Instead, use the class EddaReader
-	/// \param edda_file the name of the file to be read
-	/// \return an object of Dataset, storing all info read from the file
-	std::shared_ptr<Dataset<Real> > EDDA_EXPORT loadEddaScalarDataset_noneVTK(const std::string &edda_file);
+	///// \brief Historical function to be deprecated. Instead, use the class EddaReader
+	///// \param edda_file the name of the file to be read
+	///// \return an object of Dataset, storing all info read from the file
+	//std::shared_ptr<Dataset<Real> > EDDA_EXPORT loadEddaScalarDataset_noneVTK(const std::string &edda_file);
 }
 
 #endif
