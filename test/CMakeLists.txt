@@ -13,7 +13,6 @@ if (NOT EDDA_BUILD_WITH_CUDA)
     test_thrust.cpp
     test_NdArray.cpp
     test_distribution.cpp
-    test_io.cpp
     test_histogram_io.cpp
     test_jointGMM.cpp
     test_joint_histogram.cpp

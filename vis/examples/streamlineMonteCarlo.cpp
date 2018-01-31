@@ -32,7 +32,6 @@
 #include "edda.h"
 #include "distributions/gaussian.h"
 #include "distributions/distribution.h"
-#include "io/edda_vtk_reader.h"
 #include "filters/stream_tracer.h"
 #include "dataset/dataset.h"
 
@@ -125,48 +124,14 @@ int main(int argc, char **argv)
   }
   else {
 	  cout << "Loading sample file" << endl;
-	  filename = string(SAMPLE_DATA_PATH) + "/SW6_PIV.vti";
+	  filename = string(SAMPLE_DATA_PATH) + "/SW6_PIV.vti"; //this file will not work. use new file format *.edda 
   }
 
   cout << "Press 'i' to change the rake\n";
 
-  // load data with random sampling
-  shared_ptr<Dataset<VECTOR3> > datasetvtk = edda::loadEddaVector3Dataset(filename, "");
-
-  //writeEddaDataset(datasetvtk, "testData_vector3.edda");
-
   //load edda dataset with our reader
-  shared_ptr<Dataset<VECTOR3> > dataset = loadEddaVector3Dataset_noneVTK("testData_vector3.edda");
-
-  {
-	  //one by one check only for GMM5 and vector3 !!
-	  if (dataset->getArray()->getDistrName() == "GaussianMixture5" && dataset->getArray()->getNumComponents()==3){
-		  int* dims = dataset->getDimension();
-		  double dif = 0;
-		  for (int k = 0; k < dims[2]; k++){
-			  for (int j = 0; j < dims[1]; j++){
-				  for (int i = 0; i < dims[0]; i++){
-					  std::vector<dist::Variant> distrVec = datasetvtk->at_comp_distr_vector(i, j, k);
-					  std::vector<dist::Variant> distrVec2 = dataset->at_comp_distr_vector(i, j, k);
-					  
-					  for (int c = 0; c < 3; c++){
-						  dist::GaussianMixture<5> curDist1 = boost::get<dist::GaussianMixture<5> >(distrVec[c]);
-						  dist::GaussianMixture<5> curDist2 = boost::get<dist::GaussianMixture<5> >(distrVec2[c]);
-						  for (int model = 0; model < 5; model++){
-							  dif = dif + abs(curDist1.models[model].m - curDist2.models[model].m)
-								  + abs(curDist1.models[model].v - curDist2.models[model].v)
-								  + abs(curDist1.models[model].w - curDist2.models[model].w);
-						  }
-					  }
-				  }
-			  }
-		  }
-		  cout << "the differences between the old vtk format and the new format is: " << dif << endl;
-	  }
-	  else{
-		  cout << "one by one check is not performed " << endl;
-	  }
-  }
+  EddaReader eddaReader;
+  shared_ptr<Dataset<Real> > dataset = eddaReader.loadEddaDataset(filename);
 
 
 

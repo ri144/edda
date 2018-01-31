@@ -35,7 +35,6 @@
 
 #include "distributions/gaussian.h"
 #include "distributions/distribution.h"
-#include "io/edda_vtk_reader.h"
 #include "io/path.h"
 #include "vtk/vtk_common.h"
 #include "vtk/eddaRandomProbeFilter.h"

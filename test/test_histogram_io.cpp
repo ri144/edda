@@ -3,8 +3,7 @@
 #include <iostream>
 #include <iostream>
 
-#include "io/edda_vtk_reader.h"
-#include "io/edda_vtk_writer.h"
+
 #include "io/edda_reader.h"
 #include "io/edda_writer.h"
 #include "distributions/histogram.h"
@@ -38,11 +37,19 @@ int main()
 		new RegularCartesianGrid(2, 2, 2),
 		abstract_array
 		);
-	writeEddaVtkDataset(dataset, "testHist.vti", "test_");
+
+	//write the dataset using the writer
+	EddaWriter eddaWriter;
+	eddaWriter.writeEddaDataset(dataset, "testHist.vti");
+	//writeEddaVtkDataset(dataset, "testHist.vti", "test_");
 	cout << "finish histogram modeling and write into file, press any key to continue!" << endl;
 	//getchar();
 
-	shared_ptr<Dataset<Real> > dataset2 = loadEddaScalarDataset("testHist.vti", "test_");
+	//read the dataset using the reader
+	EddaReader eddaReader;
+	shared_ptr<Dataset<Real>> dataset2 = eddaReader.loadEddaDataset("testHist.vti");
+	//shared_ptr<Dataset<Real> > dataset2 = loadEddaScalarDataset("testHist.vti", "test_");
+
 	cout << dataset2->getArray()->getDistrName() << endl;
 	int* dim;
 	dim = dataset2->getDimension();
@@ -61,8 +68,13 @@ int main()
 	{
 		cout << endl << endl;
 
-		writeEddaDataset(dataset, "testHist.edda");
-		shared_ptr<Dataset<Real> > dataset3 = loadEddaScalarDataset_noneVTK("testHist.edda");
+		EddaWriter eddaWriter;
+		eddaWriter.writeEddaDataset(dataset, "testHist.edda");
+		//writeEddaDataset(dataset, "testHist.edda");
+		
+		EddaReader eddaReader;
+		shared_ptr<Dataset<Real>> dataset3 = eddaReader.loadEddaDataset("testHist.edda");
+		//shared_ptr<Dataset<Real> > dataset3 = loadEddaScalarDataset_noneVTK("testHist.edda");
 		cout << dataset3->getArray()->getDistrName() << endl;
 		int* dim;
 		dim = dataset3->getDimension();

@@ -31,12 +31,10 @@
 
 #include "distributions/gaussian.h"
 #include "distributions/distribution.h"
-#include "io/edda_vtk_reader.h"
 #include "io/path.h"
 #include "filters/level_crossing_prob.h"
 #include "vtk/vtk_common.h"
 #include "vtk/eddaUncertainIsocontour.h"
-#include <io/gmm_vtk_data_array.h>
 #include "core/thrust_gmm_array.h"
 #include "filters/fuzzy_isosurface.h"
 
