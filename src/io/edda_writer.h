@@ -26,11 +26,12 @@ namespace edda{
 		const dist::GMMTuple EddaWriter::getGmmModels(dist::Variant &distr, int GMs, int model);
 		void EddaWriter::writeMixArrays(ofstream & myFile, DistrArray *array);
 	};
-
-	/// \brief Historical function to be deprecated. Instead, use the class EddaReader
-	/// \param dataset the object of edda Dataset to be saved
-	/// \param edda_file the name of the file to be saved to
-	void EDDA_EXPORT writeEddaDataset(std::shared_ptr<Dataset<Real> > dataset, const std::string &edda_file);
+	/*
+	///// \brief Historical function to be deprecated. Instead, use the class EddaReader
+	///// \param dataset the object of edda Dataset to be saved
+	///// \param edda_file the name of the file to be saved to
+	//void EDDA_EXPORT writeEddaDataset(std::shared_ptr<Dataset<Real> > dataset, const std::string &edda_file);
+	*/
 }
 
 #endif
