@@ -156,7 +156,40 @@ struct EDDA_EXPORT JointHistogram: public DiscreteDistributionTag, public JointD
 	/// the key (std:vector<int>) is the index of a non-empty bin 
 	/// of the joint histogram; the value is the probability of that bin.
 	void setDistr(boost::unordered_map<std::vector<int>, Real> p) { pdf = p; }
-	
+
+	/// \brief Get the joint mean of the joint histogram
+	/// \return the joint mean 
+	std::vector<Real> getJointMean() const { 
+		std::vector<Real> m(mean.size());
+		std::copy(mean.begin(), mean.end(), m.begin());
+		return m; 
+	} 
+
+	std::vector<Real> getJointSample() const {
+		if(pdf.size()==0) {
+			printf("ERROR: distribution size is 0.\n");
+			return std::vector<Real>(num_vars, 0);
+		}
+		Real x = static_cast<Real>(rand())/RAND_MAX;
+		int i=0;
+		// no binary search!
+		while(x > cdf[i].second) i++;
+
+		// if reach here, we find the bin
+		std::vector<int> bin = cdf[i].first;
+		std::vector<Real> smp;
+		std::vector<Real> mins = min_vals;
+		std::vector<Real> widths = bin_widths;
+		bool binCenter = true;
+		for(int i=0; i<bin.size(); i++) { 
+			Real smpPos;
+			if(binCenter) smpPos = 0.5;// use bin center
+			else smpPos = static_cast<Real>(rand())/RAND_MAX;
+			smp.push_back(mins[i]+(bin[i]+smpPos)*widths[i]);
+		}
+		return smp;
+	}
+
 	/// \brief Get the distribution (pdf) of the joint histogram 
 	/// \return un unordered_map that stores a pdf. In the map structure,
 	/// the key (std:vector<int>) is the index of a non-empty bin 
@@ -198,7 +231,7 @@ struct EDDA_EXPORT JointHistogram: public DiscreteDistributionTag, public JointD
 	/// \param vars variables want to be left after marginalization, 
 	///	i.e. project onto which variables
 	/// \return the marginalized distribution, which is also a jointHistogram
-	JointHistogram marginalization(std::unordered_set<int>& vars) const {
+	JointHistogram* marginalization(std::unordered_set<int>& vars) const {
 		assert(pdf.size()>0);
 		assert(vars.size()>0);
 
@@ -237,8 +270,9 @@ struct EDDA_EXPORT JointHistogram: public DiscreteDistributionTag, public JointD
 			}
 			iitr++;
 		}
-		JointHistogram jhist(vars.size(), new_min_vals, new_max_vals, new_bin_widths, new_num_bins, new_pdf, new_mean, new_cov);
-		return jhist; 
+		//JointHistogram jhist(vars.size(), new_min_vals, new_max_vals, new_bin_widths, new_num_bins, new_pdf, new_mean, new_cov);
+		//return jhist; 
+		return new JointHistogram(vars.size(), new_min_vals, new_max_vals, new_bin_widths, new_num_bins, new_pdf, new_mean, new_cov);
 	}
 	
 	/// \brief Compute the joint histogram of certain variables (vars) given the 
@@ -421,9 +455,7 @@ private:
 /// \param dist the joint histogram
 __host__ __device__
 inline std::vector<Real> getJointMean(const JointHistogram &dist) {
-	std::vector<Real> m(dist.mean.size());
-	std::copy(dist.mean.begin(), dist.mean.end(), m.begin());
-	return m;
+	return dist.getJointMean();
 }
 
 /// \brief Return the probability of a multivariate value 
@@ -516,6 +548,13 @@ inline std::vector<Real> getJointSample(const JointHistogram &dist) {
 	}
 	return smp;
 }
+
+/// \brief Function that can marginalize a JointHistogram
+/// \param dist: the JointHistogram to be marginalized
+/// \param vars: project on to these variables 
+// JointHistogram marginalization(const JointHistogram &dist, std::unordered_set<int>& vars) const {
+// 	return dist.marginalization(vars);
+// }
 
 /// \brief Return a random sample using random engine. This function 
 /// leaves the interface for parallel platforms

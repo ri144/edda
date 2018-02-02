@@ -67,4 +67,3 @@ dummy_data = np.random.rand(100)
 modelGmm = edda.GMM(dummy_data,3)
 modelGmm.output()
 print()
-
