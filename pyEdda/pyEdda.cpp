@@ -81,10 +81,9 @@ PYBIND11_MODULE(pyedda, m) {
         .def("getNumVars", &PyJointHistogram::getNumVars)
         .def("getJointMean", &PyJointHistogram::getJointMean)
         .def("getJointSample", &PyJointHistogram::getJointSample);
-        //.def("marginalization", &PyJointHistogram::marginalization);
 
     // C-like functions for JointHistogram
     m.def("getJointMean", &getJointMean_py);
-    m.def("marginalization", &marginalization_py, py::return_value_policy::copy);
-
+    m.def("marginalization", &marginalization, py::return_value_policy::reference);
+    m.def("conditionalHist", &conditionalHist, py::return_value_policy::reference);
 }

@@ -7,11 +7,10 @@ from scipy import misc
 
 #JointHistogram
 print("Testing code for JointHistogram with an image example...")
-print("This testing code requires the scipy package!")
+#print("This testing code requires the scipy package!")
 
 im = misc.imread("../sample_data/test_img.bmp")
 width, height, channel = (im.shape)
-print ((im.dtype))
 
 bz = 20	#block size
 dsUs = width/bz
@@ -21,6 +20,8 @@ jointMeanImg = np.ndarray(shape=(width, height, channel), dtype=np.int)
 jointSmpImg = np.ndarray(shape=(width, height, channel), dtype=np.int)
 marginMeanImg = np.ndarray(shape=(width, height, channel), dtype=np.int)
 marginSmpImg = np.ndarray(shape=(width, height, channel), dtype=np.int)
+condMeanImg = np.ndarray(shape=(width, height, channel), dtype=np.int)
+condSmpImg = np.ndarray(shape=(width, height, channel), dtype=np.int)
 
 for dsU in range(dsUs):
 	for dsV in range(dsVs):
@@ -64,24 +65,39 @@ for dsU in range(dsUs):
 		marvars = np.array([1, 2]) # marginalize to dimension 1 and 2
 		marginHist = edda.marginalization(jointHist, marvars)
 		marginMean = marginHist.getJointMean()
-		# print ("The dimension fo the marginalized mean is {}".format(marginMean.shape))
 		marginMeanImg[dsU*bz:(dsU+1)*bz, dsV*bz:(dsV+1)*bz, 0] = 0
 		marginMeanImg[dsU*bz:(dsU+1)*bz, dsV*bz:(dsV+1)*bz, 1] = marginMean[0]
 		marginMeanImg[dsU*bz:(dsU+1)*bz, dsV*bz:(dsV+1)*bz, 2] = marginMean[1]
-
-		# for u in range(dsU*bz, (dsU+1)*bz):
-		# 	for v in range(dsV*bz, (dsV+1)*bz):
-		# 		marginSmp = marginHist.getJointSample()
-		# 		marginSmpImg[u, v, 0] = 0
-		# 		marginSmpImg[u, v, 1] = marginMean[0]
-		# 		marginSmpImg[u, v, 2] = marginMean[1]
+		for u in range(dsU*bz, (dsU+1)*bz):
+			for v in range(dsV*bz, (dsV+1)*bz):
+				marginSmp = marginHist.getJointSample()
+				marginSmpImg[u, v, 0] = 0
+				marginSmpImg[u, v, 1] = marginSmp[0]
+				marginSmpImg[u, v, 2] = marginSmp[1]
 
 		# 4. test conditionalHistogram
-		# orivars = 
-		# condvars = 
+		orivars = np.array([0, 1])
+		condvars = np.array([2])
+		condbins = np.array([[0,29]])
+		condHist = edda.conditionalHist(jointHist, orivars, condvars, condbins)
+		condMean = condHist.getJointMean()
+		condMeanImg[dsU*bz:(dsU+1)*bz, dsV*bz:(dsV+1)*bz, 0] = condMean[0]
+		condMeanImg[dsU*bz:(dsU+1)*bz, dsV*bz:(dsV+1)*bz, 1] = condMean[1]
+		condMeanImg[dsU*bz:(dsU+1)*bz, dsV*bz:(dsV+1)*bz, 2] = 0
+		for u in range(dsU*bz, (dsU+1)*bz):
+			for v in range(dsV*bz, (dsV+1)*bz):
+				condSmp = condHist.getJointSample()
+				condSmpImg[u, v, 0] = condSmp[0]
+				condSmpImg[u, v, 1] = condSmp[1]
+				condSmpImg[u, v, 2] = 0
+
+
 
 misc.imsave('./joint_mean.bmp', jointMeanImg)
 misc.imsave('./joint_sample.bmp', jointSmpImg)
 # result for marginalized distribution
 misc.imsave('./margin_mean.bmp', marginMeanImg)
 misc.imsave('./margin_sample.bmp', marginSmpImg)
+# result for conditional distribution
+misc.imsave('./cond_mean.bmp', condMeanImg)
+misc.imsave('./cond_sample.bmp', condSmpImg)

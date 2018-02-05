@@ -156,36 +156,6 @@ public:
         std::vector<Real> v = hist->getJointSample();
         return py::array_t<Real>(v.size(), v.data());
     }
-
-    //vars, dimensions that will be left
-    // JointHistogram* marginalization(py::array_t<int> vars) {
-    //     std::unordered_set<int> marvars;
-
-    //     py::buffer_info info = vars.request();
-    //     auto ptr = static_cast<int *>(info.ptr);
-    //     int ndim = info.ndim;
-    //     if(ndim != 1)
-    //         throw std::runtime_error("Variables to be marginalized must be in 1D");
-    //     int num_vars = info.shape[0];
-
-    //     for(int i=0; i<num_vars; i++)
-    //         marvars.insert(*(ptr+i));
-    //     return hist->marginalization(marvars);
-    // }
-
-    // PyJointHistogram conditionalHist() {
-
-    // }
-    // /// set distribution
-    // void setDistr(boost::unordered_map<std::vector<int>, Real> p) {
-    //     hist->setDistr(p);
-    // }
-
-    // py::dict getDistr() {
-    //     boost::unordered_map<std::vector<int>, Real> c_pdf = hist->getDistr();
-    //     /// convert boost::unordered_map<std::vector<int>, Real> to dict
-    //     return c_pdf;
-    // }
 };
 
 
@@ -193,7 +163,7 @@ py::array_t<Real> getJointMean_py(PyJointHistogram& hist) {
     return hist.getJointMean();
 }
 
-PyJointHistogram marginalization_py(PyJointHistogram& pyHist, py::array_t<int> vars) {
+PyJointHistogram marginalization(PyJointHistogram& pyHist, py::array_t<int> vars) {
     std::unordered_set<int> marvars;
 
     py::buffer_info info = vars.request();
@@ -202,11 +172,54 @@ PyJointHistogram marginalization_py(PyJointHistogram& pyHist, py::array_t<int> v
     if(ndim != 1)
         throw std::runtime_error("Variables to be marginalized must be in 1D");
     int num_vars = info.shape[0];
-
     for(int i=0; i<num_vars; i++) {
         marvars.insert(*(ptr+i));
     }
 
     PyJointHistogram mhist(pyHist.hist->marginalization(marvars));
     return mhist;
+}
+
+PyJointHistogram conditionalHist(PyJointHistogram& pyHist, py::array_t<int> orivars, py::array_t<int> condvars, py::array_t<int> condbins) {
+    std::unordered_set<int> c_orivars;
+    py::buffer_info info = orivars.request();
+    auto ptr = static_cast<int *>(info.ptr);
+    int ndim = info.ndim;
+    if(ndim != 1)
+        throw std::runtime_error("Dimensions of Variables must be in 1D");
+    int num_vars = info.shape[0];
+    for(int i=0; i<num_vars; i++) {
+        c_orivars.insert(*(ptr+i));
+    }
+
+    std::vector<int> c_condvars;
+    info = condvars.request();
+    ptr = static_cast<int *>(info.ptr);
+    ndim = info.ndim;
+    if(ndim != 1)
+        throw std::runtime_error("Dimensions of conditional variables must be in 1D");
+    num_vars = info.shape[0];
+    for(int i=0; i<num_vars; i++) {
+        c_condvars.push_back(*(ptr+i));
+    }
+
+    std::vector<std::pair<int,int>> c_binrange;
+    info = condbins.request();
+    ptr = static_cast<int *>(info.ptr);
+    ndim = info.ndim;
+    if(ndim != 2)
+        throw std::runtime_error("Dimension of conditional range must be in 2D");
+    num_vars = info.shape[0];
+    int bin_range = info.shape[1]; // must be 2, representing start and end index of the bin
+    if(bin_range != 2)
+        throw std::runtime_error("Dimension of a bin range must be in 2D");
+    for(int i=0; i<num_vars; i++) {
+        int rg_start = *(ptr+i*bin_range+0);
+        int rg_end = *(ptr+i*bin_range+1);
+        std::pair<int, int> rg(rg_start, rg_end);
+        c_binrange.push_back(rg);
+    }
+
+    PyJointHistogram chist(pyHist.hist->conditionalHist(c_orivars, c_condvars, c_binrange));
+    return chist;
 }

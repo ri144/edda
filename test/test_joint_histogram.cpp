@@ -127,7 +127,7 @@ int main(int argc, char* argv[]) {
 			elastTime += ((float)t2-(float)t1)/CLOCKS_PER_SEC;
 
 			// test marginalization
-			JointHistogram hist = array[dsV*dsUs+dsU].marginalization(marVars);
+			JointHistogram hist = *(array[dsV*dsUs+dsU].marginalization(marVars));
 			for(int v=dsV*blockSize; v<(dsV+1)*blockSize; v++) {//row
 				for(int u=dsU*blockSize; u<(dsU+1)*blockSize; u++) {//col
 					std::vector<Real> mean = getJointMean(hist); 
@@ -148,7 +148,7 @@ int main(int argc, char* argv[]) {
 			}
 
 			// test conditionalHistogram
-			JointHistogram chist = array[dsV*dsUs+dsU].conditionalHist(vars, condVars, bin_range);
+			JointHistogram chist = *(array[dsV*dsUs+dsU].conditionalHist(vars, condVars, bin_range));
 			for(int v=dsV*blockSize; v<(dsV+1)*blockSize; v++) {//row
 				for(int u=dsU*blockSize; u<(dsU+1)*blockSize; u++) {//col
 					std::vector<Real> mean = getJointMean(chist); 

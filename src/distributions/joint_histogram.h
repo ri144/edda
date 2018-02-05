@@ -281,7 +281,7 @@ struct EDDA_EXPORT JointHistogram: public DiscreteDistributionTag, public JointD
 	/// \param cond_var given the range of these variables
 	/// \param bin_range the bin range of conditional variables (cond_var)
 	///	\return return the conditional distribution, which is also a jointHistogram
-	JointHistogram conditionalHist(std::unordered_set<int>& vars, std::vector<int>& cond_var, std::vector<std::pair<int,int>>& bin_range) { 
+	JointHistogram* conditionalHist(std::unordered_set<int>& vars, std::vector<int>& cond_var, std::vector<std::pair<int,int>>& bin_range) { 
 		// step 0: check input parameter
 		assert(pdf.size()>0);
 		assert(vars.size()>0);
@@ -359,8 +359,9 @@ struct EDDA_EXPORT JointHistogram: public DiscreteDistributionTag, public JointD
 			}
 			iitr++;
 		}
-		JointHistogram jhist(vars.size(), new_min_vals, new_max_vals, new_bin_widths, new_num_bins, new_pdf, new_mean, new_cov);
-		return jhist; 
+		//JointHistogram jhist(vars.size(), new_min_vals, new_max_vals, new_bin_widths, new_num_bins, new_pdf, new_mean, new_cov);
+		//return jhist; 
+		return new JointHistogram(vars.size(), new_min_vals, new_max_vals, new_bin_widths, new_num_bins, new_pdf, new_mean, new_cov);
 	}
 	
 private:
