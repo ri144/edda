@@ -119,13 +119,18 @@ namespace edda {
 			/// \param rng random engine
 			///
 			__host__ __device__
-				std::vector<Real> getJointSample(thrust::default_random_engine &rng) const {
+				std::vector<Real> getJointSample(/*thrust::default_random_engine &rng*/) const {
 					//draw nVar samples from independent standard normal variant
-					thrust::random::normal_distribution<double> ndist(0,1);
+					//thrust::random::normal_distribution<double> ndist(0,1);
 					ublas_vector r(cov.size1());
+					// for (int j = 0; j < r.size(); j++){
+					// 	r(j) = ndist(rng);
+					// }
+
 					for (int j = 0; j < r.size(); j++){
-						r(j) = ndist(rng);
+						r(j) = static_cast<Real>(rand())/RAND_MAX;
 					}
+
 
 					//transform the above sample by the covariance matrix
 					ublas_vector s(cov.size1());
@@ -233,9 +238,10 @@ namespace edda {
 		/// \param rng random engine
 		///
 		__host__ __device__
-			inline std::vector<Real> getJointSample(const JointGaussian &dist, thrust::default_random_engine &rng)
+			inline std::vector<Real> getJointSample(const JointGaussian &dist/*, thrust::default_random_engine &rng*/)
 		{
-				return getJointSample(dist, rng);
+			//return getJointSample(dist, rng);
+			return dist.getJointSample();
 		}
 
 		///

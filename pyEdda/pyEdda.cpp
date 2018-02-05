@@ -5,6 +5,7 @@
 #include "py_gaussian.h"
 #include "py_gmm.h"
 #include "py_joint_histogram.h"
+#include "py_joint_gaussian.h"
 
 using namespace std;
 
@@ -65,6 +66,7 @@ PYBIND11_MODULE(pyedda, m) {
         .def("getCdf", &PyGMM::getGMMCdf)
         .def("output", &PyGMM::output);
 
+
     //JointHistogram
     py::class_<PyJointHistogram>(m, "JointHistogram")
         .def(py::init<PyJointHistogram*>())
@@ -86,4 +88,15 @@ PYBIND11_MODULE(pyedda, m) {
     m.def("getJointMean", &getJointMean_py);
     m.def("marginalization", &marginalization, py::return_value_policy::reference);
     m.def("conditionalHist", &conditionalHist, py::return_value_policy::reference);
+
+
+    //JointGaussian
+    py::class_<PyJointGaussian>(m, "JointGaussian")
+        .def(py::init<PyJointGaussian*>())
+        .def(py::init<py::array_t<Real>, py::array_t<Real>>())
+        .def("getMean", &PyJointGaussian::getMean)
+        .def("getJointSample", &PyJointGaussian::getJointSample);
+
+    // C-like functions for JointGaussian
+    m.def("getJointMean_Gaussian", &getJointMean_gaussian); // TODO: need to find a way for function overloading in pybind11
 }

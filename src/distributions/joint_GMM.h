@@ -127,7 +127,7 @@ namespace edda {
 			/// \brief Return a samplel drawn from GMM
 			/// \param rng random engine
 			///
-			std::vector<Real> getJointSample(thrust::default_random_engine &rng) const{
+			std::vector<Real> getJointSample(/*thrust::default_random_engine &rng*/) const{
 				Real r = rand() / (float)RAND_MAX;
 				float sum = 0;
 				std::vector<Real> s;
@@ -135,7 +135,7 @@ namespace edda {
 				for (int i = 0; i < gaus.size(); i++){
 					sum += weights[i];
 					if (sum >= r || i==gaus.size()-1){
-						s = gaus[i].getJointSample(rng);
+						s = gaus[i].getJointSample(/*rng*/);
 						break;
 					}
 				}
@@ -196,9 +196,9 @@ namespace edda {
 		/// \param dist a distribution
 		/// \param rng random engine
 		///
-		inline std::vector<Real> getJointSample(const JointGMM &dist, thrust::default_random_engine &rng)
+		inline std::vector<Real> getJointSample(const JointGMM &dist/*, thrust::default_random_engine &rng*/)
 		{
-			return dist.getJointSample(rng);
+			return dist.getJointSample(/*rng*/);
 		}
 
 		///

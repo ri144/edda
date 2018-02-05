@@ -33,7 +33,7 @@ int main()
 	
 	//Joint GMM array
 	shared_ary<JointGMM> array(new JointGMM[dsVs*dsUs], dsVs*dsUs);
-	thrust::default_random_engine rng;//random engine for getJointSample()
+	//thrust::default_random_engine rng;//random engine for getJointSample()
 
 	Real* varR = (Real*)malloc(sizeof(Real)*blockSize*blockSize);
 	Real* varG = (Real*)malloc(sizeof(Real)*blockSize*blockSize);
@@ -64,7 +64,7 @@ int main()
 			//resample this block and write to image		
 			for (int i = 0; i < blockSize; i++){
 				for (int j = 0; j < blockSize; j++){
-					std::vector<Real> sample = getJointSample(array[dsV*dsUs + dsU], rng);
+					std::vector<Real> sample = getJointSample(array[dsV*dsUs + dsU]/*, rng*/);
 
 					int rawV = dsV*blockSize + i;//u and v in the original image resolution
 					int rawU = dsU*blockSize + j;
