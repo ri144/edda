@@ -162,6 +162,21 @@ namespace edda {
 					return -0.5 * (k * 1.83787706641 + getLogDet() + density);
 			}
 
+			__host__ __device__
+				inline double getJointPdf(const std::vector<Real> x_)
+			{
+				int k = this->mean.size();
+				assert(x_.size() == k);
+				ublas_vector x(k);
+				std::copy(x_.begin(), x_.end(), x.begin());
+				x = x - this->mean;
+				ublas_vector tmp;
+				tmp = ublas::prod(ublas::trans(x), getUMat());
+				double density = ublas::inner_prod(tmp, tmp);
+
+				return exp(-0.5 * (k * 1.83787706641 + getLogDet() + density));
+			}
+
 			///
 			/// \brief Return mean vector of this Gaussian
 			///

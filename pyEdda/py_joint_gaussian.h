@@ -96,7 +96,19 @@ public:
         
         return hist->getJointLogPdf(c_x);
     }
-    
+
+    Real getJointPdf(py::array_t<Real> x) {
+        py::buffer_info info = x.request();
+        auto ptr = static_cast<Real *>(info.ptr);
+        int ndim = info.ndim;
+        if(ndim != 1)
+            throw std::runtime_error("Number of dimensions should be 1");
+        int dim = info.shape[0];
+        std::vector<Real> c_x {ptr, ptr + dim};
+        
+        return hist->getJointPdf(c_x);
+    }
+
     py::array_t<Real> getMean() {
         ublas_vector m = hist->getMean();
         std::vector<Real> v{m.begin(), m.end()};
@@ -105,7 +117,23 @@ public:
 };
 
 
-py::array_t<Real> getJointMean_gaussian(PyJointGaussian& hist) {
-    return hist.getMean();
+py::array_t<Real> getJointMean_Gaussian(PyJointGaussian& pyhist) {
+    return pyhist.getMean();
 }
 
+py::array_t<Real> getJointSample_Gaussian(PyJointGaussian& pyhist) {
+    return pyhist.getJointSample();
+}
+
+Real getJointPdf_Gaussian(PyJointGaussian& pyhist, py::array_t<Real> x) {
+    // py::buffer_info info = x.request();
+    // auto ptr = static_cast<Real *>(info.ptr);
+    // int ndim = info.ndim;
+    // if(ndim != 1)
+    //     throw std::runtime_error("Number of dimensions for the sample x must be one");
+    // int dim = info.shape[0];
+    // std::vector<Real> c_x {ptr, ptr + dim};
+
+    // return pyhist.hist->getJointPdf(c_x);
+    return pyhist.getJointPdf(x);   // a simpler way
+}

@@ -95,8 +95,11 @@ PYBIND11_MODULE(pyedda, m) {
         .def(py::init<PyJointGaussian*>())
         .def(py::init<py::array_t<Real>, py::array_t<Real>>())
         .def("getMean", &PyJointGaussian::getMean)
-        .def("getJointSample", &PyJointGaussian::getJointSample);
+        .def("getJointSample", &PyJointGaussian::getJointSample)
+        .def("getJointPdf", &PyJointGaussian::getJointPdf);
 
     // C-like functions for JointGaussian
-    m.def("getJointMean_Gaussian", &getJointMean_gaussian); // TODO: need to find a way for function overloading in pybind11
+    m.def("getJointMean_Gaussian", &getJointMean_Gaussian); // TODO: need to find a way for function overloading in pybind11
+    m.def("getJointSample_Gaussian", &getJointSample_Gaussian); // TODO: need to find a way for function overloading in pybind11
+    m.def("getJointPdf_Gaussian", &getJointPdf_Gaussian); // TODO: need to find a way for function overloading in pybind11
 }
