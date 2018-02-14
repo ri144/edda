@@ -59,11 +59,11 @@ public:
 	void computeGMM(float *data, size_t size, size_t nGmm, size_t index)
 	{
 		//TODO: check for out of bound errors.
-		double *dataD;		
-  		dataD = new double[size];
+		Real *dataD;		
+  		dataD = new Real[size];
 
   		for(size_t i=0; i<size; i++)
-	 		dataD[i] = (double) data[i];
+	 		dataD[i] = (Real) data[i];
 
 	 	dist::GMM new_distr;
 		new_distr = eddaComputeGMM(dataD, size, nGmm);

@@ -24,11 +24,11 @@ namespace edda
 ///////////////////////////////////////////
 /// \brief EM helper function
 ///
-inline int check_convergence(double fmax, double fmin, double ftol)
+inline int check_convergence(Real fmax, Real fmin, Real ftol)
 {
-    double EPS = 1e-10;
-    double delta = fabs(fmax - fmin);
-    double accuracy = (fabs(fmax) + fabs(fmin)) * ftol;
+    Real EPS = 1e-10;
+    Real delta = fabs(fmax - fmin);
+    Real accuracy = (fabs(fmax) + fabs(fmin)) * ftol;
     return (delta < (accuracy + EPS));
 }
 
@@ -37,11 +37,11 @@ inline int check_convergence(double fmax, double fmin, double ftol)
 /// \mean mean of a Gaussian
 /// \sigma sigma of a Gaussian
 /// \val given sample value
-inline double eval_gaussian_density(double mean, double sigma, double val)
+inline Real eval_gaussian_density(Real mean, Real sigma, Real val)
 {
-    double EPS = 1e-10;
-    double prob=0.0;
-    double exponent=0.0;
+    Real EPS = 1e-10;
+    Real prob=0.0;
+    Real exponent=0.0;
 
     if(sigma>0)
     {
@@ -62,9 +62,9 @@ inline double eval_gaussian_density(double mean, double sigma, double val)
 
 ///////////////////////////////////////////
 /// \brief Upate parameter of a Gaussian
-inline void update_parameters(int n, double * data, int k, double * prob, double * mean, double * sd, double ** class_prob)
+inline void update_parameters(int n, Real * data, int k, Real * prob, Real * mean, Real * sd, Real ** class_prob)
 {
-    double EPS = 1e-6;
+    Real EPS = 1e-6;
 
     //Update weights first
     for (int j = 0; j < k; j++)
@@ -99,11 +99,11 @@ inline void update_parameters(int n, double * data, int k, double * prob, double
 
 ///////////////////////////////////////////
 /// EM helper function
-inline double classprob(int j, double x, int k, double *prob, double *mean, double *sd)
+inline Real classprob(int j, Real x, int k, Real *prob, Real *mean, Real *sd)
 {
-    double num = prob[j]*eval_gaussian_density(mean[j],sd[j],x);
+    Real num = prob[j]*eval_gaussian_density(mean[j],sd[j],x);
 
-    double denom=0;
+    Real denom=0;
     for(int i=0;i<k;i++)
         denom += prob[i]*eval_gaussian_density(mean[i],sd[i],x);
 
@@ -112,7 +112,7 @@ inline double classprob(int j, double x, int k, double *prob, double *mean, doub
 
 ///////////////////////////////////////////
 /// EM helper function
-inline void update_class_prob(int n, double * data, int k, double * prob, double * mean, double * sd, double ** class_prob)
+inline void update_class_prob(int n, Real * data, int k, Real * prob, Real * mean, Real * sd, Real ** class_prob)
 {
     int i, j;
     for (i = 0; i < n; i++)
@@ -122,13 +122,13 @@ inline void update_class_prob(int n, double * data, int k, double * prob, double
 
 ///////////////////////////////////////////
 /// EM helper function
-inline double computeLogLikelihood(int n, double* data,int k, double* prob,double* mean,double* sd)
+inline Real computeLogLikelihood(int n, Real* data,int k, Real* prob,Real* mean,Real* sd)
 {
-    double llk=0;
+    Real llk=0;
 
     for(int p=0;p<n;p++)
     {
-        double val=0;
+        Real val=0;
         for(int q=0;q<k;q++)
         {
             val += prob[q]*eval_gaussian_density(mean[q],sd[q],data[p]);
@@ -144,9 +144,9 @@ inline double computeLogLikelihood(int n, double* data,int k, double* prob,doubl
 //////////////////////////////////////////////
 /// Main EM function
 ///
-inline dist::GMM eddaComputeGMM(double *dataArray, int nSamples, int nComps)
+inline dist::GMM eddaComputeGMM(Real *dataArray, int nSamples, int nComps)
 {
-	double eps = 1e-6;
+	Real eps = 1e-6;
     int GMMs = nComps;
 
 	if (nSamples<GMMs)
@@ -157,23 +157,23 @@ inline dist::GMM eddaComputeGMM(double *dataArray, int nSamples, int nComps)
 	}
 	else
 	{
-		double llk = 0, prev_llk = 0;
-		double *mean, *sd, *weight;
-		double **class_prob;
+		Real llk = 0, prev_llk = 0;
+		Real *mean, *sd, *weight;
+		Real **class_prob;
 
 		//Allocate memories for computation
 		/////////////////////////////////////////////////////////////
-		class_prob = (double **)malloc(sizeof(double *)*nSamples);
+		class_prob = (Real **)malloc(sizeof(Real *)*nSamples);
 		for (int i = 0; i<nSamples; i++)
-			class_prob[i] = (double *)malloc(sizeof(double)* GMMs);
+			class_prob[i] = (Real *)malloc(sizeof(Real)* GMMs);
 
-		mean = (double *)malloc(sizeof(double)* GMMs);
-		sd = (double *)malloc(sizeof(double)* GMMs);
-		weight = (double *)malloc(sizeof(double)* GMMs);
+		mean = (Real *)malloc(sizeof(Real)* GMMs);
+		sd = (Real *)malloc(sizeof(Real)* GMMs);
+		weight = (Real *)malloc(sizeof(Real)* GMMs);
 
 		//initial estimate of parameters
 		/////////////////////////////////////////////
-		double mean1 = 0.0, sd1 = 0.0;
+		Real mean1 = 0.0, sd1 = 0.0;
 
 		for (int i = 0; i < nSamples; i++)
 			mean1 += dataArray[i];
@@ -236,9 +236,9 @@ inline dist::GMM eddaComputeGMM(double *dataArray, int nSamples, int nComps)
 /// Main EM function
 ///
 template <int GMMs>
-void eddaComputeEM(double *samples, int numSamples, dist::GaussianMixture<GMMs>* new_gmm)
+void eddaComputeEM(Real *samples, int numSamples, dist::GaussianMixture<GMMs>* new_gmm)
 {
-    double eps =  1e-6;
+    Real eps =  1e-6;
 
     if(numSamples<GMMs)
     {
@@ -247,23 +247,23 @@ void eddaComputeEM(double *samples, int numSamples, dist::GaussianMixture<GMMs>*
     }
     else
     {
-        double llk = 0, prev_llk = 0;
-        double *mean,*sd,*weight;
-        double **class_prob;
+        Real llk = 0, prev_llk = 0;
+        Real *mean,*sd,*weight;
+        Real **class_prob;
         
         //Allocate memories for computation
         /////////////////////////////////////////////////////////////
-        class_prob = (double **) malloc(sizeof(double *)*numSamples);
+        class_prob = (Real **) malloc(sizeof(Real *)*numSamples);
         for(int i=0;i<numSamples;i++)
-            class_prob[i] = (double *) malloc(sizeof(double) * GMMs);
+            class_prob[i] = (Real *) malloc(sizeof(Real) * GMMs);
 
-        mean = (double *) malloc(sizeof(double) * GMMs);
-        sd = (double *) malloc(sizeof(double) * GMMs);
-        weight = (double *) malloc(sizeof(double) * GMMs);
+        mean = (Real *) malloc(sizeof(Real) * GMMs);
+        sd = (Real *) malloc(sizeof(Real) * GMMs);
+        weight = (Real *) malloc(sizeof(Real) * GMMs);
 
         //initial estimate of parameters
         /////////////////////////////////////////////
-        double mean1 = 0.0, sd1 = 0.0;
+        Real mean1 = 0.0, sd1 = 0.0;
         
         for (int i = 0; i < numSamples; i++)
             mean1 += samples[i];
@@ -326,7 +326,7 @@ void eddaComputeEM(double *samples, int numSamples, dist::GaussianMixture<GMMs>*
 ///////////////////////////////////////////
 /// Incremental update helper function
 template <int GMMs>
-bool testforMatch(double val, dist::GaussianMixture<GMMs>* currentGMM, std::vector<float> *valList, std::vector<float> *distList)
+bool testforMatch(Real val, dist::GaussianMixture<GMMs>* currentGMM, std::vector<float> *valList, std::vector<float> *distList)
 {
     float sigmaTh = 2.0;
     int match=0;
@@ -359,7 +359,7 @@ bool testforMatch(double val, dist::GaussianMixture<GMMs>* currentGMM, std::vect
 /// Main Incremental GMM update function
 ///
 template <int GMMs>
-void eddaUpdateGMMIncremental(double *samples, int numSamples, dist::GaussianMixture<GMMs>* new_gmm)
+void eddaUpdateGMMIncremental(Real *samples, int numSamples, dist::GaussianMixture<GMMs>* new_gmm)
 {
     float alpha = 0.2;//Mixing rate in updation
 

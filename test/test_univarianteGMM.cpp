@@ -28,81 +28,25 @@ void setVoxel(float* data, int d0, int d1, int d2, int D0, int D1, int D2, float
 //using image to test joint Gaussian GMM
 int main()
 {
-	int Dim0 = 100;
-	int Dim1 = 100;
-	int Dim2 = 100;
-	
-	//modify this to the local path
-	//this sampled data is in the "sampled_data" folder of the source folder
-	FILE* fpr = fopen("C:\\GravityLabDataSet\\Edda\\edda\\sample_data\\subIsabel.raw", "rb");//load the raw test file
-	FILE* fpw = fopen("resampled_subIsabel.raw", "wb");//output resampled data
+	Real data[100] = {  0.10405,  0.528,     -0.31456,   -1.34501,   -1.29526,    0.07432,
+						-0.19956,   -0.6546,     0.31801,   -0.89027,   50.11134,   49.98048,
+						49.16001,   47.70179,   51.45653,   50.31664,   47.33587,   49.57357,
+						50.39379,   49.77186,   50.58033,   49.02673,   50.17517,   49.94652,
+						49.81694,   49.77897,   50.19976,   50.93272,   49.46988,   49.59276,
+						50.16056,   49.87985,   50.3856 ,   50.71829,   51.29119,   49.88356,
+						47.7227 ,   49.93038,   50.35387,   49.81304,   99.84676,   97.56749,
+						100.50798,   99.67597,   98.48892,   99.12858,   99.13517,  100.60875,
+						100.56164,  101.51475,  100.64792,   98.64835,   98.59079,  101.13073,
+						101.56669,   99.76225,  100.5588 ,   98.49511,   98.05608,   98.82598,
+						99.64281,   99.47862,   99.76989,   99.50899,  100.6793 ,  101.42755,
+						100.0362 ,  102.03   ,   99.3656 ,   99.4749 ,  100.38773,   99.6452,
+						101.17705,   99.35889,  101.32269,  100.19418,  102.56545,   99.53589,
+						99.79731,  100.14565,   97.81897,  100.60227,  100.48085,  100.10932,
+						98.4556 ,   98.45344,  100.58662,  101.17518,  101.59446,   99.10456,
+						98.9692 ,   99.72806,   98.02427,   99.41107,  100.85179,  101.6346,
+						100.27916,  101.64055,  100.41087,  100.19136};
 
-	float* rbuffer = (float*)malloc(sizeof(float)* Dim0 * Dim1 * Dim2);
-	float* wbuffer = (float*)malloc(sizeof(float)* Dim0 * Dim1 * Dim2);
-
-	fread(rbuffer, sizeof(float), Dim0 * Dim1 * Dim2, fpr);
-	
-	//down-sampled block size
-	int blockSize = 10;
-	int nGmmCompMin = 3;//number of Gaussian compoenents
-	int nGmmCompMax = 7;//number of Gaussian compoenents
-
-	////number of row and col after down-sampleing
-	int dsD0 = Dim0 / blockSize;
-	int dsD1 = Dim1 / blockSize;
-	int dsD2 = Dim2 / blockSize;
-	
-	//GMM array
-	shared_ary<GMM> array(new GMM[dsD0*dsD1*dsD2], dsD0*dsD1*dsD2);
-	thrust::default_random_engine rng;//random engine for getJointSample()
-
-	double* trainingData = (double*)malloc(sizeof(double)* blockSize* blockSize* blockSize);
-
-	//loop: go through each block
-	for (int dsd0 = 0; dsd0 < dsD0; dsd0++){
-		for (int dsd1 = 0; dsd1 < dsD1; dsd1++){
-			for (int dsd2 = 0; dsd2 < dsD2; dsd2++){
-			printf("%d %d %d\n", dsd0, dsd1, dsd2);
-
-			//prepare training array of this local block
-			int cnt = 0;
-			for (int d0 = dsd0*blockSize; d0<(dsd0 + 1)*blockSize; d0++) {
-				for (int d1 = dsd1*blockSize; d1<(dsd1 + 1)*blockSize; d1++) {
-					for (int d2 = dsd2*blockSize; d2 < (dsd2 + 1)*blockSize; d2++) {
-						trainingData[cnt] = getVoxel(rbuffer, d0, d1, d2, Dim0, Dim1, Dim2);
-						cnt++;
-					}
-				}
-			}
-
-			//EM in Edda
-			int distAryIdx = dsd0*dsD1*dsD2 + dsd1*dsD2 + dsd2;
-			int nGmmComp = (int)(nGmmCompMax - nGmmCompMin) * (rand() / (float)RAND_MAX) + nGmmCompMin;
-			array[distAryIdx] = eddaComputeGMM(trainingData, blockSize*blockSize*blockSize, nGmmComp);
-
-			//resample this block and write to image		
-			for (int i = 0; i < blockSize; i++){
-				for (int j = 0; j < blockSize; j++){
-					for (int k = 0; k < blockSize; k++){
-						float sample = getSample(array[distAryIdx], rng);
-
-						int rawd0 = dsd0*blockSize + i;//u and v in the original image resolution
-						int rawd1 = dsd1*blockSize + j;
-						int rawd2 = dsd2*blockSize + k;
-
-						setVoxel(wbuffer, rawd0, rawd1, rawd2, Dim0, Dim1, Dim2, sample);
-					}
-				}
-			}
-			}
-		}
-	}
-
-	fwrite(wbuffer, sizeof(float), Dim0 * Dim1 * Dim2, fpw);
-
-	free(rbuffer);
-	free(wbuffer);
-	fclose(fpr);
-	fclose(fpw);
+	GMM gmm = eddaComputeGMM(data, 100, 3);
+	std::cout << gmm << std::endl;
 }
 
