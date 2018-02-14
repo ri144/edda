@@ -118,7 +118,8 @@ int main(int argc, char* argv[]) {
     //CovMatrix = [[0.025, 0.0075,0.00175], 
     //             [0.0075,0.007, 0.00135],
     //             [0.00175,0.00135,0.00043]]
-    //We expect the re-calculated mean and cov are close to them
+    //We expect the re-calculated mean and cov are "close" 
+    //(do not have to be the same) to them
 
     Real* var0 = (Real*)malloc(sizeof(Real)*100);
 	Real* var1 = (Real*)malloc(sizeof(Real)*100);
@@ -132,7 +133,7 @@ int main(int argc, char* argv[]) {
     trainSamples.push_back(var0);
     trainSamples.push_back(var1);
     trainSamples.push_back(var2);
-    JointGaussian gau = eddaComputeJointGMM(trainSamples, 100);
+    JointGaussian gau = eddaComputeJointGaussian(trainSamples, 100);
 
     std::cout << gau.getMean() << std::endl;
     std::cout << gau.getCovariance() << std::endl;

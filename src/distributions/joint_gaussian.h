@@ -287,7 +287,7 @@ namespace edda {
 	/// \param dataAry input sample vectors for modeling
 	/// \param nSamples number of input samples (vectors)
 	///
-	inline dist::JointGaussian eddaComputeJointGMM(std::vector<Real*>& dataAry, int nSamples)
+	inline dist::JointGaussian eddaComputeJointGaussian(std::vector<Real*>& dataAry, int nSamples)
 	{
 		int nVar = dataAry.size();
 		if( nSamples <= 1 ){
