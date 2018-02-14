@@ -54,11 +54,11 @@ public:
         gmm = new GMM(c_Models);
     }
 
-    PyGMM(py::array_t<double> data, int GMs)
+    PyGMM(py::array_t<Real> data, int GMs)
     {
         //first convert the numpy array (data) to a pointer of array to be passed to the c++ functions
 		py::buffer_info info = data.request();
-		auto ptr = static_cast<double *>(info.ptr);
+		auto ptr = static_cast<Real *>(info.ptr);
 
         //Check the input numpy array's dimensionality
         int ndim = info.ndim;
