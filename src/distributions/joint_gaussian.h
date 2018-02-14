@@ -50,7 +50,6 @@ namespace edda {
 					assert(mean.size() == cov.size1() && mean.size() == cov.size2());
 					this->mean = mean;
 					setMatrices(cov);
-
 				}
 
 			///
@@ -282,6 +281,41 @@ namespace edda {
 
 
 	}  // namespace dist
+
+	///
+	/// \brief Create a Joint Gaussian
+	/// \param dataAry input sample vectors for modeling
+	/// \param nSamples number of input samples (vectors)
+	///
+	inline dist::JointGaussian eddaComputeJointGaussian(std::vector<Real*>& dataAry, int nSamples)
+	{
+		int nVar = dataAry.size();
+		if( nSamples <= 1 ){
+			std::cout<<"Number of samples must be larger than 1, return a non-initialized gaussian"<<std::endl;
+        	return dist::JointGaussian();
+		}
+
+		ublas_vector mean(nVar);
+		for (int j = 0; j < nVar; j++){
+			mean(j) = 0;
+			for (int i = 0; i < nSamples; i++)
+				mean(j) += dataAry[j][i];
+			mean(j) /= static_cast<float>(nSamples);
+		}
+
+		ublas_matrix cov(nVar, nVar);
+		for( int i=0; i<nVar; i++ ){
+			for( int j=0; j<nVar; j++ ){
+				cov(i,j) = 0;
+				for( int k=0; k<nSamples; k++ ){
+					cov(i,j) += (dataAry[i][k] - mean(i)) * (dataAry[j][k] - mean(j));
+				}
+				cov(i,j) /= static_cast<float>(nSamples-1);
+			}
+		}
+
+		return dist::JointGaussian(mean, cov);
+	}
 }  // namespace edda
 
 #endif  // DIST_GAUSSIAN_H_
