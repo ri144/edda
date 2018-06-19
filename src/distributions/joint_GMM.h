@@ -72,7 +72,7 @@ namespace edda {
 			/// \param _means mean vectors
 			/// \param _covs covariance matrixs
 			///
-			void setGMM(int _nVar, int _nComp, ublas_vector &_weights, ublas_matrix &_means, ublas_matrix &_covs){
+			void setGMM(int _nVar, int _nComp, ublas_vector &_weights, ublas_matrix &_means, ublas_matrix &_covs ){
 				nVar = _nVar;
 				nComp = _nComp;
 
@@ -81,7 +81,7 @@ namespace edda {
 				std::copy(_weights.begin(), _weights.end(), weights.begin());
 
 				for (int i = 0; i < nComp; i++){
-					boost::numeric::ublas::matrix_row<boost::numeric::ublas::matrix<float> > m(_means, i);
+					boost::numeric::ublas::matrix_row<boost::numeric::ublas::matrix<Real> > m(_means, i);
 					ublas_matrix cov_ = subrange( _covs, i*nVar, (i+1)*nVar, 0, nVar );
 
 					JointGaussian g(m, cov_);
@@ -128,8 +128,8 @@ namespace edda {
 			/// \param rng random engine
 			///
 			std::vector<Real> getJointSample(/*thrust::default_random_engine &rng*/) const{
-				Real r = rand() / (float)RAND_MAX;
-				float sum = 0;
+				Real r = rand() / (Real)RAND_MAX;
+				Real sum = 0;
 				std::vector<Real> s;
 
 				for (int i = 0; i < gaus.size(); i++){
@@ -222,6 +222,49 @@ namespace edda {
 		}
 
 	}  // namespace dist
+
+        void estimateParameters(ublas_matrix samples ,ublas_matrix resposibilities, int nSamples, int nComp, int nVar, 
+                                ublas_vector& w, ublas_matrix& m, ublas_matrix& covs)
+        {
+                        for (int j = 0; j < nComp; j++){
+                            w(j) = 0;
+                            for (int smpPtr = 0; smpPtr < nSamples; smpPtr++){
+                                    w(j) += resposibilities(smpPtr, j);
+                            }
+                            w(j) += 10 * std::numeric_limits<Real>::epsilon();
+                        }
+
+
+                        ublas_matrix weighted_X_sum = boost::numeric::ublas::prod(boost::numeric::ublas::trans(resposibilities) , samples);
+                        for (int c = 0; c < nComp; c++){
+                                subrange(m, c, c + 1, 0, nVar) = subrange(weighted_X_sum, c, c + 1, 0, nVar)  / w(c);
+                        }
+
+                        for (int c = 0; c < nComp; c++){
+                                ublas_vector post(nSamples);
+                                for (int s = 0; s < nSamples; s++){
+                                        post(s) = resposibilities(s, c);
+                                }
+                                ublas_vector mu = row(m, c);
+                                ublas_matrix diff(nSamples, nVar);
+                                for (int s = 0; s < nSamples; s++){
+                                        row(diff, s) = row(samples, s) - mu;
+                                }
+
+                                ublas_matrix postDiff( nVar, nSamples );
+                                for (int s = 0; s < nSamples; s++){
+                                        column(postDiff, s) = row(diff, s) * post(s);
+                                }
+                                ublas_matrix avg_cv = boost::numeric::ublas::prod(postDiff, diff);
+                                avg_cv = avg_cv / w(c);
+                                ublas_matrix cv = avg_cv + 0.000001 * ublas::identity_matrix<Real>(nVar);
+                                subrange(covs, c*nVar, (c + 1)*nVar, 0, nVar) = cv;
+                        }
+
+                        for (int j = 0; j < nComp; j++){
+                            w(j) /= (Real)nSamples;
+                        }
+        }//End estimateParameter()
 	
 	///
 	/// \brief Compute the Gaussian Mixture Model 
@@ -229,8 +272,7 @@ namespace edda {
 	/// \param nSamples number of input samples (vectors)
 	/// \param nComp number of Gaussian component of GMM
 	///
-	inline dist::JointGMM eddaComputeJointGMM(std::vector<Real*>& dataAry, int nSamples, int nComp)
-		//inline dist::JointGMM eddaComputeJointGMM(int nComp, ublas_matrix &samples)
+	inline dist::JointGMM eddaComputeJointGMM(std::vector<Real*>& dataAry, int nSamples, int nComp, int verbose = 0, int n_iter=100, Real converge_threshold = 0.001)
 	{
 		int nVar = dataAry.size();
 
@@ -244,109 +286,77 @@ namespace edda {
 
 		dist::JointGMM gmm;
 		//initialization: 
-		//equally set weights, randomly pickup mean, set identity CovMatrix
 		ublas_vector w(nComp);
 		ublas_matrix m(nComp, nVar);
 		ublas_matrix covs(nComp* nVar, nVar);
-		for (int i = 0; i < nComp; i++)w(i) = 1.0/(float)nComp;
-		for (int i = 0; i < nComp; i++){
-			int r = rand() % nSamples;
-			subrange(m, i, i + 1, 0, nVar) = subrange(samples, r, r + 1, 0, nVar);
-		}
-		for (int i = 0; i < nComp; i++ ){
-			subrange(covs, i*nVar, (i+1)*nVar, 0, nVar) = ublas::identity_matrix<Real>(nVar);
-		}
+                ublas_matrix resposibilities(nSamples, nComp);
+                Real current_total_log_norm = NAN;
+                bool converged_ = false;
 
-		int n_iter = 100;
-		float current_log_likelihood = NAN;
-		bool converged_ = false;
+                //random resposibility to init weights means and covs
+                for( int i=0; i<nSamples; i++ ){
+                    Real sum = 0;
+                    for( int j=0; j<nComp; j++ ){
+                        int r = rand();
+                        resposibilities(i,j) = r;
+                        sum += resposibilities(i,j);
+                    }
+                    for(int j=0; j<nComp; j++ ) resposibilities(i,j) /= sum;
+                }
+                estimateParameters(samples, resposibilities, nSamples, nComp, nVar, w, m ,covs);
 
-		ublas_matrix log_likelihoods(nSamples, 1);
-		ublas_matrix resposibilities(nSamples, nComp);
 		for (int i = 0; i < n_iter; i++){
 			gmm.setGMM(nVar, nComp, w, m, covs);
-			float prev_log_likelihood = current_log_likelihood;
-			//E step
-			current_log_likelihood = 0;
+			Real prev_total_log_norm = current_total_log_norm;
+                        if( verbose > 1 ){
+                            std::cout << "Weights: " << w << std::endl;
+                            std::cout << "Means: " << m << std::endl;
+                            std::cout << "Covs: " << covs << std::endl << std::endl << std::endl;
+                        }
+
+			//E step (calculate resposibility)
+			current_total_log_norm = 0;
 			for (int smpPtr = 0; smpPtr < nSamples; smpPtr++){
 				std::vector<Real> s(nVar);
-				boost::numeric::ublas::matrix_row<boost::numeric::ublas::matrix<float> > mr(samples, smpPtr);
+				boost::numeric::ublas::matrix_row<boost::numeric::ublas::matrix<Real> > mr(samples, smpPtr);
 				std::copy(mr.begin(), mr.end(), s.begin());
 				std::vector<Real> score = gmm.getCompWgtLogProbability(s);
-				log_likelihoods(smpPtr, 0) = 0;		
 
-				double maxScore = score[0];
-				for (int j = 0; j < nComp; j++){
-					if (score[j] > maxScore)maxScore = score[j];
-				}
-				for (int j = 0; j < nComp; j++){
-					log_likelihoods(smpPtr, 0) += exp(score[j]-maxScore);
-				}
-
-				log_likelihoods(smpPtr, 0) = log(log_likelihoods(smpPtr, 0)) + maxScore;
-				current_log_likelihood += log_likelihoods(smpPtr, 0);
-				for (int j = 0; j < nComp; j++){
-					resposibilities(smpPtr, j) = exp(score[j] - log_likelihoods(smpPtr, 0));
-				}
+                                Real log_prob_norm = 0;
+                                for( int j = 0; j<nComp; j++ ){
+                                    if( exp(score[j]) < std::numeric_limits<float>::min() ) {
+                                        score[j] = log(std::numeric_limits<float>::min());
+                                    }
+                                    log_prob_norm += exp( score[j] );
+                                }
+                                log_prob_norm = log( log_prob_norm );
+                                for( int j=0; j<nComp; j++ ){
+                                    resposibilities( smpPtr, j ) = exp( score[j] - log_prob_norm );
+                                }
+                                current_total_log_norm += log_prob_norm;
 			}
 
-			//current log likelihood
-			current_log_likelihood /= (float)nSamples;
-			
-			if (prev_log_likelihood == prev_log_likelihood){
-				double change = abs(current_log_likelihood - prev_log_likelihood);
-				if (change < 0.001){//threshold for stopping EM
+                        // Check converge
+			current_total_log_norm /= (Real)nSamples;
+			if (prev_total_log_norm == prev_total_log_norm){
+				Real change = abs(current_total_log_norm - prev_total_log_norm);
+				if (change < converge_threshold){//threshold for stopping EM (should be a user input para)
+                                        converged_ = true;
 					break;
 				}
 			}
 
-			//M step
-			ublas_vector weights(nComp);
-			for (int j = 0; j < nComp; j++){
-				weights(j) = 0;
-				for (int smpPtr = 0; smpPtr < nSamples; smpPtr++){
-					weights(j) += resposibilities(smpPtr, j);
-				}
-			}
-			
-			ublas_matrix weighted_X_sum = boost::numeric::ublas::prod(boost::numeric::ublas::trans(resposibilities) , samples);
-			
-			double sumWeight = 0;
-			for (int j = 0; j < nComp; j++){
-				sumWeight += weights(j);
-			}
-			for (int j = 0; j < nComp; j++){
-				w(j) = (weights(j) / (sumWeight + 10 * EMEPS) + EMEPS);
-			}
-			
-			for (int c = 0; c < nComp; c++){
-				subrange(m, c, c + 1, 0, nVar) = subrange(weighted_X_sum, c, c + 1, 0, nVar)  / (weights(c) + 10 * EMEPS);
-			}
-			
-			//estimate covariance matrix
-			for (int c = 0; c < nComp; c++){
-				ublas_vector post(nSamples);
-				double sumPost = 0;
-				for (int s = 0; s < nSamples; s++){
-					post(s) = resposibilities(s, c);
-					sumPost += resposibilities(s, c);
-				}
-				ublas_vector mu = row(m, c);
-				ublas_matrix diff(nSamples, nVar);
-				for (int s = 0; s < nSamples; s++){
-					row(diff, s) = row(samples, s) - mu;
-				}
+			//M step (use resposibility to update weights, means, covs
+                        estimateParameters(samples, resposibilities, nSamples, nComp, nVar, w, m ,covs);
 
-				ublas_matrix postDiff( nVar, nSamples );
-				for (int s = 0; s < nSamples; s++){
-					column(postDiff, s) = row(diff, s) * post(s);
-				}
-								
-				ublas_matrix avg_cv = boost::numeric::ublas::prod(postDiff, diff);
-				avg_cv = avg_cv / (sumPost + 10 * EMEPS);
-				ublas_matrix cv = avg_cv + 0.001 * ublas::identity_matrix<Real>(nVar);
-				subrange(covs, c*nVar, (c + 1)*nVar, 0, nVar) = cv;
-			}
+                        if( verbose > 0 ){
+                            std::cout << "Iters: " << i << ", log_norm: " << current_total_log_norm  << std::endl;
+                        }
+                        if( verbose > 1 ){
+                            std::cout << "Weights: " << w << std::endl;
+                            std::cout << "Means: " << m << std::endl;
+                            std::cout << "Covs: " << covs << std::endl << std::endl << std::endl;
+                        }
 		}
 
 		gmm.setGMM(nVar, nComp, w, m, covs);

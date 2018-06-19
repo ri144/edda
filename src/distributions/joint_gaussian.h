@@ -52,67 +52,65 @@ namespace edda {
 					setMatrices(cov);
 				}
 
-			///
-			/// \brief set and use eigen decomposition to compute the necessary matrixes, eigenMat: (for sampling) and "uMat" (for probability computation)
-			/// \param cov the input covariance matrix
-			///
-			__host__ __device__
-				void setMatrices(const ublas_matrix &cov) {
-					this->cov = cov;
-	
-					int covSize = this->cov.size1(); //cov.size1 == cov.size2
 
-					//BEGIN eigenDecomposition using Eigen Library********************
-					MatrixXf rawCov(covSize, covSize);
-					for (int i = 0; i < covSize; i++){
-						for (int j = 0; j < covSize; j++){
-							rawCov(i,j) = this->cov(i, j);
-						}
-					}
-					SelfAdjointEigenSolver<MatrixXf> eigensolver(rawCov);
-					if (eigensolver.info() != Success){ std::cout << "eigen decomposition fails" << std::endl; }
-					ublas_matrix eigenVectors(covSize, covSize);
-					ublas_vector eigenValues(covSize);
-					for (int i = 0; i < covSize; i++)eigenValues(i) = eigensolver.eigenvalues()[i];
-					for (int i = 0; i < covSize; i++){
-						for (int j = 0; j < covSize; j++){
-							eigenVectors(i, j) = eigensolver.eigenvectors()(i, j);
-						}
-					}
-					//END eigenDecomposition and eigen value vector is in boost data structure now********************
+                        ///
+                        /// \brief computer lower matrix and precision cholesky matrix for probability estimat and sampling
+                        /// \param cov the input covariance matrix
+                        ///
+                        __host__ __device__
+                                void setMatrices(const ublas_matrix &cov) {
+                                        //Decomposition computation steps
+                                        //1. use cholescky decomposition: covMat -> L (lower matrix)
+                                        //2. solve LX = I to get X (this can be solve by Lx=e column by column)
+                                        //3. put transpose(X) in precCholMat
+                                        //4. calculate logPDet from precCholMat
+                                        //Note: step 1 and 2 now is on Eigen libray
+                                        //      they are possible to be implement by ourself, 
+                                        //      then we can get rid of Eigen library.
+                                        this->cov = cov;  //keep here
 
-					//compute eigenMat by eigenvector and eigenvalue (for sampling)
-					eigenMat.resize(covSize, covSize);
-					for (int j = 0; j < covSize; j++){
-						double sqrtEvalue = sqrt(eigenValues(j));
-						if (sqrtEvalue != sqrtEvalue)sqrtEvalue = 0; //discard the small negative Eigen value
-						column(eigenMat, j) = column(eigenVectors, j) *sqrtEvalue;
-					}
-					
-					//compute the U matrix and logPDet (for probability estimation)
-					double cond = 0.0000000000222044604;//just a eps value
-					double maxAbsEv = -1;
-					for (int i = 0; i < covSize; i++){
-						if (maxAbsEv < fabs(eigenValues(i))){
-							maxAbsEv = fabs(eigenValues(i));
-						}
-					}
-					double eps = cond * maxAbsEv;
+                                        int covSize = this->cov.size1(); //cov.size1 == cov.size2
 
-					logPDet = 0;
-					for (int i = 0; i < covSize; i++){
-						if (eigenValues(i) > eps)
-							logPDet += log(eigenValues(i));
-					}
+                                        //convert matrix data structure
+                                        MatrixXd rawCov(covSize, covSize);
+                                        for (int i = 0; i < covSize; i++){
+                                                for (int j = 0; j < covSize; j++){
+                                                        rawCov(i,j) = this->cov(i, j);
+                                                }
+                                        }
 
-					uMat.resize(covSize, covSize);
-					for (int j = 0; j < covSize; j++){
-						double spinv = eigenValues(j);
-						if (spinv > eps) spinv = 1.0 / spinv;
-						column(uMat, j) = column(eigenVectors, j) *sqrt(spinv);
-					}
-				}
+                                        //Chol decomposition and triangular solver from Eigen
+                                        //for probability computation (EM Need this)
+                                        Eigen::LLT<Eigen::MatrixXd>  chol(rawCov);
+                                        //Handle non positive definite covariance somehow:
+                                        if(chol.info()!=Eigen::Success){
+                                            std::cout << "Choleschy Decomposition Error!! (use double precision may solve this problem)" << std::endl;
+                                            exit(0);
+                                        }
+                                        MatrixXd L = chol.matrixL();
+                                        lowerMat.resize(covSize, covSize);
+                                        for (int i = 0; i < covSize; i++){
+                                                for (int j = 0; j < covSize; j++){
+                                                        lowerMat(i,j) = L(i, j);
+                                                }
+                                        }
+                                        MatrixXd I = MatrixXd::Identity(covSize,covSize);
+                                        MatrixXd preciChol = L.triangularView<Lower>().solve(I);
+                                        precCholMat.resize(covSize, covSize); 
+                                        for (int i = 0; i < covSize; i++){
+                                            for (int j = 0; j < covSize; j++){
+                                                precCholMat(i,j) = preciChol(j,i);     
+                                            }
+                                        }
 
+                                        //Compute logPDet
+                                        logPDet = 0;
+                                        for( int i=0; i<covSize; i++ ){
+                                            logPDet += log( precCholMat(i,i) ); //diag elements
+                                        }
+                                }
+
+            
 			///
 			/// \brief Return a sample drawn from this joint Gaussian
 			/// \param rng random engine
@@ -120,20 +118,17 @@ namespace edda {
 			__host__ __device__
 				std::vector<Real> getJointSample(/*thrust::default_random_engine &rng*/) const {
 					//draw nVar samples from independent standard normal variant
-					//thrust::random::normal_distribution<double> ndist(0,1);
+					//thrust::random::normal_distribution<Real> ndist(0,1);
 					ublas_vector r(cov.size1());
-					// for (int j = 0; j < r.size(); j++){
-					// 	r(j) = ndist(rng);
-					// }
 
 					for (int j = 0; j < r.size(); j++){
 						r(j) = static_cast<Real>(rand())/RAND_MAX;
 					}
 
-
 					//transform the above sample by the covariance matrix
 					ublas_vector s(cov.size1());
-					boost::numeric::ublas::axpy_prod(eigenMat, r, s, true);
+					boost::numeric::ublas::axpy_prod(lowerMat, r, s, true);
+
 					std::vector<Real> retS(cov.size1());
 					for (int j = 0; j < r.size(); j++){
 						retS[j] = s(j) + mean(j);
@@ -147,33 +142,31 @@ namespace edda {
 			/// \param x_ vector of a sample for probability estimation
 			///
 			__host__ __device__
-				inline double getJointLogPdf(const std::vector<Real> x_) const
+				inline Real getJointLogPdf(const std::vector<Real> x_) const
 			{
 					int k = this->mean.size();
 					assert(x_.size() == k);
 					ublas_vector x(k);
 					std::copy(x_.begin(), x_.end(), x.begin());
-					x = x - this->mean;
-					ublas_vector tmp;
-					tmp = ublas::prod(ublas::trans(x), getUMat());
-					double density = ublas::inner_prod(tmp, tmp);
+					x = x - this->mean;					
+					ublas_vector tmp = ublas::prod(ublas::trans(x), getPrecCholMat());
+					Real density = ublas::inner_prod(tmp, tmp);
 
-					return -0.5 * (k * 1.83787706641 + getLogDet() + density);
+					return -0.5 * (k * 1.83787706641 + density ) + getLogDet();
 			}
 
 			__host__ __device__
-				inline double getJointPdf(const std::vector<Real> x_)
+				inline Real getJointPdf(const std::vector<Real> x_)
 			{
 				int k = this->mean.size();
 				assert(x_.size() == k);
 				ublas_vector x(k);
 				std::copy(x_.begin(), x_.end(), x.begin());
 				x = x - this->mean;
-				ublas_vector tmp;
-				tmp = ublas::prod(ublas::trans(x), getUMat());
-				double density = ublas::inner_prod(tmp, tmp);
+				ublas_vector tmp = ublas::prod(ublas::trans(x), getPrecCholMat());
+				Real density = ublas::inner_prod(tmp, tmp);
 
-				return exp(-0.5 * (k * 1.83787706641 + getLogDet() + density));
+				return exp( -0.5 * (k * 1.83787706641 + density ) + getLogDet());
 			}
 
 			///
@@ -192,26 +185,20 @@ namespace edda {
 			/// \brief Return eigen matrix of this Gaussian's covariance matrix
 			///
 			__host__ __device__
-				const ublas_matrix &getEigenMat() const { return this->eigenMat; }
-
-			///
-			/// \brief Return eigen matrix of this Gaussian's covariance matrix
-			///
-			__host__ __device__
-				const ublas_matrix &getUMat() const { return this->uMat; }
+				const ublas_matrix &getPrecCholMat() const { return this->precCholMat; }
 
 			///
 			/// \brief Return U matrix of this Gaussian's covariance matrix
 			///
 			__host__ __device__
-				double getLogDet() const { return this->logPDet; }
+				Real getLogDet() const { return this->logPDet; }
 
 		private:
-			ublas_vector mean; 		// boost's vector for mean vector
-			ublas_matrix cov;		//covariance matrix
-			ublas_matrix eigenMat; //Eigen matrix: use when draw sample, sample = eigenMat * z + mean
-			ublas_matrix uMat;	   //U-Matrix: use compute the point probability from Gaussian
-			double logPDet;		   //log determinate of covariance matrix
+			ublas_vector mean; 	    // boost's vector for mean vector
+			ublas_matrix cov;	    //covariance matrix
+			ublas_matrix precCholMat;   //precisionCholeskyMat:cov->L and solve LX=I, the X is this
+                        ublas_matrix lowerMat;      //lower matrix from covMat cholescky decomposition
+			Real logPDet;		    //log determinate of covariance matrix
 		};
 
 		// ------------------------------------------------------------------------------
@@ -231,7 +218,7 @@ namespace edda {
 		/// \param x_ vector of a sample for probability estimation
 		///
 		__host__ __device__
-			inline double getJointPdf(const JointGaussian &dist, const std::vector<Real> x_)
+			inline Real getJointPdf(const JointGaussian &dist, const std::vector<Real> x_)
 		{
 			ublas_vector mean = dist.getMean();
 			int k = mean.size();
@@ -239,11 +226,10 @@ namespace edda {
 			ublas_vector x(k);  
 			std::copy(x_.begin(), x_.end(), x.begin());
 			x = x - mean;
-			ublas_vector tmp;
-			tmp = ublas::prod(ublas::trans(x), dist.getUMat());
-			double density = ublas::inner_prod(tmp, tmp);
+			ublas_vector tmp= ublas::prod(ublas::trans(x), dist.getPrecCholMat());
+			Real density = ublas::inner_prod(tmp, tmp);
 
-			return exp(-0.5 * (k * 1.83787706641 + dist.getLogDet() + density));
+			return exp(-0.5 * (k * 1.83787706641 + density ) + dist.getLogDet());
 		}
 
 		///
@@ -266,7 +252,7 @@ namespace edda {
 		__host__
 			inline std::ostream& operator<<(std::ostream& os, const JointGaussian &dist)
 		{
-				os << "<JointGaussian: mean=" << dist.getMean() << ", covariance=" << dist.getCovariance() << ", eigenMatrix=" << dist.getEigenMat() << ">";
+				os << "<JointGaussian: mean=" << dist.getMean() << ", covariance=" << dist.getCovariance() << ", >";
 				return os;
 		}
 
@@ -300,7 +286,7 @@ namespace edda {
 			mean(j) = 0;
 			for (int i = 0; i < nSamples; i++)
 				mean(j) += dataAry[j][i];
-			mean(j) /= static_cast<float>(nSamples);
+			mean(j) /= static_cast<Real>(nSamples);
 		}
 
 		ublas_matrix cov(nVar, nVar);
@@ -310,7 +296,7 @@ namespace edda {
 				for( int k=0; k<nSamples; k++ ){
 					cov(i,j) += (dataAry[i][k] - mean(i)) * (dataAry[j][k] - mean(j));
 				}
-				cov(i,j) /= static_cast<float>(nSamples-1);
+				cov(i,j) /= static_cast<Real>(nSamples-1);
 			}
 		}
 

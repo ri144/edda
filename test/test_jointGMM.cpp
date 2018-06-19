@@ -21,7 +21,7 @@ int main()
 	//down-sampled block size
 	int blockSize = 20;
 	int nVar = 3;//number of variables, rgb is 3 variables
-	int nGmmComp = 2;//number of Gaussian compoenents
+	int nGmmComp = 3;//number of Gaussian compoenents
 	
 
 	//output image means and resampled image
@@ -59,8 +59,8 @@ int main()
 			trainSamples.push_back(varR);
 			trainSamples.push_back(varG);
 			trainSamples.push_back(varB);
-			array[dsV*dsUs + dsU] = eddaComputeJointGMM(trainSamples, blockSize*blockSize, nGmmComp);
-
+			array[dsV*dsUs + dsU] = eddaComputeJointGMM(trainSamples, blockSize*blockSize, nGmmComp, 0);
+                        
 			//resample this block and write to image		
 			for (int i = 0; i < blockSize; i++){
 				for (int j = 0; j < blockSize; j++){
@@ -81,12 +81,6 @@ int main()
 			}
 		}
 	}
-
-	//shared_ptr<Dataset<std::vector<Real>> > dataset = make_Dataset<std::vector<Real>>(
-	//	new RegularCartesianGrid(1, 1, dsVs*dsUs),
-	//	array
-	//	);
-
 
 	// safe to free data, after constructing the distribution
 	free(varR);
