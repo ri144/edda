@@ -25,7 +25,7 @@ const double EPS        = 1.0E-6;
 
 // The distribution precision is set here.
 // Using float instead of double for smaller storage and because the nature of uncertainty has less precision.
-typedef float Real;
+typedef double Real;
 
 // numeric limits:
 //template <typename T> using limits = std::numeric_limits<T>;

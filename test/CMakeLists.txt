@@ -16,6 +16,7 @@ if (NOT EDDA_BUILD_WITH_CUDA)
     test_histogram_io.cpp
     test_jointGaussian.cpp
     test_jointGMM.cpp
+    test_jointGMMVar4.cpp
     test_joint_histogram.cpp
     test_univarianteGMM.cpp
   )
